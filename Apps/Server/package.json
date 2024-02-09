@@ -1,0 +1,45 @@
+{
+  "name": "liquors-server",
+  "label": "Server",
+  "version": "latest",
+  "author": "David Leclerc",
+  "main": "./src/index.ts",
+  "scripts": {
+    "start": "cross-env ENV=development nodemon ./src/index.ts",
+    "build": "npm run delete && npm run compile",
+    "compile": "tsc -p ./tsconfig.json",
+    "delete": "rimraf ./dist",
+    "lint": "eslint ./src",
+    "package:main": "echo \"Main: $npm_package_main\"",
+    "package:name": "echo \"Name: $npm_package_name\"",
+    "package:version": "echo \"Version: $npm_package_version\""
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "minimist": "^1.2.8",
+    "pino": "^8.15.0",
+    "pino-pretty": "^10.2.0",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
+    "@babel/preset-typescript": "^7.21.4",
+    "@types/compression": "^1.7.5",
+    "@types/cookie-parser": "^1.4.6",
+    "@types/express": "^4.17.21",
+    "@types/minimist": "^1.2.2",
+    "@types/node": "^18.11.18",
+    "@types/ws": "^8.5.10",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "eslint": "^8.49.0",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  }
+}
