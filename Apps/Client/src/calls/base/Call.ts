@@ -1,6 +1,6 @@
 import fetchWithTimeout from './Fetch';
 import { API_ROOT } from '../../config';
-import { ErrorResponse, SuccessResponse } from '../../types/CallTypes';
+import { SuccessResponse } from '../../types/CallTypes';
 
 /**
  * This is a class that models API calls.

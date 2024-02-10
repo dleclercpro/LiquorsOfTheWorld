@@ -3,9 +3,9 @@
 
 .quiz-question {
   width: 100%;
-  padding: 20px;
-  background-color: #fff;
-  border: 2px solid #ccc;
+  padding: 10px;
+  background-color: $color-white;
+  border: 2px solid $color-gray;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -13,32 +13,41 @@
     position: absolute;
     top: 50%;
     right: 0;
+    padding: 15px;
     transform: translate(-100px, -50%);
     align-items: flex-end;
     max-width: 800px;
   }
 
-  > .quiz-question-theme {
-    margin-bottom: 5px;
-    color: $color-gray;
-    font-size: $font-size-caption;
-    text-align: right;
+  > .quiz-question-theme-container {
+    display: flex;
+    justify-content: flex-end;
 
-    @include tablet {
-      font-size: $font-size-tablet-caption;
-    }
-
-    @include desktop {
-      font-size: $font-size-desktop-caption;
+    > .quiz-question-theme {
+      margin-bottom: 5px;
+      padding: 10px 20px;
+      border-radius: 4px;
+      color: $color-white;
+      background-color: $color-black;
+      font-size: $font-size-caption;
+      text-align: right;
+  
+      @include tablet {
+        font-size: $font-size-tablet-caption;
+      }
+  
+      @include desktop {
+        font-size: $font-size-desktop-caption;
+      }
     }
   }
 
   > .quiz-question-title {
     margin-top: 0;
+    margin-bottom: 20px;
   }
 
   > form {
-    margin-top: 20px;
 
     > .checkbox {
       display: flex;
@@ -51,6 +60,15 @@
 
       > label {
         display: block;
+        font-size: $font-size-subtitle;
+      
+        @include tablet {
+          font-size: $font-size-tablet-subtitle;
+        }
+      
+        @include desktop {
+          font-size: $font-size-desktop-subtitle;
+        }
       }
   
       > input[type='radio'] {
@@ -63,7 +81,7 @@
       margin-top: 20px;
       padding: 20px;
       background-color: $color-primary;
-      color: #fff;
+      color: $color-white;
       border: none;
       border-radius: 4px;
       cursor: pointer;

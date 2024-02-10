@@ -33,7 +33,10 @@ const QuizQuestion = ({ id, question, theme, options }: Question) => {
 
   return (
     <div className='quiz-question'>
-      <p className='quiz-question-theme'>{theme}</p>
+      <div className='quiz-question-theme-container'>
+        <p className='quiz-question-theme'>{theme}</p>
+      </div>
+
       <h2 className='quiz-question-title'>{question}</h2>
 
       <form onSubmit={handleSubmit}>

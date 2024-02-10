@@ -44,6 +44,19 @@ h1, h2, h3 {
   }
 }
 
+h4, h5, h6 {
+  font-family: $special-font-stack;
+  font-size: $font-size-subtitle;
+
+  @include tablet {
+    font-size: $font-size-tablet-subtitle;
+  }
+
+  @include desktop {
+    font-size: $font-size-desktop-subtitle;
+  }
+}
+
 body, input, button {
   font-family: $font-stack;
   font-size: $font-size;

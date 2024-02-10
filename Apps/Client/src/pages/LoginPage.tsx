@@ -28,14 +28,16 @@ const LoginPage: React.FC = () => {
     <div className='login-page'>
       <div className='login-box'>
         <h1 className='login-title'>Liquors of the World</h1>
-        <p className='login-text'>Welcome to tonight's quiz! Are you ready?</p>
+        <p className='login-text'>Welcome to tonight's quiz!</p>
+        <p className='login-text'>Get ready to showcase your mastery of the world's spirits in an epic quiz, where only the savviest liquor aficionados will manage to claim victory...</p>
+        <p className='login-text'>Are you ready?</p>
         
         <form className='login-form' onSubmit={(e) => handleSubmit(e)}>
           <input
             className='login-username'
             type='text'
             value={username}
-            placeholder='Username?'
+            placeholder='Enter a username'
             onChange={(e) => setUsername(e.target.value)}
             required
           />
@@ -44,7 +46,7 @@ const LoginPage: React.FC = () => {
             className='login-password'
             type='password'
             value={password}
-            placeholder='Password?'
+            placeholder='Enter a password'
             onChange={(e) => setPassword(e.target.value)}
             required
           />
