@@ -1,6 +1,7 @@
 @import '../styles/mq';
+@import '../styles/variables';
 
-.page {
+.login-page {
   position: relative;
   display: flex;
   justify-content: center;
@@ -10,7 +11,7 @@
   background: url('../../public/img/background-2.jpg') no-repeat center center;
   background-size: cover;
 
-  > .box {
+  > .login-box {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -30,12 +31,12 @@
       width: 500px;
     }
 
-    > .text {
+    > .login-text {
       margin-bottom: 20px;
       font-size: 22px;
     }
 
-    > .form {
+    > .login-form {
       display: flex;
       flex-direction: column;
       width: 100%;
@@ -51,8 +52,23 @@
         text-align: center;
       }
 
-      > button {
+      > .login-error {
+        margin-bottom: 10px;
+        color: red;
+      }
+
+      
+      > .login-input {
         width: 100%;
+        padding: 20px 20px;
+      }
+
+      > .login-button {
+        width: 100%;
+        padding: 20px 20px;
+        background-color: $color-primary;
+        color: #fff;
+        font-weight: bold;
       }
     }
   }

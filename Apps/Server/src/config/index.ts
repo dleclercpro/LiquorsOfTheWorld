@@ -5,7 +5,7 @@ import TimeDuration from '../models/units/TimeDuration';
 import { TimeUnit } from '../types';
 
 export const ENV = loadEnvironment();
-export const LOGGING_LEVEL = (process.env.LOGGING_LEVEL ?? 'debug') as Level;
+export const LOGGING_LEVEL = (process.env.LOGGING_LEVEL ?? 'trace') as Level;
 
 export const HOST = process.env.HOST!;
 export const PORT = parseNumberText(process.env.PORT);

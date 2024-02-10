@@ -1,11 +1,15 @@
 import http from 'http';
 import process from 'process';
 import express, { Router } from 'express';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { APP_NAME } from '../constants';
-import { PORT } from '../config';
+import { ENV, PORT } from '../config';
 import logger from '../logger';
+import { Environment } from '../types';
+import RequestMiddleware from '../middleware/RequestMiddleware';
+import ErrorMiddleware from '../middleware/ErrorMiddleware';
 
 // There can only be one app server: singleton!
 class AppServer {
@@ -39,11 +43,22 @@ class AppServer {
         // Enable HTTP response compression
         this.app.use(compression());
 
+        // Allow all origins in dev mode
+        if (ENV === Environment.Development) {
+            this.app.use(cors({ origin: '*' }));
+        }
+
+        // Log every request
+        this.app.use(RequestMiddleware);
+
         // Public static files
         this.app.use('/', express.static('public'));
     
         // Define server's API endpoints
         this.app.use('/', router);
+
+        // Final error middleware
+        this.app.use(ErrorMiddleware);
     }
 
     public getApp() {

@@ -12,9 +12,10 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
     public constructor(options: DatabaseOptions) {
         super(options);
 
-        // Instanciate Redis client
+        const url = this.getURI();
+
         this.client = createClient({
-            url: this.getURI(),
+            url,
             socket: {
                 reconnectStrategy: this.retry,
             },
@@ -110,7 +111,7 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
     }
 
     public async has(key: string) {
-        return this.get(key) !== null;
+        return await this.get(key) !== null;
     }
 
     public async get(key: string) {
