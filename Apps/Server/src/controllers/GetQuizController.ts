@@ -1,13 +1,10 @@
 import { RequestHandler } from 'express';
 import { successResponse } from '../utils/calls';
-import quiz from '../../data/quiz.json';
-import logger from '../logger';
+import QUIZ from '../../data/quiz.json';
 
 const GetQuizController: RequestHandler = async (req, res, next) => {
     try {
-        logger.debug(`Trying to read quiz...`);
-
-        return res.json(successResponse(quiz));
+        return res.json(successResponse(QUIZ));
 
     } catch (err: any) {
         next(err);

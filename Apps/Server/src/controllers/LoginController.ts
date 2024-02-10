@@ -5,9 +5,10 @@ import logger from '../logger';
 import { REDIS_DB } from '..';
 import { errorResponse, successResponse } from '../utils/calls';
 import { Auth } from '../types';
-import { N_SALT_ROUNDS } from '../config';
+import { COOKIE_NAME, N_SALT_ROUNDS } from '../config';
+import { encodeCookie } from '../utils/cookies';
 
-type RequestBody = Auth;
+
 
 const addUser = async (username: string, password: string) => {
     logger.trace(`Trying to add user: ${username}`);
@@ -31,40 +32,46 @@ const addUser = async (username: string, password: string) => {
 
 
 
-const validatePassword = async (password: string, hashedPassword: string) => {
-
-    // Compare the entered password to the stored hash
-    await new Promise<void>((resolve, reject) => {
+const isPasswordValid = async (password: string, hashedPassword: string) => {
+    const isValid = await new Promise<boolean>((resolve, reject) => {
         bcrypt.compare(password, hashedPassword, (err, result) => {
             if (err) {
                 logger.error('CANNOT_VALIDATE_PASSWORD', err);
-                return reject();
+                return reject(false);
             }
 
             if (!result) {
-                return reject(new Error('INVALID_PASSWORD'));
+                return reject(false);
             }
 
-            resolve();
+            resolve(true);
         });
     });
+
+    return isValid;
 }
 
 
+
+type RequestBody = Auth;
 
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
         const { username, password } = req.body as RequestBody;
 
-        if (await REDIS_DB.has(`user:${username}`)) {
-            const hashedPassword = await REDIS_DB.get(`user:${username}`) ?? '';
+        if (await REDIS_DB.has(`users:${username}`)) {
+            const hashedPassword = await REDIS_DB.get(`users:${username}`) as string;
 
-            await validatePassword(password, hashedPassword);
+            if (!await isPasswordValid(password, hashedPassword)) {
+                throw new Error('INVALID_PASSWORD');
+            }
         } else {
             await addUser(username, password);
         }
         
-        return res.json(successResponse());
+        return res
+            .cookie(COOKIE_NAME, await encodeCookie({ username, password }))
+            .json(successResponse());
 
     } catch (err: any) {
         if (err instanceof Error) {
@@ -75,7 +82,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
         // their credentials are invalid
         if (['USER_ALREADY_EXISTS', 'INVALID_PASSWORD'].includes(err.message)) {
             return res
-                .status(HttpStatusCode.FORBIDDEN)
+                .status(HttpStatusCode.UNAUTHORIZED)
                 .json(errorResponse('INVALID_CREDENTIALS'));
         }
 

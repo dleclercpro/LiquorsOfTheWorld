@@ -1,22 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './QuizQuestion.scss';
+import { useNavigate } from 'react-router-dom';
+import { CallVote } from '../calls/data/CallVote';
 
 type Question = {
-  checked: boolean,
+  id: number,
   question: string,
   theme: string,
   options: string[],
-  onChange: () => void,
-  onSubmit: () => void,
 }
 
-const QuizQuestion = ({ checked, question, theme, options, onChange, onSubmit }: Question) => {
+const QuizQuestion = ({ id, question, theme, options }: Question) => {
+  const [selectedOption, setSelectedOption] = useState('');
+  const navigate = useNavigate();
+
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSelectedOption(e.target.value);
+  }
+
+  const handleSubmit: React.ChangeEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    
+    await new CallVote({
+      questionId: id,
+      vote: options.findIndex(option => option === selectedOption),
+    }).execute();
+
+    navigate(`/quiz/${id + 1}`);
+  }
+
   return (
     <div className='quiz-question'>
       <p className='quiz-question-theme'>{theme}</p>
       <h2 className='quiz-question-title'>{question}</h2>
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit}>
         {options.map((option, index) => (
           <div className='checkbox' key={index}>
             <input
@@ -24,14 +42,14 @@ const QuizQuestion = ({ checked, question, theme, options, onChange, onSubmit }:
               id={`option-${index}`}
               name='option'
               value={option}
-              checked={checked}
-              onChange={onChange}
+              checked={selectedOption === option}
+              onChange={handleChange}
             />
             <label htmlFor={`option-${index}`}>{option}</label>
           </div>
         ))}
 
-        <button type='submit'>Next Question</button>
+        <button type='submit' disabled={selectedOption === ''}>Next Question</button>
       </form>
     </div>
   );

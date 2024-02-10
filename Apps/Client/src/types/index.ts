@@ -25,6 +25,11 @@ export interface SuccessResponse<Data = void> {
   data: Data,
 }
 
+export type QuizVote = {
+  questionId: number,
+  vote: number,
+}
+
 export type QuizQuestionResponse = {
   theme: string,
   answer: number,

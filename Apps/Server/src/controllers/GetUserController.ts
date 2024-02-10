@@ -4,7 +4,7 @@ import { REDIS_DB } from '..';
 import { errorResponse, successResponse } from '../utils/calls';
 import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
 
-const GetPlayerController: RequestHandler = async (req, res, next) => {
+const GetUserController: RequestHandler = async (req, res, next) => {
     try {
         const users = await REDIS_DB.getAll();
 
@@ -29,4 +29,4 @@ const GetPlayerController: RequestHandler = async (req, res, next) => {
     }
 }
 
-export default GetPlayerController;
+export default GetUserController;

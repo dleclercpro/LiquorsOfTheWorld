@@ -1,4 +1,5 @@
-import { DB_HOST, DB_NAME, DB_PORT, ENV, PORT } from './config'; // Do NOT remove!
+import _ from './types/Express'; // Do NOT remove!
+import { DB_HOST, DB_NAME, DB_PORT, ENV } from './config'; // Do NOT remove!
 import router from './routes';
 import logger from './logger';
 import APP_SERVER from './models/AppServer';

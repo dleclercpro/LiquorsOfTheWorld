@@ -30,7 +30,3 @@ export interface Comparable {
     greaterThanOrEquals(other: Comparable): boolean;
     greaterThan(other: Comparable): boolean;
 }
-
-export type User = {
-    email: string,
-}

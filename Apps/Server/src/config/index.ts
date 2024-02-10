@@ -24,6 +24,9 @@ export const CLIENT_HOST = process.env.CLIENT_HOST!;
 export const CLIENT_PORT = parseNumberText(process.env.CLIENT_PORT);
 export const CLIENT_ROOT = `http://${CLIENT_HOST}:${CLIENT_PORT}`;
 
+export const COOKIE_NAME = `liquors`;
+export const TOKEN_SECRET = process.env.TOKEN_SECRET!;
+
 export const N_SALT_ROUNDS = 10;
 
 export const N_QUIZ_QUESTIONS = 20;

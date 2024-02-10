@@ -22,6 +22,7 @@
     margin-bottom: 5px;
     color: $color-gray;
     font-size: $font-size-caption;
+    text-align: right;
 
     @include tablet {
       font-size: $font-size-tablet-caption;
@@ -69,6 +70,11 @@
 
       &:hover {
         background-color: $color-primary;
+      }
+
+      &:disabled {
+        background-color: $color-gray;
+        cursor: not-allowed;
       }
     }
   }

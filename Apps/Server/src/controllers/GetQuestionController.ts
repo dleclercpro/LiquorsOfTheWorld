@@ -10,13 +10,10 @@ const GetQuestionController: RequestHandler = async (req, res, next) => {
 
         if (questionId + 1 > N_QUIZ_QUESTIONS) {
             throw new Error('INVALID_QUESTION_INDEX');
-        } else {
-            logger.trace(`Question ID is valid: ${questionId + 1}/${N_QUIZ_QUESTIONS}`);
         }
 
         const { theme, question, options } = quiz[questionId];
 
-        logger.debug(`Trying to read quiz question ${questionId + 1}/${quiz.length}...`);
         return res.json(successResponse({ theme, question, options }));
 
     } catch (err: any) {
