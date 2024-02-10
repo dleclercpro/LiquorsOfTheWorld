@@ -1,9 +1,9 @@
-import { QuizVote } from '../../types/QuizTypes';
+import { Vote } from '../../types/QuizTypes';
 import CallPOST from '../base/CallPOST';
 
-export class CallVote extends CallPOST<QuizVote> {
+export class CallVote extends CallPOST<Vote> {
 
-    constructor(payload: QuizVote) {
+    constructor(payload: Vote) {
         super('Vote', `/quiz/${payload.questionId}`, payload);
     }
 };

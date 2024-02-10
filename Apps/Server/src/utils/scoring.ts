@@ -1,11 +1,9 @@
 import { REDIS_DB } from '..';
-import logger from '../logger';
+import { ANSWERS } from '../constants';
 import { getLastValue } from './array';
-import QUIZ from '../../data/quiz.json';
 import { sum } from './math';
 
 const SEPARATOR = '|';
-const ANSWERS = QUIZ.map(({ answer }) => answer);
 
 export const getAllVotes = async (): Promise<Record<string, number[]>> => {
     const rawVotes = await REDIS_DB.getKeysByPattern(`votes:*`);

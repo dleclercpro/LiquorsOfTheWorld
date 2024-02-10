@@ -1,22 +1,21 @@
 import './Scoreboard.scss';
-import { QuizScoreboard } from '../types/QuizTypes';
 import { useState, useEffect } from 'react';
 import { CallGetScores } from '../calls/data/CallGetScores';
 
-const Scoreboard = () => {
+const Scoreboard: React.FC = () => {
   const [scoreboard, setScoreboard] = useState<Record<string, number>>({});
   
   useEffect(() => {
-    const getScores = async () => {
+    const fetchScores = async () => {
       const { data } = await new CallGetScores().execute();
 
       return data;
     }
 
-    getScores().then((scores) => {
+    fetchScores().then((scores) => {
       setScoreboard(scores ?? scoreboard);
     });
-  }, []);
+  }, [scoreboard, setScoreboard]);
   
   return (
     <div className='scoreboard'>

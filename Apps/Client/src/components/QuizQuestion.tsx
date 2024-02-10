@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import './QuizQuestion.scss';
-import { useNavigate } from 'react-router-dom';
 import { CallVote } from '../calls/data/CallVote';
+import AppContext from '../states/AppContext';
 
 type Question = {
   id: number,
@@ -10,9 +10,9 @@ type Question = {
   options: string[],
 }
 
-const QuizQuestion = ({ id, question, theme, options }: Question) => {
+const QuizQuestion: React.FC<Question> = ({ id, question, theme, options }) => {
   const [selectedOption, setSelectedOption] = useState('');
-  const navigate = useNavigate();
+  const { showAnswer } = useContext(AppContext);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSelectedOption(e.target.value);
@@ -21,14 +21,14 @@ const QuizQuestion = ({ id, question, theme, options }: Question) => {
   const handleSubmit: React.ChangeEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    const response = await new CallVote({
+    await new CallVote({
       questionId: id,
       vote: options.findIndex(option => option === selectedOption),
     }).execute();
 
-    console.log(response);
-
-    navigate(`/quiz/${id + 1}`);
+    showAnswer();
+    
+    setSelectedOption('');
   }
 
   return (
@@ -54,7 +54,7 @@ const QuizQuestion = ({ id, question, theme, options }: Question) => {
           </div>
         ))}
 
-        <button type='submit' disabled={selectedOption === ''}>Next Question</button>
+        <button type='submit' disabled={selectedOption === ''}>Submit my answer</button>
       </form>
     </div>
   );

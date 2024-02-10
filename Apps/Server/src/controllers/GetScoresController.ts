@@ -8,8 +8,6 @@ const GetScoresController: RequestHandler = async (req, res, next) => {
     try {
         const scores = await computeScores();
 
-        logger.debug(`Scoreboard: ${scores}`);
-
         return res.json(successResponse(scores));
 
     } catch (err: any) {

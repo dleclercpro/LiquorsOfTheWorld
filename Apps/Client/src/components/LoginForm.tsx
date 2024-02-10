@@ -16,8 +16,7 @@ const LoginForm: React.FC = () => {
       await new CallLogIn(username, password).execute();
 
       // Go to last question answered in the quiz
-      // FIXME
-      navigate(`/quiz/0`);
+      navigate(`/quiz`);
 
     } catch (err: any) {
       const { message } = err;

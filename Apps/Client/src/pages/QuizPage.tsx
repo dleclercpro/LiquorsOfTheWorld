@@ -1,44 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './QuizPage.scss';
-import { CallGetQuestion } from '../calls/data/CallGetQuestion';
-import { useParams } from 'react-router-dom';
 import HamburgerMenu from '../components/HamburgerMenu';
 import QuizQuestion from '../components/QuizQuestion';
-import { QuizQuestionResponse } from '../types/QuizTypes';
 
 type QuizPageProps = {
-
+  id: number,
+  theme: string,
+  question: string,
+  options: string[],
 }
 
 const QuizPage: React.FC<QuizPageProps> = (props) => {
-  const params = useParams();
-  const questionId = Number(params.questionId)
-
-  const [data, setData] = useState<QuizQuestionResponse>();
-
-  // Fetch page data on load once
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await new CallGetQuestion(questionId).execute();
-  
-      setData(res.data);
-    };
-    
-    fetchData();
-  }, [questionId]);
-
-  if (!data) {
-    return null;
-  }
+  const { id, theme, question, options } = props;
 
   return (
     <React.Fragment>
       <HamburgerMenu />
       <QuizQuestion
-        id={questionId}
-        theme={data.theme}
-        question={data.question}
-        options={data.options}
+        id={id}
+        theme={theme}
+        question={question}
+        options={options}
       /> 
     </React.Fragment>
   );

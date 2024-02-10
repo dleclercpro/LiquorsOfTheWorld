@@ -20,6 +20,7 @@
   > .quiz-question-theme-container {
     display: flex;
     justify-content: flex-end;
+    margin-bottom: 20px;
 
     > .quiz-question-theme {
       margin-bottom: 5px;
@@ -48,23 +49,39 @@
   > form {
 
     > .checkbox {
-      display: inline-block;
+      display: block;
       margin-right: 10px;
+    
+      @include tablet {
+        display: inline-block;
+      }
 
       &:not(:last-of-type) {
-        margin-bottom: 10px;        
+        margin-bottom: 5px;
+
+        @include tablet {
+          margin-bottom: 0;
+        }
       }
 
       > label {
         display: inline-block;
+        width: 100%;
         background-color: #f2f2f2;
         color: $color-black;
-        padding: 10px 20px;
+        padding: 20px;
         border: 2px solid #d1d3d4;
         border-radius: 25px;
         cursor: pointer;
         transition: background-color 0.3s, color 0.3s;
+        text-align: center;
         @include font-subtitle;
+
+        @include tablet {
+          width: auto;
+          padding: 10px 30px;
+          text-align: left;
+        }
 
         &:hover {
           background-color: $color-grey;
@@ -88,13 +105,14 @@
       margin-top: 20px;
       padding: 20px;
       background-color: $color-primary;
+      transition: background-color 0.3s, color 0.3s;
       color: $color-white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
 
       &:hover {
-        background-color: $color-primary;
+        background-color: darken($color-primary, 10%);
       }
 
       &:disabled {

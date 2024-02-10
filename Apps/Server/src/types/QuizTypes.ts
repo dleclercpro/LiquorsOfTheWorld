@@ -1,3 +1,10 @@
+export type QuizQuestionJSON = {
+  theme: string,
+  question: string,
+  options: string[],
+  answer: number,
+}
+
 export type QuizVote = {
   questionId: number,
   vote: number,

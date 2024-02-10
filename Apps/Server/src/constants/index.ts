@@ -1,7 +1,10 @@
 import { name, version, label } from '../../package.json';
 import { Environment } from '../types';
+import quiz from '../../data/quiz.json';
 
 export const ENVIRONMENTS = Object.values(Environment);
+export const QUIZ = quiz;
+export const ANSWERS = QUIZ.map(({ answer }) => answer);
 
 export const PACKAGE_NAME = name;
 export const PACKAGE_VERSION = version;

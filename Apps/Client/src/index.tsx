@@ -4,6 +4,7 @@ import './index.scss';
 import App from './App';
 import { ENV } from './utils/env';
 import { setLogLevel } from './utils/logging';
+import { AppContextProvider } from './states/AppContextProvider';
 
 setLogLevel(ENV);
 
@@ -13,6 +14,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App />
+      <AppContextProvider>
+        <App />
+      </AppContextProvider>
   </React.StrictMode>
 );
