@@ -7,51 +7,7 @@ import { errorResponse, successResponse } from '../utils/calls';
 import { Auth } from '../types';
 import { COOKIE_NAME, N_SALT_ROUNDS } from '../config';
 import { encodeCookie } from '../utils/cookies';
-
-
-
-const addUser = async (username: string, password: string) => {
-    logger.trace(`Trying to add user: ${username}`);
-
-    // Hash the password
-    const hashedPassword = await new Promise<string>((resolve, reject) => {
-        bcrypt.hash(password, N_SALT_ROUNDS, async (err, hash) => {
-            if (err) {
-                logger.fatal(`Error while hashing password for user: ${username}`, err);
-                reject(new Error('CANNOT_HASH_PASSWORD'));
-            }
-
-            resolve(hash);
-        });
-    });
-
-    await REDIS_DB.set(`user:${username}`, hashedPassword);
-
-    logger.trace(`Added user to database: ${username}`);
-}
-
-
-
-const isPasswordValid = async (password: string, hashedPassword: string) => {
-    const isValid = await new Promise<boolean>((resolve, reject) => {
-        bcrypt.compare(password, hashedPassword, (err, result) => {
-            if (err) {
-                logger.error('CANNOT_VALIDATE_PASSWORD', err);
-                return reject(false);
-            }
-
-            if (!result) {
-                return reject(false);
-            }
-
-            resolve(true);
-        });
-    });
-
-    return isValid;
-}
-
-
+import { isPasswordValid, createUser } from '../utils/auth';
 
 type RequestBody = Auth;
 
@@ -66,7 +22,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
                 throw new Error('INVALID_PASSWORD');
             }
         } else {
-            await addUser(username, password);
+            await createUser(username, password);
         }
         
         return res

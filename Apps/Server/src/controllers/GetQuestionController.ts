@@ -1,7 +1,6 @@
 import { RequestHandler } from 'express';
 import { successResponse } from '../utils/calls';
 import quiz from '../../data/quiz.json';
-import logger from '../logger';
 import { N_QUIZ_QUESTIONS } from '../config';
 
 const GetQuestionController: RequestHandler = async (req, res, next) => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.scss';
-import { CallLogin } from '../calls/auth/CallLogin';
+import { CallLogIn } from '../calls/auth/CallLogIn';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      await new CallLogin(username, password).execute();
+      await new CallLogIn(username, password).execute();
 
       navigate(`/quiz/0`);
 

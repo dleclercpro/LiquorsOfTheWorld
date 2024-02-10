@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { HttpStatusCode } from '../types/HTTPTypes';
 import logger from '../logger';
 
-const ReadyController: RequestHandler = async (req, res) => {
+const ReadyController: RequestHandler = async (req, res, next) => {
     try {
         const status = HttpStatusCode.OK;
         
@@ -12,8 +12,7 @@ const ReadyController: RequestHandler = async (req, res) => {
     } catch (err: any) {
         logger.error(err);
 
-        // Unknown error
-        return res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
+        next(err);
     }
 }
 
