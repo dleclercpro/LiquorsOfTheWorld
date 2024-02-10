@@ -1,0 +1,59 @@
+@import '../styles/mq';
+
+.page {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px 10px;
+  background: url('../../public/img/background-2.jpg') no-repeat center center;
+  background-size: cover;
+
+  > .box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: #fff;
+
+    @include desktop {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translate(-100px, -50%);
+      align-items: flex-end;
+      width: 500px;
+    }
+
+    > .text {
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
+    > .form {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      @include desktop {
+        align-items: flex-end;
+      }
+
+      > input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      > button {
+        width: 100%;
+      }
+    }
+  }
+}
