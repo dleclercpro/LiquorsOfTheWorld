@@ -24,5 +24,5 @@ export const createUser = async (username: string, password: string) => {
 }
 
 export const getAllUsers = async () => {
-    return REDIS_DB.get(`users`);
+    return REDIS_DB.getKeysByPattern(`users:*`);
 }

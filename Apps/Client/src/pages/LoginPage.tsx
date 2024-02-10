@@ -1,30 +1,8 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import './LoginPage.scss';
-import { CallLogIn } from '../calls/auth/CallLogIn';
 import LoginForm from '../components/LoginForm';
 
 const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      await new CallLogIn(username, password).execute();
-
-      navigate(`/quiz/0`);
-
-    } catch (err: any) {
-      const { message } = err;
-
-      setError(message);
-    }
-  };
-
   return (
     <div className='login-page'>
       <div className='login-box'>

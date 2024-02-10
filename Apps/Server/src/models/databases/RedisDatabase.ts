@@ -6,6 +6,9 @@ import { DB_RETRY_CONNECT_MAX, DB_RETRY_CONNECT_MAX_DELAY } from '../../config';
 import { TimeUnit } from '../../types';
 import logger from '../../logger';
 
+// Define a type for the callback function
+type Callback = (err: Error | null, keys?: string[]) => void;
+
 class RedisDatabase extends Database implements IKeyValueDatabase<string> {
     protected client: RedisClientType;
     
@@ -127,6 +130,24 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
         const values = await Promise.all(keys.map((key) => this.client.get(key)));
 
         return values;
+    }
+
+    public async getKeysByPattern(pattern: string) {
+        let cursor = 0;
+        let keys: string[] = [];
+
+        do {
+            const reply = await this.client.scan(cursor, {
+                MATCH: this.getPrefixedKey(pattern),
+                COUNT: 100,
+            });
+
+            cursor = reply.cursor;
+            keys.push(...reply.keys);
+
+          } while (cursor !== 0);
+    
+        return keys;
     }
 
     public async set(key: string, value: string) {

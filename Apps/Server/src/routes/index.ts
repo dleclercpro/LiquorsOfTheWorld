@@ -26,7 +26,7 @@ router.put('/auth', LoginController);
 router.delete('/auth', [AuthMiddleware], LogoutController);
 
 router.get('/user', [AuthMiddleware], GetUserController);
-router.get('/score', [AuthMiddleware], GetScoresController);
+router.get('/scores', [AuthMiddleware], GetScoresController);
 router.get('/quiz', [AuthMiddleware], GetQuizController);
 router.get('/quiz/:questionId', [AuthMiddleware], GetQuestionController);
 router.post('/quiz/:questionId', [AuthMiddleware], VoteController);
