@@ -13,15 +13,11 @@
 html, body {
   height: 100%;
   width: 100%;
+  min-width: 320px;
   line-height: 1.5;
   font-family: $font-stack;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-#root {
-  height: 100%;
-  width: 100%;
 }
 
 body {
@@ -29,9 +25,21 @@ body {
   color: #333;
 }
 
+#root {
+  height: 100%;
+  width: 100%;
+}
 
-button {
-  font-weight: bold;
+h1, h2, h3 {
+  font-size: $font-size-title;
+
+  @include tablet {
+    font-size: $font-size-tablet-title;
+  }
+
+  @include desktop {
+    font-size: $font-size-desktop-title;
+  }
 }
 
 body, input, button {
@@ -44,4 +52,8 @@ body, input, button {
   @include desktop {
     font-size: $font-size-desktop;
   }
+}
+
+button {
+  font-weight: bold;
 }

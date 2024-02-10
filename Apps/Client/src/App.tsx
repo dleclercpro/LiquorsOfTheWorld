@@ -7,12 +7,14 @@ import QuizPage from './pages/QuizPage';
 function App() {
   return (
     <div className='app'>
-      <Router>
-          <Routes>
-            <Route path='/quiz/:questionId' element={<QuizPage />} />
-            <Route path='/' element={<LoginPage />} />
-          </Routes>
-      </Router>
+      <div className='app-container'>
+        <Router>
+            <Routes>
+              <Route path='/quiz/:questionId' element={<QuizPage />} />
+              <Route path='/' element={<LoginPage />} />
+            </Routes>
+        </Router>
+      </div>
     </div>
   );
 }
