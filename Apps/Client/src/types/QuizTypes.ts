@@ -11,3 +11,5 @@ export type QuizQuestionResponse = {
 }
 
 export type QuizResponse = QuizQuestionResponse[];
+
+export type QuizScoreboard = Record<string, number>;

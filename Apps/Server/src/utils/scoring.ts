@@ -42,4 +42,6 @@ export const computeScores = async () => {
             [username]: userScore,
         };
     }, {});
+
+    return scores;
 }

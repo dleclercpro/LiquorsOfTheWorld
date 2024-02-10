@@ -64,20 +64,12 @@
         border-radius: 25px;
         cursor: pointer;
         transition: background-color 0.3s, color 0.3s;
-        font-size: $font-size-subtitle;
+        @include font-subtitle;
 
         &:hover {
           background-color: $color-grey;
           color: #333;
-        }
-      
-        @include tablet {
-          font-size: $font-size-tablet-subtitle;
-        }
-      
-        @include desktop {
-          font-size: $font-size-desktop-subtitle;
-        }
+        }      
       }
   
       > input[type='radio'] {

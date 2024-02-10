@@ -1,0 +1,44 @@
+@import '../styles/common';
+
+.scoreboard {
+  width: 100%;
+  max-width: 800px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  > .scoreboard-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
+  > .scoreboard-table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+
+    th, td {
+        width: 50%;
+        border: 1px solid #ddd;
+        text-align: center;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        color: #333;
+        @include font-subtitle;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    td {
+        background-color: #f9f9f9;
+    }
+  }
+}

@@ -6,9 +6,11 @@ import { computeScores } from '../utils/scoring';
 
 const GetScoresController: RequestHandler = async (req, res, next) => {
     try {
-        await computeScores();
+        const scores = await computeScores();
 
-        return res.json(successResponse());
+        logger.debug(`Scoreboard: ${scores}`);
+
+        return res.json(successResponse(scores));
 
     } catch (err: any) {
         if (err instanceof Error) {

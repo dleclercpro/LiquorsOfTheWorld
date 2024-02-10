@@ -1,16 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './ScoresPage.scss';
-import { CallGetScores } from '../calls/data/CallGetScores';
+import HamburgerMenu from '../components/HamburgerMenu';
+import Scoreboard from '../components/Scoreboard';
 
 const ScoresPage: React.FC = () => {
-  useEffect(() => {
-    new CallGetScores().execute();
-  }, []);
-
   return (
-    <div className='scores-page'>
-
-    </div>
+    <React.Fragment>
+      <HamburgerMenu />
+      <Scoreboard />
+    </React.Fragment>
   );
 };
 
