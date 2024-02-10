@@ -8,6 +8,7 @@ import GetQuizController from '../controllers/GetQuizController';
 import GetQuestionController from '../controllers/GetQuestionController';
 import VoteController from '../controllers/VoteController';
 import AuthMiddleware from '../middleware/AuthMiddleware';
+import GetScoresController from '../controllers/GetScoresController';
 
 
 
@@ -25,6 +26,7 @@ router.put('/auth', LoginController);
 router.delete('/auth', [AuthMiddleware], LogoutController);
 
 router.get('/user', [AuthMiddleware], GetUserController);
+router.get('/score', [AuthMiddleware], GetScoresController);
 router.get('/quiz', [AuthMiddleware], GetQuizController);
 router.get('/quiz/:questionId', [AuthMiddleware], GetQuestionController);
 router.post('/quiz/:questionId', [AuthMiddleware], VoteController);

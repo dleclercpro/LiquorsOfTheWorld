@@ -1,13 +1,13 @@
-import bcrypt from 'bcrypt';
 import { RequestHandler } from 'express';
 import { HttpStatusCode } from '../types/HTTPTypes';
 import logger from '../logger';
 import { REDIS_DB } from '..';
 import { errorResponse, successResponse } from '../utils/calls';
 import { Auth } from '../types';
-import { COOKIE_NAME, N_SALT_ROUNDS } from '../config';
+import { COOKIE_NAME } from '../config';
 import { encodeCookie } from '../utils/cookies';
-import { isPasswordValid, createUser } from '../utils/auth';
+import { isPasswordValid } from '../utils/math';
+import { createUser } from '../utils/users';
 
 type RequestBody = Auth;
 

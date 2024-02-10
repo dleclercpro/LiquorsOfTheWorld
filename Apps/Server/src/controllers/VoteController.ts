@@ -35,7 +35,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         logger.debug(`Votes of '${username}' so far: ${votes}`);
 
         // Store votes in DB
-        await REDIS_DB.set(`votes:${username}`, votes.join(SEPARATOR))
+        await REDIS_DB.set(`votes:${username}`, votes.join(SEPARATOR));
 
         return res.json(successResponse());
 

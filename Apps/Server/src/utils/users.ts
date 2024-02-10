@@ -3,27 +3,6 @@ import { REDIS_DB } from '..';
 import { N_SALT_ROUNDS } from '../config';
 import logger from '../logger';
 
-export const isPasswordValid = async (password: string, hashedPassword: string) => {
-  const isValid = await new Promise<boolean>((resolve, reject) => {
-      bcrypt.compare(password, hashedPassword, (err, isEqualAfterHash) => {
-          if (err) {
-              logger.error('CANNOT_VALIDATE_PASSWORD', err);
-              resolve(false);
-              return;
-          }
-
-          if (!isEqualAfterHash) {
-              resolve(false);
-              return;
-          }
-
-          resolve(true);
-      });
-  });
-
-  return isValid;
-}
-
 export const createUser = async (username: string, password: string) => {
   logger.trace(`Adding user to Redis DB: ${username}`);
 
@@ -42,4 +21,8 @@ export const createUser = async (username: string, password: string) => {
   await REDIS_DB.set(`users:${username}`, hashedPassword);
 
   logger.trace(`Added user to database: ${username}`);
+}
+
+export const getAllUsers = async () => {
+    return REDIS_DB.get(`users`);
 }

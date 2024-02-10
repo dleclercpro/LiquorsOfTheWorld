@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 const EPSILON: number = Math.pow(10, -9);
 
 export const equals = (x: number, y: number, epsilon: number = EPSILON) => {
@@ -21,3 +23,23 @@ export const getAverage = (arr: number[]) => {
 export const getRange = (size: number) => {
     return [...Array(size).keys()];
 }
+
+export const isPasswordValid = async (password: string, hashedPassword: string) => {
+    const isValid = await new Promise<boolean>((resolve, reject) => {
+        bcrypt.compare(password, hashedPassword, (err, isEqualAfterHash) => {
+            if (err) {
+                resolve(false);
+                return;
+            }
+  
+            if (!isEqualAfterHash) {
+                resolve(false);
+                return;
+            }
+  
+            resolve(true);
+        });
+    });
+  
+    return isValid;
+  }

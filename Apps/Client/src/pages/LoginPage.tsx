@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.scss';
 import { CallLogIn } from '../calls/auth/CallLogIn';
+import LoginForm from '../components/LoginForm';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -32,31 +33,7 @@ const LoginPage: React.FC = () => {
         <p className='login-text'>Get ready to showcase your mastery of the world's spirits in an epic quiz, where only the savviest liquor aficionados will manage to claim victory...</p>
         <p className='login-text'>Are you ready?</p>
         
-        <form className='login-form' onSubmit={(e) => handleSubmit(e)}>
-          <input
-            className='login-username'
-            type='text'
-            value={username}
-            placeholder='Enter a username'
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-
-          <input
-            className='login-password'
-            type='password'
-            value={password}
-            placeholder='Enter a password'
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          {error && <p className='login-error'>{error}</p>}
-
-          <button className='login-button' type='submit'>
-            Let's go!
-          </button>
-        </form>
+        <LoginForm />
       </div>
     </div>
   );

@@ -1,11 +1,9 @@
-@import '../styles/mq';
-@import '../styles/variables';
+@import '../styles/common';
 
 .quiz-question {
   width: 100%;
-  padding: 10px;
-  background-color: $color-white;
-  border: 2px solid $color-gray;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -13,7 +11,7 @@
     position: absolute;
     top: 50%;
     right: 0;
-    padding: 15px;
+    padding: 15px 25px;
     transform: translate(-100px, -50%);
     align-items: flex-end;
     max-width: 800px;
@@ -25,7 +23,7 @@
 
     > .quiz-question-theme {
       margin-bottom: 5px;
-      padding: 10px 20px;
+      padding: 10px;
       border-radius: 4px;
       color: $color-white;
       background-color: $color-black;
@@ -50,17 +48,28 @@
   > form {
 
     > .checkbox {
-      display: flex;
-      justify-content: left;
-      align-items: center;
+      display: inline-block;
+      margin-right: 10px;
 
       &:not(:last-of-type) {
         margin-bottom: 10px;        
       }
 
       > label {
-        display: block;
+        display: inline-block;
+        background-color: #f2f2f2;
+        color: $color-black;
+        padding: 10px 20px;
+        border: 2px solid #d1d3d4;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
         font-size: $font-size-subtitle;
+
+        &:hover {
+          background-color: $color-grey;
+          color: #333;
+        }
       
         @include tablet {
           font-size: $font-size-tablet-subtitle;
@@ -72,7 +81,13 @@
       }
   
       > input[type='radio'] {
-        margin-right: 10px;
+        display: none;
+
+        &:checked + label {
+          background-color: $color-secondary;
+          color: $color-white;
+          border-color: $color-secondary;
+        }
       }
     }
     
@@ -91,7 +106,7 @@
       }
 
       &:disabled {
-        background-color: $color-gray;
+        background-color: $color-grey;
         cursor: not-allowed;
       }
     }
