@@ -1,16 +1,15 @@
-import { DB_HOST, DB_PORT, ENV, PORT } from './config'; // Do NOT remove!
+import { DB_HOST, DB_NAME, DB_PORT, ENV, PORT } from './config'; // Do NOT remove!
 import router from './routes';
 import logger from './logger';
 import APP_SERVER from './models/AppServer';
 import RedisDatabase from './models/databases/RedisDatabase';
-import { APP_NAME } from './constants';
 
 
 
 export const REDIS_DB = new RedisDatabase({
     host: DB_HOST,
     port: DB_PORT,
-    name: APP_NAME,
+    name: DB_NAME,
 });
 
 

@@ -83,7 +83,10 @@ class Call {
         // Execute API call
         const response = await fetchWithTimeout(this.url, this.params, this.timeout)
             .then(res => res.json())
-            .catch(err => err.data);
+            .catch(err => {
+                console.error(err);
+                return err.data
+            });
 
         // API calls should always return the same JSON data structure:
         // - Code
@@ -93,6 +96,7 @@ class Call {
 
         // Everything went fine on the server
         if (code >= 0) {
+            console.log(`Successful response: ${response}`);
             return response;
         }
 

@@ -9,10 +9,10 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
     try {
-      await new CallAddPlayer(user).execute();
+      const res = await new CallAddPlayer(user).execute();
+      console.warn(`Here:`);
+      console.warn(res);
 
       navigate(`/quiz`);
 
@@ -31,14 +31,25 @@ const LoginPage: React.FC = () => {
         
         <form className='login-form' onSubmit={(e) => handleSubmit(e)}>
           <input
-            className='login-input'
+            className='login-username'
             type='text'
             value={user}
-            placeholder='What shall be your username?'
+            placeholder='Username?'
             onChange={(e) => setUser(e.target.value)}
             required
           />
+
+          <input
+            className='login-password'
+            type='password'
+            value={user}
+            placeholder='Password?'
+            onChange={(e) => setUser(e.target.value)}
+            required
+          />
+
           {error && <p className='login-error'>{error}</p>}
+
           <button className='login-button' type='submit'>Let's go!</button>
         </form>
       </div>

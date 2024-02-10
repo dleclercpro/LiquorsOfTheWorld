@@ -4,7 +4,9 @@ import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
 
 // Custom middleware function to log requests
 const ErrorMiddleware = async (err: Error, req: Request, res: Response, next: NextFunction) => {
-  logger.fatal(`An unexpected error occurred: ${err}`);
+  if (err instanceof Error) {
+    logger.fatal(`An unexpected error occurred: ${err.message}`);
+  }
 
   // Unknown error
   return res
