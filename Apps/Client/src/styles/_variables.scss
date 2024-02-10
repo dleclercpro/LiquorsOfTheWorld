@@ -1,19 +1,26 @@
 // Colors
 $color-primary: #800020;
 $color-secondary: #C0A080;
+$color-black: #000;
+$color-white: #fff;
+$color-gray: #aaa;
 
 // Font families
-$font-stack: Helvetica, sans-serif;
-$special-font-stack: 'Merriweather', serif;
+$font-stack: 'Merriweather', sans-serif;
+$special-font-stack: 'Pacifico', serif;
 
 // Font sizes
-$font-size: 16px;
-$font-size-tablet: 18px;
-$font-size-desktop: 20px;
+$font-size: 14px;
+$font-size-tablet: 16px;
+$font-size-desktop: 18px;
 
-$font-size-title: 24px;
-$font-size-tablet-title: 27px;
-$font-size-desktop-title: 30px;
+$font-size-title: 36px;
+$font-size-tablet-title: 38px;
+$font-size-desktop-title: 48px;
+
+$font-size-caption: 14px;
+$font-size-tablet-caption: 16px;
+$font-size-desktop-caption: 18px;
 
 // Widths
 $min-width: 320px;

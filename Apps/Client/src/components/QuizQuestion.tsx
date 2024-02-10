@@ -2,25 +2,36 @@ import React from 'react';
 import './QuizQuestion.scss';
 
 type Question = {
+  checked: boolean,
   question: string,
+  theme: string,
   options: string[],
+  onChange: () => void,
   onSubmit: () => void,
 }
 
-const QuizQuestion = ({ question, options, onSubmit }: Question) => {
-  console.log(options);
-  
+const QuizQuestion = ({ checked, question, theme, options, onChange, onSubmit }: Question) => {
   return (
     <div className='quiz-question'>
-      <h2>{question}</h2>
+      <p className='quiz-question-theme'>{theme}</p>
+      <h2 className='quiz-question-title'>{question}</h2>
+
       <form onSubmit={onSubmit}>
         {options.map((option, index) => (
-          <div key={index}>
-            <input type='radio' id={`option-${index}`} name='option' value={option} />
+          <div className='checkbox' key={index}>
+            <input
+              type='radio'
+              id={`option-${index}`}
+              name='option'
+              value={option}
+              checked={checked}
+              onChange={onChange}
+            />
             <label htmlFor={`option-${index}`}>{option}</label>
           </div>
         ))}
-        <button type='submit'>Submit</button>
+
+        <button type='submit'>Next Question</button>
       </form>
     </div>
   );

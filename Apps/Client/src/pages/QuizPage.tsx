@@ -4,6 +4,7 @@ import { CallGetQuestion } from '../calls/data/CallGetQuestion';
 import { QuizQuestionResponse } from '../types';
 import { useParams } from 'react-router-dom';
 import HamburgerMenu from '../components/HamburgerMenu';
+import QuizQuestion from '../components/QuizQuestion';
 
 type QuizPageProps = {
 
@@ -47,26 +48,14 @@ const QuizPage: React.FC<QuizPageProps> = (props) => {
   return (
     <React.Fragment>
       <HamburgerMenu />
-
-      <div className='quiz-question'>
-        <h2>{data.question}</h2>
-        <form onSubmit={handleSubmit}>
-          {data.options.map((option, index) => (
-            <div className='checkbox' key={index}>
-              <input
-                type='radio'
-                id={`option-${index}`}
-                name='option'
-                value={option}
-                checked={selectedOption === option}
-                onChange={handleOptionChange}
-              />
-              <label htmlFor={`option-${index}`}>{option}</label>
-            </div>
-          ))}
-          <button type='submit'>Next Question</button>
-        </form>
-      </div>
+      <QuizQuestion
+        checked={false}
+        theme={data.theme}
+        question={data.question}
+        options={data.options}
+        onChange={() => {}}
+        onSubmit={() => {}}
+      /> 
     </React.Fragment>
   );
 }

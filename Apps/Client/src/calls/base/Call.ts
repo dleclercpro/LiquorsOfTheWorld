@@ -1,6 +1,6 @@
 import fetchWithTimeout from './Fetch';
-import getCookie from './Cookie';
 import { ServerResponse, SuccessResponse } from '../../types';
+import { API_ROOT } from '../../config';
 
 /**
  * This is a class that models API calls.
@@ -16,7 +16,7 @@ class Call<RequestData = void, ResponseData = void> {
 
     constructor(name: string, url: string, method: string, payload?: RequestData, timeout?: number) {
         this.name = name;
-        this.url = url;
+        this.url = `${API_ROOT}${url}`;
         this.method = method;
         this.payload = payload;
         this.timeout = timeout !== undefined ? timeout : 5_000;
@@ -58,7 +58,6 @@ class Call<RequestData = void, ResponseData = void> {
 
     prepareHeaders() {
         this.headers = {
-            'X-CSRFToken': getCookie('csrftoken'),
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         };
@@ -76,7 +75,7 @@ class Call<RequestData = void, ResponseData = void> {
     }
 
     async execute() {
-        console.trace(`Executing API call: ${this.name}`);
+        console.trace(`Executing API call '${this.name}': ${this.url}`);
 
         // Set API call parameters
         this.prepare();
@@ -84,7 +83,11 @@ class Call<RequestData = void, ResponseData = void> {
         // Execute API call
         const response = await fetchWithTimeout(this.url, this.params, this.timeout)
             .then(res => res.json())
-            .catch(err => err.data);
+            .catch(err => {
+                console.error(`There was an error while executing API call '${this.name}': ${err.message}`);
+
+                return err.data;
+            });
 
         // API calls should always return the same JSON data structure:
         // - Code

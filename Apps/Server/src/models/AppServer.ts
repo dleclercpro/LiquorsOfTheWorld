@@ -5,7 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { APP_NAME } from '../constants';
-import { ENV, PORT } from '../config';
+import { CLIENT_ROOT, ENV, PORT } from '../config';
 import logger from '../logger';
 import { Environment } from '../types';
 import RequestMiddleware from '../middleware/RequestMiddleware';
@@ -45,7 +45,12 @@ class AppServer {
 
         // Allow all origins in dev mode
         if (ENV === Environment.Development) {
-            this.app.use(cors({ origin: '*' }));
+            logger.debug(`Enabling CORS...`);
+
+            this.app.use(cors({
+                origin: CLIENT_ROOT,
+                credentials: true,
+            }));
         }
 
         // Log every request
