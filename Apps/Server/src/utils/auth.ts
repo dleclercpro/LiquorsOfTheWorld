@@ -5,14 +5,16 @@ import logger from '../logger';
 
 export const isPasswordValid = async (password: string, hashedPassword: string) => {
   const isValid = await new Promise<boolean>((resolve, reject) => {
-      bcrypt.compare(password, hashedPassword, (err, result) => {
+      bcrypt.compare(password, hashedPassword, (err, isEqualAfterHash) => {
           if (err) {
               logger.error('CANNOT_VALIDATE_PASSWORD', err);
-              return reject(false);
+              resolve(false);
+              return;
           }
 
-          if (!result) {
-              return reject(false);
+          if (!isEqualAfterHash) {
+              resolve(false);
+              return;
           }
 
           resolve(true);

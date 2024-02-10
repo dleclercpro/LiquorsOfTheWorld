@@ -1,6 +1,6 @@
 import fetchWithTimeout from './Fetch';
-import { ServerResponse, SuccessResponse } from '../../types';
 import { API_ROOT } from '../../config';
+import { ErrorResponse, SuccessResponse } from '../../types/CallTypes';
 
 /**
  * This is a class that models API calls.
@@ -83,25 +83,20 @@ class Call<RequestData = void, ResponseData = void> {
         // Execute API call
         const response = await fetchWithTimeout(this.url, this.params, this.timeout)
             .then(res => res.json())
-            .catch(err => {
-                console.error(`There was an error while executing API call '${this.name}': ${err.message}`);
+            .catch(err => err.data);
 
-                return err.data;
-            });
-
-        // API calls should always return the same JSON data structure:
-        // - Code
-        // - Data [optional]
-        // - Error [optional]
-        const { code, error } = response as ServerResponse<ResponseData>;
+        // There was an error on the server
+        if (response && response.error) {
+            return Promise.reject(new Error(response.error));
+        }
 
         // Everything went fine on the server
-        if (code !== undefined && code >= 0) {
+        if (response && Number.isInteger(response.code) && response.code >= 0) {
             return response as SuccessResponse<ResponseData>;
         }
-        // Either the error happened on the server, or there was issues communicating with the latter
 
-        const err = error ?? 'FETCH_ERROR';
+        // There were other issues
+        const err = 'UNKNOWN_ERROR';
         console.warn(`Error in call [${this.name}]: ${err}`);
 
         // Something went wrong, but we let the processing happen further down the line

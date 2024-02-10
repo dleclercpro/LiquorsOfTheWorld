@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './QuizPage.scss';
 import { CallGetQuestion } from '../calls/data/CallGetQuestion';
-import { QuizQuestionResponse } from '../types';
 import { useParams } from 'react-router-dom';
 import HamburgerMenu from '../components/HamburgerMenu';
 import QuizQuestion from '../components/QuizQuestion';
+import { QuizQuestionResponse } from '../types/QuizTypes';
 
 type QuizPageProps = {
 

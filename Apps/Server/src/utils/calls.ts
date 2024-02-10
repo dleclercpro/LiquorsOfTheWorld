@@ -1,13 +1,4 @@
-export interface SuccessResponse<Data> {
-  code: number,
-  data?: Data,
-}
-
-export interface ErrorResponse<Data> {
-  code: number,
-  error: string,
-  data?: Data,
-}
+import { SuccessResponse, ErrorResponse } from '../types/CallTypes';
 
 export const successResponse = <Data> (data?: Data, code: number = 0): SuccessResponse<Data> => ({
   code,

@@ -15,10 +15,16 @@ const LoginController: RequestHandler = async (req, res, next) => {
     try {
         const { username, password } = req.body as RequestBody;
 
-        if (await REDIS_DB.has(`users:${username}`)) {
-            const hashedPassword = await REDIS_DB.get(`users:${username}`) as string;
+        logger.trace(`Login attempt for: ${username}`);
 
-            if (!await isPasswordValid(password, hashedPassword)) {
+        if (await REDIS_DB.has(`users:${username}`)) {
+            logger.trace(`User exists: validating password...`);
+
+            const hashedPassword = await REDIS_DB.get(`users:${username}`) as string;
+            const isAuthorized = await isPasswordValid(password, hashedPassword);
+
+            if (!isAuthorized) {
+                logger.warn(`Failed login attempt for: ${username}`);
                 throw new Error('INVALID_PASSWORD');
             }
         } else {

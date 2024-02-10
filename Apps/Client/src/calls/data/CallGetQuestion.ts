@@ -1,4 +1,4 @@
-import { QuizQuestionResponse } from '../../types';
+import { QuizQuestionResponse } from '../../types/QuizTypes';
 import CallGET from '../base/CallGET';
 
 export type RequestDataCallGetQuestion = {

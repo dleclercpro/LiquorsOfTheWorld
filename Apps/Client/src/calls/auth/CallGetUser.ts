@@ -1,7 +1,6 @@
 import CallGET from '../base/CallGET';
-import { SuccessResponse } from '../../types';
 
-export class CallGetUser extends CallGET<void, SuccessResponse> {
+export class CallGetUser extends CallGET {
 
     constructor() {
         super('GetUser', `/user`);

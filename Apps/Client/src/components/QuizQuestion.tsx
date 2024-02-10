@@ -20,11 +20,13 @@ const QuizQuestion = ({ id, question, theme, options }: Question) => {
 
   const handleSubmit: React.ChangeEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    
-    await new CallVote({
+
+    const response = await new CallVote({
       questionId: id,
       vote: options.findIndex(option => option === selectedOption),
     }).execute();
+
+    console.log(response);
 
     navigate(`/quiz/${id + 1}`);
   }

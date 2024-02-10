@@ -1,5 +1,5 @@
+import { CallType } from '../../types/CallTypes';
 import Call from './Call';
-import { CallType } from '../../types';
 
 class CallDELETE<RequestData = void, ResponseData = void> extends Call<RequestData, ResponseData> {
 
