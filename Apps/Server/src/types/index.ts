@@ -4,6 +4,11 @@ export enum Environment {
     Production = 'production',
 }
 
+export interface Auth {
+    user: string,
+    password: string,
+}
+
 export enum TimeUnit {
     Days = 'd',
     Hours = 'h',

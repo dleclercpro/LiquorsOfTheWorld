@@ -23,6 +23,7 @@
     "minimist": "^1.2.8",
     "pino": "^8.15.0",
     "pino-pretty": "^10.2.0",
+    "redis": "^4.6.13",
     "ws": "^8.14.2"
   },
   "devDependencies": {
