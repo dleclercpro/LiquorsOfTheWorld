@@ -1,19 +1,20 @@
 import fetchWithTimeout from './Fetch';
 import getCookie from './Cookie';
+import { ServerResponse, SuccessResponse } from '../../types';
 
 /**
  * This is a class that models API calls.
  */
-class Call {
+class Call<RequestData = void, ResponseData = void> {
     private name: string;
     private url: string;
     private method: string;
     private timeout: number;
-    private payload: object | undefined;
+    private payload: RequestData | undefined;
     private headers: HeadersInit;
     private params: RequestInit;
 
-    constructor(name: string, url: string, method: string, payload?: object, timeout?: number) {
+    constructor(name: string, url: string, method: string, payload?: RequestData, timeout?: number) {
         this.name = name;
         this.url = url;
         this.method = method;
@@ -31,7 +32,7 @@ class Call {
         return this.method;
     }
 
-    getPayload(): object | undefined {
+    getPayload(): RequestData | undefined {
         return this.payload;
     }
 
@@ -47,7 +48,7 @@ class Call {
         this.method = method;
     }
 
-    setPayload = (payload: object) => {
+    setPayload = (payload: RequestData) => {
         this.payload = payload;
     }
 
@@ -83,24 +84,20 @@ class Call {
         // Execute API call
         const response = await fetchWithTimeout(this.url, this.params, this.timeout)
             .then(res => res.json())
-            .catch(err => {
-                console.error(err);
-                return err.data
-            });
+            .catch(err => err.data);
 
         // API calls should always return the same JSON data structure:
         // - Code
         // - Data [optional]
         // - Error [optional]
-        const { code, error } = response;
+        const { code, error } = response as ServerResponse<ResponseData>;
 
         // Everything went fine on the server
-        if (code >= 0) {
-            console.log(`Successful response: ${response}`);
-            return response;
+        if (code !== undefined && code >= 0) {
+            return response as SuccessResponse<ResponseData>;
         }
-
         // Either the error happened on the server, or there was issues communicating with the latter
+
         const err = error ?? 'FETCH_ERROR';
         console.warn(`Error in call [${this.name}]: ${err}`);
 

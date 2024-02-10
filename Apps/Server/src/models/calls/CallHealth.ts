@@ -1,10 +1,10 @@
-import { Service } from '../../types/ServiceTypes';
+import { API_ROOT } from '../../config';
 
 class CallHealth {
     protected url: string;
 
-    public constructor(service: Service) {
-        this.url = `${service.uri}/health`;
+    public constructor() {
+        this.url = `${API_ROOT}/health`;
     }
 
     public async execute() {

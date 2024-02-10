@@ -6,10 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  padding: 20px 10px;
-  background: url('../../public/img/background-2.jpg') no-repeat center center;
-  background-size: cover;
+  height: 100%;
 
   > .login-box {
     display: flex;
@@ -63,6 +60,7 @@
         background-color: $color-primary;
         color: #fff;
         font-weight: bold;
+        cursor: pointer;
       }
     }
   }

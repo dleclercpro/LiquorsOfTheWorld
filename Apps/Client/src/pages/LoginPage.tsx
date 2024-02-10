@@ -5,14 +5,15 @@ import { CallAddPlayer } from '../calls/auth/CallAddPlayer';
 
 const LoginPage: React.FC = () => {
   const [user, setUser] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     try {
-      const res = await new CallAddPlayer(user).execute();
-      console.warn(`Here:`);
-      console.warn(res);
+      await new CallAddPlayer(user, password).execute();
 
       navigate(`/quiz`);
 
@@ -42,15 +43,17 @@ const LoginPage: React.FC = () => {
           <input
             className='login-password'
             type='password'
-            value={user}
+            value={password}
             placeholder='Password?'
-            onChange={(e) => setUser(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
 
           {error && <p className='login-error'>{error}</p>}
 
-          <button className='login-button' type='submit'>Let's go!</button>
+          <button className='login-button' type='submit'>
+            Let's go!
+          </button>
         </form>
       </div>
     </div>

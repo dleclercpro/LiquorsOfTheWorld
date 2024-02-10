@@ -1,12 +1,13 @@
+import { QuizQuestionResponse } from '../../types';
 import CallGET from '../base/CallGET';
 
-export class CallGetQuestion extends CallGET {
+export type RequestDataCallGetQuestion = {
+    questionId: number,
+};
 
-    constructor(question: number = 0) {
-        super('GetQuestion', `/question`);
+export class CallGetQuestion extends CallGET<RequestDataCallGetQuestion, QuizQuestionResponse> {
 
-        this.setPayload({
-            question,
-        });
+    constructor(questionId: number = 0) {
+        super('GetQuestion', `/quiz/${questionId}`);
     }
 };

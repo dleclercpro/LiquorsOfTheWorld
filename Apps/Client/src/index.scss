@@ -19,9 +19,19 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  height: 100%;
+  width: 100%;
+}
+
 body {
   background-color: #f4f4f4;
   color: #333;
+}
+
+
+button {
+  font-weight: bold;
 }
 
 body, input, button {

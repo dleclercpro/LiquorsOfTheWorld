@@ -7,7 +7,7 @@ const GetQuizController: RequestHandler = async (req, res, next) => {
     try {
         logger.debug(`Trying to read quiz...`);
 
-        return res.json(successResponse(quiz.map(({ theme, question }) => ({ theme, question, }), {})));
+        return res.json(successResponse(quiz));
 
     } catch (err: any) {
         next(err);

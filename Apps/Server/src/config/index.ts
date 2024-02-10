@@ -11,6 +11,9 @@ export const LOGGING_LEVEL = (process.env.LOGGING_LEVEL ?? 'trace') as Level;
 export const HOST = process.env.HOST!;
 export const PORT = parseNumberText(process.env.PORT);
 
+export const API_VERSION = 1;
+export const API_ROOT = `/api/v${API_VERSION}`;
+
 export const DB_HOST = process.env.DB_HOST!;
 export const DB_PORT = parseNumberText(process.env.DB_PORT);
 export const DB_NAME = PACKAGE_NAME;

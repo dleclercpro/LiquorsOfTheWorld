@@ -5,6 +5,11 @@ export enum CallType {
   DELETE = 'DELETE',
 }
 
+export type Auth = {
+  user: string,
+  password: string,
+}
+
 
 
 // Server responses
@@ -13,3 +18,18 @@ export interface ServerResponse<Data = void> {
   error?: string,
   data: Data,
 }
+
+export interface SuccessResponse<Data = void> {
+  code: number,
+  error?: string,
+  data: Data,
+}
+
+export type QuizQuestionResponse = {
+  theme: string,
+  answer: number,
+  question: string,
+  options: string[],
+}
+
+export type QuizResponse = QuizQuestionResponse[];

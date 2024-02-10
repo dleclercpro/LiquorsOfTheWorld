@@ -3,14 +3,13 @@ import { HttpStatusCode } from '../types/HTTPTypes';
 import logger from '../logger';
 import { REDIS_DB } from '..';
 import { errorResponse, successResponse } from '../utils/calls';
+import { Auth } from '../types';
 
-type RequestBody = {
-    user: string,
-};
+type RequestBody = Auth;
 
 const AddPlayerController: RequestHandler = async (req, res, next) => {
     try {
-        const { user } = req.body as RequestBody;
+        const { user, password } = req.body as RequestBody;
         
         logger.trace(`Trying to add user: ${user}`);
 
@@ -18,9 +17,9 @@ const AddPlayerController: RequestHandler = async (req, res, next) => {
             throw new Error('USER_ALREADY_EXISTS');
         }
 
-        await REDIS_DB.set(`user:${user}`, new Date().toISOString());
+        await REDIS_DB.set(`user:${user}`, password);
 
-        logger.info(`Added user to database: ${user}`);
+        logger.trace(`Added user to database: ${user}`);
         
         return res.json(successResponse());
 
