@@ -22,4 +22,6 @@ export const DB_RETRY_CONNECT_MAX_DELAY = new TimeDuration(3, TimeUnit.Seconds);
 export const DB_RETRY_CONNECT_TIMEOUT = new TimeDuration(5, TimeUnit.Seconds);
 export const DB_RETRY_CONNECT_MAX = 5;
 
+export const N_SALT_ROUNDS = 10;
+
 export const N_QUIZ_QUESTIONS = 20;

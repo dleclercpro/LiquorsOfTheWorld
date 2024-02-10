@@ -2,27 +2,28 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import './QuizPage.scss';
 import { CallGetQuestion } from '../calls/data/CallGetQuestion';
 import { QuizQuestionResponse } from '../types';
+import { useParams } from 'react-router-dom';
 
 type QuizPageProps = {
 
 }
 
 const QuizPage: React.FC<QuizPageProps> = (props) => {
+  const { questionId } = useParams();
+  
   const [data, setData] = useState<QuizQuestionResponse>();
   const [selectedOption, setSelectedOption] = useState<string>();
 
-  const fetchData = async () => {
-    const res = await new CallGetQuestion(0).execute();
-
-    console.log(res.data);
-
-    setData(res.data);
-  };
-
   // Fetch page data on load once
   useEffect(() => {
+    const fetchData = async () => {
+      const res = await new CallGetQuestion(Number(questionId)).execute();
+  
+      setData(res.data);
+    };
+    
     fetchData();
-  }, []);
+  }, [questionId]);
 
   function onNextQuestion(option: any) {
     throw new Error('Function not implemented.');
@@ -34,7 +35,7 @@ const QuizPage: React.FC<QuizPageProps> = (props) => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    // Send the selected option to the parent component
+
     onNextQuestion(selectedOption);
   };
 

@@ -6,14 +6,14 @@ import QuizPage from './pages/QuizPage';
 
 function App() {
   return (
-    <Router>
-      <div className='app'>
-        <Routes>
-          <Route path='/' element={<LoginPage />} />
-          <Route path='/quiz' element={<QuizPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <div className='app'>
+      <Router>
+          <Routes>
+            <Route path='/quiz/:questionId' element={<QuizPage />} />
+            <Route path='/' element={<LoginPage />} />
+          </Routes>
+      </Router>
+    </div>
   );
 }
 

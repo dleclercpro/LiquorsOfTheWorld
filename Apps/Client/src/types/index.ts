@@ -6,7 +6,7 @@ export enum CallType {
 }
 
 export type Auth = {
-  user: string,
+  username: string,
   password: string,
 }
 

@@ -26,9 +26,9 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
         let uri = this.getAnonymousURI();
 
         if (this.auth) {
-            const { user, password } = this.auth;
+            const { username, password } = this.auth;
 
-            uri = uri.replace('[USER]', encodeURIComponent(user));
+            uri = uri.replace('[USER]', encodeURIComponent(username));
             uri = uri.replace('[PASS]', encodeURIComponent(password));
         }
 

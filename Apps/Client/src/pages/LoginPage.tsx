@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.scss';
-import { CallAddPlayer } from '../calls/auth/CallAddPlayer';
+import { CallLogin } from '../calls/auth/CallLogin';
 
 const LoginPage: React.FC = () => {
-  const [user, setUser] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -13,9 +13,9 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      await new CallAddPlayer(user, password).execute();
+      await new CallLogin(username, password).execute();
 
-      navigate(`/quiz`);
+      navigate(`/quiz/0`);
 
     } catch (err: any) {
       const { message } = err;
@@ -34,9 +34,9 @@ const LoginPage: React.FC = () => {
           <input
             className='login-username'
             type='text'
-            value={user}
+            value={username}
             placeholder='Username?'
-            onChange={(e) => setUser(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
 

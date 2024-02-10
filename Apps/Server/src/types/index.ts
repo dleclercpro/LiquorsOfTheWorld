@@ -5,7 +5,7 @@ export enum Environment {
 }
 
 export interface Auth {
-    user: string,
+    username: string,
     password: string,
 }
 
