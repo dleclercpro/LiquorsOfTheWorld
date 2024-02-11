@@ -21,9 +21,9 @@ function App() {
     fetchQuizData().then((data) => {
       setQuizData(data ?? []);
     });
-  }, [quizData, setQuizData]);
+  }, []);
 
-  if (quizData.length === 0) {
+  if (quizData.length === 0 || currentQuestionId === quizData.length) {
     return null;
   }
 

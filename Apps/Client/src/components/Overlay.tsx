@@ -8,6 +8,7 @@ interface Props {
 
 const Overlay: React.FC<Props> = ({ children }) => {
   const { currentQuestionId, setCurrentQuestionId, quizData, shouldShowAnswer, hideAnswer } = useContext(AppContext);
+  const nextQuestionId = currentQuestionId + 1;
 
   const questionData = quizData[currentQuestionId];
 
@@ -15,15 +16,20 @@ const Overlay: React.FC<Props> = ({ children }) => {
 
   const handleClick = () => {
     hideAnswer();
-    setCurrentQuestionId(currentQuestionId + 1);
+    setCurrentQuestionId(nextQuestionId);
   }
+
+
+  const text = nextQuestionId + 1 > quizData.length ? `See results` : `Next question (${nextQuestionId + 1}/${quizData.length})`;
 
   return (
     <div id='overlay' className={shouldShowAnswer ? '' : 'hidden'}>
       <div className='overlay-box'>
         <h2 className='overlay-title'>And the answer is...</h2>
         <p className='overlay-text'>{answer}</p>
-        <button className='overlay-buttom' onClick={handleClick}>Next question ({currentQuestionId + 2}/{quizData.length})</button>
+        <button className='overlay-buttom' onClick={handleClick}>
+          {text}
+        </button>
       </div>
     </div>
   );

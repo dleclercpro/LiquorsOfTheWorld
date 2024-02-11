@@ -15,26 +15,29 @@ const Scoreboard: React.FC = () => {
     fetchScores().then((scores) => {
       setScoreboard(scores ?? scoreboard);
     });
-  }, [scoreboard, setScoreboard]);
+  }, []);
   
   return (
     <div className='scoreboard'>
       <h2 className='scoreboard-title'>Scoreboard</h2>
       <table className='scoreboard-table'>
-        <tr>
-            <th>Username</th>
-            <th>Score</th>
-        </tr>
-        {Object.entries(scoreboard).map(([username, score]) => {
-          return (
-            <tr>
-                <td>{username}</td>
-                <td>{score}</td>
-            </tr>
-          );
-        })}
+        <thead>
+          <tr>
+              <th>Username</th>
+              <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(scoreboard).map(([username, score], index) => {
+            return (
+              <tr key={`scoreboard-row-${index}`}>
+                  <td>{username}</td>
+                  <td>{score}</td>
+              </tr>
+            );
+          })}
+        </tbody>
     </table>
-
     </div>
   );
 };

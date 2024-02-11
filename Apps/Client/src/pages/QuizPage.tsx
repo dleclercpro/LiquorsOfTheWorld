@@ -3,7 +3,7 @@ import './QuizPage.scss';
 import HamburgerMenu from '../components/HamburgerMenu';
 import QuizQuestion from '../components/QuizQuestion';
 import AppContext from '../states/AppContext';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 type QuizPageProps = {
   id: number,
@@ -15,10 +15,12 @@ type QuizPageProps = {
 const QuizPage: React.FC<QuizPageProps> = (props) => {
   const { id, theme, question, options } = props;
   const { currentQuestionId, quizData } = useContext(AppContext);
-  const navigate = useNavigate();
+  const nextQuestionId = currentQuestionId + 1;
 
-  if (currentQuestionId + 1 === quizData.length) {
-    navigate(`/scores`);
+  if (nextQuestionId === quizData.length) {
+    return (
+      <Navigate to={`/scores`} replace />
+    );
   }
 
   return (
