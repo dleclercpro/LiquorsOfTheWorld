@@ -3,7 +3,7 @@ version: '3.8'
 
 services:
   liquors-app:
-    image: dleclercpro/dummy-authenticator:latest
+    image: dleclercpro/liquors-quiz:latest
     container_name: liquors-app
     ports:
       - 8000:8000

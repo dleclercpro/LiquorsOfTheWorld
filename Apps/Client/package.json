@@ -1,5 +1,5 @@
 {
-  "name": "liquors-client",
+  "name": "liquors-quiz--client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
