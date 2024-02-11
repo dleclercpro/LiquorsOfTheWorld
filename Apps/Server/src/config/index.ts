@@ -27,13 +27,12 @@ export const CLIENT_PORT = parseNumberText(process.env.CLIENT_PORT);
 export const CLIENT_ROOT = `http://${CLIENT_HOST}:${CLIENT_PORT}`;
 
 // Redis
-export const DB_HOST = process.env.DB_HOST!;
-export const DB_PORT = parseNumberText(process.env.DB_PORT);
-export const DB_NAME = PACKAGE_NAME;
-
-export const DB_RETRY_CONNECT_MAX_DELAY = new TimeDuration(3, TimeUnit.Seconds);
-export const DB_RETRY_CONNECT_TIMEOUT = new TimeDuration(5, TimeUnit.Seconds);
-export const DB_RETRY_CONNECT_MAX = 5;
+export const REDIS_HOST = process.env.REDIS_HOST!;
+export const REDIS_PORT = parseNumberText(process.env.REDIS_PORT);
+export const REDIS_NAME = PACKAGE_NAME;
+export const REDIS_RETRY_CONNECT_MAX_DELAY = new TimeDuration(3, TimeUnit.Seconds);
+export const REDIS_RETRY_CONNECT_TIMEOUT = new TimeDuration(5, TimeUnit.Seconds);
+export const REDIS_RETRY_CONNECT_MAX = 5;
 
 // Authentication
 export const COOKIE_NAME = `liquors`;

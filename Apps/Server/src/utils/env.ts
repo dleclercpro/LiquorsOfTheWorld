@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
+import path from 'path';
 import { Environment } from '../types';
+import { doesFileExist } from './file';
 import { ENVIRONMENTS } from '../constants';
 
 
@@ -17,7 +19,14 @@ export const loadEnvironment = () => {
         process.exit(-1);
     }
 
-    dotenv.config();
+    const filepath = path.resolve(process.cwd(), `.env.${env}`);
+    if (!doesFileExist(filepath)) {
+        console.error(`Missing environment variables file: .env.${env}`)
+        process.exit(-1);
+    }
+    
+    dotenv.config({ path: filepath });
+    console.debug(`Loaded environment: ${env}\n`);
 
     return env;
 }

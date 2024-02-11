@@ -2,7 +2,7 @@ import { RedisClientType, createClient } from 'redis';
 import Database, { DatabaseOptions } from './Database';
 import { IKeyValueDatabase } from './MemoryDatabase';
 import TimeDuration from '../units/TimeDuration';
-import { DB_RETRY_CONNECT_MAX, DB_RETRY_CONNECT_MAX_DELAY } from '../../config';
+import { REDIS_RETRY_CONNECT_MAX, REDIS_RETRY_CONNECT_MAX_DELAY } from '../../config';
 import { TimeUnit } from '../../types';
 import logger from '../../logger';
 
@@ -98,12 +98,12 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
         }
         
         // End reconnecting with built in error
-        if (retries > DB_RETRY_CONNECT_MAX) {
+        if (retries > REDIS_RETRY_CONNECT_MAX) {
             return new Error('Number of connection retries exhausted. Stopping connection attempts.');
         }
 
         // Reconnect after ... ms
-        const wait = Math.min(new TimeDuration(retries + 0.5, TimeUnit.Seconds).toMs().getAmount(), DB_RETRY_CONNECT_MAX_DELAY.toMs().getAmount());
+        const wait = Math.min(new TimeDuration(retries + 0.5, TimeUnit.Seconds).toMs().getAmount(), REDIS_RETRY_CONNECT_MAX_DELAY.toMs().getAmount());
         logger.debug(`Waiting ${wait} ms...`);
 
         return wait;
