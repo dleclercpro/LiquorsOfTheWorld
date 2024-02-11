@@ -22,7 +22,20 @@
     justify-content: flex-end;
     margin-bottom: 20px;
 
+    > .quiz-question-index {
+      margin-right: 5px;
+      margin-bottom: 5px;
+      padding: 10px;
+      border-radius: 4px;
+      font-weight: bold;
+      text-align: right;
+      @include font-subtitle;
+    }
+
     > .quiz-question-theme {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       margin-bottom: 5px;
       padding: 10px;
       border-radius: 4px;

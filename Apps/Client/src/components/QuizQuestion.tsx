@@ -10,9 +10,9 @@ type Question = {
   options: string[],
 }
 
-const QuizQuestion: React.FC<Question> = ({ question, theme, options }) => {
+const QuizQuestion: React.FC<Question> = ({ index, question, theme, options }) => {
   const [selectedOption, setSelectedOption] = useState('');
-  const { questionIndex, showAnswer } = useContext(AppContext);
+  const { quiz, showAnswer } = useContext(AppContext);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSelectedOption(e.target.value);
@@ -22,7 +22,7 @@ const QuizQuestion: React.FC<Question> = ({ question, theme, options }) => {
     e.preventDefault();
 
     await new CallVote({
-      questionIndex,
+      questionIndex: index,
       vote: options.findIndex(option => option === selectedOption),
     }).execute();
 
@@ -31,9 +31,14 @@ const QuizQuestion: React.FC<Question> = ({ question, theme, options }) => {
     setSelectedOption('');
   }
 
+  if (quiz.length === 0) {
+    return null;
+  }
+
   return (
     <div className='quiz-question'>
       <div className='quiz-question-theme-container'>
+        <p className='quiz-question-index'>Question: {index + 1}/{quiz.length}</p>
         <p className='quiz-question-theme'>{theme}</p>
       </div>
 
