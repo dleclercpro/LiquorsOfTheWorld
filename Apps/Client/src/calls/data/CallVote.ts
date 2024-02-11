@@ -4,6 +4,6 @@ import CallPOST from '../base/CallPOST';
 export class CallVote extends CallPOST<Vote> {
 
     constructor(payload: Vote) {
-        super('Vote', `/api/quiz/${payload.questionId}`, payload);
+        super('Vote', `/api/quiz/${payload.questionIndex}`, payload);
     }
 };

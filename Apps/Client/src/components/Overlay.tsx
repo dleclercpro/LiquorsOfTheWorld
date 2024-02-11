@@ -1,26 +1,29 @@
 import { ReactNode, useContext } from 'react';
 import './Overlay.scss';
-import AppContext from '../states/AppContext';
+import AppContext from '../contexts/AppContext';
 
 interface Props {
   children?: ReactNode,
 }
 
-const Overlay: React.FC<Props> = ({ children }) => {
-  const { currentQuestionId, setCurrentQuestionId, quizData, shouldShowAnswer, hideAnswer } = useContext(AppContext);
-  const nextQuestionId = currentQuestionId + 1;
+const Overlay: React.FC<Props> = () => {
+  const { questionIndex, setQuestionIndex, quiz, shouldShowAnswer, hideAnswer } = useContext(AppContext);
+  const nextQuestionIndex = questionIndex + 1;
 
-  const questionData = quizData[currentQuestionId];
+  // Wait until quiz data has been fetched
+  if (quiz.length === 0) {
+    return null;
+  }
 
-  const answer = questionData.options[questionData.answer];
+  const question = quiz[questionIndex];
+  const answer = question.options[question.answer];
 
   const handleClick = () => {
     hideAnswer();
-    setCurrentQuestionId(nextQuestionId);
+    setQuestionIndex(nextQuestionIndex);
   }
 
-
-  const text = nextQuestionId + 1 > quizData.length ? `See results` : `Next question (${nextQuestionId + 1}/${quizData.length})`;
+  const text = nextQuestionIndex + 1 > quiz.length ? `See results` : `Next question (${nextQuestionIndex + 1}/${quiz.length})`;
 
   return (
     <div id='overlay' className={shouldShowAnswer ? '' : 'hidden'}>

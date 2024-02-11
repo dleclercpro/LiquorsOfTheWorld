@@ -1,20 +1,17 @@
 import { RequestHandler } from 'express';
 import logger from '../logger';
-import { REDIS_DB } from '..';
 import { errorResponse, successResponse } from '../utils/calls';
 import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
+import { User } from '../types/UserTypes';
 
 const GetUserController: RequestHandler = async (req, res, next) => {
     try {
-        const users = await REDIS_DB.getAll();
+        const user = req.user!;
 
-        logger.debug(`Users in database:`);
-
-        for (const user in users) {
-            logger.debug(`User: ${user}`);
-        }
-        
-        return res.json(successResponse(users));
+        return res.json(successResponse<User>({
+            username: user.username,
+            questionIndex: user.questionIndex,
+        }));
 
     } catch (err: any) {
         if (err instanceof Error) {

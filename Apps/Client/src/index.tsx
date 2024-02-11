@@ -4,7 +4,7 @@ import './index.scss';
 import App from './App';
 import { ENV } from './utils/env';
 import { setLogLevel } from './utils/logging';
-import { AppContextProvider } from './states/AppContextProvider';
+import { AppContextProvider } from './contexts/AppContextProvider';
 
 setLogLevel(ENV);
 

@@ -5,13 +5,13 @@ import { N_QUIZ_QUESTIONS } from '../config';
 
 const GetQuestionController: RequestHandler = async (req, res, next) => {
     try {
-        const questionId = Number(req.params.questionId);
+        const questionIndex = Number(req.params.questionIndex);
 
-        if (questionId + 1 > N_QUIZ_QUESTIONS) {
+        if (questionIndex + 1 > N_QUIZ_QUESTIONS) {
             throw new Error('INVALID_QUESTION_INDEX');
         }
 
-        const { theme, question, options } = quiz[questionId];
+        const { theme, question, options } = quiz[questionIndex];
 
         return res.json(successResponse({ theme, question, options }));
 

@@ -5,29 +5,40 @@ import QuizPage from './pages/QuizPage';
 import ScoresPage from './pages/ScoresPage';
 import Overlay from './components/Overlay';
 import { useContext, useEffect } from 'react';
-import AppContext from './states/AppContext';
+import AppContext from './contexts/AppContext';
 import { CallGetQuiz } from './calls/data/CallGetQuiz';
+import { CallGetUser } from './calls/auth/CallGetUser';
+import { User } from './types/UserTypes';
+import { Quiz } from './types/QuizTypes';
 
 function App() {
-  const { currentQuestionId, quizData, setQuizData } = useContext(AppContext);
+  const { setQuiz, setQuestionIndex } = useContext(AppContext);
 
   useEffect(() => {
     const fetchQuizData = async () => {
       const { data } = await new CallGetQuiz().execute();
 
-      return data;
+      return data! as Quiz;
     }
 
-    fetchQuizData().then((data) => {
-      setQuizData(data ?? []);
-    });
+    const fetchUserData = async () => {
+      const { data } = await new CallGetUser().execute();
+
+      return data! as User;
+    }
+
+    fetchQuizData()
+      .then((data) => {
+        setQuiz(data ?? []);
+      });
+
+    fetchUserData()
+      .then(({ questionIndex }) => {
+        console.log(`Question index: ${questionIndex}`);
+        setQuestionIndex(questionIndex);
+      });
+
   }, []);
-
-  if (quizData.length === 0 || currentQuestionId === quizData.length) {
-    return null;
-  }
-
-  const { theme, question, options } = quizData[currentQuestionId];
 
   return (
     <Router>
@@ -35,14 +46,7 @@ function App() {
           <Overlay />
           <div className='app-container'>
             <Routes>
-              <Route path='/quiz' element={
-                <QuizPage
-                  id={currentQuestionId}
-                  theme={theme}
-                  question={question}
-                  options={options}
-                />}
-              />
+              <Route path='/quiz' element={<QuizPage />} />
               <Route path='/scores' element={<ScoresPage />} />
               <Route path='/' element={<LoginPage />} />
               <Route path='*' element={<Navigate to='/' replace />} />

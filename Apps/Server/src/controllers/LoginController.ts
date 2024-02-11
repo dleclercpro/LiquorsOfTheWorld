@@ -8,31 +8,39 @@ import { COOKIE_NAME } from '../config';
 import { encodeCookie } from '../utils/cookies';
 import { isPasswordValid } from '../utils/math';
 import { createUser } from '../utils/users';
+import { DatabaseUser, User } from '../types/UserTypes';
+import { DEFAULT_USER } from '../constants';
 
 type RequestBody = Auth;
 
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
         const { username, password } = req.body as RequestBody;
-
         logger.trace(`Login attempt for: ${username}`);
+
+        let user: DatabaseUser = DEFAULT_USER;
 
         if (await REDIS_DB.has(`users:${username}`)) {
             logger.trace(`User exists: validating password...`);
 
-            const hashedPassword = await REDIS_DB.get(`users:${username}`) as string;
-            const isAuthorized = await isPasswordValid(password, hashedPassword);
+            user = JSON.parse(await REDIS_DB.get(`users:${username}`) as string) as DatabaseUser;
+            
+            const isAuthorized = await isPasswordValid(password, user.hashedPassword);
 
             if (!isAuthorized) {
                 logger.warn(`Failed login attempt for: ${username}`);
                 throw new Error('INVALID_PASSWORD');
             }
         } else {
-            await createUser(username, password);
+            user = await createUser(username, password);
         }
+
+        const cookie = await encodeCookie(user);
+
+        logger.info(user, `Setting cookie:`);
         
         return res
-            .cookie(COOKIE_NAME, await encodeCookie({ username, password }))
+            .cookie(COOKIE_NAME, cookie)
             .json(successResponse());
 
     } catch (err: any) {

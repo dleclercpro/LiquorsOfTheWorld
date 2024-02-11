@@ -4,40 +4,49 @@ import { REDIS_DB } from '..';
 import { errorResponse, successResponse } from '../utils/calls';
 import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
 import { QuizVote } from '../types/QuizTypes';
-
-const SEPARATOR = '|';
+import { COOKIE_NAME } from '../config';
+import { encodeCookie } from '../utils/cookies';
+import { getUserVotes } from '../utils/users';
+import { SEPARATOR } from '../constants';
 
 type RequestBody = QuizVote;
 
 const VoteController: RequestHandler = async (req, res, next) => {
     try {
         const { vote } = req.body as RequestBody;
-        const { username } = req.user!;
-        const questionId = Number(req.params.questionId);
+        const user = req.user!;
 
-        let votes: number[] = [];
+        const questionIndex = Number(req.params.questionIndex);
+        const nextQuestionIndex = questionIndex + 1;
 
         // Get votes from DB if they exist
-        if (await REDIS_DB.has(`votes:${username}`)) {
-            votes = (await REDIS_DB.get(`votes:${username}`))!
-                .split(SEPARATOR)
-                .map(Number);
-        }
+        let votes: number[] = [] = await getUserVotes(user.username);
 
-        logger.debug(`'${username}' voted on question #${questionId} for: ${vote}`);
-
-        if (votes.length === questionId) {
+        // Add vote to array
+        if (votes.length === questionIndex) {
             votes = [...votes, vote];
-        } else {
-            votes[questionId] = vote;
+        }
+        // Overwrite vote
+        else {
+            votes[questionIndex] = vote;
         }
 
-        logger.debug(`Votes of '${username}' so far: ${votes}`);
+        // Re-write the user object
+        const newUser = {
+            ...user,
+            questionIndex: nextQuestionIndex,
+        };
 
         // Store votes in DB
-        await REDIS_DB.set(`votes:${username}`, votes.join(SEPARATOR));
+        await REDIS_DB.set(`votes:${user.username}`, votes.join(SEPARATOR));
 
-        return res.json(successResponse());
+        // Update current question index for user in DB
+        await REDIS_DB.set(`users:${user.username}`, JSON.stringify(newUser));
+
+        // Update user cookie
+        return res
+            .cookie(COOKIE_NAME, await encodeCookie(newUser))
+            .json(successResponse());
 
     } catch (err: any) {
         if (err instanceof Error) {

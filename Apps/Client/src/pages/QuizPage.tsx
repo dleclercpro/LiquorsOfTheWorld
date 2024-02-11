@@ -2,32 +2,31 @@ import React, { useContext } from 'react';
 import './QuizPage.scss';
 import HamburgerMenu from '../components/HamburgerMenu';
 import QuizQuestion from '../components/QuizQuestion';
-import AppContext from '../states/AppContext';
+import AppContext from '../contexts/AppContext';
 import { Navigate } from 'react-router-dom';
 
-type QuizPageProps = {
-  id: number,
-  theme: string,
-  question: string,
-  options: string[],
-}
+const QuizPage: React.FC = () => {
+  const { questionIndex, quiz } = useContext(AppContext);
+  const nextQuestionIndex = questionIndex + 1;
 
-const QuizPage: React.FC<QuizPageProps> = (props) => {
-  const { id, theme, question, options } = props;
-  const { currentQuestionId, quizData } = useContext(AppContext);
-  const nextQuestionId = currentQuestionId + 1;
+  // Wait until quiz data has been fetched
+  if (quiz.length === 0) {
+    return null;
+  }
 
-  if (nextQuestionId === quizData.length) {
+  if (nextQuestionIndex === quiz.length) {
     return (
       <Navigate to={`/scores`} replace />
     );
   }
 
+  const { theme, question, options } = quiz[questionIndex];
+
   return (
     <React.Fragment>
       <HamburgerMenu />
       <QuizQuestion
-        id={id}
+        index={questionIndex}
         theme={theme}
         question={question}
         options={options}

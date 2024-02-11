@@ -1,13 +1,13 @@
-import { QuestionData } from '../../types/QuizTypes';
+import { Question } from '../../types/QuizTypes';
 import CallGET from '../base/CallGET';
 
 export type RequestDataCallGetQuestion = {
-    questionId: number,
+    questionIndex: number,
 };
 
-export class CallGetQuestion extends CallGET<RequestDataCallGetQuestion, QuestionData> {
+export class CallGetQuestion extends CallGET<RequestDataCallGetQuestion, Question> {
 
-    constructor(questionId: number = 0) {
-        super('GetQuestion', `/api/quiz/${questionId}`);
+    constructor(questionIndex: number) {
+        super('GetQuestion', `/api/quiz/${questionIndex}`);
     }
 };

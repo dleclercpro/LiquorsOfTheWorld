@@ -1,4 +1,8 @@
 export type User = {
     username: string,
-    password: string,
+    questionIndex: number,
+}
+
+export type DatabaseUser = User & {
+    hashedPassword: string,
 }

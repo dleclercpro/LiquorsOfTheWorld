@@ -1,6 +1,7 @@
 import { name, version, label } from '../../package.json';
 import { Environment } from '../types';
 import quiz from '../../data/quiz.json';
+import { DatabaseUser } from '../types/UserTypes';
 
 export const ENVIRONMENTS = Object.values(Environment);
 export const QUIZ = quiz;
@@ -13,5 +14,12 @@ export const APP_NAME = label;
 
 export const EPOCH_TIME_INIT = new Date(0);
 
+export const SEPARATOR = '|';
 export const NEW_LINE_REGEXP = /[\r\n]+/;
 export const NEW_LINE = '\n';
+
+export const DEFAULT_USER: DatabaseUser = {
+  username: '',
+  questionIndex: 0,
+  hashedPassword: '',
+};

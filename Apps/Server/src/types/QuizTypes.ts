@@ -6,7 +6,7 @@ export type QuizQuestionJSON = {
 }
 
 export type QuizVote = {
-  questionId: number,
+  questionIndex: number,
   vote: number,
 }
 

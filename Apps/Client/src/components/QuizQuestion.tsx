@@ -1,18 +1,18 @@
 import React, { useContext, useState } from 'react';
 import './QuizQuestion.scss';
 import { CallVote } from '../calls/data/CallVote';
-import AppContext from '../states/AppContext';
+import AppContext from '../contexts/AppContext';
 
 type Question = {
-  id: number,
+  index: number,
   question: string,
   theme: string,
   options: string[],
 }
 
-const QuizQuestion: React.FC<Question> = ({ id, question, theme, options }) => {
+const QuizQuestion: React.FC<Question> = ({ question, theme, options }) => {
   const [selectedOption, setSelectedOption] = useState('');
-  const { showAnswer } = useContext(AppContext);
+  const { questionIndex, showAnswer } = useContext(AppContext);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSelectedOption(e.target.value);
@@ -22,7 +22,7 @@ const QuizQuestion: React.FC<Question> = ({ id, question, theme, options }) => {
     e.preventDefault();
 
     await new CallVote({
-      questionId: id,
+      questionIndex,
       vote: options.findIndex(option => option === selectedOption),
     }).execute();
 
@@ -40,17 +40,17 @@ const QuizQuestion: React.FC<Question> = ({ id, question, theme, options }) => {
       <h2 className='quiz-question-title'>{question}</h2>
 
       <form onSubmit={handleSubmit}>
-        {options.map((option, index) => (
-          <div className='checkbox' key={index}>
+        {options.map((option, i) => (
+          <div className='checkbox' key={i}>
             <input
               type='radio'
-              id={`option-${index}`}
+              id={`option-${i}`}
               name='option'
               value={option}
               checked={selectedOption === option}
               onChange={handleChange}
             />
-            <label htmlFor={`option-${index}`}>{option}</label>
+            <label htmlFor={`option-${i}`}>{option}</label>
           </div>
         ))}
 
