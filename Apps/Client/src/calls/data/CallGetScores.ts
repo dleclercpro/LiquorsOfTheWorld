@@ -4,6 +4,6 @@ import CallGET from '../base/CallGET';
 export class CallGetScores extends CallGET<void, Scores> {
 
     constructor() {
-        super('GetScores', `/scores`);
+        super('GetScores', `/api/scores`);
     }
 };

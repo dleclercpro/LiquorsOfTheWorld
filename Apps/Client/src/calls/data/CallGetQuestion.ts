@@ -8,6 +8,6 @@ export type RequestDataCallGetQuestion = {
 export class CallGetQuestion extends CallGET<RequestDataCallGetQuestion, QuestionData> {
 
     constructor(questionId: number = 0) {
-        super('GetQuestion', `/quiz/${questionId}`);
+        super('GetQuestion', `/api/quiz/${questionId}`);
     }
 };
