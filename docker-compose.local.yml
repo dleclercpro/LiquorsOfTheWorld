@@ -1,0 +1,25 @@
+version: '3.8'
+
+
+services:
+  liquors-app:
+    image: dleclercpro/dummy-authenticator:latest
+    container_name: liquors-app
+    ports:
+      - 8000:8000
+    depends_on:
+      - liquors-redis
+    environment:
+      NODE_ENV: production
+
+  liquors-redis:
+    image: redis:latest
+    container_name: liquors-redis
+    # ports:
+    #   - 6379:6379
+    volumes:
+      - redis:/data
+
+
+volumes:
+  redis:
