@@ -21,7 +21,7 @@ export const PORT = parseNumberText(process.env.PORT);
 export const ROOT = `http://${HOST}:${PORT}`;
 
 // Client
-export const CLIENT_DIR = path.join(__dirname, `../../..`, `client`);
+export const CLIENT_DIR = path.join(__dirname, `../..`, `client`);
 export const CLIENT_HOST = process.env.CLIENT_HOST!;
 export const CLIENT_PORT = parseNumberText(process.env.CLIENT_PORT);
 export const CLIENT_ROOT = `http://${CLIENT_HOST}:${CLIENT_PORT}`;
