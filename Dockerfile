@@ -44,7 +44,7 @@ COPY --from=build-stage ./apps/Client/build ./client
 RUN npm install --omit=dev
 
 # Copy environment variables
-COPY ./Apps/Server/.env.production ./.env.production
+COPY ./Apps/Server/.env ./.env
 
 # Set the STOPSIGNAL
 STOPSIGNAL SIGTERM
