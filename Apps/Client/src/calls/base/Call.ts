@@ -1,6 +1,7 @@
 import fetchWithTimeout from './Fetch';
-import { API_ROOT } from '../../config';
+import { API_ROOT, ENV } from '../../config';
 import { SuccessResponse } from '../../types/CallTypes';
+import { Environment } from '../../constants';
 
 /**
  * This is a class that models API calls.
@@ -16,7 +17,7 @@ class Call<RequestData = void, ResponseData = void> {
 
     constructor(name: string, url: string, method: string, payload?: RequestData, timeout?: number) {
         this.name = name;
-        this.url = `${API_ROOT}${url}`;
+        this.url = ENV === Environment.Development ? `${API_ROOT}${url}` : url; // Proxy request to API server in development mode
         this.method = method;
         this.payload = payload;
         this.timeout = timeout !== undefined ? timeout : 5_000;
