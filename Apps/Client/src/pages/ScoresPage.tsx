@@ -1,7 +1,7 @@
 import React from 'react';
 import './ScoresPage.scss';
-import HamburgerMenu from '../components/HamburgerMenu';
-import Scoreboard from '../components/Scoreboard';
+import HamburgerMenu from '../components/menus/HamburgerMenu';
+import Scoreboard from '../components/boxes/Scoreboard';
 
 const ScoresPage: React.FC = () => {
   return (

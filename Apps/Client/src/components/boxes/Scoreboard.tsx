@@ -1,6 +1,6 @@
 import './Scoreboard.scss';
 import { useState, useEffect } from 'react';
-import { CallGetScores } from '../calls/data/CallGetScores';
+import { CallGetScores } from '../../calls/data/CallGetScores';
 
 const Scoreboard: React.FC = () => {
   const [scoreboard, setScoreboard] = useState<Record<string, number>>({});

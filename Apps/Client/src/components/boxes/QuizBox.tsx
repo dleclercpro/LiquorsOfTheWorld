@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
-import './QuizQuestion.scss';
-import { CallVote } from '../calls/data/CallVote';
-import AppContext from '../contexts/AppContext';
+import './QuizBox.scss';
+import { CallVote } from '../../calls/data/CallVote';
+import AppContext from '../../contexts/AppContext';
 
 type Question = {
   index: number,
@@ -10,7 +10,7 @@ type Question = {
   options: string[],
 }
 
-const QuizQuestion: React.FC<Question> = ({ index, question, theme, options }) => {
+const QuizBox: React.FC<Question> = ({ index, question, theme, options }) => {
   const [selectedOption, setSelectedOption] = useState('');
   const { quiz, showAnswer } = useContext(AppContext);
 
@@ -36,13 +36,13 @@ const QuizQuestion: React.FC<Question> = ({ index, question, theme, options }) =
   }
 
   return (
-    <div className='quiz-question'>
-      <div className='quiz-question-theme-container'>
-        <p className='quiz-question-index'>Question: {index + 1}/{quiz.length}</p>
-        <p className='quiz-question-theme'>{theme}</p>
+    <div className='quiz-box'>
+      <div className='quiz-box-theme-container'>
+        <p className='quiz-box-index'>Question: {index + 1}/{quiz.length}</p>
+        <p className='quiz-box-theme'>{theme}</p>
       </div>
 
-      <h2 className='quiz-question-title'>{question}</h2>
+      <h2 className='quiz-box-title'>{question}</h2>
 
       <form onSubmit={handleSubmit}>
         {options.map((option, i) => (
@@ -65,4 +65,4 @@ const QuizQuestion: React.FC<Question> = ({ index, question, theme, options }) =
   );
 };
 
-export default QuizQuestion;
+export default QuizBox;

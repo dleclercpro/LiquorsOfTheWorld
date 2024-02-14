@@ -1,4 +1,4 @@
-export type QuizQuestionJSON = {
+export type QuizBoxJSON = {
   theme: string,
   question: string,
   options: string[],

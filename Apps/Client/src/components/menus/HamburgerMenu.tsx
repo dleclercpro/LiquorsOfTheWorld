@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './HamburgerMenu.scss';
-import { CallLogOut } from '../calls/auth/CallLogOut';
+import { CallLogOut } from '../../calls/auth/CallLogOut';
 
 type HamburgerMenuProps = {
 

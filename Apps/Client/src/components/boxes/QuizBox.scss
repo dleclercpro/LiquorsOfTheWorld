@@ -1,6 +1,6 @@
-@import '../styles/common';
+@import '../../styles/common';
 
-.quiz-question {
+.quiz-box {
   width: 100%;
   padding: 15px;
   background-color: rgba(255, 255, 255, 0.8);
@@ -17,12 +17,12 @@
     max-width: 800px;
   }
 
-  > .quiz-question-theme-container {
+  > .quiz-box-theme-container {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 20px;
 
-    > .quiz-question-index {
+    > .quiz-box-index {
       margin-right: 5px;
       margin-bottom: 5px;
       padding: 10px;
@@ -32,7 +32,7 @@
       @include font-subtitle;
     }
 
-    > .quiz-question-theme {
+    > .quiz-box-theme {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -54,7 +54,7 @@
     }
   }
 
-  > .quiz-question-title {
+  > .quiz-box-title {
     margin-top: 0;
     margin-bottom: 20px;
   }
