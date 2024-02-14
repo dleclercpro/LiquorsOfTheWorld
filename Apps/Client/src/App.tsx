@@ -3,13 +3,15 @@ import './App.scss';
 import LoginPage from './pages/LoginPage';
 import QuizPage from './pages/QuizPage';
 import ScoresPage from './pages/ScoresPage';
-import Overlay from './components/Overlay';
+import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useContext, useEffect } from 'react';
 import AppContext from './contexts/AppContext';
 import { CallGetQuiz } from './calls/data/CallGetQuiz';
 import { CallGetUser } from './calls/auth/CallGetUser';
 import { User } from './types/UserTypes';
 import { Quiz } from './types/QuizTypes';
+import { DEBUG } from './config';
+import TestPage from './pages/TestPage';
 
 function App() {
   const { setQuiz, setQuestionIndex } = useContext(AppContext);
@@ -43,9 +45,12 @@ function App() {
   return (
     <Router>
         <div className='app'>
-          <Overlay />
+          <AnswerOverlay />
           <div className='app-container'>
             <Routes>
+              {DEBUG && (
+                <Route path='/test' element={<TestPage />} />
+              )}
               <Route path='/quiz' element={<QuizPage />} />
               <Route path='/scores' element={<ScoresPage />} />
               <Route path='/' element={<LoginPage />} />

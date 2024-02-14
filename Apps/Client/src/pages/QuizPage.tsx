@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import './QuizPage.scss';
 import HamburgerMenu from '../components/menus/HamburgerMenu';
-import QuizBox from '../components/boxes/QuizBox';
+import QuestionBox from '../components/boxes/QuestionBox';
 import AppContext from '../contexts/AppContext';
 import { Navigate } from 'react-router-dom';
 
@@ -25,7 +25,7 @@ const QuizPage: React.FC = () => {
   return (
     <React.Fragment>
       <HamburgerMenu />
-      <QuizBox
+      <QuestionBox
         index={questionIndex}
         theme={theme}
         question={question}

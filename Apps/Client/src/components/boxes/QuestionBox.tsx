@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import './QuizBox.scss';
+import './QuestionBox.scss';
 import { CallVote } from '../../calls/data/CallVote';
 import AppContext from '../../contexts/AppContext';
 
@@ -10,7 +10,7 @@ type Question = {
   options: string[],
 }
 
-const QuizBox: React.FC<Question> = ({ index, question, theme, options }) => {
+const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) => {
   const [selectedOption, setSelectedOption] = useState('');
   const { quiz, showAnswer } = useContext(AppContext);
 
@@ -36,13 +36,13 @@ const QuizBox: React.FC<Question> = ({ index, question, theme, options }) => {
   }
 
   return (
-    <div className='quiz-box'>
-      <div className='quiz-box-theme-container'>
-        <p className='quiz-box-index'>Question: {index + 1}/{quiz.length}</p>
-        <p className='quiz-box-theme'>{theme}</p>
+    <div className='question-box'>
+      <div className='question-box-theme-container'>
+        <p className='question-box-index'>Question: {index + 1}/{quiz.length}</p>
+        <p className='question-box-theme'>{theme}</p>
       </div>
 
-      <h2 className='quiz-box-title'>{question}</h2>
+      <h2 className='question-box-title'>{question}</h2>
 
       <form onSubmit={handleSubmit}>
         {options.map((option, i) => (
@@ -65,4 +65,4 @@ const QuizBox: React.FC<Question> = ({ index, question, theme, options }) => {
   );
 };
 
-export default QuizBox;
+export default QuestionBox;

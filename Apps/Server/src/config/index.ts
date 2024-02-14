@@ -8,6 +8,7 @@ import path from 'path';
 
 // Environment
 export const ENV = loadEnvironment();
+export const DEV = ENV === Environment.Development;
 export const PROD = ENV === Environment.Production;
 export const LOGGING_LEVEL = (process.env.LOGGING_LEVEL ?? 'trace') as Level;
 

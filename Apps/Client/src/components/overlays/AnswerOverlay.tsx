@@ -1,12 +1,12 @@
 import { ReactNode, useContext } from 'react';
-import './Overlay.scss';
-import AppContext from '../contexts/AppContext';
+import './AnswerOverlay.scss';
+import AppContext from '../../contexts/AppContext';
 
 interface Props {
   children?: ReactNode,
 }
 
-const Overlay: React.FC<Props> = () => {
+const AnswerOverlay: React.FC<Props> = () => {
   const { questionIndex, setQuestionIndex, quiz, shouldShowAnswer, hideAnswer } = useContext(AppContext);
   const nextQuestionIndex = questionIndex + 1;
 
@@ -27,10 +27,10 @@ const Overlay: React.FC<Props> = () => {
 
   return (
     <div id='overlay' className={shouldShowAnswer ? '' : 'hidden'}>
-      <div className='overlay-box'>
-        <h2 className='overlay-title'>And the answer is...</h2>
-        <p className='overlay-text'>{answer}</p>
-        <button className='overlay-buttom' onClick={handleClick}>
+      <div className='answer-overlay-box'>
+        <h2 className='answer-overlay-title'>And the answer is...</h2>
+        <p className='answer-overlay-text'>{answer}</p>
+        <button className='answer-overlay-buttom' onClick={handleClick}>
           {text}
         </button>
       </div>
@@ -38,4 +38,4 @@ const Overlay: React.FC<Props> = () => {
   );
 };
 
-export default Overlay;
+export default AnswerOverlay;

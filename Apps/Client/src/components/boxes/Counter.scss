@@ -1,28 +1,23 @@
 @import '../../styles/common';
 
-.login-form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+#counter {
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   @include desktop {
+    padding: 15px 25px;
     align-items: flex-end;
   }
 
-  > input {
-    width: 100%;
-    padding: 10px;
+  > p {
     margin-bottom: 10px;
-    text-align: center;
   }
 
-  > .login-error {
-    margin-bottom: 10px;
-    color: $color-error;
-  }
-  
-  > .login-button {
+  > button {
     width: 100%;
+    min-width: 250px;
     padding: 20px 20px;
     border-radius: 4px;
     background-color: $color-primary;

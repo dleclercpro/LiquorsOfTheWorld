@@ -1,6 +1,6 @@
-@import '../styles/common';
+@import '../../styles/common';
 
-#overlay {
+#answer-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,19 +16,19 @@
     display: none;
   }
 
-  > .overlay-box {
+  > .answer-overlay-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     
-    > .overlay-title {
+    > .answer-overlay-title {
       color: $color-white;
       @include font-subtitle;
       margin-bottom: 20px;
     }
 
-    > .overlay-text {
+    > .answer-overlay-text {
       color: $color-white;
       @include font-title;
     }
