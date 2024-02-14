@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginForm.scss';
-import { CallLogIn } from '../calls/auth/CallLogIn';
+import { CallLogIn } from '../calls/auth/CallLog';
 
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState('');
