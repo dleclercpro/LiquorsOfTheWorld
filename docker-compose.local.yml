@@ -2,19 +2,19 @@ version: '3.8'
 
 
 services:
-  liquors-app:
+  liquors-quiz-app:
     image: dleclercpro/liquors-quiz:latest
-    container_name: liquors-app
+    container_name: liquors-quiz-app
     ports:
       - 8000:8000
     depends_on:
-      - liquors-redis
+      - liquors-quiz-redis
     environment:
       NODE_ENV: production
 
-  liquors-redis:
+  liquors-quiz-redis:
     image: redis:latest
-    container_name: liquors-redis
+    container_name: liquors-quiz-redis
     volumes:
       - data:/data
 
