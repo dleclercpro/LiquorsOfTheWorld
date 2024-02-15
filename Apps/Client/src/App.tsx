@@ -4,24 +4,19 @@ import LoginPage from './pages/LoginPage';
 import QuizPage from './pages/QuizPage';
 import ScoresPage from './pages/ScoresPage';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
-import { useContext, useEffect } from 'react';
-import AppContext from './contexts/AppContext';
-import { CallGetQuiz } from './calls/data/CallGetQuiz';
+import { useEffect } from 'react';
 import { CallGetUser } from './calls/auth/CallGetUser';
 import { User } from './types/UserTypes';
-import { Quiz } from './types/QuizTypes';
 import { DEBUG } from './config';
 import TestPage from './pages/TestPage';
+import { useDispatch } from './hooks/redux';
+import { fetchQuizData, setQuestionIndex } from './reducers/QuizReducer';
 
-function App() {
-  const { setQuiz, setQuestionIndex } = useContext(AppContext);
+function App() {  
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchQuizData = async () => {
-      const { data } = await new CallGetQuiz().execute();
-
-      return data! as Quiz;
-    }
+    dispatch(fetchQuizData());
 
     const fetchUserData = async () => {
       const { data } = await new CallGetUser().execute();
@@ -29,15 +24,8 @@ function App() {
       return data! as User;
     }
 
-    fetchQuizData()
-      .then((data) => {
-        setQuiz(data ?? []);
-      });
-
     fetchUserData()
-      .then(({ questionIndex }) => {
-        setQuestionIndex(questionIndex);
-      });
+      .then(({ questionIndex }) => dispatch(setQuestionIndex(questionIndex)));
 
   }, []);
 

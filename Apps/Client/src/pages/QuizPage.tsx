@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import './QuizPage.scss';
 import HamburgerMenu from '../components/menus/HamburgerMenu';
 import QuestionBox from '../components/boxes/QuestionBox';
-import AppContext from '../contexts/AppContext';
 import { Navigate } from 'react-router-dom';
+import { useSelector } from '../hooks/redux';
 
 const QuizPage: React.FC = () => {
-  const { questionIndex, quiz } = useContext(AppContext);
+  const quiz = useSelector(({ quiz }) => quiz.data);
+  const questionIndex = useSelector(({ quiz }) => quiz.questionIndex);
   const nextQuestionIndex = questionIndex + 1;
 
   // Wait until quiz data has been fetched

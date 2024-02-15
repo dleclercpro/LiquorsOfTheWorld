@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import './QuestionBox.scss';
 import { CallVote } from '../../calls/data/CallVote';
-import AppContext from '../../contexts/AppContext';
+import { useDispatch, useSelector } from '../../hooks/redux';
+import { showAnswer } from '../../reducers/QuizReducer';
 
 type Question = {
   index: number,
@@ -11,8 +12,9 @@ type Question = {
 }
 
 const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) => {
+  const quiz = useSelector(({ quiz }) => quiz.data);
   const [selectedOption, setSelectedOption] = useState('');
-  const { quiz, showAnswer } = useContext(AppContext);
+  const dispatch = useDispatch();
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSelectedOption(e.target.value);
@@ -26,7 +28,7 @@ const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) =>
       vote: options.findIndex(option => option === selectedOption),
     }).execute();
 
-    showAnswer();
+    dispatch(showAnswer());
     
     setSelectedOption('');
   }

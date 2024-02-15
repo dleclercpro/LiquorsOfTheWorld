@@ -26,7 +26,7 @@ export const login = createAsyncThunk(
   async ({ username, password }: LoginData, { rejectWithValue }) => {
     try {
       await new CallLogIn(username, password).execute();
-      
+
       return username;
 
     } catch (err: unknown) {
@@ -59,7 +59,7 @@ export const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.isAuthenticated = true;
-        state.username = action.payload;
+        state.username = action.payload as string;
       })
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';

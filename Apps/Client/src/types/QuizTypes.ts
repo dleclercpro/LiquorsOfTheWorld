@@ -1,15 +1,15 @@
-export type Vote = {
+export type VoteData = {
   questionIndex: number,
   vote: number,
 }
 
-export type Question = {
+export type QuestionData = {
   theme: string,
   answer: number,
   question: string,
   options: string[],
 }
 
-export type Quiz = Question[];
+export type QuizData = QuestionData[];
 
-export type Scores = Record<string, number>;
+export type ScoreboardData = Record<string, number>;

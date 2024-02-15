@@ -28,9 +28,9 @@ const Scoreboard: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(scoreboard).map(([username, score], index) => {
+          {Object.entries(scoreboard).map(([username, score], i) => {
             return (
-              <tr key={`scoreboard-row-${index}`}>
+              <tr key={`scoreboard-row-${i}`}>
                   <td>{username}</td>
                   <td>{score}</td>
               </tr>

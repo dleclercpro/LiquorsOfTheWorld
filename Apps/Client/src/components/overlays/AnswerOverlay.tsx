@@ -1,13 +1,18 @@
-import { ReactNode, useContext } from 'react';
+import { ReactNode } from 'react';
 import './AnswerOverlay.scss';
-import AppContext from '../../contexts/AppContext';
+import { useDispatch, useSelector } from '../../hooks/redux';
+import { hideAnswer, incrementQuestionIndex } from '../../reducers/QuizReducer';
 
 interface Props {
   children?: ReactNode,
 }
 
 const AnswerOverlay: React.FC<Props> = () => {
-  const { questionIndex, setQuestionIndex, quiz, shouldShowAnswer, hideAnswer } = useContext(AppContext);
+  const dispatch = useDispatch();
+
+  const shouldShowAnswer = useSelector(({ quiz }) => quiz.shouldShowAnswer);
+  const quiz = useSelector(({ quiz }) => quiz.data);
+  const questionIndex = useSelector(({ quiz }) => quiz.questionIndex);
   const nextQuestionIndex = questionIndex + 1;
 
   // Wait until quiz data has been fetched
@@ -19,8 +24,8 @@ const AnswerOverlay: React.FC<Props> = () => {
   const answer = question.options[question.answer];
 
   const handleClick = () => {
-    hideAnswer();
-    setQuestionIndex(nextQuestionIndex);
+    dispatch(hideAnswer());
+    dispatch(incrementQuestionIndex());
   }
 
   const text = nextQuestionIndex + 1 > quiz.length ? `See results` : `Next question (${nextQuestionIndex + 1}/${quiz.length})`;
