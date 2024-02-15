@@ -26,7 +26,7 @@ const AnswerOverlay: React.FC<Props> = () => {
   const text = nextQuestionIndex + 1 > quiz.length ? `See results` : `Next question (${nextQuestionIndex + 1}/${quiz.length})`;
 
   return (
-    <div id='overlay' className={shouldShowAnswer ? '' : 'hidden'}>
+    <div id='answer-overlay' className={shouldShowAnswer ? '' : 'hidden'}>
       <div className='answer-overlay-box'>
         <h2 className='answer-overlay-title'>And the answer is...</h2>
         <p className='answer-overlay-text'>{answer}</p>

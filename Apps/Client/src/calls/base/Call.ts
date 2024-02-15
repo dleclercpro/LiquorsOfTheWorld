@@ -96,7 +96,7 @@ class Call<RequestData = void, ResponseData = void> {
         }
 
         // There were other issues
-        const err = 'UNKNOWN_ERROR';
+        const err = 'FETCH_ERROR';
         console.warn(`Error in call [${this.name}]: ${err}`);
 
         // Something went wrong, but we let the processing happen further down the line
