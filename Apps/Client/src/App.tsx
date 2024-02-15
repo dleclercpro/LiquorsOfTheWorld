@@ -5,28 +5,16 @@ import QuizPage from './pages/QuizPage';
 import ScoresPage from './pages/ScoresPage';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
-import { CallGetUser } from './calls/auth/CallGetUser';
-import { User } from './types/UserTypes';
 import { DEBUG } from './config';
 import TestPage from './pages/TestPage';
 import { useDispatch } from './hooks/redux';
-import { fetchQuizData, setQuestionIndex } from './reducers/QuizReducer';
+import { fetchQuizData } from './reducers/QuizReducer';
 
 function App() {  
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchQuizData());
-
-    const fetchUserData = async () => {
-      const { data } = await new CallGetUser().execute();
-
-      return data! as User;
-    }
-
-    fetchUserData()
-      .then(({ questionIndex }) => dispatch(setQuestionIndex(questionIndex)));
-
   }, []);
 
   return (
