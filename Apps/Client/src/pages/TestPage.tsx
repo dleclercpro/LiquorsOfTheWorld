@@ -1,8 +1,8 @@
 import React from 'react';
 import './TestPage.scss';
 import ButtonWithText from '../components/boxes/ButtonWithText';
-import { incremented } from '../reducers/counter.slice';
-import { incrementAsync } from '../reducers/counterAsync.slice';
+import { incremented } from '../reducers/CounterReducer';
+import { incrementAsync } from '../reducers/CounterAsyncReducer';
 import { RootState } from '../store';
 import { useDispatch, useSelector } from '../hooks/redux';
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './HamburgerMenu.scss';
-import { CallLogOut } from '../../calls/auth/CallLogOut';
+import { useDispatch } from '../../hooks/redux';
+import { logout } from '../../reducers/AuthReducer';
 
 type HamburgerMenuProps = {
 
@@ -8,6 +9,8 @@ type HamburgerMenuProps = {
 
 const HamburgerMenu: React.FC<HamburgerMenuProps> = (props) => {
   const [menuClass, setMenuClass] = useState('hamburger-menu-content hidden');
+
+  const dispatch = useDispatch();
   
   const showMenu = () => {
     setMenuClass(menuClass.replace('hidden', 'visible'));
@@ -25,10 +28,6 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (props) => {
     }
   }
 
-  const logout = async () => {
-    await new CallLogOut().execute();
-  }
-
   const handleClickOnMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
@@ -41,7 +40,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (props) => {
         &#9776;
       </div>
       <div className={menuClass}>
-        <a href='/' onClick={() => logout()}>Log out</a>
+        <a href='/' onClick={() => dispatch(logout())}>Log out</a>
       </div>
     </div>
   );

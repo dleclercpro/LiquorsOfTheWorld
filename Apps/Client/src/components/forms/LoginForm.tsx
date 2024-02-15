@@ -1,28 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../hooks/redux';
+import { login, selectAuthError, selectAuthStatus } from '../../reducers/AuthReducer';
 import './LoginForm.scss';
-import { CallLogIn } from '../../calls/auth/CallLogIn';
 
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  
+  const authStatus = useSelector(selectAuthStatus);
+  const authError = useSelector(selectAuthError);
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Redirect to current quiz question on successful login
+  useEffect(() => {
+    if (authStatus === 'succeeded') {
+      navigate(`/quiz`);
+    }
+  }, [authStatus]);
+
+  // Display authentication error to user
+  useEffect(() => {
+    if (authStatus === 'failed' && authError) {
+      setError(authError);
+    }
+  }, [authStatus, authError]);
+
+  // Send login data to server
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      await new CallLogIn(username, password).execute();
-
-      // Go to last question answered in the quiz
-      navigate(`/quiz`);
-
-    } catch (err: any) {
-      const { message } = err;
-
-      setError(message);
-    }
+    await dispatch(login({ username, password }));
   };
 
   return (

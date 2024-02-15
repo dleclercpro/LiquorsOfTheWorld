@@ -1,10 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import counterReducer from './counter.slice';
-import counterAsyncReducer from './counterAsync.slice';
+import AuthReducer from './AuthReducer';
+import CounterReducer from './CounterReducer';
+import CounterAsyncReducer from './CounterAsyncReducer';
 
 const rootReducer = combineReducers({
-  counter: counterReducer,
-  counterAsync: counterAsyncReducer,
+  auth: AuthReducer,
+  counter: CounterReducer,
+  counterAsync: CounterAsyncReducer,
 });
 
 export default rootReducer;

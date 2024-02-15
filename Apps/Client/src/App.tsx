@@ -36,7 +36,6 @@ function App() {
 
     fetchUserData()
       .then(({ questionIndex }) => {
-        console.log(`Question index: ${questionIndex}`);
         setQuestionIndex(questionIndex);
       });
 
@@ -45,7 +44,6 @@ function App() {
   return (
     <Router>
         <div className='app'>
-          <AnswerOverlay />
           <div className='app-container'>
             <Routes>
               {DEBUG && (
@@ -57,6 +55,7 @@ function App() {
               <Route path='*' element={<Navigate to='/' replace />} />
             </Routes>
           </div>
+          <AnswerOverlay />
         </div>
     </Router>
   );
