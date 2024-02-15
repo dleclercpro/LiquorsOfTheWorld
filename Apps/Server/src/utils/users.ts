@@ -28,7 +28,7 @@ export const createUser = async (username: string, password: string) => {
   return user;
 }
 
-export const getUserVotes = async (username: string) => {
+export const getVotesOfUser = async (username: string) => {
     if (await REDIS_DB.has(`votes:${username}`)) {
         const votes = await REDIS_DB.get(`votes:${username}`);
         

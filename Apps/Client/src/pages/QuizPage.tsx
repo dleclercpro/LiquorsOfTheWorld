@@ -6,22 +6,22 @@ import { Navigate } from 'react-router-dom';
 import { useSelector } from '../hooks/redux';
 
 const QuizPage: React.FC = () => {
-  const quiz = useSelector(({ quiz }) => quiz.data);
-  const questionIndex = useSelector(({ quiz }) => quiz.questionIndex);
+  const { questionIndex, questions } = useSelector(({ quiz }) => quiz);
   const nextQuestionIndex = questionIndex + 1;
 
   // Wait until quiz data has been fetched
-  if (quiz.length === 0) {
+  if (questions.length === 0) {
     return null;
   }
 
-  if (nextQuestionIndex === quiz.length) {
+  if (nextQuestionIndex === questions.length) {
     return (
       <Navigate to={`/scores`} replace />
     );
   }
 
-  const { theme, question, options } = quiz[questionIndex];
+  console.log(questionIndex);
+  const { theme, question, options } = questions[questionIndex];
 
   return (
     <React.Fragment>

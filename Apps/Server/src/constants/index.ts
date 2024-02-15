@@ -1,11 +1,11 @@
 import { name, version, label } from '../../package.json';
 import { Environment } from '../types';
-import quiz from '../../data/quiz.json';
+import questions from '../../data/questions.json';
 import { DatabaseUser } from '../types/UserTypes';
 
 export const ENVIRONMENTS = Object.values(Environment);
-export const QUIZ = quiz;
-export const ANSWERS = QUIZ.map(({ answer }) => answer);
+export const QUESTIONS = questions;
+export const ANSWERS = QUESTIONS.map(({ answer }) => answer);
 
 export const PACKAGE_NAME = name;
 export const PACKAGE_VERSION = version;
@@ -20,6 +20,5 @@ export const NEW_LINE = '\n';
 
 export const DEFAULT_USER: DatabaseUser = {
   username: '',
-  questionIndex: 0,
   hashedPassword: '',
 };

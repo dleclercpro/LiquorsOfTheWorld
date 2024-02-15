@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { successResponse } from '../utils/calls';
-import quiz from '../../data/quiz.json';
 import { N_QUIZ_QUESTIONS } from '../config';
+import { QUESTIONS } from '../constants';
 
 const GetQuestionController: RequestHandler = async (req, res, next) => {
     try {
@@ -11,7 +11,7 @@ const GetQuestionController: RequestHandler = async (req, res, next) => {
             throw new Error('INVALID_QUESTION_INDEX');
         }
 
-        const { theme, question, options } = quiz[questionIndex];
+        const { theme, question, options } = QUESTIONS[questionIndex];
 
         return res.json(successResponse({ theme, question, options }));
 

@@ -12,7 +12,7 @@ type Question = {
 }
 
 const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) => {
-  const quiz = useSelector(({ quiz }) => quiz.data);
+  const { questions } = useSelector(({ quiz }) => quiz);
   const [selectedOption, setSelectedOption] = useState('');
   const dispatch = useDispatch();
 
@@ -23,24 +23,23 @@ const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) =>
   const handleSubmit: React.ChangeEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    await new CallVote({
-      questionIndex: index,
-      vote: options.findIndex(option => option === selectedOption),
-    }).execute();
+    const vote = options.findIndex(option => option === selectedOption);
+
+    await new CallVote(index).execute(vote);
 
     dispatch(showAnswer());
     
     setSelectedOption('');
   }
 
-  if (quiz.length === 0) {
+  if (questions.length === 0) {
     return null;
   }
 
   return (
     <div className='question-box'>
       <div className='question-box-theme-container'>
-        <p className='question-box-index'>Question: {index + 1}/{quiz.length}</p>
+        <p className='question-box-index'>Question: {index + 1}/{questions.length}</p>
         <p className='question-box-theme'>{theme}</p>
       </div>
 

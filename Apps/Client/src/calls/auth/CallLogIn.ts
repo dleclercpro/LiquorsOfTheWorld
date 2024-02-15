@@ -4,10 +4,7 @@ import { User } from '../../types/UserTypes';
 
 export class CallLogIn extends CallPUT<Auth, User> {
 
-    constructor(username: string, password: string) {
-        super('Login', `/api/auth`, {
-            username,
-            password,
-        });
+    constructor() {
+        super('Login', `/api/auth`);
     }
 };

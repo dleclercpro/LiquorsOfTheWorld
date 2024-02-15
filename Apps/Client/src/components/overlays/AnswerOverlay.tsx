@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import './AnswerOverlay.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { hideAnswer, incrementQuestionIndex, selectQuestionAnswer } from '../../reducers/QuizReducer';
+import { hideAnswer, selectQuestionAnswer } from '../../reducers/QuizReducer';
 
 interface Props {
   children?: ReactNode,
@@ -10,23 +10,20 @@ interface Props {
 const AnswerOverlay: React.FC<Props> = () => {
   const dispatch = useDispatch();
 
-  const shouldShowAnswer = useSelector(({ quiz }) => quiz.shouldShowAnswer);
-  const quiz = useSelector(({ quiz }) => quiz.data);
-  const questionIndex = useSelector(({ quiz }) => quiz.questionIndex);
+  const { questionIndex, questions, shouldShowAnswer } = useSelector(({ quiz }) => quiz);
   const nextQuestionIndex = questionIndex + 1;
   const answer = useSelector(selectQuestionAnswer);
 
   // Wait until quiz data has been fetched
-  if (quiz.length === 0) {
+  if (questions.length === 0) {
     return null;
   }
 
   const handleClick = () => {
     dispatch(hideAnswer());
-    dispatch(incrementQuestionIndex());
   }
 
-  const text = nextQuestionIndex + 1 > quiz.length ? `See results` : `Next question (${nextQuestionIndex + 1}/${quiz.length})`;
+  const text = nextQuestionIndex + 1 > questions.length ? `See results` : `Next question (${nextQuestionIndex + 1}/${questions.length})`;
 
   return (
     <div id='answer-overlay' className={shouldShowAnswer ? '' : 'hidden'}>

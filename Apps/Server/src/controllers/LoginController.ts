@@ -41,7 +41,6 @@ const LoginController: RequestHandler = async (req, res, next) => {
             .cookie(COOKIE_NAME, cookie)
             .json(successResponse<User>({
                 username: user.username,
-                questionIndex: user.questionIndex,
             }));
 
     } catch (err: any) {

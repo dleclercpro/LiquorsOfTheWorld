@@ -25,7 +25,7 @@ export const login = createAsyncThunk(
   'user/login',
   async ({ username, password }: LoginData, { rejectWithValue }) => {
     try {
-      await new CallLogIn(username, password).execute();
+      await new CallLogIn().execute({ username, password });
 
       return username;
 

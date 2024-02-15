@@ -4,10 +4,9 @@ import { REDIS_DB } from '..';
 import { errorResponse, successResponse } from '../utils/calls';
 import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
 import { QuizVote } from '../types/QuizTypes';
-import { COOKIE_NAME } from '../config';
-import { encodeCookie } from '../utils/cookies';
-import { getUserVotes } from '../utils/users';
+import { getAllUsers, getVotesOfUser } from '../utils/users';
 import { SEPARATOR } from '../constants';
+import { getAllVotes } from '../utils/scoring';
 
 type RequestBody = QuizVote;
 
@@ -17,36 +16,35 @@ const VoteController: RequestHandler = async (req, res, next) => {
         const user = req.user!;
 
         const questionIndex = Number(req.params.questionIndex);
-        const nextQuestionIndex = questionIndex + 1;
+
+        // Is it the current question index?
+        if (questionIndex !== Number(await REDIS_DB.get(`questionIndex`))) {
+            throw new Error('INVALID_QUESTION_INDEX');
+        }
 
         // Get votes from DB if they exist
-        let votes: number[] = [] = await getUserVotes(user.username);
+        let votes: number[] = await getVotesOfUser(user.username);
 
-        // Add vote to array
+        // Add vote to array, otherwise overwrite it
         if (votes.length === questionIndex) {
             votes = [...votes, vote];
-        }
-        // Overwrite vote
-        else {
+        } else {
             votes[questionIndex] = vote;
         }
-
-        // Re-write the user object
-        const newUser = {
-            ...user,
-            questionIndex: nextQuestionIndex,
-        };
 
         // Store votes in DB
         await REDIS_DB.set(`votes:${user.username}`, votes.join(SEPARATOR));
 
-        // Update current question index for user in DB
-        await REDIS_DB.set(`users:${user.username}`, JSON.stringify(newUser));
+        // If all users have voted on current question, move on to next one
+        // FIXME: create games
+        const usersWhoVoted = Object.keys(await getAllVotes());
+        const users = await getAllUsers();
+        if (usersWhoVoted.length === users.length) {
+            logger.info(`All users have voted on question #${questionIndex + 1}: incrementing question index...`);
+            await REDIS_DB.set(`questionIndex`, String(questionIndex + 1));
+        }
 
-        // Update user cookie
-        return res
-            .cookie(COOKIE_NAME, await encodeCookie(newUser))
-            .json(successResponse());
+        return res.json(successResponse());
 
     } catch (err: any) {
         if (err instanceof Error) {

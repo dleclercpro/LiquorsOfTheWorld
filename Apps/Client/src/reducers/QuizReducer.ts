@@ -1,20 +1,20 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { QuizData } from '../types/QuizTypes';
+import { QuestionData, QuizData } from '../types/QuizTypes';
 import { CallGetQuiz } from '../calls/data/CallGetQuiz';
 import { RootState } from '../store';
 
 interface QuizState {
+  questions: QuestionData[],
   questionIndex: number,
   shouldShowAnswer: boolean,
-  data: QuizData,
   status: 'idle' | 'loading' | 'succeeded' | 'failed',
   error: string | null,
 }
 
 const initialState: QuizState = {
+  questions: [],
   questionIndex: 0,
   shouldShowAnswer: false,
-  data: [],
   status: 'idle',
   error: null,
 };
@@ -23,9 +23,9 @@ export const fetchQuizData = createAsyncThunk(
   'quiz/data',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await new CallGetQuiz().execute();
+      const response = await new CallGetQuiz().execute();
       
-      return data;
+      return response.data as QuizData;
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';
@@ -42,7 +42,7 @@ export const fetchQuizData = createAsyncThunk(
 )
 
 export const authSlice = createSlice({
-  name: 'auth',
+  name: 'quiz',
   initialState,
   reducers: {
     setQuestionIndex: (state, action: PayloadAction<number>) => {
@@ -65,7 +65,8 @@ export const authSlice = createSlice({
       })
       .addCase(fetchQuizData.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.data = action.payload as QuizData;
+        state.questions = action.payload.questions;
+        state.questionIndex = action.payload.index;
       })
       .addCase(fetchQuizData.rejected, (state, action) => {
         state.status = 'failed';
@@ -77,14 +78,13 @@ export const authSlice = createSlice({
 export const { setQuestionIndex, incrementQuestionIndex, showAnswer, hideAnswer } = authSlice.actions;
 
 export const selectQuestionAnswer = (state: RootState) => {
-  const { questionIndex } = state.quiz;
-  const { data } = state.quiz;
+  const { questions, questionIndex } = state.quiz;
 
-  if (data.length === 0) {
+  if (questions.length === 0) {
     return null;
   }
   
-  const question = data[questionIndex];
+  const question = questions[questionIndex];
   const answer = question.options[question.answer];
 
   return answer;

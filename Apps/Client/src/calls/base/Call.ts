@@ -14,11 +14,10 @@ class Call<RequestData = void, ResponseData = void> {
     private headers: HeadersInit;
     private params: RequestInit;
 
-    constructor(name: string, url: string, method: string, payload?: RequestData, timeout?: number) {
+    constructor(name: string, url: string, method: string, timeout?: number) {
         this.name = name;
         this.url = DEBUG ? `${API_ROOT}${url}` : url; // Proxy request to API server in development mode
         this.method = method;
-        this.payload = payload;
         this.timeout = timeout !== undefined ? timeout : 5_000;
         this.headers = {}
         this.params = {};
@@ -74,8 +73,11 @@ class Call<RequestData = void, ResponseData = void> {
         };
     }
 
-    async execute() {
+    async execute(payload?: RequestData) {
         console.trace(`Executing API call '${this.name}': ${this.url}`);
+
+        // Store call's payload
+        this.payload = payload;
 
         // Set API call parameters
         this.prepare();
