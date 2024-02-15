@@ -7,14 +7,14 @@ interface LoginData {
   password: string,
 }
 
-interface AuthState {
+interface UserState {
   username: string | null,
   isAuthenticated: boolean,
   status: 'idle' | 'loading' | 'succeeded' | 'failed',
   error: string | null,
 }
 
-const initialState: AuthState = {
+const initialState: UserState = {
   username: null,
   isAuthenticated: false,
   status: 'idle',
@@ -22,7 +22,7 @@ const initialState: AuthState = {
 };
 
 export const login = createAsyncThunk(
-  'auth/login',
+  'user/login',
   async ({ username, password }: LoginData, { rejectWithValue }) => {
     try {
       await new CallLogIn(username, password).execute();
@@ -43,8 +43,8 @@ export const login = createAsyncThunk(
   }
 )
 
-export const authSlice = createSlice({
-  name: 'auth',
+export const userSlice = createSlice({
+  name: 'user',
   initialState,
   reducers: {
     logout: (state) => {
@@ -68,9 +68,8 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout } = userSlice.actions;
 
-export const selectAuthStatus = (state: RootState) => state.auth.status;
-export const selectAuthError = (state: RootState) => state.auth.error;
+export const selectAuthentication = (state: RootState) => state.auth;
 
-export default authSlice.reducer;
+export default userSlice.reducer;

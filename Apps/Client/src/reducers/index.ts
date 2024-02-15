@@ -1,5 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import AuthReducer from './AuthReducer';
+import AuthReducer from './UserReducer';
 import QuizReducer from './QuizReducer';
 import CounterReducer from './CounterReducer';
 import CounterAsyncReducer from './CounterAsyncReducer';

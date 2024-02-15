@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import './AnswerOverlay.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { hideAnswer, incrementQuestionIndex } from '../../reducers/QuizReducer';
+import { hideAnswer, incrementQuestionIndex, selectQuestionAnswer } from '../../reducers/QuizReducer';
 
 interface Props {
   children?: ReactNode,
@@ -14,14 +14,12 @@ const AnswerOverlay: React.FC<Props> = () => {
   const quiz = useSelector(({ quiz }) => quiz.data);
   const questionIndex = useSelector(({ quiz }) => quiz.questionIndex);
   const nextQuestionIndex = questionIndex + 1;
+  const answer = useSelector(selectQuestionAnswer);
 
   // Wait until quiz data has been fetched
   if (quiz.length === 0) {
     return null;
   }
-
-  const question = quiz[questionIndex];
-  const answer = question.options[question.answer];
 
   const handleClick = () => {
     dispatch(hideAnswer());

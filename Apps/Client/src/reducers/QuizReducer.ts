@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { QuizData } from '../types/QuizTypes';
 import { CallGetQuiz } from '../calls/data/CallGetQuiz';
+import { RootState } from '../store';
 
 interface QuizState {
   questionIndex: number,
@@ -74,5 +75,19 @@ export const authSlice = createSlice({
 });
 
 export const { setQuestionIndex, incrementQuestionIndex, showAnswer, hideAnswer } = authSlice.actions;
+
+export const selectQuestionAnswer = (state: RootState) => {
+  const { questionIndex } = state.quiz;
+  const { data } = state.quiz;
+
+  if (data.length === 0) {
+    return null;
+  }
+  
+  const question = data[questionIndex];
+  const answer = question.options[question.answer];
+
+  return answer;
+}
 
 export default authSlice.reducer;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './HamburgerMenu.scss';
 import { useDispatch } from '../../hooks/redux';
-import { logout } from '../../reducers/AuthReducer';
+import { logout } from '../../reducers/UserReducer';
 
 type HamburgerMenuProps = {
 

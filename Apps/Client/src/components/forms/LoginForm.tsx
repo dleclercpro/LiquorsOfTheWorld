@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { login, selectAuthError, selectAuthStatus } from '../../reducers/AuthReducer';
+import { login, selectAuthentication } from '../../reducers/UserReducer';
 import './LoginForm.scss';
 
 const LoginForm: React.FC = () => {
@@ -9,25 +9,24 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   
-  const authStatus = useSelector(selectAuthStatus);
-  const authError = useSelector(selectAuthError);
+  const auth = useSelector(selectAuthentication);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Redirect to current quiz question on successful login
   useEffect(() => {
-    if (authStatus === 'succeeded') {
+    if (auth.status === 'succeeded') {
       navigate(`/quiz`);
     }
-  }, [authStatus]);
+  }, [auth.status]);
 
   // Display authentication error to user
   useEffect(() => {
-    if (authStatus === 'failed' && authError) {
-      setError(authError);
+    if (auth.status === 'failed' && auth.error) {
+      setError(auth.error);
     }
-  }, [authStatus, authError]);
+  }, [auth.status, auth.error]);
 
   // Send login data to server
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
