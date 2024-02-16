@@ -1,13 +1,22 @@
 import './Scoreboard.scss';
 import { useState, useEffect } from 'react';
-import { CallGetScores } from '../../calls/data/CallGetScores';
+import { CallGetScores } from '../../calls/quiz/CallGetScores';
 
-const Scoreboard: React.FC = () => {
+interface Props {
+  quizId: string,
+}
+
+const Scoreboard: React.FC<Props> = (props) => {
+  const { quizId } = props;
   const [scoreboard, setScoreboard] = useState<Record<string, number>>({});
   
   useEffect(() => {
+    if (quizId === undefined) {
+      return;
+    }
+    
     const fetchScores = async () => {
-      const { data } = await new CallGetScores().execute();
+      const { data } = await new CallGetScores(quizId).execute();
 
       return data;
     }
@@ -15,7 +24,7 @@ const Scoreboard: React.FC = () => {
     fetchScores().then((scores) => {
       setScoreboard(scores ?? scoreboard);
     });
-  }, []);
+  }, [quizId]);
   
   return (
     <div className='scoreboard'>

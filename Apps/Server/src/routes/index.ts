@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import path from 'path';
-import { CLIENT_DIR, PROD } from '../config';
+import { API_VERSION, CLIENT_DIR, PROD } from '../config';
 import API from './API';
 
 
@@ -11,7 +11,7 @@ const router = Router();
 
 // ROUTES
 // API endpoints
-router.use(`/api`, API)
+router.use(`/api/${API_VERSION}`, API)
 
 // Public static files
 router.use('/static', express.static('public'));

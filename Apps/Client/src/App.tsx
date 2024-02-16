@@ -4,35 +4,35 @@ import LoginPage from './pages/LoginPage';
 import QuizPage from './pages/QuizPage';
 import ScoresPage from './pages/ScoresPage';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
-import { useEffect } from 'react';
 import { DEBUG } from './config';
 import TestPage from './pages/TestPage';
-import { useDispatch } from './hooks/redux';
-import { fetchQuizData } from './reducers/QuizReducer';
+import AuthRoute from './routes/AuthRoute';
 
 function App() {  
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchQuizData());
-  }, []);
-
   return (
     <Router>
-        <div className='app'>
-          <div className='app-container'>
-            <Routes>
-              {DEBUG && (
-                <Route path='/test' element={<TestPage />} />
-              )}
-              <Route path='/quiz' element={<QuizPage />} />
-              <Route path='/scores' element={<ScoresPage />} />
-              <Route path='/' element={<LoginPage />} />
-              <Route path='*' element={<Navigate to='/' replace />} />
-            </Routes>
-          </div>
-          <AnswerOverlay />
+      <div className='app'>
+        <div className='app-container'>
+          <Routes>
+            {DEBUG && (
+              <Route path='/test' element={<TestPage />} />
+            )}
+            <Route path='/quiz/:quizId' element={(
+              <AuthRoute>
+                <QuizPage />
+              </AuthRoute>
+              )} />
+            <Route path='/quiz/:quizId/scores' element={(
+              <AuthRoute>
+                <ScoresPage />
+              </AuthRoute>
+            )} />
+            <Route path='/' element={<LoginPage />} />
+            <Route path='*' element={<Navigate to='/' replace />} />
+          </Routes>
         </div>
+        <AnswerOverlay />
+      </div>
     </Router>
   );
 }

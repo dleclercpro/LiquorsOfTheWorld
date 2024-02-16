@@ -1,4 +1,6 @@
-export type VoteData = number;
+export type VoteData = {
+  vote: number,
+};
 
 export type QuestionData = {
   theme: string,
@@ -9,7 +11,7 @@ export type QuestionData = {
 
 export type QuizData = {
   questions: QuestionData[],
-  index: number,
+  questionIndex: number,
 }
 
 export type ScoreboardData = Record<string, number>;

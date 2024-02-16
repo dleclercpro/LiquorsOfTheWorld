@@ -5,8 +5,8 @@ import { sum } from './math';
 
 const SEPARATOR = '|';
 
-export const getAllVotes = async (): Promise<Record<string, number[]>> => {
-    const rawVotes = await REDIS_DB.getKeysByPattern(`votes:*`);
+export const getAllVotes = async (quizId: string) => {
+    const rawVotes = await REDIS_DB.getKeysByPattern(`votes:${quizId}:*`);
 
     const votes: Record<string, number[]> = {};
 
@@ -17,7 +17,7 @@ export const getAllVotes = async (): Promise<Record<string, number[]>> => {
             throw new Error('INVALID_VOTE');
         }
 
-        const userVotes = await REDIS_DB.get(`votes:${username}`);
+        const userVotes = await REDIS_DB.get(`votes:${quizId}:${username}`);
 
         if (userVotes !== null) {
             votes[username] = userVotes.split(SEPARATOR).map(Number);
@@ -27,8 +27,8 @@ export const getAllVotes = async (): Promise<Record<string, number[]>> => {
     return votes;
 }
 
-export const computeScores = async () => {
-    const votes = await getAllVotes();
+export const computeScores = async (quizId: string) => {
+    const votes = await getAllVotes(quizId);
 
     const scores = Object.entries(votes).reduce((prev, [username, vote]) => {
         const userScore = sum(ANSWERS

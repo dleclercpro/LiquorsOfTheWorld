@@ -3,7 +3,7 @@ import CallGET from '../base/CallGET';
 
 export class CallGetQuiz extends CallGET<void, QuizData> {
 
-    constructor() {
-        super('GetQuiz', `/api/quiz`);
+    constructor(quizId: string) {
+        super(`/quiz/${quizId}`);
     }
 };

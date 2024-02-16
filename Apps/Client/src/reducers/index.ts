@@ -1,9 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import AuthReducer from './UserReducer';
+import UserReducer from './UserReducer';
 import QuizReducer from './QuizReducer';
 
 const rootReducer = combineReducers({
-  auth: AuthReducer,
+  user: UserReducer,
   quiz: QuizReducer,
 });
 

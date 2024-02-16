@@ -1,8 +1,8 @@
 import { RequestHandler } from 'express';
-import logger from '../logger';
-import { errorResponse, successResponse } from '../utils/calls';
-import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
-import { User } from '../types/UserTypes';
+import logger from '../../logger';
+import { errorResponse, successResponse } from '../../utils/calls';
+import { HttpStatusCode, HttpStatusMessage } from '../../types/HTTPTypes';
+import { User } from '../../types/UserTypes';
 
 const GetUserController: RequestHandler = async (req, res, next) => {
     try {

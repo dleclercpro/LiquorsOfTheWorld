@@ -4,6 +4,6 @@ import CallGET from '../base/CallGET';
 export class CallGetUser extends CallGET<void, User> {
 
     constructor() {
-        super('GetUser', `/api/user`);
+        super(`/user`);
     }
 };

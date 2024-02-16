@@ -6,9 +6,6 @@ import { REDIS_RETRY_CONNECT_MAX, REDIS_RETRY_CONNECT_MAX_DELAY } from '../../co
 import { TimeUnit } from '../../types';
 import logger from '../../logger';
 
-// Define a type for the callback function
-type Callback = (err: Error | null, keys?: string[]) => void;
-
 class RedisDatabase extends Database implements IKeyValueDatabase<string> {
     protected client: RedisClientType;
     

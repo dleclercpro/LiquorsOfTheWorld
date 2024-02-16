@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { QuestionData, QuizData } from '../types/QuizTypes';
-import { CallGetQuiz } from '../calls/data/CallGetQuiz';
+import { CallGetQuiz } from '../calls/quiz/CallGetQuiz';
 import { RootState } from '../store';
+import { login } from './UserReducer';
 
 interface QuizState {
+  id: string | null,
   questions: QuestionData[],
   questionIndex: number,
   shouldShowAnswer: boolean,
@@ -12,6 +14,7 @@ interface QuizState {
 }
 
 const initialState: QuizState = {
+  id: null,
   questions: [],
   questionIndex: 0,
   shouldShowAnswer: false,
@@ -20,12 +23,12 @@ const initialState: QuizState = {
 };
 
 export const fetchQuizData = createAsyncThunk(
-  'quiz/data',
-  async (_, { rejectWithValue }) => {
+  'quiz/fetchQuizData',
+  async (quizId: string, { rejectWithValue }) => {
     try {
-      const response = await new CallGetQuiz().execute();
+      const { data } = await new CallGetQuiz(quizId).execute();
       
-      return response.data as QuizData;
+      return data as QuizData;
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';
@@ -35,7 +38,6 @@ export const fetchQuizData = createAsyncThunk(
       }
 
       console.error(`Could not fetch quiz data: ${error}`);
-
       return rejectWithValue(error);
     }
   }
@@ -66,11 +68,14 @@ export const authSlice = createSlice({
       .addCase(fetchQuizData.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.questions = action.payload.questions;
-        state.questionIndex = action.payload.index;
+        state.questionIndex = action.payload.questionIndex;
       })
       .addCase(fetchQuizData.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.id = action.payload.quizId;
       });
   },
 });

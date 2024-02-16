@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './QuizPage.scss';
 import HamburgerMenu from '../components/menus/HamburgerMenu';
 import QuestionBox from '../components/boxes/QuestionBox';
-import { Navigate } from 'react-router-dom';
-import { useSelector } from '../hooks/redux';
+import { Navigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from '../hooks/redux';
+import { fetchQuizData } from '../reducers/QuizReducer';
+
+type RouteParams = {
+  quizId: string;
+};
 
 const QuizPage: React.FC = () => {
+  const { quizId } = useParams<RouteParams>();
+  const dispatch = useDispatch();
   const { questionIndex, questions } = useSelector(({ quiz }) => quiz);
   const nextQuestionIndex = questionIndex + 1;
+
+  useEffect(() => {
+    if (quizId === undefined) {
+      return;
+    }
+
+    dispatch(fetchQuizData(quizId));
+  }, [quizId]);
 
   // Wait until quiz data has been fetched
   if (questions.length === 0) {
@@ -20,7 +35,6 @@ const QuizPage: React.FC = () => {
     );
   }
 
-  console.log(questionIndex);
   const { theme, question, options } = questions[questionIndex];
 
   return (

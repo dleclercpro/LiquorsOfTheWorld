@@ -3,8 +3,8 @@ import Call from './Call';
 
 class CallPUT<RequestData = void, ResponseData = void> extends Call<RequestData, ResponseData> {
 
-    constructor(name: string, url: string) {
-        super(name, url, CallType.PUT);
+    constructor(url: string) {
+        super(url, CallType.PUT);
     }
 }
 

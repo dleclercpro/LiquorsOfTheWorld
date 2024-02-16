@@ -1,11 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { CallLogIn } from '../calls/auth/CallLogIn';
 import { RootState } from '../store';
-
-interface LoginData {
-  username: string,
-  password: string,
-}
+import { LoginData } from '../types';
 
 interface UserState {
   username: string | null,
@@ -23,11 +19,11 @@ const initialState: UserState = {
 
 export const login = createAsyncThunk(
   'user/login',
-  async ({ username, password }: LoginData, { rejectWithValue }) => {
+  async ({ quizId, username, password }: LoginData, { rejectWithValue }) => {
     try {
-      await new CallLogIn().execute({ username, password });
+      await new CallLogIn().execute({ quizId, username, password });
 
-      return username;
+      return { quizId, username };
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';
@@ -37,7 +33,6 @@ export const login = createAsyncThunk(
       }
 
       console.error(`Could not log user in: ${error}`);
-
       return rejectWithValue(error);
     }
   }
@@ -59,7 +54,7 @@ export const userSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.isAuthenticated = true;
-        state.username = action.payload as string;
+        state.username = action.payload.username;
       })
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';
@@ -70,6 +65,6 @@ export const userSlice = createSlice({
 
 export const { logout } = userSlice.actions;
 
-export const selectAuthentication = (state: RootState) => state.auth;
+export const selectAuthentication = (state: RootState) => state.user;
 
 export default userSlice.reducer;

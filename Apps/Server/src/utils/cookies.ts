@@ -1,15 +1,22 @@
 import jwt from 'jsonwebtoken';
 import { TOKEN_SECRET } from '../config';
-import { DatabaseUser } from '../types/UserTypes';
+import { User } from '../types/UserTypes';
 
-export const encodeCookie = async (user: DatabaseUser) => {
-  const cookie = await jwt.sign(user, TOKEN_SECRET);
-
-  return cookie;
+type Cookie = {
+  user: User,
+  quizId: string,
 }
 
-export const decodeCookie = (cookie: string) => {
-  const { iat, ...user } = jwt.verify(cookie, TOKEN_SECRET) as DatabaseUser & { iat: number };
+type JWTCookie = Cookie & {
+  iat: number,
+}
 
-  return user;
+export const encodeCookie = async (cookie: Cookie) => {
+  return jwt.sign(cookie, TOKEN_SECRET);
+}
+
+export const decodeCookie = (cookieString: string) => {
+  const { iat, ...cookie } = jwt.verify(cookieString, TOKEN_SECRET) as JWTCookie;
+
+  return cookie;
 }

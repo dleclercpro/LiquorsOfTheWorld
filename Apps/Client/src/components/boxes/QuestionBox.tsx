@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './QuestionBox.scss';
-import { CallVote } from '../../calls/data/CallVote';
+import { CallVote } from '../../calls/quiz/CallVote';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { showAnswer } from '../../reducers/QuizReducer';
 
@@ -12,7 +12,7 @@ type Question = {
 }
 
 const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) => {
-  const { questions } = useSelector(({ quiz }) => quiz);
+  const { id: quizId, questions } = useSelector(({ quiz }) => quiz);
   const [selectedOption, setSelectedOption] = useState('');
   const dispatch = useDispatch();
 
@@ -25,7 +25,7 @@ const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) =>
 
     const vote = options.findIndex(option => option === selectedOption);
 
-    await new CallVote(index).execute(vote);
+    await new CallVote(quizId as string, index).execute({ vote });
 
     dispatch(showAnswer());
     

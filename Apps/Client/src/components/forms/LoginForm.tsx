@@ -5,6 +5,7 @@ import { login, selectAuthentication } from '../../reducers/UserReducer';
 import './LoginForm.scss';
 
 const LoginForm: React.FC = () => {
+  const [quizId, setQuizId] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -17,7 +18,7 @@ const LoginForm: React.FC = () => {
   // Redirect to current quiz question on successful login
   useEffect(() => {
     if (auth.status === 'succeeded') {
-      navigate(`/quiz`);
+      navigate(`/quiz/${quizId}`);
     }
   }, [auth.status]);
 
@@ -32,13 +33,22 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await dispatch(login({ username, password }));
+    await dispatch(login({ quizId, username, password }));
   };
 
   return (
     <form className='login-form' onSubmit={(e) => handleSubmit(e)}>
+        <input
+        id='login-quiz-id'
+        type='text'
+        value={quizId}
+        placeholder='Enter a quiz ID'
+        onChange={(e) => setQuizId(e.target.value)}
+        required
+      />
+
       <input
-        className='login-username'
+        id='login-username'
         type='text'
         value={username}
         placeholder='Enter a username'
@@ -47,7 +57,7 @@ const LoginForm: React.FC = () => {
       />
 
       <input
-        className='login-password'
+        id='login-password'
         type='password'
         value={password}
         placeholder='Enter a password'

@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import HealthController from '../controllers/HealthController';
 import ReadyController from '../controllers/ReadyController';
-import LoginController from '../controllers/LoginController';
-import LogoutController from '../controllers/LogoutController';
-import GetUserController from '../controllers/GetUserController';
+import LoginController from '../controllers/auth/LoginController';
+import LogoutController from '../controllers/auth/LogoutController';
+import GetUserController from '../controllers/user/GetUserController';
 import GetQuizController from '../controllers/GetQuizController';
 import GetQuestionController from '../controllers/GetQuestionController';
 import VoteController from '../controllers/VoteController';
@@ -24,7 +24,7 @@ router.use(RequestMiddleware);
 
 // ROUTES
 // Probes
-router.get('/api/v1/health', HealthController);
+router.get('/health', HealthController);
 router.get('/ready', ReadyController);
 
 
@@ -34,11 +34,12 @@ router.put('/auth', LoginController);
 router.delete('/auth', [AuthMiddleware], LogoutController);
 
 router.get('/user', [AuthMiddleware], GetUserController);
-router.get('/scores', [AuthMiddleware], GetScoresController);
 
-router.get('/quiz', GetQuizController);
-router.get('/quiz/:questionIndex', [AuthMiddleware], GetQuestionController);
-router.post('/quiz/:questionIndex', [AuthMiddleware], VoteController);
+router.get('/quiz/:quizId', GetQuizController);
+router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);
+router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);
+
+router.get('/question/:questionIndex', [AuthMiddleware], GetQuestionController);
 
 
 

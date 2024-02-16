@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
-import logger from '../logger';
-import { successResponse } from '../utils/calls';
-import { COOKIE_NAME } from '../config';
+import logger from '../../logger';
+import { successResponse } from '../../utils/calls';
+import { COOKIE_NAME } from '../../config';
 
 const LogoutController: RequestHandler = async (req, res, next) => {
     const { username } = req.user!;

@@ -5,13 +5,8 @@ export enum CallType {
   DELETE = 'DELETE',
 }
 
-export interface SuccessResponse<Data = void> {
+export interface ServerResponse<Data = void> {
   code: number,
-  data?: Data,
-}
-
-export interface ErrorResponse<Data = void> {
-  code: number,
-  error: string,
+  error?: string,
   data?: Data,
 }
