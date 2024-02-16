@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.scss';
-import App from './App';
+import { Provider } from 'react-redux';
+import { store } from './store';
 import { ENV } from './utils/env';
 import { setLogLevel } from './utils/logging';
-import { AppContextProvider } from './contexts/AppContextProvider';
+import App from './App';
+import './index.scss';
 
 setLogLevel(ENV);
 
@@ -14,8 +15,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-      <AppContextProvider>
-        <App />
-      </AppContextProvider>
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );

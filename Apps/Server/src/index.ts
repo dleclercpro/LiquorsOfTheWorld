@@ -1,6 +1,5 @@
 import _ from './types/Express'; // Do NOT remove!
 import { REDIS_HOST, REDIS_NAME, REDIS_PORT, ENV } from './config'; // Do NOT remove!
-import router from './routes';
 import logger from './logger';
 import APP_SERVER from './models/AppServer';
 import RedisDatabase from './models/databases/RedisDatabase';
@@ -20,7 +19,7 @@ const execute = async () => {
 
     await REDIS_DB.start();
 
-    await APP_SERVER.setup(router);
+    await APP_SERVER.setup();
     await APP_SERVER.start();
 }
 

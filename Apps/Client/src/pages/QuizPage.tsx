@@ -1,31 +1,46 @@
-import React, { useContext } from 'react';
+import React, { useEffect } from 'react';
 import './QuizPage.scss';
-import HamburgerMenu from '../components/HamburgerMenu';
-import QuizQuestion from '../components/QuizQuestion';
-import AppContext from '../contexts/AppContext';
-import { Navigate } from 'react-router-dom';
+import HamburgerMenu from '../components/menus/HamburgerMenu';
+import QuestionBox from '../components/boxes/QuestionBox';
+import { Navigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from '../hooks/redux';
+import { fetchQuizData } from '../reducers/QuizReducer';
+
+type RouteParams = {
+  quizId: string;
+};
 
 const QuizPage: React.FC = () => {
-  const { questionIndex, quiz } = useContext(AppContext);
+  const { quizId } = useParams<RouteParams>();
+  const dispatch = useDispatch();
+  const { questionIndex, questions } = useSelector(({ quiz }) => quiz);
   const nextQuestionIndex = questionIndex + 1;
 
+  useEffect(() => {
+    if (quizId === undefined) {
+      return;
+    }
+
+    dispatch(fetchQuizData(quizId));
+  }, [quizId]);
+
   // Wait until quiz data has been fetched
-  if (quiz.length === 0) {
+  if (questions.length === 0) {
     return null;
   }
 
-  if (nextQuestionIndex === quiz.length) {
+  if (nextQuestionIndex === questions.length) {
     return (
       <Navigate to={`/scores`} replace />
     );
   }
 
-  const { theme, question, options } = quiz[questionIndex];
+  const { theme, question, options } = questions[questionIndex];
 
   return (
     <React.Fragment>
       <HamburgerMenu />
-      <QuizQuestion
+      <QuestionBox
         index={questionIndex}
         theme={theme}
         question={question}

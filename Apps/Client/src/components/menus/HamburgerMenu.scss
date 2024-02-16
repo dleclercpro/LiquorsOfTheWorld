@@ -1,4 +1,4 @@
-@import '../styles/common';
+@import '../../styles/common';
 
 .hamburger-menu {
   position: absolute;
@@ -30,6 +30,10 @@
     border-radius: 6px;
     z-index: 1;
 
+    &:hover {
+      background-color: darken(#f9f9f9, 10%);
+    }
+
     @include desktop {
       top: auto;
       bottom: 0;
@@ -52,10 +56,6 @@
       text-decoration: none;
       font-weight: bold;
       text-align: center;
-  
-      &:hover {
-        background-color: #ddd;
-      }
     }
   }
 }

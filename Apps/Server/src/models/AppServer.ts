@@ -1,14 +1,13 @@
 import http from 'http';
 import process from 'process';
-import express, { Router } from 'express';
+import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { APP_NAME } from '../constants';
-import { CLIENT_ROOT, ENV, PORT } from '../config';
+import { CLIENT_ROOT, DEV, ENV, PORT } from '../config';
 import logger from '../logger';
-import { Environment } from '../types';
-import RequestMiddleware from '../middleware/RequestMiddleware';
+import Router from '../routes';
 import ErrorMiddleware from '../middleware/ErrorMiddleware';
 
 // There can only be one app server: singleton!
@@ -29,7 +28,7 @@ class AppServer {
         return AppServer.instance;
     }
 
-    public async setup(router: Router) {
+    public async setup() {
         this.app = express();
         this.server = http.createServer(this.app);
     
@@ -44,7 +43,7 @@ class AppServer {
         this.app.use(compression());
 
         // Allow all origins in dev mode
-        if (ENV === Environment.Development) {
+        if (DEV) {
             logger.debug(`Enabling CORS...`);
 
             this.app.use(cors({
@@ -52,15 +51,9 @@ class AppServer {
                 credentials: true,
             }));
         }
-
-        // Log every request
-        this.app.use(RequestMiddleware);
-
-        // Public static files
-        this.app.use('/', express.static('public'));
     
-        // Define server's API endpoints
-        this.app.use('/', router);
+        // Define server's routes
+        this.app.use(Router);
 
         // Final error middleware
         this.app.use(ErrorMiddleware);

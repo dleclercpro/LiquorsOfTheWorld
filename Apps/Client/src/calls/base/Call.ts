@@ -1,7 +1,5 @@
-import fetchWithTimeout from './Fetch';
-import { API_ROOT, ENV } from '../../config';
-import { SuccessResponse } from '../../types/CallTypes';
-import { Environment } from '../../constants';
+import { API_ROOT } from '../../config';
+import { ServerResponse } from '../../types/CallTypes';
 
 /**
  * This is a class that models API calls.
@@ -15,11 +13,10 @@ class Call<RequestData = void, ResponseData = void> {
     private headers: HeadersInit;
     private params: RequestInit;
 
-    constructor(name: string, url: string, method: string, payload?: RequestData, timeout?: number) {
-        this.name = name;
-        this.url = ENV === Environment.Development ? `${API_ROOT}${url}` : url; // Proxy request to API server in development mode
+    constructor(url: string, method: string, timeout?: number) {
+        this.name = this.constructor.name;
+        this.url = `${API_ROOT}${url}`;
         this.method = method;
-        this.payload = payload;
         this.timeout = timeout !== undefined ? timeout : 5_000;
         this.headers = {}
         this.params = {};
@@ -75,30 +72,50 @@ class Call<RequestData = void, ResponseData = void> {
         };
     }
 
-    async execute() {
+    async execute(payload?: RequestData) {
         console.trace(`Executing API call '${this.name}': ${this.url}`);
+
+        // Store call's payload
+        this.payload = payload;
 
         // Set API call parameters
         this.prepare();
 
-        // Execute API call
-        const response = await fetchWithTimeout(this.url, this.params, this.timeout)
-            .then(res => res.json())
-            .catch(err => err.data);
+        // Execute call
+        const response = await fetch(this.url, this.params)
+            .then(async (r) => {
+                const res = { status: r.status, statusText: r.statusText };
+                console.log(r);
 
-        // There was an error on the server
-        if (response && response.error) {
-            return Promise.reject(new Error(response.error));
-        }
+                // Try to parse JSON and return it with rest of
+                // response
+                try {
+                    return { ...res, json: await r.json() as ServerResponse<ResponseData> };
+                } catch {
+                    return { ...res, json: null };
+                }
+            });
 
-        // Everything went fine on the server
-        if (response && Number.isInteger(response.code) && response.code >= 0) {
-            return response as SuccessResponse<ResponseData>;
+        console.log(response);
+
+        // There was valid JSON data in the response
+        if (response.json) {
+            const { code, error, data } = response.json;
+
+            // There was an error
+            if (response.status >= 400 && error) {
+                return Promise.reject(new Error(error));
+            }
+
+            // Everything went fine
+            if (response.status < 400 && Number.isInteger(code) && code >= 0) {
+                return { code, data };
+            }
         }
 
         // There were other issues
-        const err = 'UNKNOWN_ERROR';
-        console.warn(`Error in call [${this.name}]: ${err}`);
+        const err = `Unexpected Error [${response.statusText}]`;
+        console.warn(`Error in call '${this.name}': ${err} [${response.status}]`);
 
         // Something went wrong, but we let the processing happen further down the line
         return Promise.reject(new Error(err));

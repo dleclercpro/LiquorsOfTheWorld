@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import path from 'path';
-import { CLIENT_DIR, PROD } from '../config';
+import { API_VERSION, CLIENT_DIR, PROD } from '../config';
 import API from './API';
 
 
@@ -10,9 +10,11 @@ const router = Router();
 
 
 // ROUTES
-router.use(`/api`, API)
+// API endpoints
+router.use(`/api/${API_VERSION}`, API)
 
-
+// Public static files
+router.use('/static', express.static('public'));
 
 // Client app
 if (PROD) {

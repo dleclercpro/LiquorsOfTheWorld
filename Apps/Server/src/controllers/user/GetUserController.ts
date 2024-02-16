@@ -1,16 +1,15 @@
 import { RequestHandler } from 'express';
-import logger from '../logger';
-import { errorResponse, successResponse } from '../utils/calls';
-import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
-import { User } from '../types/UserTypes';
+import logger from '../../logger';
+import { errorResponse, successResponse } from '../../utils/calls';
+import { HttpStatusCode, HttpStatusMessage } from '../../types/HTTPTypes';
+import { User } from '../../types/UserTypes';
 
 const GetUserController: RequestHandler = async (req, res, next) => {
     try {
-        const user = req.user!;
+        const { username } = req.user!;
 
         return res.json(successResponse<User>({
-            username: user.username,
-            questionIndex: user.questionIndex,
+            username,
         }));
 
     } catch (err: any) {

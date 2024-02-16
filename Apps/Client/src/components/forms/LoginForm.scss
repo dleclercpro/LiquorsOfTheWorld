@@ -1,4 +1,4 @@
-@import '../styles/common';
+@import '../../styles/common';
 
 .login-form {
   display: flex;
@@ -24,6 +24,7 @@
   > .login-button {
     width: 100%;
     padding: 20px 20px;
+    border-radius: 4px;
     background-color: $color-primary;
     color: $color-white;
     font-weight: bold;

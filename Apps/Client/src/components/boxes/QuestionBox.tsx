@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react';
-import './QuizQuestion.scss';
-import { CallVote } from '../calls/data/CallVote';
-import AppContext from '../contexts/AppContext';
+import React, { useState } from 'react';
+import './QuestionBox.scss';
+import { CallVote } from '../../calls/quiz/CallVote';
+import { useDispatch, useSelector } from '../../hooks/redux';
+import { showAnswer } from '../../reducers/QuizReducer';
 
 type Question = {
   index: number,
@@ -10,9 +11,10 @@ type Question = {
   options: string[],
 }
 
-const QuizQuestion: React.FC<Question> = ({ index, question, theme, options }) => {
+const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) => {
+  const { id: quizId, questions } = useSelector(({ quiz }) => quiz);
   const [selectedOption, setSelectedOption] = useState('');
-  const { quiz, showAnswer } = useContext(AppContext);
+  const dispatch = useDispatch();
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSelectedOption(e.target.value);
@@ -21,28 +23,27 @@ const QuizQuestion: React.FC<Question> = ({ index, question, theme, options }) =
   const handleSubmit: React.ChangeEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    await new CallVote({
-      questionIndex: index,
-      vote: options.findIndex(option => option === selectedOption),
-    }).execute();
+    const vote = options.findIndex(option => option === selectedOption);
 
-    showAnswer();
+    await new CallVote(quizId as string, index).execute({ vote });
+
+    dispatch(showAnswer());
     
     setSelectedOption('');
   }
 
-  if (quiz.length === 0) {
+  if (questions.length === 0) {
     return null;
   }
 
   return (
-    <div className='quiz-question'>
-      <div className='quiz-question-theme-container'>
-        <p className='quiz-question-index'>Question: {index + 1}/{quiz.length}</p>
-        <p className='quiz-question-theme'>{theme}</p>
+    <div className='question-box'>
+      <div className='question-box-theme-container'>
+        <p className='question-box-index'>Question: {index + 1}/{questions.length}</p>
+        <p className='question-box-theme'>{theme}</p>
       </div>
 
-      <h2 className='quiz-question-title'>{question}</h2>
+      <h2 className='question-box-title'>{question}</h2>
 
       <form onSubmit={handleSubmit}>
         {options.map((option, i) => (
@@ -65,4 +66,4 @@ const QuizQuestion: React.FC<Question> = ({ index, question, theme, options }) =
   );
 };
 
-export default QuizQuestion;
+export default QuestionBox;
