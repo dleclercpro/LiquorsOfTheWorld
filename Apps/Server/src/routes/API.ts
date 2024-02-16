@@ -9,10 +9,16 @@ import GetQuestionController from '../controllers/GetQuestionController';
 import VoteController from '../controllers/VoteController';
 import AuthMiddleware from '../middleware/AuthMiddleware';
 import GetScoresController from '../controllers/GetScoresController';
+import RequestMiddleware from '../middleware/RequestMiddleware';
 
 
 
 const router = Router();
+
+
+
+// Log every request
+router.use(RequestMiddleware);
 
 
 

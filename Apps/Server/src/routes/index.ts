@@ -10,9 +10,11 @@ const router = Router();
 
 
 // ROUTES
+// API endpoints
 router.use(`/api`, API)
 
-
+// Public static files
+router.use('/static', express.static('public'));
 
 // Client app
 if (PROD) {
