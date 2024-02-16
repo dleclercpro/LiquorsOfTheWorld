@@ -2,7 +2,7 @@ import _ from './types/Express'; // Do NOT remove!
 import { REDIS_HOST, REDIS_NAME, REDIS_PORT, ENV } from './config'; // Do NOT remove!
 import logger from './logger';
 import APP_SERVER from './models/AppServer';
-import RedisDatabase from './models/databases/RedisDatabase';
+import RedisDatabase from './models/databases/base/RedisDatabase';
 
 
 

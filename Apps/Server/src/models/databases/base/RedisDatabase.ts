@@ -1,10 +1,10 @@
 import { RedisClientType, createClient } from 'redis';
 import Database, { DatabaseOptions } from './Database';
 import { IKeyValueDatabase } from './MemoryDatabase';
-import TimeDuration from '../units/TimeDuration';
-import { REDIS_RETRY_CONNECT_MAX, REDIS_RETRY_CONNECT_MAX_DELAY } from '../../config';
-import { TimeUnit } from '../../types';
-import logger from '../../logger';
+import TimeDuration from '../../units/TimeDuration';
+import { REDIS_RETRY_CONNECT_MAX, REDIS_RETRY_CONNECT_MAX_DELAY } from '../../../config';
+import { TimeUnit } from '../../../types';
+import logger from '../../../logger';
 
 class RedisDatabase extends Database implements IKeyValueDatabase<string> {
     protected client: RedisClientType;
