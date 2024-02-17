@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './ScoresPage.scss';
 import HamburgerMenu from '../components/menus/HamburgerMenu';
-import Scoreboard from '../components/boxes/Scoreboard';
+import Scoreboard from '../components/Scoreboard';
 import { fetchScores } from '../reducers/QuizReducer';
 import { useDispatch, useSelector } from '../hooks/redux';
 

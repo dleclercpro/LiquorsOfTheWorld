@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './QuizPage.scss';
 import HamburgerMenu from '../components/menus/HamburgerMenu';
-import QuestionBox from '../components/boxes/QuestionBox';
+import QuestionBox from '../components/forms/QuestionForm';
 import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { fetchQuestionIndexData, fetchQuizData, fetchScores } from '../reducers/QuizReducer';

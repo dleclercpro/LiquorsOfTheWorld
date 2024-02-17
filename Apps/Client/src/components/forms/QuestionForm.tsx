@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import './QuestionBox.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { vote } from '../../reducers/QuizReducer';
 import { showAnswer } from '../../reducers/OverlaysReducer';
+import './QuestionForm.scss';
 
 type Question = {
   index: number,
@@ -39,32 +39,30 @@ const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) =>
   }
 
   return (
-    <div className='question-box'>
-      <div className='question-box-theme-container'>
-        <p className='question-box-index'>Question: {index + 1}/{questions.length}</p>
-        <p className='question-box-theme'>{theme}</p>
+    <form className='question-form' onSubmit={handleSubmit}>
+      <div className='question-form-theme-container'>
+        <p className='question-form-index'>Question: {index + 1}/{questions.length}</p>
+        <p className='question-form-theme'>{theme}</p>
       </div>
 
-      <h2 className='question-box-title'>{question}</h2>
+      <h2 className='question-form-title'>{question}</h2>
 
-      <form onSubmit={handleSubmit}>
-        {options.map((option, i) => (
-          <div className='checkbox' key={i}>
-            <input
-              type='radio'
-              id={`option-${i}`}
-              name='option'
-              value={option}
-              checked={selectedOption === option}
-              onChange={handleChange}
-            />
-            <label htmlFor={`option-${i}`}>{option}</label>
-          </div>
-        ))}
+      {options.map((option, i) => (
+        <div className='checkbox' key={i}>
+          <input
+            type='radio'
+            id={`option-${i}`}
+            name='option'
+            value={option}
+            checked={selectedOption === option}
+            onChange={handleChange}
+          />
+          <label htmlFor={`option-${i}`}>{option}</label>
+        </div>
+      ))}
 
-        <button type='submit' disabled={selectedOption === ''}>Submit my answer</button>
-      </form>
-    </div>
+      <button type='submit' disabled={selectedOption === ''}>Submit my answer</button>
+    </form>
   );
 };
 

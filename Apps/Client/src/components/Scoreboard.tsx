@@ -1,5 +1,6 @@
+import { useSelector } from '../hooks/redux';
+import { ScoreboardData } from '../types/DataTypes';
 import './Scoreboard.scss';
-import { ScoreboardData } from '../../types/DataTypes';
 
 interface Props {
   scores: ScoreboardData,
@@ -7,10 +8,21 @@ interface Props {
 
 const Scoreboard: React.FC<Props> = (props) => {
   const { scores } = props;
+
+  const quiz = useSelector((state) => state.quiz);
+  const quizId = quiz.id;
   
   return (
     <div className='scoreboard'>
       <h2 className='scoreboard-title'>Scoreboard</h2>
+      <p className='scoreboard-subtitle'>
+        <strong>
+          {`Quiz #${quizId}`}
+        </strong>
+      </p>
+      <p className='scoreboard-text'>
+        Here are the results of this quiz:
+      </p>
       <table className='scoreboard-table'>
         <thead>
           <tr>
@@ -21,14 +33,14 @@ const Scoreboard: React.FC<Props> = (props) => {
         <tbody>
           {Object.entries(scores).map(([username, score], i) => {
             return (
-              <tr key={`scoreboard-row-${i}`}>
+              <tr key={`scoreboard-table-row-${i}`}>
                   <td>{username}</td>
                   <td>{score}</td>
               </tr>
             );
           })}
         </tbody>
-    </table>
+      </table>
     </div>
   );
 };

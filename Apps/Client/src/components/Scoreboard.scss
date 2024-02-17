@@ -1,4 +1,4 @@
-@import '../../styles/common';
+@import '../styles/common';
 
 .scoreboard {
   width: 100%;
@@ -9,8 +9,21 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   > .scoreboard-title {
-    margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
+    @include font-title;
+  }
+
+  > .scoreboard-subtitle {
+    margin-bottom: 5px;
+    @include font-subtitle;
+  }
+
+  > .scoreboard-text {
+    margin-bottom: 5px;
+
+    &:last-of-type {
+      margin-bottom: 20px;
+    }
   }
 
   > .scoreboard-table {
