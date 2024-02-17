@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { QuestionIndexData, QuizData, ScoresData, VoteData, VotesData } from '../types/DataTypes';
+import { QuestionIndexData, QuizData, ScoresData, VotesData } from '../types/DataTypes';
 import { CallGetQuiz } from '../calls/quiz/CallGetQuiz';
 import { CallGetQuestionIndex } from '../calls/quiz/CallGetQuestionIndex';
 import { CallVote } from '../calls/quiz/CallVote';
@@ -92,7 +92,7 @@ export const fetchScores = createAsyncThunk(
 
 export const vote = createAsyncThunk(
   'user/vote',
-  async ({ quizId, questionIndex, vote }: VoteData, { rejectWithValue }) => {
+  async ({ quizId, questionIndex, vote }: { quizId: string, questionIndex: number, vote: number }, { rejectWithValue }) => {
     try {
       const { data } = await new CallVote(quizId, questionIndex).execute({ vote });
 

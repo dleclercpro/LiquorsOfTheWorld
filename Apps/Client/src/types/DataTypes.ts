@@ -18,12 +18,6 @@ export type UserData = {
   username: string,
 };
 
-export type VoteData = {
-  quizId: string,
-  questionIndex: number,
-  vote: number,
-};
-
 export type VotesData = {
   questionIndex: number,
   votes: number[],
