@@ -2,10 +2,10 @@ import { useSelector } from '../../hooks/redux';
 import './LoadingOverlay.scss';
 
 const LoadingOverlay: React.FC = () => {
-  const { text, show } = useSelector(({ overlays }) => overlays.loading);
+  const { show, opaque, text } = useSelector(({ overlays }) => overlays.loading);
 
   return (
-    <div id='loading-overlay' className={show ? '' : 'hidden'}>
+    <div id='loading-overlay' className={`${!show ? 'hidden' : ''} ${opaque ? 'opaque' : ''}`}>
       <div className='loading-overlay-box'>
         <h2 className='loading-overlay-title'>
           {text}

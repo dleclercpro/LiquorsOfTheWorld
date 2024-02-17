@@ -11,14 +11,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 1;
+  opacity: 0.8;
   visibility: visible;
-  transition: visibility 0s linear 0.5s, opacity 0.5s linear;
+
+  &.opaque {
+    opacity: 1;
+  }
 
   &.hidden {
-    opacity: 0;
     visibility: hidden;
-    transition: visibility 0s linear 0.5s, opacity 0.5s linear;
   }
 
   > .loading-overlay-box {

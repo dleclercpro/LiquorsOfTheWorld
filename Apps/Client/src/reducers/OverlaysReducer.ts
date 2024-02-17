@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface ModalsState {
+interface OverlaysState {
   loading: {
     show: boolean,
+    opaque: boolean,
     text: string | null,
   },
   answer: {
@@ -10,9 +11,10 @@ interface ModalsState {
   },
 }
 
-const initialState: ModalsState = {
+const initialState: OverlaysState = {
   loading: {
     show: false,
+    opaque: false,
     text: null,
   },
   answer: {
@@ -28,7 +30,8 @@ export const overlaysSlice = createSlice({
   reducers: {
     showLoading: (state, action) => {
       state.loading.show = true;
-      state.loading.text = action.payload;
+      state.loading.opaque = action.payload.opaque;
+      state.loading.text = action.payload.text;
     },
     hideLoading: (state) => {
       state.loading.show = false;

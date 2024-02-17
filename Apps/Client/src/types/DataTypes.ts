@@ -8,9 +8,15 @@ export type LoginData = Auth & {
   quizId: string,
 }
 
+export type UserData = {
+  username: string,
+}
+
 export type VoteData = {
   vote: number,
 };
+
+export type VotesData = number[];
 
 export type QuestionData = {
   theme: string,
@@ -27,4 +33,4 @@ export type QuestionIndexData = {
   questionIndex: number,
 }
 
-export type ScoreboardData = Record<string, number>;
+export type ScoresData = Record<string, number>;

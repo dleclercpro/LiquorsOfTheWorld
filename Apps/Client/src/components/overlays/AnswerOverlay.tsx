@@ -19,7 +19,7 @@ const AnswerOverlay: React.FC<Props> = () => {
   const shouldShow = useSelector(({ overlays }) => overlays.answer.show);
 
   // Wait until quiz data has been fetched
-  if (questionIndex === null || questions.length === 0) {
+  if (questionIndex === null || questions === null) {
     return null;
   }
 

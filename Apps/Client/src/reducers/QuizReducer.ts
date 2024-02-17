@@ -1,16 +1,17 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { QuestionData, QuestionIndexData, QuizData, ScoreboardData, VoteData } from '../types/DataTypes';
+import { QuestionData, QuestionIndexData, QuizData, ScoresData, VoteData, VotesData } from '../types/DataTypes';
 import { CallGetQuiz } from '../calls/quiz/CallGetQuiz';
 import { RootState } from '../store';
 import { login, ping } from './UserReducer';
 import { CallGetQuestionIndex } from '../calls/quiz/CallGetQuestionIndex';
 import { CallVote } from '../calls/quiz/CallVote';
 import { CallGetScores } from '../calls/quiz/CallGetScores';
+import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 
 interface QuizState {
   id: string | null,
   questions: {
-    data: QuestionData[],
+    data: QuestionData[] | null,
     status: 'idle' | 'loading' | 'succeeded' | 'failed',
     error: string | null,
   },
@@ -19,8 +20,13 @@ interface QuizState {
     status: 'idle' | 'loading' | 'succeeded' | 'failed',
     error: string | null,
   },
+  votes: {
+    data: VotesData | null,
+    status: 'idle' | 'loading' | 'succeeded' | 'failed',
+    error: string | null,
+  },
   scores: {
-    data: ScoreboardData | null,
+    data: ScoresData | null,
     status: 'idle' | 'loading' | 'succeeded' | 'failed',
     error: string | null,
   },
@@ -29,11 +35,16 @@ interface QuizState {
 const initialState: QuizState = {
   id: null,
   questions: {
-    data: [],
+    data: null,
     status: 'idle',
     error: null,
   },
   questionIndex: {
+    data: null,
+    status: 'idle',
+    error: null,
+  },
+  votes: {
     data: null,
     status: 'idle',
     error: null,
@@ -81,7 +92,28 @@ export const fetchQuestionIndexData = createAsyncThunk(
         error = err.message;
       }
 
-      console.error(`Could not fetch quiz ${quizId} question index data: ${error}`);
+      console.error(`Could not fetch question index: ${error}`);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchVotes = createAsyncThunk(
+  'quiz/fetchVotes',
+  async (quizId: string, { rejectWithValue }) => {
+    try {
+      const { data } = await new CallGetVotes(quizId).execute();
+      
+      return data as VotesData;
+
+    } catch (err: unknown) {
+      let error = 'UNKNOWN_ERROR';
+      
+      if (err instanceof Error) {
+        error = err.message;
+      }
+
+      console.error(`Could not fetch user's votes: ${error}`);
       return rejectWithValue(error);
     }
   }
@@ -93,7 +125,7 @@ export const fetchScores = createAsyncThunk(
     try {
       const { data } = await new CallGetScores(quizId).execute();
       
-      return data as ScoreboardData;
+      return data as ScoresData;
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';
@@ -102,7 +134,7 @@ export const fetchScores = createAsyncThunk(
         error = err.message;
       }
 
-      console.error(`Could not fetch quiz ${quizId}'s scores: ${error}`);
+      console.error(`Could not fetch scores: ${error}`);
       return rejectWithValue(error);
     }
   }
@@ -174,6 +206,17 @@ export const authSlice = createSlice({
         state.questionIndex.status = 'failed';
         state.questionIndex.error = action.payload as string;
       })
+      .addCase(fetchVotes.pending, (state) => {
+        state.votes.status = 'loading';
+      })
+      .addCase(fetchVotes.fulfilled, (state, action) => {
+        state.votes.status = 'succeeded';
+        state.votes.data = action.payload;
+      })
+      .addCase(fetchVotes.rejected, (state, action) => {
+        state.votes.status = 'failed';
+        state.votes.error = action.payload as string;
+      })
       .addCase(fetchScores.pending, (state) => {
         state.scores.status = 'loading';
       })
@@ -201,7 +244,7 @@ export const selectQuestionAnswer = (state: RootState) => {
   const questions = quiz.questions.data;
   const questionIndex = quiz.questionIndex.data;
 
-  if (questionIndex === null || questions.length === 0) {
+  if (questionIndex === null || questions === null) {
     return null;
   }
   

@@ -34,7 +34,7 @@ const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) =>
     setSelectedOption('');
   }
 
-  if (questions.length === 0) {
+  if (questions === null) {
     return null;
   }
 

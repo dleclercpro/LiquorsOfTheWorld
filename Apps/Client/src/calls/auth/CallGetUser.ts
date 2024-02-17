@@ -1,7 +1,7 @@
-import { User } from '../../types/UserTypes';
+import { UserData } from '../../types/DataTypes';
 import CallGET from '../base/CallGET';
 
-export class CallGetUser extends CallGET<void, User> {
+export class CallGetUser extends CallGET<void, UserData> {
 
     constructor() {
         super(`/user`);

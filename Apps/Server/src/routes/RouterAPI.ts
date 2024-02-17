@@ -11,6 +11,7 @@ import AuthMiddleware from '../middleware/AuthMiddleware';
 import GetScoresController from '../controllers/GetScoresController';
 import RequestMiddleware from '../middleware/RequestMiddleware';
 import GetQuestionIndexController from '../controllers/GetQuestionIndexController';
+import GetVotesController from '../controllers/GetVotesController';
 
 
 
@@ -40,6 +41,7 @@ router.get('/user', [AuthMiddleware], GetUserController);
 router.get('/quiz', GetQuizController);
 router.get('/quiz/:quizId', [AuthMiddleware], GetQuestionIndexController);
 router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);
+router.get('/quiz/:quizId/votes', [AuthMiddleware], GetVotesController);
 router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);
 
 

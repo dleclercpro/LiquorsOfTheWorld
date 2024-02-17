@@ -1,9 +1,9 @@
 import { useSelector } from '../hooks/redux';
-import { ScoreboardData } from '../types/DataTypes';
+import { ScoresData } from '../types/DataTypes';
 import './Scoreboard.scss';
 
 interface Props {
-  scores: ScoreboardData,
+  scores: ScoresData,
 }
 
 const Scoreboard: React.FC<Props> = (props) => {

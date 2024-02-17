@@ -49,12 +49,10 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async createUser(username: string, password: string) {
-        logger.trace(`Adding user '${username}' to Redis DB...`);
-
         const hashedPassword = await new Promise<string>((resolve, reject) => {
             bcrypt.hash(password, N_SALT_ROUNDS, async (err, hash) => {
                 if (err) {
-                    logger.fatal(`Error while hashing password of user '${username}'.`, err);
+                    logger.fatal(`Cannot hash password of user '${username}'.`, err);
                     reject(new Error('CANNOT_HASH_PASSWORD'));
                 }
       
@@ -62,7 +60,7 @@ class AppDatabase extends RedisDatabase {
             });
         });
       
-        logger.trace(`Creating user '${username}' in database...`);
+        logger.trace(`Creating user '${username}'...`);
         const user = { username, hashedPassword, questionIndex: 0 };
       
         await this.set(`users:${username}`, this.serializeUser(user));
