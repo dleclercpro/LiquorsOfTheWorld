@@ -38,7 +38,8 @@ const LoginController: RequestHandler = async (req, res, next) => {
         }
 
         // Check if quiz has already started and user is playing
-        if (!await APP_DB.isUserPlaying(quizId, username)) {
+        const isPlaying = await APP_DB.isUserPlaying(quizId, username);
+        if (!isPlaying) {
             if (quiz.hasStarted) {
                 throw new Error('USER_NOT_PART_OF_QUIZ');
             }
