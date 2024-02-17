@@ -9,8 +9,8 @@ import AuthRoute from './routes/AuthRoute';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
-import { ping } from './reducers/UserReducer';
 import { useDispatch } from './hooks/redux';
+import { ping } from './actions/UserActions';
 
 function App() {
   const dispatch = useDispatch();

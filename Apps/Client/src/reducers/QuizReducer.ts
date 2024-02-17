@@ -1,13 +1,9 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { FetchedData, QuestionData, QuestionIndexData, QuizData, ScoresData, VoteData, VotesData } from '../types/DataTypes';
-import { CallGetQuiz } from '../calls/quiz/CallGetQuiz';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { FetchedData, QuestionData, ScoresData } from '../types/DataTypes';
 import { RootState } from '../store';
-import { login, logout, ping } from './UserReducer';
-import { CallGetQuestionIndex } from '../calls/quiz/CallGetQuestionIndex';
-import { CallVote } from '../calls/quiz/CallVote';
-import { CallGetScores } from '../calls/quiz/CallGetScores';
-import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 import { getInitialFetchedData } from '../utils';
+import { fetchQuizData, fetchQuestionIndexData, fetchVotes, fetchScores, vote } from '../actions/QuizActions';
+import { login, logout, ping } from '../actions/UserActions';
 
 interface QuizState {
   id: string | null,
@@ -24,110 +20,6 @@ const initialState: QuizState = {
   votes: getInitialFetchedData(),
   scores: getInitialFetchedData(),
 };
-
-export const fetchQuizData = createAsyncThunk(
-  'quiz/fetchQuizData',
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await new CallGetQuiz().execute();
-      
-      return data as QuizData;
-
-    } catch (err: unknown) {
-      let error = 'UNKNOWN_ERROR';
-      
-      if (err instanceof Error) {
-        error = err.message;
-      }
-
-      console.error(`Could not fetch quiz data: ${error}`);
-      return rejectWithValue(error);
-    }
-  }
-);
-
-export const fetchQuestionIndexData = createAsyncThunk(
-  'quiz/fetchQuestionIndexData',
-  async (quizId: string, { rejectWithValue }) => {
-    try {
-      const { data } = await new CallGetQuestionIndex(quizId).execute();
-      
-      return data as QuestionIndexData;
-
-    } catch (err: unknown) {
-      let error = 'UNKNOWN_ERROR';
-      
-      if (err instanceof Error) {
-        error = err.message;
-      }
-
-      console.error(`Could not fetch question index: ${error}`);
-      return rejectWithValue(error);
-    }
-  }
-);
-
-export const fetchVotes = createAsyncThunk(
-  'quiz/fetchVotes',
-  async (quizId: string, { rejectWithValue }) => {
-    try {
-      const { data } = await new CallGetVotes(quizId).execute();
-      
-      return data as number[];
-
-    } catch (err: unknown) {
-      let error = 'UNKNOWN_ERROR';
-      
-      if (err instanceof Error) {
-        error = err.message;
-      }
-
-      console.error(`Could not fetch user's votes: ${error}`);
-      return rejectWithValue(error);
-    }
-  }
-);
-
-export const fetchScores = createAsyncThunk(
-  'quiz/fetchScores',
-  async (quizId: string, { rejectWithValue }) => {
-    try {
-      const { data } = await new CallGetScores(quizId).execute();
-      
-      return data as ScoresData;
-
-    } catch (err: unknown) {
-      let error = 'UNKNOWN_ERROR';
-      
-      if (err instanceof Error) {
-        error = err.message;
-      }
-
-      console.error(`Could not fetch scores: ${error}`);
-      return rejectWithValue(error);
-    }
-  }
-);
-
-export const vote = createAsyncThunk(
-  'user/vote',
-  async ({ quizId, questionIndex, vote }: VoteData, { rejectWithValue }) => {
-    try {
-      const { data } = await new CallVote(quizId, questionIndex).execute({ vote });
-
-      return data as VotesData;
-
-    } catch (err: unknown) {
-      let error = 'UNKNOWN_ERROR';
-      
-      if (err instanceof Error) {
-        error = err.message;
-      }
-
-      return rejectWithValue(error);
-    }
-  }
-);
 
 
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './HamburgerMenu.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { logout } from '../../reducers/UserReducer';
 import { Link, useLocation } from 'react-router-dom';
+import { logout } from '../../actions/UserActions';
 
 const HamburgerMenu: React.FC = () => {
   const location = useLocation();

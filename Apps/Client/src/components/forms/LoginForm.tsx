@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { login, selectAuthentication } from '../../reducers/UserReducer';
+import { selectAuthentication } from '../../reducers/UserReducer';
 import './LoginForm.scss';
+import { login } from '../../actions/UserActions';
 
 const LoginForm: React.FC = () => {
   const [quizId, setQuizId] = useState('');

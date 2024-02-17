@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { vote } from '../../reducers/QuizReducer';
 import { showAnswer } from '../../reducers/OverlaysReducer';
 import './QuestionForm.scss';
+import { vote } from '../../actions/QuizActions';
 
 type Question = {
   index: number,
@@ -16,7 +16,7 @@ type Question = {
 
 const QuestionBox: React.FC<Question> = (props) => {
   const { index, question, theme, options, disabled, choice, setChoice } = props;
-  
+
   const quiz = useSelector(({ quiz }) => quiz);
   const quizId = quiz.id;
   const questions = quiz.questions.data;

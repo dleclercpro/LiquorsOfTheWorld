@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import './ScoresPage.scss';
 import HamburgerMenu from '../components/menus/HamburgerMenu';
 import Scoreboard from '../components/Scoreboard';
-import { fetchScores } from '../reducers/QuizReducer';
 import { useDispatch, useSelector } from '../hooks/redux';
+import { fetchScores } from '../actions/QuizActions';
 
 const ScoresPage: React.FC = () => {
   const quiz = useSelector(({ quiz }) => quiz);

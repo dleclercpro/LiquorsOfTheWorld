@@ -4,9 +4,9 @@ import HamburgerMenu from '../components/menus/HamburgerMenu';
 import QuestionBox from '../components/forms/QuestionForm';
 import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../hooks/redux';
-import { fetchQuestionIndexData, fetchQuizData, fetchScores, fetchVotes } from '../reducers/QuizReducer';
 import { REFRESH_INTERVAL_QUESTION_INDEX } from '../config';
 import { hideLoading, showLoading } from '../reducers/OverlaysReducer';
+import { fetchQuizData, fetchVotes, fetchScores, fetchQuestionIndexData } from '../actions/QuizActions';
 
 const QuizPage: React.FC = () => {
   const quizId = useSelector((state) => state.quiz.id);
