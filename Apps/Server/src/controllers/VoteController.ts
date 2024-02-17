@@ -62,8 +62,10 @@ const VoteController: RequestHandler = async (req, res, next) => {
         await APP_DB.setUserVotes(quizId, username, votes);
 
         // Find out whether all users have voted
-        const usersWhoVoted = await APP_DB.getUsersWhoVoted(quizId);;
-        const users = await APP_DB.getAllUsers();
+        const usersWhoVoted = await APP_DB.getPlayersWhoVotedUpUntil(quizId, questionIndex);;
+        const users = await APP_DB.getAllPlayers(quizId);
+        logger.trace(`Players: ${users}`);
+        logger.trace(`Players who voted so far (${usersWhoVoted.length}/${users.length}): ${usersWhoVoted}`);
 
         // If so: increment quiz's current question index
         if (usersWhoVoted.length === users.length) {
@@ -71,7 +73,10 @@ const VoteController: RequestHandler = async (req, res, next) => {
             await APP_DB.incrementQuestionIndex(quizId);
         }
 
-        return res.json(successResponse());
+        return res.json(successResponse({
+            questionIndex,
+            votes,
+        }));
 
     } catch (err: any) {
         if (err instanceof Error) {

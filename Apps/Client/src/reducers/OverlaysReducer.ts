@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { logout } from './UserReducer';
 
 interface OverlaysState {
   loading: {
@@ -43,6 +44,20 @@ export const overlaysSlice = createSlice({
       state.answer.show = false;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      // Reset state on log out
+      .addCase(logout.fulfilled, (state, action) => {
+        state.loading = {
+          show: false,
+          opaque: false,
+          text: null,
+        };
+        state.answer = {
+          show: false,
+        };
+      });
+    },
 });
 
 export const { showLoading, hideLoading, showAnswer, hideAnswer } = overlaysSlice.actions;

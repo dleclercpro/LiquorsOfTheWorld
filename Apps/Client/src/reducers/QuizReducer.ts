@@ -1,59 +1,28 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { QuestionData, QuestionIndexData, QuizData, ScoresData, VoteData, VotesData } from '../types/DataTypes';
+import { FetchedData, QuestionData, QuestionIndexData, QuizData, ScoresData, VoteData, VotesData } from '../types/DataTypes';
 import { CallGetQuiz } from '../calls/quiz/CallGetQuiz';
 import { RootState } from '../store';
-import { login, ping } from './UserReducer';
+import { login, logout, ping } from './UserReducer';
 import { CallGetQuestionIndex } from '../calls/quiz/CallGetQuestionIndex';
 import { CallVote } from '../calls/quiz/CallVote';
 import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
+import { getInitialFetchedData } from '../utils';
 
 interface QuizState {
   id: string | null,
-  questions: {
-    data: QuestionData[] | null,
-    status: 'idle' | 'loading' | 'succeeded' | 'failed',
-    error: string | null,
-  },
-  questionIndex: {
-    data: number | null,
-    status: 'idle' | 'loading' | 'succeeded' | 'failed',
-    error: string | null,
-  },
-  votes: {
-    data: VotesData | null,
-    status: 'idle' | 'loading' | 'succeeded' | 'failed',
-    error: string | null,
-  },
-  scores: {
-    data: ScoresData | null,
-    status: 'idle' | 'loading' | 'succeeded' | 'failed',
-    error: string | null,
-  },
+  questions: FetchedData<QuestionData[]>,
+  questionIndex: FetchedData<number>,
+  votes: FetchedData<number[]>,
+  scores: FetchedData<ScoresData>,
 }
 
 const initialState: QuizState = {
   id: null,
-  questions: {
-    data: null,
-    status: 'idle',
-    error: null,
-  },
-  questionIndex: {
-    data: null,
-    status: 'idle',
-    error: null,
-  },
-  votes: {
-    data: null,
-    status: 'idle',
-    error: null,
-  },
-  scores: {
-    data: null,
-    status: 'idle',
-    error: null,
-  },
+  questions: getInitialFetchedData(),
+  questionIndex: getInitialFetchedData(),
+  votes: getInitialFetchedData(),
+  scores: getInitialFetchedData(),
 };
 
 export const fetchQuizData = createAsyncThunk(
@@ -104,7 +73,7 @@ export const fetchVotes = createAsyncThunk(
     try {
       const { data } = await new CallGetVotes(quizId).execute();
       
-      return data as VotesData;
+      return data as number[];
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';
@@ -142,17 +111,11 @@ export const fetchScores = createAsyncThunk(
 
 export const vote = createAsyncThunk(
   'user/vote',
-  async ({ vote }: VoteData, { getState, rejectWithValue }) => {
+  async ({ quizId, questionIndex, vote }: VoteData, { rejectWithValue }) => {
     try {
-      const { quiz } = getState() as RootState;
-      const quizId = quiz.id;
-      const questionIndex = quiz.questionIndex.data;
+      const { data } = await new CallVote(quizId, questionIndex).execute({ vote });
 
-      if (quizId === null || questionIndex === null) {
-        return;
-      }
-
-      await new CallVote(quizId, questionIndex).execute({ vote });
+      return data as VotesData;
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';
@@ -228,8 +191,20 @@ export const authSlice = createSlice({
         state.scores.status = 'failed';
         state.scores.error = action.payload as string;
       })
+      .addCase(vote.fulfilled, (state, action) => {
+        state.questionIndex.data = action.payload.questionIndex;
+        state.votes.data = action.payload.votes;
+      })
       .addCase(login.fulfilled, (state, action) => {
         state.id = action.payload.quizId;
+      })
+      // Reset state on log out
+      .addCase(logout.fulfilled, (state, action) => {
+        state.id = null;
+        state.questions = getInitialFetchedData();
+        state.questionIndex = getInitialFetchedData();
+        state.votes = getInitialFetchedData();
+        state.scores = getInitialFetchedData();
       })
       .addCase(ping.fulfilled, (state, action) => {
         state.id = action.payload.quizId;

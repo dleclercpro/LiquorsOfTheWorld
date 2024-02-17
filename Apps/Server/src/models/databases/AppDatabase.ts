@@ -26,13 +26,9 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async isUserPlaying(quizId: string, username: string) {
-        const quiz = await this.getQuiz(quizId);
+        const players = await this.getAllPlayers(quizId);
 
-        if (!quiz) {
-            throw new Error('INVALID_QUIZ_ID');
-        }
-
-        return quiz.players.includes(username);
+        return players.includes(username);
     }
 
     public async addUserToQuiz(quizId: string, username: string) {
@@ -61,7 +57,7 @@ class AppDatabase extends RedisDatabase {
         });
       
         logger.trace(`Creating user '${username}'...`);
-        const user = { username, hashedPassword, questionIndex: 0 };
+        const user = { username, hashedPassword };
       
         await this.set(`users:${username}`, this.serializeUser(user));
       
@@ -93,6 +89,16 @@ class AppDatabase extends RedisDatabase {
 
     public async getAllUsers() {
         return this.getKeysByPattern(`users:*`);
+    }
+
+    public async getAllPlayers(quizId: string) {
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new Error('INVALID_QUIZ_ID');
+        }
+
+        return quiz.players;
     }
 
     public async getQuiz(quizId: string) {
@@ -162,8 +168,11 @@ class AppDatabase extends RedisDatabase {
         return votes.split(SEPARATOR).map(Number);
     }
 
-    public async getUsersWhoVoted(quizId: string) {
-        return Object.keys(await this.getAllVotes(quizId));
+    public async getPlayersWhoVotedUpUntil(quizId: string, questionIndex: number) {
+        const votes = await this.getAllVotes(quizId);
+        const users = Object.keys(votes);
+
+        return users.filter(user => votes[user].length >= questionIndex + 1);
     }
 
     public async getQuestionIndex(quizId: string) {

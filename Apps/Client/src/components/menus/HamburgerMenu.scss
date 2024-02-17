@@ -6,6 +6,7 @@
   right: 50%;
   transform: translate(50%, 0);
   color: $color-white;
+  z-index: 50;
 
   @include desktop {
     top: 0;

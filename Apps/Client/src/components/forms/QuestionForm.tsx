@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { vote } from '../../reducers/QuizReducer';
 import { showAnswer } from '../../reducers/OverlaysReducer';
@@ -9,30 +9,41 @@ type Question = {
   question: string,
   theme: string,
   options: string[],
+  choice: string,
+  setChoice: (choice: string) => void,
 }
 
-const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) => {
+const QuestionBox: React.FC<Question> = ({ index, question, theme, options, choice, setChoice }) => {
   const quiz = useSelector(({ quiz }) => quiz);
+  const quizId = quiz.id;
   const questions = quiz.questions.data;
 
-  const [selectedOption, setSelectedOption] = useState('');
   const dispatch = useDispatch();
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setSelectedOption(e.target.value);
+    setChoice(e.target.value);
   }
 
   const handleSubmit: React.ChangeEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+
+    if (quizId === null) {
+      return;
+    }
     
     await dispatch(vote({
-      vote: options.findIndex(option => option === selectedOption),
+      quizId,
+      questionIndex: index,
+      vote: options.findIndex(option => option === choice),
     }));
 
     dispatch(showAnswer());
-    
-    setSelectedOption('');
   }
+
+  useEffect(() => {
+    setChoice('');
+
+  }, [index]);
 
   if (questions === null) {
     return null;
@@ -54,14 +65,14 @@ const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) =>
             id={`option-${i}`}
             name='option'
             value={option}
-            checked={selectedOption === option}
+            checked={choice === option}
             onChange={handleChange}
           />
           <label htmlFor={`option-${i}`}>{option}</label>
         </div>
       ))}
 
-      <button type='submit' disabled={selectedOption === ''}>Submit my answer</button>
+      <button type='submit' disabled={choice === ''}>Submit my answer</button>
     </form>
   );
 };
