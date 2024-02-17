@@ -8,16 +8,14 @@ class Call<RequestData = void, ResponseData = void> {
     private name: string;
     private url: string;
     private method: string;
-    private timeout: number;
     private payload: RequestData | undefined;
     private headers: HeadersInit;
     private params: RequestInit;
 
-    constructor(url: string, method: string, timeout?: number) {
+    constructor(url: string, method: string) {
         this.name = this.constructor.name;
         this.url = `${API_ROOT}${url}`;
         this.method = method;
-        this.timeout = timeout !== undefined ? timeout : 5_000;
         this.headers = {}
         this.params = {};
     }
