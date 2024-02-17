@@ -32,23 +32,23 @@ class Call<RequestData = void, ResponseData = void> {
         return this.payload;
     }
 
-    getHeaders = () => {
+    getHeaders() {
         return this.headers;
     }
 
-    setUrl = (url: string) => {
+    setUrl(url: string) {
         this.url = url;
     }
 
-    setMethod = (method: string) => {
+    setMethod(method: string) {
         this.method = method;
     }
 
-    setPayload = (payload: RequestData) => {
+    setPayload(payload: RequestData) {
         this.payload = payload;
     }
 
-    setHeaders = (headers: HeadersInit) => {
+    setHeaders(headers: HeadersInit) {
         this.headers = headers;
     }
 
