@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { CallLogIn } from '../calls/auth/CallLogIn';
 import { RootState } from '../store';
-import { LoginData } from '../types/DataTypes';
+import { LoginData, PingData } from '../types/DataTypes';
+import { CallPing } from '../calls/auth/CallPing';
+import { CallLogOut } from '../calls/auth/CallLogOut';
 
 interface UserState {
   username: string | null,
@@ -32,6 +34,48 @@ export const login = createAsyncThunk(
         error = err.message;
       }
 
+      console.error(`Could not log user in: ${error}`);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const logout = createAsyncThunk(
+  'user/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      await new CallLogOut().execute();
+
+    } catch (err: unknown) {
+      let error = 'UNKNOWN_ERROR';
+      
+      if (err instanceof Error) {
+        error = err.message;
+      }
+
+      console.error(`Could not log user out: ${error}`);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const ping = createAsyncThunk(
+  'user/ping',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await new CallPing().execute();
+      console.log(`User is already authenticated.`);
+
+      return data as PingData;
+
+    } catch (err: unknown) {
+      let error = 'UNKNOWN_ERROR';
+      
+      if (err instanceof Error) {
+        error = err.message;
+      }
+
+      console.error(`User is not authenticated yet: ${error}`);
       return rejectWithValue(error);
     }
   }
@@ -42,11 +86,7 @@ export const login = createAsyncThunk(
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-    logout: (state) => {
-      state = initialState;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -59,12 +99,31 @@ export const userSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload as string; // Assuming payload is an error message
+        state.isAuthenticated = false;
+        state.error = action.payload as string;
       })
+      .addCase(logout.pending, (state) => {
+        state.status = 'loading';
+      })
+      // Reset state on log out
+      .addCase(logout.fulfilled, (state) => {
+        state.username = null;
+        state.isAuthenticated = false;
+        state.status = 'idle';
+        state.error = null;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+      })
+      .addCase(ping.fulfilled, (state) => {
+        state.isAuthenticated = true;
+      })
+      .addCase(ping.rejected, (state) => {
+        state.isAuthenticated = false;
+      });
   },
 });
-
-export const { logout } = userSlice.actions;
 
 export const selectAuthentication = (state: RootState) => state.user;
 

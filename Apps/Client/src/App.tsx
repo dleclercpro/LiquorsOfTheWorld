@@ -1,39 +1,56 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.scss';
 import LoginPage from './pages/LoginPage';
 import QuizPage from './pages/QuizPage';
 import ScoresPage from './pages/ScoresPage';
-import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { DEBUG } from './config';
 import TestPage from './pages/TestPage';
 import AuthRoute from './routes/AuthRoute';
+import LoadingOverlay from './components/overlays/LoadingOverlay';
+import AnswerOverlay from './components/overlays/AnswerOverlay';
+import { useEffect } from 'react';
+import { ping } from './reducers/UserReducer';
+import { useDispatch } from './hooks/redux';
 
-function App() {  
+function App() {
+  const dispatch = useDispatch();
+  
+  // Check if user is logged in already
+  useEffect(() => {
+    dispatch(ping());
+  }, []);
+
   return (
-    <Router>
-      <div className='app'>
-        <div className='app-container'>
-          <Routes>
-            {DEBUG && (
-              <Route path='/test' element={<TestPage />} />
-            )}
-            <Route path='/quiz/:quizId' element={(
-              <AuthRoute>
-                <QuizPage />
-              </AuthRoute>
-              )} />
-            <Route path='/quiz/:quizId/scores' element={(
-              <AuthRoute>
-                <ScoresPage />
-              </AuthRoute>
+    <div className='app'>
+      <div className='app-container'>
+        <Routes>
+          {DEBUG && (
+            <Route path='/test' element={(
+              <TestPage />
             )} />
-            <Route path='/' element={<LoginPage />} />
-            <Route path='*' element={<Navigate to='/' replace />} />
-          </Routes>
-        </div>
-        <AnswerOverlay />
+          )}
+          <Route path='/quiz' element={(
+            <AuthRoute>
+              <QuizPage />
+            </AuthRoute>
+          )} />
+          <Route path='/scores' element={(
+            <AuthRoute>
+              <ScoresPage />
+            </AuthRoute>
+          )} />
+          <Route path='/' element={(
+            <LoginPage />
+          )} />
+          <Route path='*' element={(
+            <Navigate to='/' />
+          )} />
+        </Routes>
       </div>
-    </Router>
+      
+      <LoadingOverlay />
+      <AnswerOverlay />
+    </div>
   );
 }
 

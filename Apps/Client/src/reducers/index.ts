@@ -1,12 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import UserReducer from './UserReducer';
 import QuizReducer from './QuizReducer';
-import ModalsReducer from './ModalsReducer';
+import OverlaysReducer from './OverlaysReducer';
 
 const rootReducer = combineReducers({
   user: UserReducer,
   quiz: QuizReducer,
-  modals: ModalsReducer,
+  overlays: OverlaysReducer,
 });
 
 export default rootReducer;

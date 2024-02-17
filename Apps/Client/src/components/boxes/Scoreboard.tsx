@@ -1,30 +1,12 @@
 import './Scoreboard.scss';
-import { useState, useEffect } from 'react';
-import { CallGetScores } from '../../calls/quiz/CallGetScores';
+import { ScoreboardData } from '../../types/DataTypes';
 
 interface Props {
-  quizId: string,
+  scores: ScoreboardData,
 }
 
 const Scoreboard: React.FC<Props> = (props) => {
-  const { quizId } = props;
-  const [scoreboard, setScoreboard] = useState<Record<string, number>>({});
-  
-  useEffect(() => {
-    if (quizId === undefined) {
-      return;
-    }
-    
-    const fetchScores = async () => {
-      const { data } = await new CallGetScores(quizId).execute();
-
-      return data;
-    }
-
-    fetchScores().then((scores) => {
-      setScoreboard(scores ?? scoreboard);
-    });
-  }, [quizId]);
+  const { scores } = props;
   
   return (
     <div className='scoreboard'>
@@ -37,7 +19,7 @@ const Scoreboard: React.FC<Props> = (props) => {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(scoreboard).map(([username, score], i) => {
+          {Object.entries(scores).map(([username, score], i) => {
             return (
               <tr key={`scoreboard-row-${i}`}>
                   <td>{username}</td>

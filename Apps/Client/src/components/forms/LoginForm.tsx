@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { login, selectAuthentication } from '../../reducers/UserReducer';
 import './LoginForm.scss';
+import { showLoading } from '../../reducers/OverlaysReducer';
 
 const LoginForm: React.FC = () => {
   const [quizId, setQuizId] = useState('');
@@ -18,7 +19,7 @@ const LoginForm: React.FC = () => {
   // Redirect to current quiz question on successful login
   useEffect(() => {
     if (auth.status === 'succeeded') {
-      navigate(`/quiz/${quizId}`);
+      navigate(`/quiz`);
     }
   }, [auth.status]);
 
@@ -32,6 +33,9 @@ const LoginForm: React.FC = () => {
   // Send login data to server
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Show loading screen
+    dispatch(showLoading(`Loading...`));
 
     await dispatch(login({ quizId, username, password }));
   };

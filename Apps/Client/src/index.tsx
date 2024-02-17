@@ -6,6 +6,7 @@ import { ENV } from './utils/env';
 import { setLogLevel } from './utils/logging';
 import App from './App';
 import './index.scss';
+import { BrowserRouter } from 'react-router-dom';
 
 setLogLevel(ENV);
 
@@ -16,7 +17,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>
 );

@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 interface ModalsState {
   loading: {
     show: boolean,
+    text: string | null,
   },
   answer: {
     show: boolean,
@@ -12,6 +13,7 @@ interface ModalsState {
 const initialState: ModalsState = {
   loading: {
     show: false,
+    text: null,
   },
   answer: {
     show: false,
@@ -20,12 +22,13 @@ const initialState: ModalsState = {
 
 
 
-export const modalsSlice = createSlice({
-  name: 'modals',
+export const overlaysSlice = createSlice({
+  name: 'overlays',
   initialState,
   reducers: {
-    showLoading: (state) => {
+    showLoading: (state, action) => {
       state.loading.show = true;
+      state.loading.text = action.payload;
     },
     hideLoading: (state) => {
       state.loading.show = false;
@@ -39,6 +42,6 @@ export const modalsSlice = createSlice({
   },
 });
 
-export const { showLoading, hideLoading, showAnswer, hideAnswer } = modalsSlice.actions;
+export const { showLoading, hideLoading, showAnswer, hideAnswer } = overlaysSlice.actions;
 
-export default modalsSlice.reducer;
+export default overlaysSlice.reducer;

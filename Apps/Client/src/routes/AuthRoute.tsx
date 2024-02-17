@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useSelector } from '../hooks/redux';
 
 type Props = {
@@ -8,10 +8,11 @@ type Props = {
 
 const AuthRoute: React.FC<Props> = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-  const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to='/' state={{ from: location }} replace />;
+    console.log(`User is not authenticated: redirecting to login page...`);
+
+    return <Navigate to='/' />;
   }
 
   return <>{children}</>;

@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './LoginPage.scss';
 import LoginForm from '../components/forms/LoginForm';
+import { useSelector } from '../hooks/redux';
+import { useNavigate } from 'react-router';
 
 const LoginPage: React.FC = () => {
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      return;
+    }
+
+    navigate(`/quiz`);
+
+  }, [isAuthenticated]);
+
   return (
     <div className='login-page'>
       <div className='login-box'>

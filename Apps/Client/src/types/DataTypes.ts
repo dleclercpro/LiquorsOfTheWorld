@@ -1,5 +1,9 @@
 import { Auth } from '.';
 
+export type PingData = {
+  quizId: string,
+}
+
 export type LoginData = Auth & {
   quizId: string,
 }

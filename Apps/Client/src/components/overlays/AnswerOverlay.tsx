@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import './AnswerOverlay.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { selectQuestionAnswer } from '../../reducers/QuizReducer';
-import { hideAnswer } from '../../reducers/ModalsReducer';
+import { hideAnswer } from '../../reducers/OverlaysReducer';
 
 interface Props {
   children?: ReactNode,
@@ -16,7 +16,7 @@ const AnswerOverlay: React.FC<Props> = () => {
   const questionIndex = quiz.questionIndex.data;
   const questions = quiz.questions.data;
 
-  const shouldShowAnswer = useSelector(({ modals }) => modals.answer.show);
+  const shouldShow = useSelector(({ overlays }) => overlays.answer.show);
 
   // Wait until quiz data has been fetched
   if (questionIndex === null || questions.length === 0) {
@@ -31,7 +31,7 @@ const AnswerOverlay: React.FC<Props> = () => {
   const text = nextQuestionIndex + 1 > questions.length ? `See results` : `Next question (${nextQuestionIndex + 1}/${questions.length})`;
 
   return (
-    <div id='answer-overlay' className={shouldShowAnswer ? '' : 'hidden'}>
+    <div id='answer-overlay' className={shouldShow ? '' : 'hidden'}>
       <div className='answer-overlay-box'>
         <h2 className='answer-overlay-title'>And the answer is...</h2>
         <p className='answer-overlay-text'>{answer}</p>

@@ -24,15 +24,9 @@
     top: 100%;
     right: 50%;
     transform: translate(50%, 10px);
-    background-color: #f9f9f9;
-    min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
     border-radius: 6px;
     z-index: 1;
-
-    &:hover {
-      background-color: darken(#f9f9f9, 10%);
-    }
 
     @include desktop {
       top: auto;
@@ -49,13 +43,30 @@
       display: block;
     }
 
-    > a {
-      display: block;
-      color: black;
-      padding: 12px 16px;
-      text-decoration: none;
-      font-weight: bold;
-      text-align: center;
+    > ul {
+      list-style-type: none;
+
+      > li {
+        
+        &:not(:last-child) {
+          border-bottom: 1px solid $color-grey;
+        }
+
+        > a {
+          display: block;
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          font-weight: bold;
+          text-align: center;
+          background-color: #f9f9f9;
+          min-width: 200px;
+
+          &:hover {
+            background-color: darken(#f9f9f9, 10%);
+          }
+        }
+      }
     }
   }
 }

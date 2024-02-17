@@ -1,31 +1,28 @@
 import React, { useState } from 'react';
 import './HamburgerMenu.scss';
-import { useDispatch } from '../../hooks/redux';
+import { useDispatch, useSelector } from '../../hooks/redux';
 import { logout } from '../../reducers/UserReducer';
+import { Link, useLocation } from 'react-router-dom';
 
-type HamburgerMenuProps = {
+const HamburgerMenu: React.FC = () => {
+  const location = useLocation();
 
-}
+  const quizId = useSelector((state) => state.quiz.id);
 
-const HamburgerMenu: React.FC<HamburgerMenuProps> = (props) => {
-  const [menuClass, setMenuClass] = useState('hamburger-menu-content hidden');
+  const [shouldShow, setShouldShow] = useState(false);
 
   const dispatch = useDispatch();
   
   const showMenu = () => {
-    setMenuClass(menuClass.replace('hidden', 'visible'));
+    setShouldShow(true);
   }
 
   const hideMenu = () => {
-    setMenuClass(menuClass.replace('visible', 'hidden'));
+    setShouldShow(false);
   }
 
   const toggleMenu = () => {
-    if (menuClass.includes('hidden')) {
-      showMenu();
-    } else {
-      hideMenu();
-    }
+    shouldShow ? hideMenu() : showMenu();
   }
 
   const handleClickOnMenu = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -34,13 +31,33 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (props) => {
     toggleMenu();
   }
 
+  if (quizId === null) {
+    return null;
+  }
+
   return (
     <div className='hamburger-menu' onClick={handleClickOnMenu}>
       <div className='hamburger-menu-icon'>
         &#9776;
       </div>
-      <div className={menuClass}>
-        <a href='/' onClick={() => dispatch(logout())}>Log out</a>
+      <div className={`hamburger-menu-content ${shouldShow ? 'visible' : 'hidden'}`}>
+        <ul>
+          {location.pathname !== '/quiz' && (
+            <li>
+              <Link to={`/quiz`}>Quiz</Link>
+            </li>
+          )}
+          {location.pathname !== '/scores' && (
+            <li>
+              <Link to={`/scores`}>Scoreboard</Link>
+            </li>
+          )}
+          <li>
+          </li>
+          <li>
+            <Link to='/' onClick={() => dispatch(logout())}>Log out</Link>
+          </li>
+        </ul>
       </div>
     </div>
   );

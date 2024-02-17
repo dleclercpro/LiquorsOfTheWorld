@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { QuestionData, QuestionIndexData, QuizData, VoteData } from '../types/DataTypes';
+import { QuestionData, QuestionIndexData, QuizData, ScoreboardData, VoteData } from '../types/DataTypes';
 import { CallGetQuiz } from '../calls/quiz/CallGetQuiz';
 import { RootState } from '../store';
-import { login } from './UserReducer';
+import { login, ping } from './UserReducer';
 import { CallGetQuestionIndex } from '../calls/quiz/CallGetQuestionIndex';
 import { CallVote } from '../calls/quiz/CallVote';
+import { CallGetScores } from '../calls/quiz/CallGetScores';
 
 interface QuizState {
   id: string | null,
@@ -18,6 +19,11 @@ interface QuizState {
     status: 'idle' | 'loading' | 'succeeded' | 'failed',
     error: string | null,
   },
+  scores: {
+    data: ScoreboardData | null,
+    status: 'idle' | 'loading' | 'succeeded' | 'failed',
+    error: string | null,
+  },
 }
 
 const initialState: QuizState = {
@@ -28,6 +34,11 @@ const initialState: QuizState = {
     error: null,
   },
   questionIndex: {
+    data: null,
+    status: 'idle',
+    error: null,
+  },
+  scores: {
     data: null,
     status: 'idle',
     error: null,
@@ -71,6 +82,27 @@ export const fetchQuestionIndexData = createAsyncThunk(
       }
 
       console.error(`Could not fetch quiz ${quizId} question index data: ${error}`);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchScores = createAsyncThunk(
+  'quiz/fetchScores',
+  async (quizId: string, { rejectWithValue }) => {
+    try {
+      const { data } = await new CallGetScores(quizId).execute();
+      
+      return data as ScoreboardData;
+
+    } catch (err: unknown) {
+      let error = 'UNKNOWN_ERROR';
+      
+      if (err instanceof Error) {
+        error = err.message;
+      }
+
+      console.error(`Could not fetch quiz ${quizId}'s scores: ${error}`);
       return rejectWithValue(error);
     }
   }
@@ -142,7 +174,21 @@ export const authSlice = createSlice({
         state.questionIndex.status = 'failed';
         state.questionIndex.error = action.payload as string;
       })
+      .addCase(fetchScores.pending, (state) => {
+        state.scores.status = 'loading';
+      })
+      .addCase(fetchScores.fulfilled, (state, action) => {
+        state.scores.status = 'succeeded';
+        state.scores.data = action.payload;
+      })
+      .addCase(fetchScores.rejected, (state, action) => {
+        state.scores.status = 'failed';
+        state.scores.error = action.payload as string;
+      })
       .addCase(login.fulfilled, (state, action) => {
+        state.id = action.payload.quizId;
+      })
+      .addCase(ping.fulfilled, (state, action) => {
         state.id = action.payload.quizId;
       });
   },

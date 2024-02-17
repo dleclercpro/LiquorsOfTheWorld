@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './QuestionBox.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { vote } from '../../reducers/QuizReducer';
-import { showAnswer } from '../../reducers/ModalsReducer';
+import { showAnswer } from '../../reducers/OverlaysReducer';
 
 type Question = {
   index: number,

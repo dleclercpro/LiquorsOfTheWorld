@@ -4,7 +4,6 @@ import { APP_DB } from '..';
 import { errorResponse, successResponse } from '../utils/calls';
 import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
 import { QuizVote } from '../types/QuizTypes';
-import { SEPARATOR } from '../constants';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { N_QUIZ_QUESTIONS } from '../config';
 

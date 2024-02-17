@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import HealthController from '../controllers/HealthController';
 import ReadyController from '../controllers/ReadyController';
+import PingController from '../controllers/auth/PingController';
 import LoginController from '../controllers/auth/LoginController';
 import LogoutController from '../controllers/auth/LogoutController';
 import GetUserController from '../controllers/user/GetUserController';
@@ -31,6 +32,7 @@ router.get('/ready', ReadyController);
 
 // API
 router.put('/auth', LoginController);
+router.get('/auth', [AuthMiddleware], PingController);
 router.delete('/auth', [AuthMiddleware], LogoutController);
 
 router.get('/user', [AuthMiddleware], GetUserController);
