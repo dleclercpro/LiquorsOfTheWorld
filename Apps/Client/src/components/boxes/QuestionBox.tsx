@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './QuestionBox.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { showAnswer } from '../../reducers/QuizReducer';
 import { vote } from '../../reducers/QuizReducer';
+import { showAnswer } from '../../reducers/ModalsReducer';
 
 type Question = {
   index: number,

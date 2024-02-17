@@ -18,7 +18,6 @@ interface QuizState {
     status: 'idle' | 'loading' | 'succeeded' | 'failed',
     error: string | null,
   },
-  shouldShowAnswer: boolean,
 }
 
 const initialState: QuizState = {
@@ -33,7 +32,6 @@ const initialState: QuizState = {
     status: 'idle',
     error: null,
   },
-  shouldShowAnswer: false,
 };
 
 export const fetchQuizData = createAsyncThunk(
@@ -119,12 +117,6 @@ export const authSlice = createSlice({
       }
       state.questionIndex.data += 1;
     },
-    showAnswer: (state) => {
-      state.shouldShowAnswer = true;
-    },
-    hideAnswer: (state) => {
-      state.shouldShowAnswer = false;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -156,7 +148,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setQuestionIndex, incrementQuestionIndex, showAnswer, hideAnswer } = authSlice.actions;
+export const { setQuestionIndex, incrementQuestionIndex } = authSlice.actions;
 
 export const selectQuestionAnswer = (state: RootState) => {
   const quiz = state.quiz;
