@@ -16,17 +16,16 @@ const LoginController: RequestHandler = async (req, res, next) => {
         const { quizId, username, password } = req.body as RequestBody;
         logger.trace(`Attempt to join quiz '${quizId}' as '${username}'...`);
 
-        const exists = await APP_DB.has(`quiz:${quizId}`);
-        if (!exists) {
+        if (!await APP_DB.doesQuizExist(quizId)) {
             throw new Error('INVALID_QUIZ_ID');
         }
 
         // TODO: check if quiz has already started
 
-        if (await APP_DB.has(`users:${username}`)) {
+        if (await APP_DB.doesUserExist(username)) {
             logger.trace(`Validating password for '${username}'...`);
-            const user = JSON.parse(await APP_DB.get(`users:${username}`) as string) as DatabaseUser;
-            
+            const user = JSON.parse(await APP_DB.getUser(username) as string) as DatabaseUser;
+
             const isAuthorized = await isPasswordValid(password, user.hashedPassword);
             if (!isAuthorized) {
                 logger.warn(`Failed joining attempt for '${username}'.`);

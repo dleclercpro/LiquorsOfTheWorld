@@ -10,8 +10,7 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new Error('INVALID_PARAMS');
     }
 
-    const exists = await APP_DB.has(`quiz:${quizId}`);
-    if (!exists) {
+    if (!await APP_DB.doesQuizExist(quizId)) {
         throw new Error('INVALID_QUIZ_ID');
     }
 
@@ -23,7 +22,7 @@ const validateParams = async (params: ParamsDictionary) => {
 const GetQuestionIndexController: RequestHandler = async (req, res, next) => {
     try {
         const { quizId } = await validateParams(req.params);
-        const questionIndex = await APP_DB.getCurrentQuestionIndex(quizId);
+        const questionIndex = await APP_DB.getQuestionIndex(quizId);
 
         return res.json(successResponse({
             questionIndex,

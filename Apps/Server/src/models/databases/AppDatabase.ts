@@ -15,14 +15,12 @@ type Votes = Record<string, number[]>;
 
 class AppDatabase extends RedisDatabase {
 
-    public async getCurrentQuestionIndex(quizId: string) {
-        const questionIndex = await this.get(`quiz:${quizId}`);
+    public async doesQuizExist(quizId: string) {
+        return this.has(`quiz:${quizId}`);
+    }
 
-        if (questionIndex === null) {
-            throw new Error('INVALID_QUIZ_ID');
-        }
-    
-        return Number(questionIndex);
+    public async doesUserExist(username: string) {
+        return this.has(`users:${username}`);
     }
 
     public async createUser(username: string, password: string) {
@@ -48,26 +46,12 @@ class AppDatabase extends RedisDatabase {
         return user;
     }
 
+    public async getUser(username: string) {
+        return this.get(`users:${username}`);
+    }
+
     public async getAllUsers() {
         return this.getKeysByPattern(`users:*`);
-    }
-
-    protected deserializeUserVotes(votes: string) {
-        return votes.split(SEPARATOR).map(Number);
-    }
-
-    public async getUserVotes(quizId: string, username: string) {
-        const votes = await this.get(`votes:${quizId}:${username}`);
-
-        if (votes !== null) {
-            return this.deserializeUserVotes(votes);
-        }
-
-        return [];
-    }
-
-    public async getUsersWhoVoted(quizId: string) {
-        return Object.keys(await this.getAllVotes(quizId));
     }
     
     public async getAllVotes(quizId: string) {
@@ -99,6 +83,48 @@ class AppDatabase extends RedisDatabase {
             }, {});
     
         return scores;
+    }
+
+    public async getUserVotes(quizId: string, username: string) {
+        const votes = await this.get(`votes:${quizId}:${username}`);
+
+        if (votes !== null) {
+            return this.deserializeUserVotes(votes);
+        }
+
+        return [];
+    }
+
+    public async setUserVotes(quizId: string, username: string, votes: number[]) {
+        await this.set(`votes:${quizId}:${username}`, votes.join(SEPARATOR));
+    }
+
+    protected deserializeUserVotes(votes: string) {
+        return votes.split(SEPARATOR).map(Number);
+    }
+
+    public async getUsersWhoVoted(quizId: string) {
+        return Object.keys(await this.getAllVotes(quizId));
+    }
+
+    public async getQuestionIndex(quizId: string) {
+        const questionIndex = await this.get(`quiz:${quizId}`);
+
+        if (questionIndex === null) {
+            throw new Error('INVALID_QUIZ_ID');
+        }
+    
+        return Number(questionIndex);
+    }
+
+    public async setQuestionIndex(quizId: string, questionIndex: number) {
+        await this.set(`quiz:${quizId}`, String(questionIndex));
+    }
+
+    public async incrementQuestionIndex(quizId: string) {
+        const questionIndex = await this.getQuestionIndex(quizId);
+
+        await this.setQuestionIndex(quizId, questionIndex + 1);
     }
 }
 

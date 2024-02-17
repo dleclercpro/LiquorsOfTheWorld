@@ -15,12 +15,11 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new Error('INVALID_PARAMS');
     }
 
-    const exists = await APP_DB.has(`quiz:${quizId}`);
-    if (!exists) {
+    if (!await APP_DB.doesQuizExist(quizId)) {
         throw new Error('INVALID_QUIZ_ID');
     }
 
-    const _currentQuestionIndex = await APP_DB.get(`quiz:${quizId}`);
+    const _currentQuestionIndex = await APP_DB.getQuestionIndex(quizId);
     if (_currentQuestionIndex === null) {
         throw new Error('INVALID_QUIZ_ID');
     }
@@ -61,7 +60,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         }
 
         // Store votes in DB
-        await APP_DB.set(`votes:${quizId}:${username}`, votes.join(SEPARATOR));
+        await APP_DB.setUserVotes(quizId, username, votes);
 
         // Find out whether all users have voted
         const usersWhoVoted = await APP_DB.getUsersWhoVoted(quizId);;
@@ -70,7 +69,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         // If so: increment quiz's current question index
         if (usersWhoVoted.length === users.length) {
             logger.info(`All users have voted on question #${questionIndex + 1}: incrementing question index...`);
-            await APP_DB.set(`quiz:${quizId}`, String(questionIndex + 1));
+            await APP_DB.incrementQuestionIndex(quizId);
         }
 
         return res.json(successResponse());

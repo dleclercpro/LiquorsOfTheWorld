@@ -12,8 +12,7 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new Error('INVALID_PARAMS');
     }
 
-    const exists = await APP_DB.has(`quiz:${quizId}`);
-    if (!exists) {
+    if (!await APP_DB.doesQuizExist(quizId)) {
         throw new Error('INVALID_QUIZ_ID');
     }
 
