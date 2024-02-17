@@ -28,7 +28,7 @@ const AnswerOverlay: React.FC<Props> = () => {
   }
 
   const nextQuestionIndex = questionIndex + 1;
-  const text = nextQuestionIndex + 1 > questions.length ? `See results` : `Next question (${nextQuestionIndex + 1}/${questions.length})`;
+  const text = nextQuestionIndex >= questions.length ? `See results` : `Next question (${nextQuestionIndex + 1}/${questions.length})`;
 
   return (
     <div id='answer-overlay' className={shouldShow ? '' : 'hidden'}>

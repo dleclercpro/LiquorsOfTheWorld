@@ -97,6 +97,7 @@ const QuizPage: React.FC = () => {
         theme={theme}
         question={question}
         options={options}
+        disabled={choice === '' || playerMustWait}
         choice={choice}
         setChoice={setChoice}
       /> 

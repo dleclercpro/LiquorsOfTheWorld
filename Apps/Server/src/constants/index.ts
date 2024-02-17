@@ -1,7 +1,6 @@
 import { name, version, label } from '../../package.json';
 import { Environment } from '../types';
 import questions from '../../data/questions.json';
-import { DatabaseUser } from '../types/UserTypes';
 
 export const ENVIRONMENTS = Object.values(Environment);
 export const QUESTIONS = questions;

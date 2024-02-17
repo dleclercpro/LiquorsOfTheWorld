@@ -38,6 +38,3 @@ export const REDIS_RETRY_CONNECT_MAX = 5;
 export const COOKIE_NAME = `liquors`;
 export const TOKEN_SECRET = process.env.TOKEN_SECRET!;
 export const N_SALT_ROUNDS = 10;
-
-// Misc
-export const N_QUIZ_QUESTIONS = 20;

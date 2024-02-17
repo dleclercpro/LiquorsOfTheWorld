@@ -9,14 +9,18 @@ type Question = {
   question: string,
   theme: string,
   options: string[],
+  disabled: boolean,
   choice: string,
   setChoice: (choice: string) => void,
 }
 
-const QuestionBox: React.FC<Question> = ({ index, question, theme, options, choice, setChoice }) => {
+const QuestionBox: React.FC<Question> = (props) => {
+  const { index, question, theme, options, disabled, choice, setChoice } = props;
+  
   const quiz = useSelector(({ quiz }) => quiz);
   const quizId = quiz.id;
   const questions = quiz.questions.data;
+  const votes = quiz.votes.data;
 
   const dispatch = useDispatch();
 
@@ -45,7 +49,7 @@ const QuestionBox: React.FC<Question> = ({ index, question, theme, options, choi
 
   }, [index]);
 
-  if (questions === null) {
+  if (questions === null || votes === null) {
     return null;
   }
 
@@ -72,7 +76,7 @@ const QuestionBox: React.FC<Question> = ({ index, question, theme, options, choi
         </div>
       ))}
 
-      <button type='submit' disabled={choice === ''}>Submit my answer</button>
+      <button type='submit' disabled={disabled}>Submit my answer</button>
     </form>
   );
 };
