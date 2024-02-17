@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FetchedData, QuestionData, ScoresData } from '../types/DataTypes';
+import { FetchedData, ScoresData } from '../types/DataTypes';
 import { RootState } from '../store';
 import { getInitialFetchedData } from '../utils';
 import { fetchQuizData, fetchQuestionIndexData, fetchVotes, fetchScores, vote } from '../actions/QuizActions';
 import { login, logout, ping } from '../actions/UserActions';
+import { QuizJSON } from '../types/JSONTypes';
 
 interface QuizState {
   id: string | null,
-  questions: FetchedData<QuestionData[]>,
+  questions: FetchedData<QuizJSON>,
   questionIndex: FetchedData<number>,
   votes: FetchedData<number[]>,
   scores: FetchedData<ScoresData>,
@@ -44,7 +45,7 @@ export const authSlice = createSlice({
       })
       .addCase(fetchQuizData.fulfilled, (state, action) => {
         state.questions.status = 'succeeded';
-        state.questions.data = action.payload.questions;
+        state.questions.data = action.payload;
       })
       .addCase(fetchQuizData.rejected, (state, action) => {
         state.questions.status = 'failed';

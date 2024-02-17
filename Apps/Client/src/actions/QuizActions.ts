@@ -1,10 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { QuestionIndexData, QuizData, ScoresData, VotesData } from '../types/DataTypes';
+import { QuestionIndexData, ScoresData, VotesData } from '../types/DataTypes';
 import { CallGetQuiz } from '../calls/quiz/CallGetQuiz';
 import { CallGetQuestionIndex } from '../calls/quiz/CallGetQuestionIndex';
 import { CallVote } from '../calls/quiz/CallVote';
 import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
+import { QuizJSON } from '../types/JSONTypes';
 
 export const fetchQuizData = createAsyncThunk(
   'quiz/fetchQuizData',
@@ -12,7 +13,7 @@ export const fetchQuizData = createAsyncThunk(
     try {
       const { data } = await new CallGetQuiz().execute();
       
-      return data as QuizData;
+      return data as QuizJSON;
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';

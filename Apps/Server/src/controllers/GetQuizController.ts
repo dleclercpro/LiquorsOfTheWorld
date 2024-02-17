@@ -4,9 +4,9 @@ import { QUESTIONS } from '../constants';
 
 const GetQuizController: RequestHandler = async (req, res, next) => {
     try {
-        return res.json(successResponse({
-            questions: QUESTIONS,
-        }));
+        return res.json(
+            successResponse(QUESTIONS)
+        );
 
     } catch (err: any) {
         next(err);

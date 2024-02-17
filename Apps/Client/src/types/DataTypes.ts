@@ -1,4 +1,5 @@
 import { Auth } from '.';
+import { QuestionJSON, QuizJSON } from './JSONTypes';
 
 export type FetchedData<Data> = {
   data: Data | null,
@@ -21,17 +22,6 @@ export type UserData = {
 export type VotesData = {
   questionIndex: number,
   votes: number[],
-};
-
-export type QuestionData = {
-  theme: string,
-  answer: number,
-  question: string,
-  options: string[],
-};
-
-export type QuizData = {
-  questions: QuestionData[],
 };
 
 export type QuestionIndexData = {
