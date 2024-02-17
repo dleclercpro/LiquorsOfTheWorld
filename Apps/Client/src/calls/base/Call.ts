@@ -85,18 +85,14 @@ class Call<RequestData = void, ResponseData = void> {
         const response = await fetch(this.url, this.params)
             .then(async (r) => {
                 const res = { status: r.status, statusText: r.statusText };
-                console.log(r);
 
-                // Try to parse JSON and return it with rest of
-                // response
+                // Try to parse JSON and return it with rest of response
                 try {
                     return { ...res, json: await r.json() as ServerResponse<ResponseData> };
                 } catch {
                     return { ...res, json: null };
                 }
             });
-
-        console.log(response);
 
         // There was valid JSON data in the response
         if (response.json) {

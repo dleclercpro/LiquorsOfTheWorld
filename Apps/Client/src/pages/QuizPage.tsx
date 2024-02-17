@@ -4,7 +4,8 @@ import HamburgerMenu from '../components/menus/HamburgerMenu';
 import QuestionBox from '../components/boxes/QuestionBox';
 import { Navigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from '../hooks/redux';
-import { fetchQuizData } from '../reducers/QuizReducer';
+import { fetchQuestionIndexData, fetchQuizData } from '../reducers/QuizReducer';
+import { REFRESH_INTERVAL_QUESTION_INDEX } from '../config';
 
 type RouteParams = {
   quizId: string;
@@ -13,22 +14,44 @@ type RouteParams = {
 const QuizPage: React.FC = () => {
   const { quizId } = useParams<RouteParams>();
   const dispatch = useDispatch();
-  const { questionIndex, questions } = useSelector(({ quiz }) => quiz);
-  const nextQuestionIndex = questionIndex + 1;
 
+  const quiz = useSelector(({ quiz }) => quiz);
+  const questionIndex = quiz.questionIndex.data;
+  const questions = quiz.questions.data;
+
+  // Fetch quiz data
+  useEffect(() => {
+    dispatch(fetchQuizData());
+  }, []);
+
+  // Fetch current question index
   useEffect(() => {
     if (quizId === undefined) {
       return;
     }
 
-    dispatch(fetchQuizData(quizId));
+    dispatch(fetchQuestionIndexData(quizId));
+  }, [quizId]);
+
+  // Regularly fetch current question index (will change as players vote)
+  useEffect(() => {
+    if (quizId === undefined) {
+      return;
+    }
+
+    const interval = setInterval(async () => {
+      await dispatch(fetchQuestionIndexData(quizId));
+    }, REFRESH_INTERVAL_QUESTION_INDEX);
+
+    return () => clearInterval(interval);
   }, [quizId]);
 
   // Wait until quiz data has been fetched
-  if (questions.length === 0) {
+  if (questionIndex === null || questions.length === 0) {
     return null;
   }
 
+  const nextQuestionIndex = questionIndex + 1;
   if (nextQuestionIndex === questions.length) {
     return (
       <Navigate to={`/scores`} replace />

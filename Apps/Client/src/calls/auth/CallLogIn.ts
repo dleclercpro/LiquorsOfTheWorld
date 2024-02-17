@@ -1,5 +1,5 @@
+import { LoginData } from '../../types/DataTypes';
 import CallPUT from '../base/CallPUT';
-import { LoginData } from '../../types';
 
 export class CallLogIn extends CallPUT<LoginData> {
 

@@ -15,6 +15,16 @@ type Votes = Record<string, number[]>;
 
 class AppDatabase extends RedisDatabase {
 
+    public async getCurrentQuestionIndex(quizId: string) {
+        const questionIndex = await this.get(`quiz:${quizId}`);
+
+        if (questionIndex === null) {
+            throw new Error('INVALID_QUIZ_ID');
+        }
+    
+        return Number(questionIndex);
+    }
+
     public async createUser(username: string, password: string) {
         logger.trace(`Adding user '${username}' to Redis DB...`);
 

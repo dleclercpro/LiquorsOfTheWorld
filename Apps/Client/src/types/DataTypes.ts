@@ -1,3 +1,9 @@
+import { Auth } from '.';
+
+export type LoginData = Auth & {
+  quizId: string,
+}
+
 export type VoteData = {
   vote: number,
 };
@@ -7,10 +13,13 @@ export type QuestionData = {
   answer: number,
   question: string,
   options: string[],
-}
+};
 
 export type QuizData = {
   questions: QuestionData[],
+};
+
+export type QuestionIndexData = {
   questionIndex: number,
 }
 

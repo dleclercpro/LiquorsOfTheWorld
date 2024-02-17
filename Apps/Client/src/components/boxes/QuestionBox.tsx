@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './QuestionBox.scss';
-import { CallVote } from '../../calls/quiz/CallVote';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { showAnswer } from '../../reducers/QuizReducer';
+import { vote } from '../../reducers/QuizReducer';
 
 type Question = {
   index: number,
@@ -12,7 +12,9 @@ type Question = {
 }
 
 const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) => {
-  const { id: quizId, questions } = useSelector(({ quiz }) => quiz);
+  const quiz = useSelector(({ quiz }) => quiz);
+  const questions = quiz.questions.data;
+
   const [selectedOption, setSelectedOption] = useState('');
   const dispatch = useDispatch();
 
@@ -22,10 +24,10 @@ const QuestionBox: React.FC<Question> = ({ index, question, theme, options }) =>
 
   const handleSubmit: React.ChangeEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-
-    const vote = options.findIndex(option => option === selectedOption);
-
-    await new CallVote(quizId as string, index).execute({ vote });
+    
+    await dispatch(vote({
+      vote: options.findIndex(option => option === selectedOption),
+    }));
 
     dispatch(showAnswer());
     

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { CallLogIn } from '../calls/auth/CallLogIn';
 import { RootState } from '../store';
-import { LoginData } from '../types';
+import { LoginData } from '../types/DataTypes';
 
 interface UserState {
   username: string | null,
@@ -32,11 +32,12 @@ export const login = createAsyncThunk(
         error = err.message;
       }
 
-      console.error(`Could not log user in: ${error}`);
       return rejectWithValue(error);
     }
   }
-)
+);
+
+
 
 export const userSlice = createSlice({
   name: 'user',
@@ -59,7 +60,7 @@ export const userSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string; // Assuming payload is an error message
-      });
+      })
   },
 });
 

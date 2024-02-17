@@ -1,4 +1,4 @@
-import { VoteData } from '../../types/QuizTypes';
+import { VoteData } from '../../types/DataTypes';
 import CallPOST from '../base/CallPOST';
 
 export class CallVote extends CallPOST<VoteData> {
