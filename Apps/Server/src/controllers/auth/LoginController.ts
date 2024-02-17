@@ -1,13 +1,12 @@
 import { RequestHandler } from 'express';
 import { HttpStatusCode } from '../../types/HTTPTypes';
 import logger from '../../logger';
-import { REDIS_DB } from '../..';
+import { APP_DB } from '../..';
 import { errorResponse, successResponse } from '../../utils/calls';
 import { Auth } from '../../types';
 import { COOKIE_NAME } from '../../config';
 import { encodeCookie } from '../../utils/cookies';
 import { isPasswordValid } from '../../utils/math';
-import { createUser } from '../../utils/users';
 import { DatabaseUser } from '../../types/UserTypes';
 
 type RequestBody = Auth & { quizId: string };
@@ -17,16 +16,16 @@ const LoginController: RequestHandler = async (req, res, next) => {
         const { quizId, username, password } = req.body as RequestBody;
         logger.trace(`Attempt to join quiz '${quizId}' as '${username}'...`);
 
-        const exists = await REDIS_DB.has(`quiz:${quizId}`);
+        const exists = await APP_DB.has(`quiz:${quizId}`);
         if (!exists) {
             throw new Error('INVALID_QUIZ_ID');
         }
 
         // TODO: check if quiz has already started
 
-        if (await REDIS_DB.has(`users:${username}`)) {
+        if (await APP_DB.has(`users:${username}`)) {
             logger.trace(`Validating password for '${username}'...`);
-            const user = JSON.parse(await REDIS_DB.get(`users:${username}`) as string) as DatabaseUser;
+            const user = JSON.parse(await APP_DB.get(`users:${username}`) as string) as DatabaseUser;
             
             const isAuthorized = await isPasswordValid(password, user.hashedPassword);
             if (!isAuthorized) {
@@ -35,7 +34,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
             }
         } else {
             logger.trace(`Creating user '${username}'...`);
-            await createUser(username, password);
+            await APP_DB.createUser(username, password);
         }
 
         // TODO: check if user is part of quiz

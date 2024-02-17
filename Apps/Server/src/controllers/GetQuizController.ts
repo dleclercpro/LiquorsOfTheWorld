@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { successResponse } from '../utils/calls';
 import { QUESTIONS } from '../constants';
-import { REDIS_DB } from '..';
+import { APP_DB } from '..';
 import { ParamsDictionary } from 'express-serve-static-core';
 
 const validateParams = async (params: ParamsDictionary) => {
@@ -11,7 +11,7 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new Error('INVALID_PARAMS');
     }
 
-    const exists = await REDIS_DB.has(`quiz:${quizId}`);
+    const exists = await APP_DB.has(`quiz:${quizId}`);
     if (!exists) {
         throw new Error('INVALID_QUIZ_ID');
     }
@@ -20,7 +20,7 @@ const validateParams = async (params: ParamsDictionary) => {
 }
 
 const fetchQuestionIndex = async (quizId: string) => {
-    const questionIndex = await REDIS_DB.get(`quiz:${quizId}`);
+    const questionIndex = await APP_DB.get(`quiz:${quizId}`);
 
     if (questionIndex === null) {
         throw new Error('INVALID_QUIZ_ID');

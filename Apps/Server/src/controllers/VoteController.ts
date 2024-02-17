@@ -1,12 +1,10 @@
 import { RequestHandler } from 'express';
 import logger from '../logger';
-import { REDIS_DB } from '..';
+import { APP_DB } from '..';
 import { errorResponse, successResponse } from '../utils/calls';
 import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
 import { QuizVote } from '../types/QuizTypes';
-import { getAllUsers, getVotesOfUser } from '../utils/users';
 import { SEPARATOR } from '../constants';
-import { getAllVotes } from '../utils/scoring';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { N_QUIZ_QUESTIONS } from '../config';
 
@@ -17,12 +15,12 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new Error('INVALID_PARAMS');
     }
 
-    const exists = await REDIS_DB.has(`quiz:${quizId}`);
+    const exists = await APP_DB.has(`quiz:${quizId}`);
     if (!exists) {
         throw new Error('INVALID_QUIZ_ID');
     }
 
-    const _currentQuestionIndex = await REDIS_DB.get(`quiz:${quizId}`);
+    const _currentQuestionIndex = await APP_DB.get(`quiz:${quizId}`);
     if (_currentQuestionIndex === null) {
         throw new Error('INVALID_QUIZ_ID');
     }
@@ -53,7 +51,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         const { quizId, questionIndex } = await validateParams(req.params);
 
         // Get votes from DB if they exist
-        let votes = await getVotesOfUser(quizId, username);
+        let votes = await APP_DB.getUserVotes(quizId, username);
 
         // Add vote to array, otherwise overwrite it
         if (votes.length === questionIndex) {
@@ -63,14 +61,16 @@ const VoteController: RequestHandler = async (req, res, next) => {
         }
 
         // Store votes in DB
-        await REDIS_DB.set(`votes:${quizId}:${username}`, votes.join(SEPARATOR));
+        await APP_DB.set(`votes:${quizId}:${username}`, votes.join(SEPARATOR));
 
-        // If all users have voted on current question, move on to next one
-        const usersWhoVoted = Object.keys(await getAllVotes(quizId));
-        const users = await getAllUsers();
+        // Find out whether all users have voted
+        const usersWhoVoted = await APP_DB.getUsersWhoVoted(quizId);;
+        const users = await APP_DB.getAllUsers();
+
+        // If so: increment quiz's current question index
         if (usersWhoVoted.length === users.length) {
             logger.info(`All users have voted on question #${questionIndex + 1}: incrementing question index...`);
-            await REDIS_DB.set(`quiz:${quizId}`, String(questionIndex + 1));
+            await APP_DB.set(`quiz:${quizId}`, String(questionIndex + 1));
         }
 
         return res.json(successResponse());

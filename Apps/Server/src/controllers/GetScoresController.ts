@@ -2,9 +2,8 @@ import { RequestHandler } from 'express';
 import logger from '../logger';
 import { errorResponse, successResponse } from '../utils/calls';
 import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
-import { computeScores } from '../utils/scoring';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { REDIS_DB } from '..';
+import { APP_DB } from '..';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -13,7 +12,7 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new Error('INVALID_PARAMS');
     }
 
-    const exists = await REDIS_DB.has(`quiz:${quizId}`);
+    const exists = await APP_DB.has(`quiz:${quizId}`);
     if (!exists) {
         throw new Error('INVALID_QUIZ_ID');
     }
@@ -27,7 +26,7 @@ const GetScoresController: RequestHandler = async (req, res, next) => {
     try {
         const { quizId } = await validateParams(req.params);
 
-        const scores = await computeScores(quizId);
+        const scores = await APP_DB.getAllScores(quizId);
 
         return res.json(successResponse(scores));
 
