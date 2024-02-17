@@ -18,6 +18,7 @@ export const API_VERSION = `v1`;
 export const HOST = process.env.HOST!;
 export const PORT = parseNumberText(process.env.PORT);
 export const ROOT = `http://${HOST}:${PORT}`;
+export const ADMIN = process.env.ADMIN!;
 
 // Client
 export const CLIENT_DIR = path.join(__dirname, `../..`, `client`);

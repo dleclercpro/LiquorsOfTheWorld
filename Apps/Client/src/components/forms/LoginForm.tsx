@@ -35,7 +35,7 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
 
     // Show loading screen
-    dispatch(showLoading(`Loading...`));
+    // dispatch(showLoading(`Loading...`));
 
     await dispatch(login({ quizId, username, password }));
   };

@@ -1,13 +1,13 @@
-export type QuestionBoxJSON = {
-  theme: string,
-  question: string,
-  options: string[],
-  answer: number,
-}
-
 export type QuizVote = {
   questionIndex: number,
   vote: number,
-}
+};
 
 export type QuizScoreboard = Record<string, number>;
+
+export type QuizGame = {
+  creator: string,
+  hasStarted: boolean,
+  questionIndex: number,
+  players: string[],
+};

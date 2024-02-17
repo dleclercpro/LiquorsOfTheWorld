@@ -4,7 +4,7 @@ import logger from '../../logger';
 import { APP_DB } from '../..';
 import { errorResponse, successResponse } from '../../utils/calls';
 import { Auth } from '../../types';
-import { COOKIE_NAME } from '../../config';
+import { ADMIN, COOKIE_NAME } from '../../config';
 import { encodeCookie } from '../../utils/cookies';
 import { isPasswordValid } from '../../utils/math';
 import { DatabaseUser } from '../../types/UserTypes';
@@ -14,29 +14,42 @@ type RequestBody = Auth & { quizId: string };
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
         const { quizId, username, password } = req.body as RequestBody;
-        logger.trace(`Attempt to join quiz '${quizId}' as '${username}'...`);
+        const isAdmin = username === ADMIN;
+        logger.trace(`Attempt to join quiz '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
 
-        if (!await APP_DB.doesQuizExist(quizId)) {
-            throw new Error('INVALID_QUIZ_ID');
-        }
-
-        // TODO: check if quiz has already started
-
-        if (await APP_DB.doesUserExist(username)) {
+        // If user exists: check if password is valid
+        const userExists = await APP_DB.doesUserExist(username);
+        if (userExists) {
             logger.trace(`Validating password for '${username}'...`);
             const user = JSON.parse(await APP_DB.getUser(username) as string) as DatabaseUser;
 
-            const isAuthorized = await isPasswordValid(password, user.hashedPassword);
-            if (!isAuthorized) {
-                logger.warn(`Failed joining attempt for '${username}'.`);
+            if (!await isPasswordValid(password, user.hashedPassword)) {
                 throw new Error('INVALID_PASSWORD');
             }
-        } else {
+        }
+
+        // In case quiz doesn't exist
+        let quiz = await APP_DB.getQuiz(quizId);
+        if (!quiz) {
+            if (!isAdmin) {
+                throw new Error('INVALID_QUIZ_ID');
+            }
+            quiz = await APP_DB.createQuiz(quizId, username);
+        }
+
+        // Check if quiz has already started and user is playing
+        if (!await APP_DB.isUserPlaying(quizId, username)) {
+            if (quiz.hasStarted) {
+                throw new Error('USER_NOT_PART_OF_QUIZ');
+            }
+            await APP_DB.addUserToQuiz(quizId, username);
+        }
+
+        // If user didn't exist, create them, now that everything worked out well
+        if (!userExists) {
             logger.trace(`Creating user '${username}'...`);
             await APP_DB.createUser(username, password);
         }
-
-        // TODO: check if user is part of quiz
 
         logger.trace(`User '${username}' joined quiz ${quizId}.`);
         const cookie = await encodeCookie({

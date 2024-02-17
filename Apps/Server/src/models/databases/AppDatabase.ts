@@ -2,10 +2,12 @@ import bcrypt from 'bcrypt';
 import { N_SALT_ROUNDS } from '../../config';
 import { ANSWERS } from '../../constants';
 import logger from '../../logger';
-import { getLastValue } from '../../utils/array';
+import { getLastValue, unique } from '../../utils/array';
 import { sum } from '../../utils/math';
 import RedisDatabase from './base/RedisDatabase';
 import { DatabaseUser } from '../../types/UserTypes';
+import { randomUUID } from 'crypto';
+import { QuizGame } from '../../types/QuizTypes';
 
 const SEPARATOR = '|';
 
@@ -23,10 +25,32 @@ class AppDatabase extends RedisDatabase {
         return this.has(`users:${username}`);
     }
 
+    public async isUserPlaying(quizId: string, username: string) {
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new Error('INVALID_QUIZ_ID');
+        }
+
+        return quiz.players.includes(username);
+    }
+
+    public async addUserToQuiz(quizId: string, username: string) {
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new Error('INVALID_QUIZ_ID');
+        }
+
+        await this.updateQuiz(quizId, {
+            ...quiz,
+            players: unique([...quiz.players, username]),
+        });
+    }
+
     public async createUser(username: string, password: string) {
         logger.trace(`Adding user '${username}' to Redis DB...`);
 
-        // Hash the password
         const hashedPassword = await new Promise<string>((resolve, reject) => {
             bcrypt.hash(password, N_SALT_ROUNDS, async (err, hash) => {
                 if (err) {
@@ -41,9 +65,28 @@ class AppDatabase extends RedisDatabase {
         logger.trace(`Creating user '${username}' in database...`);
         const user = { username, hashedPassword, questionIndex: 0 };
       
-        await this.set(`users:${username}`, JSON.stringify(user as DatabaseUser));
+        await this.set(`users:${username}`, this.serializeUser(user));
       
         return user;
+    }
+
+    public async createQuiz(quizId: string, username: string) {
+        logger.trace(`Creating a new game...`);
+
+        if (await this.doesQuizExist(quizId)) {
+            throw new Error('QUIZ_ID_ALREADY_EXISTS');
+        }
+
+        const quiz: QuizGame = {
+            creator: username,
+            questionIndex: 0,
+            hasStarted: false,
+            players: [],
+        };
+
+        await this.set(`quiz:${quizId}`, this.serializeQuiz(quiz));
+
+        return quiz;
     }
 
     public async getUser(username: string) {
@@ -52,6 +95,24 @@ class AppDatabase extends RedisDatabase {
 
     public async getAllUsers() {
         return this.getKeysByPattern(`users:*`);
+    }
+
+    public async getQuiz(quizId: string) {
+        const quiz = await this.get(`quiz:${quizId}`);
+
+        if (quiz === null) {
+            return;
+        }
+
+        return this.deserializeQuiz(quiz);
+    }
+
+    public async updateQuiz(quizId: string, updatedQuiz: QuizGame) {
+        if (!await this.doesQuizExist(quizId)) {
+            throw new Error('INVALID_QUIZ_ID');
+        }
+
+        await this.set(`quiz:${quizId}`, this.serializeQuiz(updatedQuiz));
     }
     
     public async getAllVotes(quizId: string) {
@@ -108,23 +169,56 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async getQuestionIndex(quizId: string) {
-        const questionIndex = await this.get(`quiz:${quizId}`);
+        const quiz = await this.getQuiz(quizId);
 
-        if (questionIndex === null) {
+        if (!quiz) {
             throw new Error('INVALID_QUIZ_ID');
         }
-    
-        return Number(questionIndex);
+
+        return quiz.questionIndex;
     }
 
     public async setQuestionIndex(quizId: string, questionIndex: number) {
-        await this.set(`quiz:${quizId}`, String(questionIndex));
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new Error('INVALID_QUIZ_ID');
+        }
+        
+        await this.updateQuiz(quizId, { ...quiz, questionIndex });
     }
 
     public async incrementQuestionIndex(quizId: string) {
         const questionIndex = await this.getQuestionIndex(quizId);
 
         await this.setQuestionIndex(quizId, questionIndex + 1);
+    }
+
+    public async generateQuizId() {
+        let quizId = '';
+
+        // Generate a new unique ID for the quiz
+        while (!quizId || await this.doesQuizExist(quizId)) {
+            quizId = randomUUID();
+        }
+
+        return quizId;
+    }
+
+    protected serializeUser(user: DatabaseUser) {
+        return JSON.stringify(user);
+    }
+
+    protected deserializeUser(user: string) {
+        return JSON.parse(user) as DatabaseUser;
+    }
+
+    protected serializeQuiz(quiz: QuizGame) {
+        return JSON.stringify(quiz);
+    }
+
+    protected deserializeQuiz(quiz: string) {
+        return JSON.parse(quiz) as QuizGame;
     }
 }
 
