@@ -39,6 +39,9 @@ function App() {
               <ScoresPage />
             </AuthRoute>
           )} />
+          <Route path='/:quizId' element={(
+            <LoginPage />
+          )} />
           <Route path='/' element={(
             <LoginPage />
           )} />

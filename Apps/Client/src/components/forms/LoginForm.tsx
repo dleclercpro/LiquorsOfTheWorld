@@ -5,8 +5,12 @@ import { selectAuthentication } from '../../reducers/UserReducer';
 import './LoginForm.scss';
 import { login } from '../../actions/UserActions';
 
-const LoginForm: React.FC = () => {
-  const [quizId, setQuizId] = useState('');
+type Props = {
+  quizId?: string,
+}
+
+const LoginForm: React.FC<Props> = (props) => {
+  const [quizId, setQuizId] = useState(props.quizId ?? '');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

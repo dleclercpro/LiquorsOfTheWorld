@@ -2,9 +2,11 @@ import React, { useEffect } from 'react';
 import './LoginPage.scss';
 import LoginForm from '../components/forms/LoginForm';
 import { useSelector } from '../hooks/redux';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 const LoginPage: React.FC = () => {
+  const { quizId } = useParams();
+  
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ const LoginPage: React.FC = () => {
         <p className='login-text'>Get ready to showcase your mastery of the world's spirits in an epic quiz, where only the savviest liquor aficionados will manage to claim victory...</p>
         <p className='login-text'>Are you ready?</p>
         
-        <LoginForm />
+        <LoginForm quizId={quizId} />
       </div>
     </div>
   );
