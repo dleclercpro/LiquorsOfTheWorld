@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FetchedData, ScoresData } from '../types/DataTypes';
-import { RootState } from '../store';
+import { RootState } from '../stores/store';
 import { getInitialFetchedData } from '../utils';
 import { fetchQuizData, fetchQuestionIndexData, fetchVotes, fetchScores, vote } from '../actions/QuizActions';
 import { login, logout, ping } from '../actions/UserActions';
