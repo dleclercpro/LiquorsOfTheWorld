@@ -2,24 +2,23 @@ import React, { useEffect, useState } from 'react';
 import './QuizPage.scss';
 import HamburgerMenu from '../components/menus/HamburgerMenu';
 import QuestionBox from '../components/forms/QuestionForm';
-import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../hooks/redux';
-import { REFRESH_INTERVAL_QUESTION_INDEX } from '../config';
-import { fetchQuestionIndexData, fetchInitialData } from '../actions/QuizActions';
+import { REFRESH_STATUS_INTERVAL } from '../config';
+import { fetchStatus, fetchInitialData } from '../actions/QuizActions';
 import { selectVote } from '../reducers/QuizReducer';
+import { showAnswer } from '../reducers/OverlaysReducer';
 
 const QuizPage: React.FC = () => {
-  const quizId = useSelector((state) => state.quiz.id);
-  const questionIndex = useSelector((state) => state.app.questionIndex);
-
-  const dispatch = useDispatch();
-
   const quiz = useSelector(({ quiz }) => quiz);
-  const questions = quiz.questions.data;
+  const questionIndex = useSelector((state) => state.app.questionIndex);
+  const { vote } = useSelector((state) => selectVote(state, questionIndex));
 
   const [choice, setChoice] = useState('');
 
-  const { vote } = useSelector((state) => selectVote(state, questionIndex));
+  const dispatch = useDispatch();
+
+  const quizId = quiz.id;
+  const questions = quiz.questions.data;
 
   // Fetch data
   useEffect(() => {
@@ -30,17 +29,16 @@ const QuizPage: React.FC = () => {
     dispatch(fetchInitialData(quizId));
   }, []);
 
-  // Regularly fetch current question index (will change as players vote)
+  // Regularly fetch current quiz status from server
   useEffect(() => {
     if (quizId === null) {
       return;
     }
 
     const interval = setInterval(async () => {
-      console.log(`Fetching current question index on server...`);
-      await dispatch(fetchQuestionIndexData(quizId));
+      await dispatch(fetchStatus(quizId));
 
-    }, REFRESH_INTERVAL_QUESTION_INDEX);
+    }, REFRESH_STATUS_INTERVAL);
   
     return () => clearInterval(interval);
   }, [quizId]);
@@ -52,18 +50,15 @@ const QuizPage: React.FC = () => {
     }
 
     setChoice(vote);
+    dispatch(showAnswer());
+    
   }, [vote]);
 
 
 
-  // Wait until quiz data has been fetched
+  // Wait until data has been fetched
   if (questions === null) {
     return null;
-  }
-
-  const nextQuestionIndex = questionIndex + 1;
-  if (nextQuestionIndex === questions.length) {
-    return <Navigate to='/scores' />;
   }
 
   const { theme, question, options } = questions[questionIndex];

@@ -19,12 +19,14 @@ export type UserData = {
 };
 
 export type VotesData = {
-  questionIndex: number,
+  status: StatusData,
   votes: number[],
 };
 
-export type QuestionIndexData = {
+export type StatusData = {
   questionIndex: number,
+  hasStarted: boolean,
+  isOver: boolean,
 };
 
 export type ScoresData = Record<string, number>;

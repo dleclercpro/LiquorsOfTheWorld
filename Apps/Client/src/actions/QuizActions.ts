@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { QuestionIndexData, ScoresData, VotesData } from '../types/DataTypes';
+import { StatusData, ScoresData, VotesData } from '../types/DataTypes';
 import { CallGetQuiz } from '../calls/quiz/CallGetQuiz';
-import { CallGetQuestionIndex } from '../calls/quiz/CallGetQuestionIndex';
+import { CallGetStatus } from '../calls/quiz/CallGetStatus';
 import { CallVote } from '../calls/quiz/CallVote';
 import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
@@ -30,13 +30,13 @@ export const fetchQuizData = createAsyncThunk(
   }
 );
 
-export const fetchQuestionIndexData = createAsyncThunk(
-  'quiz/fetchQuestionIndexData',
+export const fetchStatus = createAsyncThunk(
+  'quiz/fetchStatus',
   async (quizId: string, { rejectWithValue }) => {
     try {
-      const { data } = await new CallGetQuestionIndex(quizId).execute();
+      const { data } = await new CallGetStatus(quizId).execute();
       
-      return data as QuestionIndexData;
+      return data as StatusData;
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';
@@ -45,7 +45,7 @@ export const fetchQuestionIndexData = createAsyncThunk(
         error = err.message;
       }
 
-      console.error(`Could not fetch question index: ${error}`);
+      console.error(`Could not fetch quiz status: ${error}`);
       return rejectWithValue(error);
     }
   }
@@ -97,15 +97,24 @@ export const fetchInitialData = createAsyncThunk(
   'quiz/fetchInitialData',
   async (quizId: string, { dispatch, getState, rejectWithValue }) => {
     try {
-      await Promise.all([
+      const res = await Promise.all([
         dispatch(fetchQuizData()),
         dispatch(fetchVotes(quizId)),
         dispatch(fetchScores(quizId)),
-        dispatch(fetchQuestionIndexData(quizId)),
+        dispatch(fetchStatus(quizId)),
       ]);
+
+      const someFetchActionFailed = res
+        .map(({ type }) => type)
+        .some(type => type.endsWith('/rejected'));
+
+      if (someFetchActionFailed) {
+        return;
+      }
       
       const { quiz } = getState() as RootState;
-      const questionIndex = quiz.questionIndex.data as number;
+      const status = quiz.status.data as StatusData;
+      const questionIndex = status.questionIndex;
 
       // After first data fetch, set current question index in the app to match
       // the one on the server
@@ -138,6 +147,8 @@ export const vote = createAsyncThunk(
       if (err instanceof Error) {
         error = err.message;
       }
+
+      console.error(error);
 
       return rejectWithValue(error);
     }

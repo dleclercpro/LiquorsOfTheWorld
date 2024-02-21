@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { N_SALT_ROUNDS } from '../../config';
-import { ANSWERS } from '../../constants';
+import { ANSWERS, QUESTIONS } from '../../constants';
 import logger from '../../logger';
 import { getLastValue, unique } from '../../utils/array';
 import { sum } from '../../utils/math';
@@ -75,12 +75,26 @@ class AppDatabase extends RedisDatabase {
             creator: username,
             questionIndex: 0,
             hasStarted: false,
+            isOver: false,
             players: [],
         };
 
         await this.set(`quiz:${quizId}`, this.serializeQuiz(quiz));
 
         return quiz;
+    }
+
+    public async startQuiz(quizId: string) {
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new Error('INVALID_QUIZ_ID');
+        }
+
+        await this.updateQuiz(quizId, {
+            ...quiz,
+            hasStarted: true,
+        });
     }
 
     public async getUser(username: string) {
@@ -197,8 +211,16 @@ class AppDatabase extends RedisDatabase {
 
     public async incrementQuestionIndex(quizId: string) {
         const questionIndex = await this.getQuestionIndex(quizId);
+        const quiz = await this.getQuiz(quizId) as QuizGame;
 
-        await this.setQuestionIndex(quizId, questionIndex + 1);
+        if (questionIndex + 1 === QUESTIONS.length) {
+            await this.updateQuiz(quizId, {
+                ...quiz,
+                isOver: true,
+            });
+        } else {
+            await this.setQuestionIndex(quizId, questionIndex + 1);
+        }
     }
 
     public async generateQuizId() {

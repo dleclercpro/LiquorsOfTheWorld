@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 import { successResponse } from '../utils/calls';
 import { APP_DB } from '..';
 import { ParamsDictionary } from 'express-serve-static-core';
+import { QuizGame } from '../types/QuizTypes';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -19,13 +20,21 @@ const validateParams = async (params: ParamsDictionary) => {
 
 
 
-const GetQuestionIndexController: RequestHandler = async (req, res, next) => {
+const GetStatusController: RequestHandler = async (req, res, next) => {
     try {
         const { quizId } = await validateParams(req.params);
-        const questionIndex = await APP_DB.getQuestionIndex(quizId);
+        const quiz = await APP_DB.getQuiz(quizId);
+
+        if (quiz === null) {
+            throw new Error('INVALID_QUIZ_ID');
+        }
+
+        const { questionIndex, hasStarted, isOver } = quiz as QuizGame;
 
         return res.json(successResponse({
             questionIndex,
+            hasStarted,
+            isOver,
         }));
 
     } catch (err: any) {
@@ -33,4 +42,4 @@ const GetQuestionIndexController: RequestHandler = async (req, res, next) => {
     }
 }
 
-export default GetQuestionIndexController;
+export default GetStatusController;

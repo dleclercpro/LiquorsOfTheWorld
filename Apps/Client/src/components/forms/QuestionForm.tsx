@@ -35,11 +35,16 @@ const QuestionBox: React.FC<Question> = (props) => {
       return;
     }
     
-    await dispatch(vote({
+    const res = await dispatch(vote({
       quizId,
       questionIndex: index, // Vote for question that's currently being displayed in the app
       vote: options.findIndex(option => option === choice),
     }));
+
+    if (res.type === 'user/vote/rejected') {
+      alert(`Could not vote!`);
+      return;
+    }
 
     dispatch(showAnswer());
   }
@@ -76,7 +81,7 @@ const QuestionBox: React.FC<Question> = (props) => {
         </div>
       ))}
 
-      <button type='submit' disabled={disabled}>Submit my answer</button>
+      <button type='submit' disabled={disabled}>{choice === '' ? 'Pick an answer' : 'Submit your answer'}</button>
     </form>
   );
 };

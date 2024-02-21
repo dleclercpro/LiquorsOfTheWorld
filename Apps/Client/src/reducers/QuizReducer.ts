@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FetchedData, ScoresData } from '../types/DataTypes';
+import { createSlice } from '@reduxjs/toolkit';
+import { FetchedData, ScoresData, StatusData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
-import { fetchQuizData, fetchQuestionIndexData, fetchVotes, fetchScores, vote } from '../actions/QuizActions';
+import { fetchQuizData, fetchStatus, fetchVotes, fetchScores, vote } from '../actions/QuizActions';
 import { login, logout, ping } from '../actions/UserActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
@@ -9,7 +9,7 @@ import { RootState } from '../stores/store';
 interface QuizState {
   id: string | null,
   questions: FetchedData<QuizJSON>,
-  questionIndex: FetchedData<number>, // Current question index on server
+  status: FetchedData<StatusData>,
   votes: FetchedData<number[]>,
   scores: FetchedData<ScoresData>,
 }
@@ -17,7 +17,7 @@ interface QuizState {
 const initialState: QuizState = {
   id: null,
   questions: getInitialFetchedData(),
-  questionIndex: getInitialFetchedData(),
+  status: getInitialFetchedData(),
   votes: getInitialFetchedData(),
   scores: getInitialFetchedData(),
 };
@@ -27,17 +27,7 @@ const initialState: QuizState = {
 export const quizSlice = createSlice({
   name: 'quiz',
   initialState,
-  reducers: {
-    setQuestionIndex: (state, action: PayloadAction<number>) => {
-      state.questionIndex.data = action.payload;
-    },
-    incrementQuestionIndex: (state) => {
-      if (state.questionIndex.data === null) {
-        throw new Error('CANNOT_INCREMENT_QUESTION_INDEX');
-      }
-      state.questionIndex.data += 1;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchQuizData.pending, (state) => {
@@ -51,16 +41,16 @@ export const quizSlice = createSlice({
         state.questions.status = 'failed';
         state.questions.error = action.payload as string;
       })
-      .addCase(fetchQuestionIndexData.pending, (state) => {
-        state.questionIndex.status = 'loading';
+      .addCase(fetchStatus.pending, (state) => {
+        state.status.status = 'loading';
       })
-      .addCase(fetchQuestionIndexData.fulfilled, (state, action) => {
-        state.questionIndex.status = 'succeeded';
-        state.questionIndex.data = action.payload.questionIndex;
+      .addCase(fetchStatus.fulfilled, (state, action) => {
+        state.status.status = 'succeeded';
+        state.status.data = action.payload;
       })
-      .addCase(fetchQuestionIndexData.rejected, (state, action) => {
-        state.questionIndex.status = 'failed';
-        state.questionIndex.error = action.payload as string;
+      .addCase(fetchStatus.rejected, (state, action) => {
+        state.status.status = 'failed';
+        state.status.error = action.payload as string;
       })
       .addCase(fetchVotes.pending, (state) => {
         state.votes.status = 'loading';
@@ -85,7 +75,8 @@ export const quizSlice = createSlice({
         state.scores.error = action.payload as string;
       })
       .addCase(vote.fulfilled, (state, action) => {
-        state.questionIndex.data = action.payload.questionIndex;
+        console.log('vote fulfilled');
+        state.status.data = action.payload.status;
         state.votes.data = action.payload.votes;
       })
       .addCase(login.fulfilled, (state, action) => {
@@ -95,7 +86,7 @@ export const quizSlice = createSlice({
       .addCase(logout.fulfilled, (state, action) => {
         state.id = null;
         state.questions = getInitialFetchedData();
-        state.questionIndex = getInitialFetchedData();
+        state.status = getInitialFetchedData();
         state.votes = getInitialFetchedData();
         state.scores = getInitialFetchedData();
       })
@@ -105,7 +96,7 @@ export const quizSlice = createSlice({
   },
 });
 
-export const { setQuestionIndex, incrementQuestionIndex } = quizSlice.actions;
+export const { } = quizSlice.actions;
 
 export const selectQuestionAnswer = (state: RootState, questionIndex: number) => {
   const quiz = state.quiz;
@@ -146,15 +137,17 @@ export const selectVote = (state: RootState, questionIndex: number) => {
 }
 
 export const mustWaitForOthers = (state: RootState) => {
-  const { quiz } = state; 
-  const questionIndex = quiz.questionIndex.data;
+  const quiz = state.quiz;
+  const status = quiz.status.data;
   const votes = quiz.votes.data;
   
-  if (questionIndex === null || votes === null) {
+  if (status === null || votes === null) {
     return false;
   }
 
-  return votes.length === questionIndex + 1;
+  const { isOver, questionIndex } = status;
+
+  return !isOver && votes.length === questionIndex + 1;
 }
 
 export default quizSlice.reducer;

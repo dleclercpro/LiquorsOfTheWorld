@@ -43,6 +43,10 @@ const LoginController: RequestHandler = async (req, res, next) => {
             if (quiz.hasStarted) {
                 throw new Error('USER_NOT_PART_OF_QUIZ');
             }
+            // FIXME: start quiz in UI
+            else if (isAdmin) {
+                await APP_DB.startQuiz(quizId);
+            }
             await APP_DB.addUserToQuiz(quizId, username);
         }
 
@@ -75,10 +79,10 @@ const LoginController: RequestHandler = async (req, res, next) => {
                 .json(errorResponse('INVALID_CREDENTIALS'));
         }
 
-        if (['INVALID_QUIZ_ID'].includes(err.message)) {
+        if (['INVALID_QUIZ_ID', 'USER_NOT_PART_OF_QUIZ'].includes(err.message)) {
             return res
                 .status(HttpStatusCode.BAD_REQUEST)
-                .json(errorResponse('INVALID_QUIZ_ID'));
+                .json(errorResponse(err.message));
         }
 
         next(err);

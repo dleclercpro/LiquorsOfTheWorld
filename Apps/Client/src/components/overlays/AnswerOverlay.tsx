@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from '../../hooks/redux';
 import { mustWaitForOthers, selectQuestionAnswer } from '../../reducers/QuizReducer';
 import { hideAnswer } from '../../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../../reducers/AppReducer';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   children?: ReactNode,
@@ -11,43 +12,51 @@ interface Props {
 
 const AnswerOverlay: React.FC<Props> = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const app = useSelector(({ app }) => app);
   const quiz = useSelector(({ quiz }) => quiz);
 
   const questionIndex = app.questionIndex;
   const questions = quiz.questions.data;
+  const status = quiz.status.data;
   const answer = useSelector((state) => selectQuestionAnswer(state, questionIndex));
 
   const shouldShow = useSelector(({ overlays }) => overlays.answer.show);
   const mustWait = useSelector(mustWaitForOthers);
 
   // Wait until quiz data has been fetched
-  if (questions === null) {
+  if (questions === null || status === null) {
     return null;
   }
+
+  const { isOver } = status;
 
   const handleClick = () => {
     dispatch(hideAnswer());
 
-    // Update question index in app
-    dispatch(setQuestionIndex(questionIndex + 1));
+    if (isOver) {
+      navigate('/scores');
+    } else {
+      dispatch(setQuestionIndex(questionIndex + 1));
+    }
   }
 
-  const nextQuestionIndex = questionIndex + 1;
-  const text = nextQuestionIndex >= questions.length ? `See results` : `Next question (${nextQuestionIndex + 1}/${questions.length})`;
+  const text = isOver ? `See results` : `Next question (${questionIndex + 1}/${questions.length})`;
 
   return (
     <div id='answer-overlay' className={shouldShow ? '' : 'hidden'}>
       <div className='answer-overlay-box'>
-        <h2 className='answer-overlay-title'>And the answer is...</h2>
-        <p className='answer-overlay-text'>{answer}</p>
         {mustWait ? (
-          <p className='answer-overlay-wait'>Wait for other players...</p>
+          <p className='answer-overlay-title'>Please wait for other players to answer the question...</p>
         ) : (
-          <button className='answer-overlay-buttom' onClick={handleClick}>
-            {text}
-          </button>
+          <>
+            <h2 className='answer-overlay-title'>And the correct answer is...</h2>
+            <p className='answer-overlay-text'>{answer}</p>
+            <button className='answer-overlay-button' onClick={handleClick}>
+              {text}
+            </button>
+          </>
         )}
       </div>
     </div>

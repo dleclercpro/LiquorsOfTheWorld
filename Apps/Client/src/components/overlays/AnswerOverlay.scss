@@ -31,15 +31,15 @@
     > .answer-overlay-text {
       color: $color-white;
       @include font-title;
-      margin-bottom: 20px;
-    }
 
-    > .answer-overlay-wait {
-      color: $color-white;
+      &:not(:last-child) {
+        margin-bottom: 20px;
+      }
     }
 
     > button {
       width: 100%;
+      max-width: 320px;
       padding: 20px;
       background-color: $color-primary;
       transition: background-color 0.3s, color 0.3s;
