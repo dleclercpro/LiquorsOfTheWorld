@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
-import logger from '../logger';
-import { errorResponse, successResponse } from '../utils/calls';
-import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
+import logger from '../../logger';
+import { APP_DB } from '../..';
+import { errorResponse, successResponse } from '../../utils/calls';
+import { HttpStatusCode, HttpStatusMessage } from '../../types/HTTPTypes';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { APP_DB } from '..';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -21,15 +21,22 @@ const validateParams = async (params: ParamsDictionary) => {
 
 
 
-const GetVotesController: RequestHandler = async (req, res, next) => {
+const StartQuizController: RequestHandler = async (req, res, next) => {
     try {
-        const { username } = req.user!;
+        const { username, isAdmin } = req.user!;
 
         const { quizId } = await validateParams(req.params);
 
-        const votes = await APP_DB.getUserVotes(quizId, username);
+        // User needs to be admin to start quiz
+        if (!isAdmin) {
+            throw new Error('USER_CANNOT_START_QUIZ');
+        }
 
-        return res.json(successResponse(votes));
+        await APP_DB.startQuiz(quizId);
+
+        logger.info(`Quiz '${quizId}' has been started by admin '${username}'.`);
+
+        return res.json(successResponse());
 
     } catch (err: any) {
         if (err instanceof Error) {
@@ -44,4 +51,4 @@ const GetVotesController: RequestHandler = async (req, res, next) => {
     }
 }
 
-export default GetVotesController;
+export default StartQuizController;

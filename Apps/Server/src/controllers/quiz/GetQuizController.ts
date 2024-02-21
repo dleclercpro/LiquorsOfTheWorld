@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
-import { successResponse } from '../utils/calls';
-import { QUESTIONS } from '../constants';
+import { successResponse } from '../../utils/calls';
+import { QUESTIONS } from '../../constants';
 
 const GetQuizController: RequestHandler = async (req, res, next) => {
     try {

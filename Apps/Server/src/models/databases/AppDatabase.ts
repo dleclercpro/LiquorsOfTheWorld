@@ -44,7 +44,7 @@ class AppDatabase extends RedisDatabase {
         });
     }
 
-    public async createUser(username: string, password: string) {
+    public async createUser(username: string, password: string, isAdmin: boolean = false) {
         const hashedPassword = await new Promise<string>((resolve, reject) => {
             bcrypt.hash(password, N_SALT_ROUNDS, async (err, hash) => {
                 if (err) {
@@ -57,7 +57,7 @@ class AppDatabase extends RedisDatabase {
         });
       
         logger.trace(`Creating user '${username}'...`);
-        const user = { username, hashedPassword };
+        const user = { username, isAdmin, hashedPassword };
       
         await this.set(`users:${username}`, this.serializeUser(user));
       

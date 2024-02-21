@@ -1,8 +1,8 @@
 import { RequestHandler } from 'express';
-import { successResponse } from '../utils/calls';
-import { APP_DB } from '..';
+import { successResponse } from '../../utils/calls';
+import { APP_DB } from '../..';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { QuizGame } from '../types/QuizTypes';
+import { QuizGame } from '../../types/QuizTypes';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;

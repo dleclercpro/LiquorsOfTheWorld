@@ -43,10 +43,6 @@ const LoginController: RequestHandler = async (req, res, next) => {
             if (quiz.hasStarted) {
                 throw new Error('USER_NOT_PART_OF_QUIZ');
             }
-            // FIXME: start quiz in UI
-            else if (isAdmin) {
-                await APP_DB.startQuiz(quizId);
-            }
             await APP_DB.addUserToQuiz(quizId, username);
         }
 
@@ -58,7 +54,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
 
         logger.trace(`User '${username}' joined quiz ${quizId}.`);
         const cookie = await encodeCookie({
-            user: { username },
+            user: { username, isAdmin },
             quizId,
         });
         

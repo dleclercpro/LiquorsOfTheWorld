@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
-import logger from '../logger';
-import { errorResponse, successResponse } from '../utils/calls';
-import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
+import logger from '../../logger';
+import { errorResponse, successResponse } from '../../utils/calls';
+import { HttpStatusCode, HttpStatusMessage } from '../../types/HTTPTypes';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { APP_DB } from '..';
+import { APP_DB } from '../..';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -21,13 +21,15 @@ const validateParams = async (params: ParamsDictionary) => {
 
 
 
-const GetScoresController: RequestHandler = async (req, res, next) => {
+const GetVotesController: RequestHandler = async (req, res, next) => {
     try {
+        const { username } = req.user!;
+
         const { quizId } = await validateParams(req.params);
 
-        const scores = await APP_DB.getAllScores(quizId);
+        const votes = await APP_DB.getUserVotes(quizId, username);
 
-        return res.json(successResponse(scores));
+        return res.json(successResponse(votes));
 
     } catch (err: any) {
         if (err instanceof Error) {
@@ -42,4 +44,4 @@ const GetScoresController: RequestHandler = async (req, res, next) => {
     }
 }
 
-export default GetScoresController;
+export default GetVotesController;

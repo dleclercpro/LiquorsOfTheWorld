@@ -6,10 +6,11 @@ import { User } from '../../types/UserTypes';
 
 const GetUserController: RequestHandler = async (req, res, next) => {
     try {
-        const { username } = req.user!;
+        const { username, isAdmin } = req.user!;
 
         return res.json(successResponse<User>({
             username,
+            isAdmin,
         }));
 
     } catch (err: any) {
