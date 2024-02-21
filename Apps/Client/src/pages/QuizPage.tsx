@@ -7,9 +7,12 @@ import { REFRESH_STATUS_INTERVAL } from '../config';
 import { fetchStatus, fetchData } from '../actions/QuizActions';
 import { selectVote } from '../reducers/QuizReducer';
 import { hideLoading, showAnswer, showLoading } from '../reducers/OverlaysReducer';
+import StartQuizForm from '../components/forms/StartQuizForm';
 
 const QuizPage: React.FC = () => {
   const quiz = useSelector(({ quiz }) => quiz);
+  const isAdmin = useSelector(({ user }) => user.isAdmin);
+
   const questionIndex = useSelector((state) => state.app.questionIndex);
   const { vote } = useSelector((state) => selectVote(state, questionIndex));
 
@@ -20,7 +23,7 @@ const QuizPage: React.FC = () => {
   const quizId = quiz.id;
   const questions = quiz.questions.data;
   const status = quiz.status.data;
-  const hasStarted = status === null ? false : status.hasStarted;
+  const hasStarted = status?.hasStarted;
 
   // Fetch data
   useEffect(() => {
@@ -58,7 +61,7 @@ const QuizPage: React.FC = () => {
 
   // Show loading screen in case quiz has not yet been started
   useEffect(() => {
-    if (!hasStarted) {
+    if (!hasStarted && !isAdmin) {
       dispatch(showLoading({
         text: 'Please wait for quiz to start...',
         opaque: true,
@@ -81,15 +84,20 @@ const QuizPage: React.FC = () => {
   return (
     <>
       <HamburgerMenu />
-      <QuestionForm
-        index={questionIndex}
-        theme={theme}
-        question={question}
-        options={options}
-        disabled={choice === '' || vote !== null}
-        choice={choice}
-        setChoice={setChoice}
-      />
+      {!hasStarted && isAdmin && (
+        <StartQuizForm />
+      )}
+      {hasStarted && (
+        <QuestionForm
+          index={questionIndex}
+          theme={theme}
+          question={question}
+          options={options}
+          disabled={choice === '' || vote !== null}
+          choice={choice}
+          setChoice={setChoice}
+        />
+      )}
     </>
   );
 }

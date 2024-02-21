@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { CallLogIn } from '../calls/auth/CallLogIn';
-import { LoginData, PingData, VotesData } from '../types/DataTypes';
+import { LoginData, PingData, UserData, VotesData } from '../types/DataTypes';
 import { CallPing } from '../calls/auth/CallPing';
 import { CallLogOut } from '../calls/auth/CallLogOut';
 import { CallVote } from '../calls/quiz/CallVote';
@@ -9,9 +9,15 @@ export const login = createAsyncThunk(
   'user/login',
   async ({ quizId, username, password }: LoginData, { rejectWithValue }) => {
     try {
-      await new CallLogIn().execute({ quizId, username, password });
+      const { data } = await new CallLogIn().execute({ quizId, username, password });
 
-      return { quizId, username };
+      const user = data as UserData;
+
+      return {
+        username: user.username,
+        isAdmin: user.isAdmin,
+        quizId,
+      };
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';
@@ -50,7 +56,6 @@ export const ping = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await new CallPing().execute();
-      console.log(`User is already authenticated.`);
 
       return data as PingData;
 

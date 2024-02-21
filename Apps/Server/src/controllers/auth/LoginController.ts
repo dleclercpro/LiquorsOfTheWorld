@@ -53,14 +53,12 @@ const LoginController: RequestHandler = async (req, res, next) => {
         }
 
         logger.trace(`User '${username}' joined quiz ${quizId}.`);
-        const cookie = await encodeCookie({
-            user: { username, isAdmin },
-            quizId,
-        });
+        const user = { username, isAdmin };
+        const cookie = await encodeCookie({ user, quizId });
         
         return res
             .cookie(COOKIE_NAME, cookie)
-            .json(successResponse());
+            .json(successResponse(user));
 
     } catch (err: any) {
         if (err instanceof Error) {

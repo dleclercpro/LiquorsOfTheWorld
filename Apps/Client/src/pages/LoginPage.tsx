@@ -1,35 +1,30 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './LoginPage.scss';
 import LoginForm from '../components/forms/LoginForm';
 import { useSelector } from '../hooks/redux';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
+import { Navigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
   const { quizId } = useParams();
-  
+
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-  
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      return;
-    }
-
-    navigate(`/quiz`);
-
-  }, [isAuthenticated]);
 
   return (
     <div className='login-page'>
-      <div className='login-box'>
-        <h1 className='login-title'>Liquors of the World</h1>
-        <p className='login-text'>Welcome to tonight's quiz!</p>
-        <p className='login-text'>Get ready to showcase your mastery of the world's spirits in an epic quiz, where only the savviest liquor aficionados will manage to claim victory...</p>
-        <p className='login-text'>Are you ready?</p>
-        
-        <LoginForm quizId={quizId} />
-      </div>
+      {!isAuthenticated && (
+        <div className='login-box'>
+          <h1 className='login-title'>Liquors of the World</h1>
+          <p className='login-text'>Welcome to tonight's quiz!</p>
+          <p className='login-text'>Get ready to showcase your mastery of the world's spirits in an epic quiz, where only the savviest liquor aficionados will manage to claim victory...</p>
+          <p className='login-text'>Are you ready?</p>
+          
+          <LoginForm quizId={quizId} />
+        </div>
+      )}
+      {isAuthenticated && (
+        <Navigate to='/quiz' />
+      )}
     </div>
   );
 };

@@ -14,12 +14,16 @@
     padding: 15px 25px;
     transform: translate(-100px, -50%);
     align-items: flex-end;
-    max-width: 800px;
+    max-width: 500px;
   }
 
   > .start-quiz-form-title {
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+  }
+
+  > .start-quiz-form-text {
+    margin-top: 0;
   }
 
   > button {

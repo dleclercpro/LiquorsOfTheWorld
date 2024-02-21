@@ -4,11 +4,13 @@ import { successResponse } from '../../utils/calls';
 
 const PingController: RequestHandler = async (req, res, next) => {
     try {
+        const { isAdmin } = req.user!;
         const quizId = req.quizId!;
         
         return res
             .json(successResponse({
                 quizId,
+                isAdmin,
             }));
 
     } catch (err: any) {

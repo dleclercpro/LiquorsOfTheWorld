@@ -8,6 +8,7 @@ export type FetchedData<Data> = {
 
 export type PingData = {
   quizId: string,
+  isAdmin: boolean,
 };
 
 export type LoginData = Auth & {
@@ -16,6 +17,7 @@ export type LoginData = Auth & {
 
 export type UserData = {
   username: string,
+  isAdmin: boolean,
 };
 
 export type VotesData = {
