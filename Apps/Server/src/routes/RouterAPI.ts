@@ -40,9 +40,9 @@ router.get('/user', [AuthMiddleware], GetUserController);
 
 router.get('/quiz', GetQuizController);
 router.get('/quiz/:quizId', [AuthMiddleware], GetQuestionIndexController);
-router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);
 router.get('/quiz/:quizId/votes', [AuthMiddleware], GetVotesController);
 router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);
+router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);
 
 
 

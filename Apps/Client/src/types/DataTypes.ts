@@ -1,5 +1,4 @@
 import { Auth } from '.';
-import { QuestionJSON, QuizJSON } from './JSONTypes';
 
 export type FetchedData<Data> = {
   data: Data | null,

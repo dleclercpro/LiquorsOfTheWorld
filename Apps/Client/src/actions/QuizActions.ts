@@ -6,6 +6,8 @@ import { CallVote } from '../calls/quiz/CallVote';
 import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 import { QuizJSON } from '../types/JSONTypes';
+import { RootState } from '../stores/store';
+import { setQuestionIndex } from '../reducers/AppReducer';
 
 export const fetchQuizData = createAsyncThunk(
   'quiz/fetchQuizData',
@@ -86,6 +88,37 @@ export const fetchScores = createAsyncThunk(
       }
 
       console.error(`Could not fetch scores: ${error}`);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchInitialData = createAsyncThunk(
+  'quiz/fetchInitialData',
+  async (quizId: string, { dispatch, getState, rejectWithValue }) => {
+    try {
+      await Promise.all([
+        dispatch(fetchQuizData()),
+        dispatch(fetchVotes(quizId)),
+        dispatch(fetchScores(quizId)),
+        dispatch(fetchQuestionIndexData(quizId)),
+      ]);
+      
+      const { quiz } = getState() as RootState;
+      const questionIndex = quiz.questionIndex.data as number;
+
+      // After first data fetch, set current question index in the app to match
+      // the one on the server
+      dispatch(setQuestionIndex(questionIndex));
+
+    } catch (err: unknown) {
+      let error = 'UNKNOWN_ERROR';
+      
+      if (err instanceof Error) {
+        error = err.message;
+      }
+
+      console.error(`Could not fetch initial data: ${error}`);
       return rejectWithValue(error);
     }
   }

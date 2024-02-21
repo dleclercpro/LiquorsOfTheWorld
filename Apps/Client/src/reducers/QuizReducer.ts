@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FetchedData, ScoresData } from '../types/DataTypes';
-import { RootState } from '../stores/store';
 import { getInitialFetchedData } from '../utils';
 import { fetchQuizData, fetchQuestionIndexData, fetchVotes, fetchScores, vote } from '../actions/QuizActions';
 import { login, logout, ping } from '../actions/UserActions';
 import { QuizJSON } from '../types/JSONTypes';
+import { RootState } from '../stores/store';
 
 interface QuizState {
   id: string | null,
   questions: FetchedData<QuizJSON>,
-  questionIndex: FetchedData<number>,
+  questionIndex: FetchedData<number>, // Current question index on server
   votes: FetchedData<number[]>,
   scores: FetchedData<ScoresData>,
 }
@@ -24,7 +24,7 @@ const initialState: QuizState = {
 
 
 
-export const authSlice = createSlice({
+export const quizSlice = createSlice({
   name: 'quiz',
   initialState,
   reducers: {
@@ -105,14 +105,14 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setQuestionIndex, incrementQuestionIndex } = authSlice.actions;
+export const { setQuestionIndex, incrementQuestionIndex } = quizSlice.actions;
 
-export const selectQuestionAnswer = (state: RootState) => {
+export const selectQuestionAnswer = (state: RootState, questionIndex: number) => {
   const quiz = state.quiz;
-  const questions = quiz.questions.data;
-  const questionIndex = quiz.questionIndex.data;
 
-  if (questionIndex === null || questions === null) {
+  const questions = quiz.questions.data;
+
+  if (questions === null) {
     return null;
   }
   
@@ -122,4 +122,39 @@ export const selectQuestionAnswer = (state: RootState) => {
   return answer;
 }
 
-export default authSlice.reducer;
+export const selectVote = (state: RootState, questionIndex: number) => {
+  const quiz = state.quiz;
+
+  const questions = quiz.questions.data;
+  const votes = quiz.votes.data;
+
+  if (questions === null || votes === null || votes.length < questionIndex + 1) {
+    return {
+      voteIndex: null,
+      vote: null,
+    };
+  }
+  
+  const question = questions[questionIndex];
+  const voteIndex = votes[questionIndex];
+  const vote = question.options[voteIndex];
+
+  return {
+    voteIndex,
+    vote,
+  };
+}
+
+export const mustWaitForOthers = (state: RootState) => {
+  const { quiz } = state; 
+  const questionIndex = quiz.questionIndex.data;
+  const votes = quiz.votes.data;
+  
+  if (questionIndex === null || votes === null) {
+    return false;
+  }
+
+  return votes.length === questionIndex + 1;
+}
+
+export default quizSlice.reducer;

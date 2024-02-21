@@ -37,7 +37,7 @@ const QuestionBox: React.FC<Question> = (props) => {
     
     await dispatch(vote({
       quizId,
-      questionIndex: index,
+      questionIndex: index, // Vote for question that's currently being displayed in the app
       vote: options.findIndex(option => option === choice),
     }));
 

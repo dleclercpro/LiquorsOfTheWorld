@@ -5,35 +5,21 @@ import QuestionBox from '../components/forms/QuestionForm';
 import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { REFRESH_INTERVAL_QUESTION_INDEX } from '../config';
-import { hideLoading, showLoading } from '../reducers/OverlaysReducer';
-import { fetchQuizData, fetchVotes, fetchScores, fetchQuestionIndexData } from '../actions/QuizActions';
+import { fetchQuestionIndexData, fetchInitialData } from '../actions/QuizActions';
+import { selectVote } from '../reducers/QuizReducer';
 
 const QuizPage: React.FC = () => {
   const quizId = useSelector((state) => state.quiz.id);
+  const questionIndex = useSelector((state) => state.app.questionIndex);
 
   const dispatch = useDispatch();
 
   const quiz = useSelector(({ quiz }) => quiz);
-  const questionIndex = quiz.questionIndex.data;
   const questions = quiz.questions.data;
-  const votes = quiz.votes.data;
 
   const [choice, setChoice] = useState('');
 
-  let playerMustWait = false;
-  if (questionIndex !== null && votes !== null) {
-    playerMustWait = votes.length === questionIndex + 1;
-  }
-
-  // Show waiting screen when others need to vote
-  useEffect(() => {
-    if (playerMustWait) {
-      dispatch(showLoading({ text: `Wait for others to vote...`, opaque: false }));
-    } else {
-      dispatch(hideLoading());
-    }
-
-  }, [playerMustWait]);
+  const { vote } = useSelector((state) => selectVote(state, questionIndex));
 
   // Fetch data
   useEffect(() => {
@@ -41,11 +27,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    dispatch(fetchQuizData());
-    dispatch(fetchVotes(quizId));
-    dispatch(fetchScores(quizId));
-    dispatch(fetchQuestionIndexData(quizId));
-
+    dispatch(fetchInitialData(quizId));
   }, []);
 
   // Regularly fetch current question index (will change as players vote)
@@ -55,7 +37,7 @@ const QuizPage: React.FC = () => {
     }
 
     const interval = setInterval(async () => {
-      console.log(`Fetching current question index...`);
+      console.log(`Fetching current question index on server...`);
       await dispatch(fetchQuestionIndexData(quizId));
 
     }, REFRESH_INTERVAL_QUESTION_INDEX);
@@ -65,20 +47,17 @@ const QuizPage: React.FC = () => {
 
   // Set choice if user already voted
   useEffect(() => {
-    if (questionIndex === null || questions === null || votes === null) {
+    if (vote === null) {
       return;
     }
 
-    const { options } = questions[questionIndex];
-    const vote = options[votes[questionIndex]];
-
     setChoice(vote);
-  }, [questionIndex, questions, votes]);
+  }, [vote]);
 
 
 
   // Wait until quiz data has been fetched
-  if (questionIndex === null || questions === null) {
+  if (questions === null) {
     return null;
   }
 
@@ -97,7 +76,7 @@ const QuizPage: React.FC = () => {
         theme={theme}
         question={question}
         options={options}
-        disabled={choice === '' || playerMustWait}
+        disabled={choice === '' || vote !== null}
         choice={choice}
         setChoice={setChoice}
       /> 

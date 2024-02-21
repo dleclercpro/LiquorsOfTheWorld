@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
 import './AnswerOverlay.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { selectQuestionAnswer } from '../../reducers/QuizReducer';
+import { mustWaitForOthers, selectQuestionAnswer } from '../../reducers/QuizReducer';
 import { hideAnswer } from '../../reducers/OverlaysReducer';
+import { setQuestionIndex } from '../../reducers/AppReducer';
 
 interface Props {
   children?: ReactNode,
@@ -11,20 +12,26 @@ interface Props {
 const AnswerOverlay: React.FC<Props> = () => {
   const dispatch = useDispatch();
 
+  const app = useSelector(({ app }) => app);
   const quiz = useSelector(({ quiz }) => quiz);
-  const answer = useSelector(selectQuestionAnswer);
-  const questionIndex = quiz.questionIndex.data;
+
+  const questionIndex = app.questionIndex;
   const questions = quiz.questions.data;
+  const answer = useSelector((state) => selectQuestionAnswer(state, questionIndex));
 
   const shouldShow = useSelector(({ overlays }) => overlays.answer.show);
+  const mustWait = useSelector(mustWaitForOthers);
 
   // Wait until quiz data has been fetched
-  if (questionIndex === null || questions === null) {
+  if (questions === null) {
     return null;
   }
 
   const handleClick = () => {
     dispatch(hideAnswer());
+
+    // Update question index in app
+    dispatch(setQuestionIndex(questionIndex + 1));
   }
 
   const nextQuestionIndex = questionIndex + 1;
@@ -35,9 +42,13 @@ const AnswerOverlay: React.FC<Props> = () => {
       <div className='answer-overlay-box'>
         <h2 className='answer-overlay-title'>And the answer is...</h2>
         <p className='answer-overlay-text'>{answer}</p>
-        <button className='answer-overlay-buttom' onClick={handleClick}>
-          {text}
-        </button>
+        {mustWait ? (
+          <p className='answer-overlay-wait'>Wait for other players...</p>
+        ) : (
+          <button className='answer-overlay-buttom' onClick={handleClick}>
+            {text}
+          </button>
+        )}
       </div>
     </div>
   );
