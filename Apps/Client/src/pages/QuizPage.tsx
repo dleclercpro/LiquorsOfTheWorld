@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './QuizPage.scss';
 import HamburgerMenu from '../components/menus/HamburgerMenu';
-import QuestionBox from '../components/forms/QuestionForm';
+import QuestionForm from '../components/forms/QuestionForm';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { REFRESH_STATUS_INTERVAL } from '../config';
-import { fetchStatus, fetchInitialData } from '../actions/QuizActions';
+import { fetchStatus, fetchData } from '../actions/QuizActions';
 import { selectVote } from '../reducers/QuizReducer';
-import { showAnswer } from '../reducers/OverlaysReducer';
+import { hideLoading, showAnswer, showLoading } from '../reducers/OverlaysReducer';
 
 const QuizPage: React.FC = () => {
   const quiz = useSelector(({ quiz }) => quiz);
@@ -19,6 +19,8 @@ const QuizPage: React.FC = () => {
 
   const quizId = quiz.id;
   const questions = quiz.questions.data;
+  const status = quiz.status.data;
+  const hasStarted = status === null ? false : status.hasStarted;
 
   // Fetch data
   useEffect(() => {
@@ -26,7 +28,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    dispatch(fetchInitialData(quizId));
+    dispatch(fetchData(quizId));
   }, []);
 
   // Regularly fetch current quiz status from server
@@ -54,19 +56,32 @@ const QuizPage: React.FC = () => {
     
   }, [vote]);
 
+  // Show loading screen in case quiz has not yet been started
+  useEffect(() => {
+    if (!hasStarted) {
+      dispatch(showLoading({
+        text: 'Please wait for quiz to start...',
+        opaque: true,
+      }));
+    } else {
+      dispatch(hideLoading());
+    }
+
+  }, [hasStarted]);
+
 
 
   // Wait until data has been fetched
-  if (questions === null) {
+  if (questions === null || status === null) {
     return null;
   }
 
   const { theme, question, options } = questions[questionIndex];
 
   return (
-    <React.Fragment>
+    <>
       <HamburgerMenu />
-      <QuestionBox
+      <QuestionForm
         index={questionIndex}
         theme={theme}
         question={question}
@@ -74,8 +89,8 @@ const QuizPage: React.FC = () => {
         disabled={choice === '' || vote !== null}
         choice={choice}
         setChoice={setChoice}
-      /> 
-    </React.Fragment>
+      />
+    </>
   );
 }
 

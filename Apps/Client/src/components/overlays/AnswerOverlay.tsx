@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import './AnswerOverlay.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { mustWaitForOthers, selectQuestionAnswer } from '../../reducers/QuizReducer';
@@ -6,11 +5,7 @@ import { hideAnswer } from '../../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../../reducers/AppReducer';
 import { useNavigate } from 'react-router-dom';
 
-interface Props {
-  children?: ReactNode,
-}
-
-const AnswerOverlay: React.FC<Props> = () => {
+const AnswerOverlay: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -32,7 +27,7 @@ const AnswerOverlay: React.FC<Props> = () => {
 
   const { isOver } = status;
 
-  const handleClick = () => {
+  const handleButtonClick = () => {
     dispatch(hideAnswer());
 
     if (isOver) {
@@ -53,7 +48,7 @@ const AnswerOverlay: React.FC<Props> = () => {
           <>
             <h2 className='answer-overlay-title'>And the correct answer is...</h2>
             <p className='answer-overlay-text'>{answer}</p>
-            <button className='answer-overlay-button' onClick={handleClick}>
+            <button className='answer-overlay-button' onClick={handleButtonClick}>
               {text}
             </button>
           </>

@@ -1,16 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { StatusData, ScoresData, VotesData } from '../types/DataTypes';
+import { StatusData, ScoresData } from '../types/DataTypes';
 import { CallGetQuiz } from '../calls/quiz/CallGetQuiz';
 import { CallGetStatus } from '../calls/quiz/CallGetStatus';
-import { CallVote } from '../calls/quiz/CallVote';
 import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
 import { setQuestionIndex } from '../reducers/AppReducer';
+import { CallStartQuiz } from '../calls/quiz/CallStartQuiz';
 
-export const fetchQuizData = createAsyncThunk(
-  'quiz/fetchQuizData',
+export const fetchQuestions = createAsyncThunk(
+  'quiz/fetchQuestions',
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await new CallGetQuiz().execute();
@@ -24,7 +24,7 @@ export const fetchQuizData = createAsyncThunk(
         error = err.message;
       }
 
-      console.error(`Could not fetch quiz data: ${error}`);
+      console.error(`Could not fetch questions: ${error}`);
       return rejectWithValue(error);
     }
   }
@@ -93,12 +93,12 @@ export const fetchScores = createAsyncThunk(
   }
 );
 
-export const fetchInitialData = createAsyncThunk(
-  'quiz/fetchInitialData',
+export const fetchData = createAsyncThunk(
+  'quiz/fetchData',
   async (quizId: string, { dispatch, getState, rejectWithValue }) => {
     try {
       const res = await Promise.all([
-        dispatch(fetchQuizData()),
+        dispatch(fetchQuestions()),
         dispatch(fetchVotes(quizId)),
         dispatch(fetchScores(quizId)),
         dispatch(fetchStatus(quizId)),
@@ -133,13 +133,13 @@ export const fetchInitialData = createAsyncThunk(
   }
 );
 
-export const vote = createAsyncThunk(
-  'user/vote',
-  async ({ quizId, questionIndex, vote }: { quizId: string, questionIndex: number, vote: number }, { rejectWithValue }) => {
+export const start = createAsyncThunk(
+  'quiz/start',
+  async (quizId: string, { rejectWithValue }) => {
     try {
-      const { data } = await new CallVote(quizId, questionIndex).execute({ vote });
+      await new CallStartQuiz(quizId).execute();
 
-      return data as VotesData;
+      return;
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';

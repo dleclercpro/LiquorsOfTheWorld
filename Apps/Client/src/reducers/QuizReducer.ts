@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { FetchedData, ScoresData, StatusData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
-import { fetchQuizData, fetchStatus, fetchVotes, fetchScores, vote } from '../actions/QuizActions';
-import { login, logout, ping } from '../actions/UserActions';
+import { fetchQuestions, fetchStatus, fetchVotes, fetchScores } from '../actions/QuizActions';
+import { login, logout, ping, vote } from '../actions/UserActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
 
@@ -30,14 +30,14 @@ export const quizSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchQuizData.pending, (state) => {
+      .addCase(fetchQuestions.pending, (state) => {
         state.questions.status = 'loading';
       })
-      .addCase(fetchQuizData.fulfilled, (state, action) => {
+      .addCase(fetchQuestions.fulfilled, (state, action) => {
         state.questions.status = 'succeeded';
         state.questions.data = action.payload;
       })
-      .addCase(fetchQuizData.rejected, (state, action) => {
+      .addCase(fetchQuestions.rejected, (state, action) => {
         state.questions.status = 'failed';
         state.questions.error = action.payload as string;
       })
@@ -96,7 +96,7 @@ export const quizSlice = createSlice({
   },
 });
 
-export const { } = quizSlice.actions;
+// export const { } = quizSlice.actions;
 
 export const selectQuestionAnswer = (state: RootState, questionIndex: number) => {
   const quiz = state.quiz;
