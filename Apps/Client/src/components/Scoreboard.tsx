@@ -33,7 +33,7 @@ const Scoreboard: React.FC<Props> = (props) => {
         </strong>
       </p>
       <p className='scoreboard-text'>
-        {`Here are the ${isOver ? 'final' : 'current'} results of this quiz:`}
+        {isOver ? `The quiz is over. All ${questions.length} questions have been answered.` : `So far, ${questionIndex} out of ${questions.length} questions have been answered.`} {`Here are the ${isOver ? 'final' : 'current'} results:`}
       </p>
       <table className='scoreboard-table'>
         <thead>
