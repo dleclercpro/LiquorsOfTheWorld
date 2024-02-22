@@ -5,6 +5,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../../actions/UserActions';
 import OpenIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import LogoutIcon from '@mui/icons-material/Logout';
+import QuizIcon from '@mui/icons-material/Quiz';
+import ScoreboardIcon from '@mui/icons-material/Scoreboard';
 
 const HamburgerMenu: React.FC = () => {
   const dispatch = useDispatch();
@@ -45,18 +48,27 @@ const HamburgerMenu: React.FC = () => {
           </li>
           {location.pathname !== '/quiz' && (
             <li>
-              <Link to={`/quiz`}>Quiz</Link>
+              <Link to={`/quiz`}>
+                Quiz
+                <QuizIcon className='hamburger-menu-link-icon' />
+              </Link>
             </li>
           )}
           {location.pathname !== '/scores' && (
             <li>
-              <Link to={`/scores`}>Scoreboard</Link>
+              <Link to={`/scores`}>
+                Scoreboard
+                <ScoreboardIcon className='hamburger-menu-link-icon' />
+              </Link>
             </li>
           )}
           <li>
           </li>
           <li>
-            <Link to='/' onClick={() => dispatch(logout())}>Log out</Link>
+            <Link to='/' onClick={() => dispatch(logout())}>
+              Log out
+              <LogoutIcon className='hamburger-menu-link-icon' />
+            </Link>
           </li>
         </ul>
       </div>

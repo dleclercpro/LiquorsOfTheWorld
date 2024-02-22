@@ -68,10 +68,11 @@
         }
 
         > p, a {
-          display: block;
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
           min-width: 320px;
           padding: 18px 16px;
-          text-align: right;
 
           @include desktop {
             padding: 12px 16px;
@@ -81,11 +82,8 @@
         > p {
           background-color: $color-black;
           color: $color-white;
+          font-family: $special-font-stack;
           @include font-subtitle;
-
-          > .hamburger-menu-username {
-            font-family: $special-font-stack;
-          }
         }
 
         > a {
@@ -96,6 +94,13 @@
 
           &:hover {
             background-color: darken(#f9f9f9, 10%);
+          }
+
+          > .hamburger-menu-link-icon {
+            width: 32px;
+            height: 32px;
+            color: $color-black;
+            margin-left: 5px;
           }
         }
       }
