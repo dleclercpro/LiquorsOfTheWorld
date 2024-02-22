@@ -2,7 +2,8 @@
 $color-black: #000;
 $color-white: #fff;
 $color-grey: #aaa;
-$color-red: red;
+$color-red: #F44336;
+$color-green: #4CAF50;
 $color-deep-amber: #B76E79;
 $color-bordeaux-red: #5A1A29;
 $color-burgundy: #800020;
@@ -12,3 +13,5 @@ $color-beige: #C0A080;
 $color-primary: $color-bordeaux-red;
 $color-secondary: $color-deep-amber;
 $color-error: $color-red;
+$color-right: $color-green;
+$color-wrong: $color-red;

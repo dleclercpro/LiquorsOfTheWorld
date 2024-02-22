@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { N_SALT_ROUNDS } from '../../config';
 import { ANSWERS, QUESTIONS } from '../../constants';
 import logger from '../../logger';
-import { getLast, unique } from '../../utils/array';
+import { getLast, getRange, unique } from '../../utils/array';
 import { sum } from '../../utils/math';
 import RedisDatabase from './base/RedisDatabase';
 import { DatabaseUser } from '../../types/UserTypes';
@@ -132,6 +132,42 @@ class AppDatabase extends RedisDatabase {
 
         await this.set(`quiz:${quizId}`, this.serializeQuiz(updatedQuiz));
     }
+
+    public async getQuizStatus(quizId: string) {
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new Error('INVALID_QUIZ_ID');
+        }
+        
+        const votesCount = await this.getVotesCount(quizId);
+
+        const { questionIndex, hasStarted, isOver } = quiz;
+        
+        return {
+            questionIndex,
+            hasStarted,
+            isOver,
+            votesCount,
+        };
+    }
+
+    public async getVotesCount(quizId: string) {
+        const votesCount = new Array(QUESTIONS.length).fill(0);
+
+        const votes = await this.getAllVotes(quizId);
+        const players = Object.keys(votes);
+
+        players.forEach((player) => {
+            const playerVoteCount = votes[player].length;
+
+            getRange(playerVoteCount).forEach((i) => {
+                votesCount[i] += 1;
+            });
+        });
+
+        return votesCount;
+    }
     
     public async getAllVotes(quizId: string) {
         const players = await this.getAllPlayers(quizId);
@@ -190,9 +226,9 @@ class AppDatabase extends RedisDatabase {
 
     public async getPlayersWhoVotedUpUntil(quizId: string, questionIndex: number) {
         const votes = await this.getAllVotes(quizId);
-        const users = Object.keys(votes);
+        const players = Object.keys(votes);
 
-        return users.filter(user => votes[user].length >= questionIndex + 1);
+        return players.filter(player => votes[player].length >= questionIndex + 1);
     }
 
     public async getQuestionIndex(quizId: string) {

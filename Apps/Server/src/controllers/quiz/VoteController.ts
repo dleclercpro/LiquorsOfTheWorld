@@ -3,7 +3,7 @@ import logger from '../../logger';
 import { APP_DB } from '../..';
 import { errorResponse, successResponse } from '../../utils/calls';
 import { HttpStatusCode, HttpStatusMessage } from '../../types/HTTPTypes';
-import { QuizGame, QuizVote } from '../../types/QuizTypes';
+import { QuizVote } from '../../types/QuizTypes';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { QUESTIONS } from '../../constants';
 
@@ -73,16 +73,9 @@ const VoteController: RequestHandler = async (req, res, next) => {
             await APP_DB.incrementQuestionIndex(quizId);
         }
 
-        // Get current quiz status
-        const quiz = await APP_DB.getQuiz(quizId) as QuizGame;
-
         return res.json(successResponse({
             // FIXME: store quiz status indicators in a 'status' object
-            status: {
-                questionIndex: quiz.questionIndex,
-                hasStarted: quiz.hasStarted,
-                isOver: quiz.isOver,
-            },
+            status: await APP_DB.getQuizStatus(quizId),
             votes,
         }));
 

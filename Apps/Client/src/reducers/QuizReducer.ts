@@ -75,7 +75,6 @@ export const quizSlice = createSlice({
         state.scores.error = action.payload as string;
       })
       .addCase(vote.fulfilled, (state, action) => {
-        console.log('vote fulfilled');
         state.status.data = action.payload.status;
         state.votes.data = action.payload.votes;
       })
@@ -103,7 +102,19 @@ export const quizSlice = createSlice({
 
 // export const { } = quizSlice.actions;
 
-export const selectQuestionAnswer = (state: RootState, questionIndex: number) => {
+export const selectPlayers = (state: RootState) => {
+  const quiz = state.quiz;
+
+  const scores = quiz.scores.data;
+
+  if (scores === null) {
+    return null;
+  }
+
+  return Object.keys(scores);
+}
+
+export const selectRightAnswer = (state: RootState, questionIndex: number) => {
   const quiz = state.quiz;
 
   const questions = quiz.questions.data;
@@ -114,6 +125,23 @@ export const selectQuestionAnswer = (state: RootState, questionIndex: number) =>
   
   const question = questions[questionIndex];
   const answer = question.options[question.answer];
+
+  return answer;
+}
+
+export const selectAnswer = (state: RootState, questionIndex: number) => {
+  const quiz = state.quiz;
+
+  const questions = quiz.questions.data;
+  const votes = quiz.votes.data;
+
+  if (questions === null || votes === null) {
+    return null;
+  }
+  
+  const question = questions[questionIndex];
+  const vote = votes[questionIndex];
+  const answer = question.options[vote];
 
   return answer;
 }

@@ -100,6 +100,7 @@ export const fetchData = createAsyncThunk(
       const res = await Promise.all([
         dispatch(fetchQuestions()),
         dispatch(fetchVotes(quizId)),
+        dispatch(fetchScores(quizId)),
         dispatch(fetchStatus(quizId)),
       ]);
 

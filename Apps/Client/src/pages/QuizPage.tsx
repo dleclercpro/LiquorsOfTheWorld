@@ -63,10 +63,7 @@ const QuizPage: React.FC = () => {
   // Show loading screen in case quiz has not yet been started
   useEffect(() => {
     if (!hasStarted && !isAdmin) {
-      dispatch(showLoading({
-        text: 'Please wait for quiz to start...',
-        opaque: true,
-      }));
+      dispatch(showLoading({ text: 'Please wait for quiz to start...', opaque: true }));
     } else {
       dispatch(hideLoading());
     }

@@ -6,7 +6,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.9);
   z-index: 10;
   display: flex;
   justify-content: center;
@@ -21,40 +21,105 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
-    > .answer-overlay-title {
+    width: 100%;
+
+    .answer-overlay-title {
       color: $color-white;
       @include font-subtitle;
-      margin-bottom: 20px;
     }
 
-    > .answer-overlay-text {
-      color: $color-white;
-      @include font-title;
-
-      &:not(:last-child) {
-        margin-bottom: 20px;
-      }
-    }
-
-    > button {
+    > div {
       width: 100%;
-      max-width: 320px;
-      padding: 20px;
-      background-color: $color-primary;
-      transition: background-color 0.3s, color 0.3s;
-      color: $color-white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
 
-      &:hover {
-        background-color: darken($color-primary, 10%);
+      @include desktop {
+        display: flex;
+        justify-content: space-between;
       }
 
-      &:disabled {
-        background-color: $color-grey;
-        cursor: not-allowed;
+      > .answer-overlay-box-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        &:not(:last-child) {
+          margin-bottom: 60px;
+        }
+
+        @include desktop {
+          width: calc(50% - 10px);
+          margin-bottom: 0;
+        }
+
+        > .answer-overlay-icon {
+          width: 100px;
+          height: 100px;
+          margin-bottom: 5px;
+          color: $color-white;
+
+          @include desktop {
+            width: 120px;
+            height: 120px;
+          }
+
+          &.wait {
+            margin-bottom: 10px;
+          }
+    
+          &.is-right {
+            color: $color-right;
+          }
+    
+          &.is-wrong {
+            color: $color-wrong;
+          }
+        }
+      }
+
+      > .answer-overlay-box-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        @include desktop {
+          width: calc(50% - 10px);
+        }
+
+        > .answer-overlay-text {
+          color: $color-white;
+    
+          &:not(:last-child) {
+            margin-bottom: 10px;
+          }
+        }
+    
+        > .answer-overlay-value {
+          margin-bottom: 10px;
+          color: $color-white;
+          @include font-title;
+        }
+    
+        > button {
+          width: 100%;
+          max-width: 320px;
+          padding: 20px;
+          background-color: $color-primary;
+          transition: background-color 0.3s, color 0.3s;
+          color: $color-white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+    
+          &:hover {
+            background-color: darken($color-primary, 10%);
+          }
+    
+          &:disabled {
+            background-color: $color-grey;
+            cursor: not-allowed;
+          }
+        }
       }
     }
   }
