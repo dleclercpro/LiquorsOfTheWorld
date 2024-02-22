@@ -31,4 +31,4 @@ export type StatusData = {
   isOver: boolean,
 };
 
-export type ScoresData = Record<string, number>;
+export type ScoreData = Record<string, number>;

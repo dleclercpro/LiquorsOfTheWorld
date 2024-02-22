@@ -20,7 +20,6 @@ const QuestionForm: React.FC<Question> = (props) => {
   const quiz = useSelector(({ quiz }) => quiz);
   const quizId = quiz.id;
   const questions = quiz.questions.data;
-  const votes = quiz.votes.data;
 
   const dispatch = useDispatch();
 
@@ -54,7 +53,7 @@ const QuestionForm: React.FC<Question> = (props) => {
 
   }, [index]);
 
-  if (questions === null || votes === null) {
+  if (questions === null) {
     return null;
   }
 

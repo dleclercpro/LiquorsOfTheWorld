@@ -1,9 +1,10 @@
 import { useSelector } from '../hooks/redux';
-import { ScoresData } from '../types/DataTypes';
+import { ScoreData } from '../types/DataTypes';
+import { toSortedArr } from '../utils/array';
 import './Scoreboard.scss';
 
 interface Props {
-  scores: ScoresData,
+  scores: ScoreData,
 }
 
 const Scoreboard: React.FC<Props> = (props) => {
@@ -18,7 +19,10 @@ const Scoreboard: React.FC<Props> = (props) => {
     return null;
   }
 
-  const { isOver } = status;
+  const { isOver, questionIndex } = status;
+
+  const sortedScores = toSortedArr(scores, 'DESC')
+    .map(({ key, value }) => ({ username: key, score: value }));
   
   return (
     <div className='scoreboard'>
@@ -34,16 +38,18 @@ const Scoreboard: React.FC<Props> = (props) => {
       <table className='scoreboard-table'>
         <thead>
           <tr>
+              <th>Rank</th>
               <th>Username</th>
               <th>Score</th>
           </tr>
         </thead>
         <tbody>
-          {Object.entries(scores).map(([username, score], i) => {
+          {sortedScores.map(({ username, score }, i) => {
             return (
               <tr key={`scoreboard-table-row-${i}`}>
+                  <td>{i + 1}</td>
                   <td>{username}</td>
-                  <td>{score}/{questions.length}</td>
+                  <td>{score}/{questionIndex}</td>
               </tr>
             );
           })}

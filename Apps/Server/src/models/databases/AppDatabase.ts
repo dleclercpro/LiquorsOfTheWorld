@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { N_SALT_ROUNDS } from '../../config';
 import { ANSWERS, QUESTIONS } from '../../constants';
 import logger from '../../logger';
-import { getLastValue, unique } from '../../utils/array';
+import { getLast, unique } from '../../utils/array';
 import { sum } from '../../utils/math';
 import RedisDatabase from './base/RedisDatabase';
 import { DatabaseUser } from '../../types/UserTypes';
@@ -134,11 +134,17 @@ class AppDatabase extends RedisDatabase {
     }
     
     public async getAllVotes(quizId: string) {
-        const votes: Votes = {};
+        const players = await this.getAllPlayers(quizId);
+        
+        // Initialize votes for all players
+        const votes: Votes = players.reduce((prev, player) => {
+            return { ...prev, [player]: [] };
+        }, {});
+
         const votesAsStrings = await this.getKeysByPattern(`votes:${quizId}:*`);
     
         await Promise.all(votesAsStrings.map(async (voteAsString: string) => {
-            const username = getLastValue(voteAsString.split(':')) as string;
+            const username = getLast(voteAsString.split(':')) as string;
     
             votes[username] = await this.getUserVotes(quizId, username);
         }));

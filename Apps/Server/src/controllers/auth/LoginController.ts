@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { RequestHandler } from 'express';
 import { HttpStatusCode } from '../../types/HTTPTypes';
 import logger from '../../logger';
@@ -6,10 +7,31 @@ import { errorResponse, successResponse } from '../../utils/calls';
 import { Auth } from '../../types';
 import { ADMIN, COOKIE_NAME } from '../../config';
 import { encodeCookie } from '../../utils/cookies';
-import { isPasswordValid } from '../../utils/math';
 import { DatabaseUser } from '../../types/UserTypes';
 
 type RequestBody = Auth & { quizId: string };
+
+const isPasswordValid = async (password: string, hashedPassword: string) => {
+    const isValid = await new Promise<boolean>((resolve, reject) => {
+        bcrypt.compare(password, hashedPassword, (err, isEqualAfterHash) => {
+            if (err) {
+                resolve(false);
+                return;
+            }
+  
+            if (!isEqualAfterHash) {
+                resolve(false);
+                return;
+            }
+  
+            resolve(true);
+        });
+    });
+  
+    return isValid;
+}
+
+
 
 const LoginController: RequestHandler = async (req, res, next) => {
     try {

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from '../hooks/redux';
 import { REFRESH_STATUS_INTERVAL } from '../config';
 import { fetchStatus, fetchData } from '../actions/QuizActions';
 import { selectVote } from '../reducers/QuizReducer';
-import { hideLoading, showAnswer, showLoading } from '../reducers/OverlaysReducer';
+import { hideAnswer, hideLoading, showAnswer, showLoading } from '../reducers/OverlaysReducer';
 import StartQuizForm from '../components/forms/StartQuizForm';
 
 const QuizPage: React.FC = () => {
@@ -46,11 +46,12 @@ const QuizPage: React.FC = () => {
     }, REFRESH_STATUS_INTERVAL);
   
     return () => clearInterval(interval);
-  }, [quizId]);
+  }, []);
 
   // Set choice if user already voted
   useEffect(() => {
     if (vote === null) {
+      dispatch(hideAnswer());
       return;
     }
 
