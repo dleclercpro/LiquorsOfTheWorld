@@ -3,26 +3,20 @@ import './HamburgerMenu.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../../actions/UserActions';
+import OpenIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
 const HamburgerMenu: React.FC = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
 
-  const quizId = useSelector((state) => state.quiz.id);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const [shouldShow, setShouldShow] = useState(false);
-
-  const dispatch = useDispatch();
+  const quiz = useSelector((state) => state.quiz);
+  const user = useSelector((state) => state.user);
   
-  const showMenu = () => {
-    setShouldShow(true);
-  }
-
-  const hideMenu = () => {
-    setShouldShow(false);
-  }
-
   const toggleMenu = () => {
-    shouldShow ? hideMenu() : showMenu();
+    setIsOpen(!isOpen);
   }
 
   const handleClickOnMenu = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -31,17 +25,24 @@ const HamburgerMenu: React.FC = () => {
     toggleMenu();
   }
 
-  if (quizId === null) {
+  if (quiz.id === null || user === null) {
     return null;
   }
 
+  const username = user.username as string;
+
+  const Icon = isOpen ? CloseIcon : OpenIcon;
+
   return (
     <div className='hamburger-menu' onClick={handleClickOnMenu}>
-      <div className='hamburger-menu-icon'>
-        &#9776;
-      </div>
-      <div className={`hamburger-menu-content ${shouldShow ? 'visible' : 'hidden'}`}>
+      <Icon className='hamburger-menu-icon' />
+      <div className={`hamburger-menu-content ${isOpen ? 'visible' : 'hidden'}`}>
         <ul>
+          <li>
+            <p>
+              <strong className='hamburger-menu-username'>{username}</strong>
+            </p>
+          </li>
           {location.pathname !== '/quiz' && (
             <li>
               <Link to={`/quiz`}>Quiz</Link>

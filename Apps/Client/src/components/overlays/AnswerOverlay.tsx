@@ -5,7 +5,7 @@ import { hideAnswer } from '../../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../../reducers/AppReducer';
 import { useNavigate } from 'react-router-dom';
 import RightIcon from '@mui/icons-material/Check';
-import WrongIcon from '@mui/icons-material/Clear';
+import WrongIcon from '@mui/icons-material/Close';
 import WaitIcon from '@mui/icons-material/Schedule';
 import { startQuestion } from '../../actions/QuizActions';
 

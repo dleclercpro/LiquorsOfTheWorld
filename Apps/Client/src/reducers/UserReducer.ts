@@ -27,10 +27,12 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(ping.fulfilled, (state, action) => {
+        state.username = action.payload.username;
         state.isAdmin = action.payload.isAdmin;
         state.isAuthenticated = true;
       })
       .addCase(ping.rejected, (state) => {
+        state.username = null;
         state.isAdmin = false;
         state.isAuthenticated = false;
       })

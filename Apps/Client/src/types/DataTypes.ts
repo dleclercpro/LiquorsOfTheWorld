@@ -8,6 +8,7 @@ export type FetchedData<Data> = {
 
 export type PingData = {
   quizId: string,
+  username: string,
   isAdmin: boolean,
 };
 
