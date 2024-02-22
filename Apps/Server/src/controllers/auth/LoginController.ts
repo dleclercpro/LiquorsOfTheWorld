@@ -9,7 +9,9 @@ import { ADMIN, COOKIE_NAME } from '../../config';
 import { encodeCookie } from '../../utils/cookies';
 import { DatabaseUser } from '../../types/UserTypes';
 
-type RequestBody = Auth & { quizId: string };
+type RequestBody = Auth & {
+    quizId: string,
+};
 
 const isPasswordValid = async (password: string, hashedPassword: string) => {
     const isValid = await new Promise<boolean>((resolve, reject) => {

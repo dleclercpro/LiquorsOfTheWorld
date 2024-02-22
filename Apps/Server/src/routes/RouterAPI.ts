@@ -13,6 +13,7 @@ import RequestMiddleware from '../middleware/RequestMiddleware';
 import GetStatusController from '../controllers/quiz/GetStatusController';
 import GetVotesController from '../controllers/quiz/GetVotesController';
 import StartQuizController from '../controllers/quiz/StartQuizController';
+import StartQuestionController from '../controllers/quiz/StartQuestionController';
 
 
 
@@ -45,6 +46,7 @@ router.put('/quiz/:quizId/start', [AuthMiddleware], StartQuizController);
 router.get('/quiz/:quizId/votes', [AuthMiddleware], GetVotesController);
 router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);
 router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);
+router.put('/quiz/:quizId/question/:questionIndex/start', [AuthMiddleware], StartQuestionController);
 
 
 

@@ -3,7 +3,7 @@ import logger from '../../logger';
 import { APP_DB } from '../..';
 import { errorResponse, successResponse } from '../../utils/calls';
 import { HttpStatusCode, HttpStatusMessage } from '../../types/HTTPTypes';
-import { QuizVote } from '../../types/QuizTypes';
+import { QuizGame, QuizVote } from '../../types/QuizTypes';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { QUESTIONS } from '../../constants';
 
@@ -18,20 +18,9 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new Error('INVALID_QUIZ_ID');
     }
 
-    const _currentQuestionIndex = await APP_DB.getQuestionIndex(quizId);
-    if (_currentQuestionIndex === null) {
-        throw new Error('INVALID_QUIZ_ID');
-    }
-
     const questionIndex = Number(_questionIndex);
     if (questionIndex + 1 > QUESTIONS.length) {
         throw new Error('INVALID_QUESTION_INDEX');
-    }
-
-    // Is it the current question index?
-    const currentQuestionIndex = Number(_currentQuestionIndex);
-    if (questionIndex !== currentQuestionIndex) {
-        throw new Error('WRONG_QUESTION_INDEX');
     }
 
     return { quizId, questionIndex };
@@ -48,6 +37,12 @@ const VoteController: RequestHandler = async (req, res, next) => {
 
         const { quizId, questionIndex } = await validateParams(req.params);
 
+        // Players can only vote on current question index
+        const currentQuestionIndex = await APP_DB.getQuestionIndex(quizId);
+        if (questionIndex !== currentQuestionIndex) {
+            throw new Error('WRONG_QUESTION_INDEX');
+        }
+
         // Get votes from DB if they exist
         let votes = await APP_DB.getUserVotes(quizId, username);
 
@@ -61,16 +56,21 @@ const VoteController: RequestHandler = async (req, res, next) => {
         // Store votes in DB
         await APP_DB.setUserVotes(quizId, username, votes);
 
-        // Find out whether all users have voted
-        const usersWhoVoted = await APP_DB.getPlayersWhoVotedUpUntil(quizId, questionIndex);;
-        const users = await APP_DB.getAllPlayers(quizId);
-        logger.trace(`Players: ${users}`);
-        logger.trace(`Players who voted so far (${usersWhoVoted.length}/${users.length}): ${usersWhoVoted}`);
+        // If quiz is not supervised: increment question index
+        const quiz = await APP_DB.getQuiz(quizId) as QuizGame;
+        if (!quiz.isSupervised) {
 
-        // If so: increment quiz's current question index
-        if (usersWhoVoted.length === users.length) {
-            logger.info(`All users have voted on question #${questionIndex + 1}: incrementing question index...`);
-            await APP_DB.incrementQuestionIndex(quizId);
+            // Find out whether all users have voted up until current question
+            const playersWhoVoted = await APP_DB.getPlayersWhoVotedUpUntil(quizId, questionIndex);;
+            const players = await APP_DB.getAllPlayers(quizId);
+            logger.trace(`Players: ${players}`);
+            logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);
+
+            // If so: increment quiz's current question index
+            if (playersWhoVoted.length === players.length) {
+                logger.info(`All users have voted on question #${questionIndex + 1}: incrementing question index...`);
+                await APP_DB.incrementQuestionIndex(quizId);
+            }
         }
 
         return res.json(successResponse({

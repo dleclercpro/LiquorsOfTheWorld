@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { FetchedData, ScoreData, StatusData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
-import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, start } from '../actions/QuizActions';
+import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, startQuiz, startQuestion } from '../actions/QuizActions';
 import { login, logout, ping, vote } from '../actions/UserActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
@@ -89,7 +89,7 @@ export const quizSlice = createSlice({
         state.votes = getInitialFetchedData();
         state.scores = getInitialFetchedData();
       })
-      .addCase(start.fulfilled, (state) => {
+      .addCase(startQuiz.fulfilled, (state) => {
         if (state.status.data === null) return;
 
         state.status.data.hasStarted = true;
@@ -170,17 +170,21 @@ export const selectVote = (state: RootState, questionIndex: number) => {
 }
 
 export const mustWaitForOthers = (state: RootState) => {
+  const app = state.app;
   const quiz = state.quiz;
+  
   const status = quiz.status.data;
   const votes = quiz.votes.data;
+  const players = selectPlayers(state);
   
-  if (status === null || votes === null) {
+  if (status === null || votes === null || players === null) {
     return false;
   }
 
-  const { isOver, questionIndex } = status;
+  const { questionIndex } = app;
+  const { isOver, votesCount } = status;
 
-  return !isOver && votes.length === questionIndex + 1;
+  return !isOver && votesCount[questionIndex] < players.length;
 }
 
 export default quizSlice.reducer;

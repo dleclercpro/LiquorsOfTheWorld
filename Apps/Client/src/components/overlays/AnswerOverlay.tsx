@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import RightIcon from '@mui/icons-material/Check';
 import WrongIcon from '@mui/icons-material/Clear';
 import WaitIcon from '@mui/icons-material/Schedule';
+import { startQuestion } from '../../actions/QuizActions';
 
 const AnswerOverlay: React.FC = () => {
   const dispatch = useDispatch();
@@ -31,59 +32,77 @@ const AnswerOverlay: React.FC = () => {
   const mustWait = useSelector(mustWaitForOthers);
 
   // Wait until quiz data has been fetched
-  if (questions === null || status === null || votes === null || players === null) {
+  if (quiz.id === null || questions === null || status === null || votes === null || players === null) {
     return null;
   }
 
-  console.log(status);
-  const { isOver, votesCount } = status;
-  const voteCount = votesCount[questionIndex];
-
-  const handleButtonClick = () => {
+  const handleSeeNextQuestionButtonClick = () => {
     dispatch(hideAnswer());
 
-    if (isOver) {
-      navigate('/scores');
-    } else {
-      dispatch(setQuestionIndex(questionIndex + 1));
-    }
+    dispatch(setQuestionIndex(questionIndex + 1));
   }
 
-  const isAdmin = user.isAdmin;
+  const handleStartNextQuestionButtonClick = () => {
+    dispatch(hideAnswer());
+
+    dispatch(startQuestion({
+      quizId: quiz.id as string,
+      questionIndex: questionIndex + 1,
+    }));
+  }
+
+  const handleSeeResultsButtonClick = () => {
+    dispatch(hideAnswer());
+
+    navigate('/scores');
+  }
+
+  const { isAdmin } = user;
+  const { isOver, isSupervised, votesCount } = status;
+  const voteCount = votesCount[questionIndex];
+
   const Icon = isRight ? RightIcon : WrongIcon;
-  const buttonText = isOver ? `See results` : `Next question (${questionIndex + 1}/${questions.length})`;
   const adminText = 'The correct answer was:';
   const userText = `${isRight ? 'Indeed' : 'Actually'}, the correct answer was:`;
+  const buttonText = isAdmin && isSupervised ? `Start next question (${questionIndex + 1}/${questions.length})` : `Next question (${questionIndex + 1}/${questions.length})`;
+  const handleButtonClick = isAdmin && isSupervised ? handleStartNextQuestionButtonClick : handleSeeNextQuestionButtonClick;
 
   return (
     <div id='answer-overlay' className={shouldShow ? '' : 'hidden'}>
       <div className='answer-overlay-box'>
           <div>
             <div className='answer-overlay-box-left'>
-              {!mustWait ? (
+              {mustWait ? (
+                <>
+                  <WaitIcon className='answer-overlay-icon wait' />
+                  <p className='answer-overlay-title'>Please wait for {isAdmin ? 'all' : 'other'} players to answer the question...</p>
+                </>
+              ) : (
                 <>
                   <Icon className={`answer-overlay-icon ${isRight ? 'is-right' : 'is-wrong'}`} />
                   <h2 className='answer-overlay-title'>{`You're ${isRight ? 'right!' : 'wrong...'}`}</h2>
                 </>
-              ) : (
-                <>
-                  <WaitIcon className='answer-overlay-icon wait' />
-                  <p className='answer-overlay-title'>Please wait for other players to answer the question...</p>
-                </>
               )}
             </div>
             <div className='answer-overlay-box-right'>
-              {!mustWait ? (
+              {mustWait ? (
                 <>
-                  <p className='answer-overlay-text'>{isAdmin ? adminText : userText}</p>
-                  <p className='answer-overlay-value'>{rightAnswer}</p>
-                  <button className='answer-overlay-button' onClick={handleButtonClick}>
-                    {buttonText}
-                  </button>
+                  <p className='answer-overlay-title'>So far, <strong>{voteCount} out of {players.length}</strong> players have voted.</p>
                 </>
               ) : (
                 <>
-                  <p className='answer-overlay-title'>So far, <strong>{voteCount} out of {players.length}</strong> players have voted.</p>
+                  <p className='answer-overlay-text'>{isAdmin ? adminText : userText}</p>
+                  <p className='answer-overlay-value'>{rightAnswer}</p>
+                  {!isOver && (!isSupervised || isAdmin) && (
+                    <button className='answer-overlay-button' onClick={handleButtonClick}>
+                      {buttonText}
+                    </button>
+                  )}
+                  {isOver && (
+                    <button className='answer-overlay-button' onClick={handleSeeResultsButtonClick}>
+                      See results
+                    </button>
+                  )}
                 </>
               )}
             </div>

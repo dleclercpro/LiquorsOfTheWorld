@@ -8,6 +8,7 @@ import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
 import { setQuestionIndex } from '../reducers/AppReducer';
 import { CallStartQuiz } from '../calls/quiz/CallStartQuiz';
+import { CallStartQuestion } from '../calls/quiz/CallStartQuestion';
 
 export const fetchQuestions = createAsyncThunk(
   'quiz/fetchQuestions',
@@ -133,11 +134,33 @@ export const fetchData = createAsyncThunk(
   }
 );
 
-export const start = createAsyncThunk(
+export const startQuiz = createAsyncThunk(
   'quiz/start',
-  async (quizId: string, { rejectWithValue }) => {
+  async ({ quizId, isSupervised }: { quizId: string, isSupervised: boolean }, { rejectWithValue }) => {
     try {
-      await new CallStartQuiz(quizId).execute();
+      await new CallStartQuiz(quizId).execute({ isSupervised });
+
+      return;
+
+    } catch (err: unknown) {
+      let error = 'UNKNOWN_ERROR';
+      
+      if (err instanceof Error) {
+        error = err.message;
+      }
+
+      console.error(error);
+
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const startQuestion = createAsyncThunk(
+  'quiz/question/start',
+  async ({ quizId, questionIndex }: { quizId: string, questionIndex: number }, { rejectWithValue }) => {
+    try {
+      await new CallStartQuestion(quizId, questionIndex).execute();
 
       return;
 

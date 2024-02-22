@@ -9,6 +9,7 @@ export type QuizGame = {
   creator: string,
   hasStarted: boolean,
   isOver: boolean,
+  isSupervised: boolean,
   questionIndex: number,
   players: string[],
 };

@@ -29,6 +29,7 @@ export type StatusData = {
   questionIndex: number,
   hasStarted: boolean,
   isOver: boolean,
+  isSupervised: boolean,
   votesCount: number[],
 };
 

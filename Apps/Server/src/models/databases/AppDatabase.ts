@@ -65,7 +65,7 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async createQuiz(quizId: string, username: string) {
-        logger.trace(`Creating a new game...`);
+        logger.trace(`Creating a new quiz...`);
 
         if (await this.doesQuizExist(quizId)) {
             throw new Error('QUIZ_ID_ALREADY_EXISTS');
@@ -76,6 +76,7 @@ class AppDatabase extends RedisDatabase {
             questionIndex: 0,
             hasStarted: false,
             isOver: false,
+            isSupervised: false,
             players: [],
         };
 
@@ -84,7 +85,7 @@ class AppDatabase extends RedisDatabase {
         return quiz;
     }
 
-    public async startQuiz(quizId: string) {
+    public async startQuiz(quizId: string, isSupervised: boolean) {
         const quiz = await this.getQuiz(quizId);
 
         if (!quiz) {
@@ -94,6 +95,7 @@ class AppDatabase extends RedisDatabase {
         await this.updateQuiz(quizId, {
             ...quiz,
             hasStarted: true,
+            isSupervised,
         });
     }
 
@@ -142,12 +144,13 @@ class AppDatabase extends RedisDatabase {
         
         const votesCount = await this.getVotesCount(quizId);
 
-        const { questionIndex, hasStarted, isOver } = quiz;
+        const { questionIndex, hasStarted, isOver, isSupervised } = quiz;
         
         return {
             questionIndex,
             hasStarted,
             isOver,
+            isSupervised,
             votesCount,
         };
     }
