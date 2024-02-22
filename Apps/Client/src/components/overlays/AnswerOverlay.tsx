@@ -1,7 +1,7 @@
 import './AnswerOverlay.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { mustWaitForOthers, selectAnswer, selectPlayers, selectRightAnswer } from '../../reducers/QuizReducer';
-import { hideAnswer } from '../../reducers/OverlaysReducer';
+import { hideAnswerOverlay } from '../../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../../reducers/AppReducer';
 import { useNavigate } from 'react-router-dom';
 import RightIcon from '@mui/icons-material/Check';
@@ -37,13 +37,13 @@ const AnswerOverlay: React.FC = () => {
   }
 
   const handleSeeNextQuestionButtonClick = () => {
-    dispatch(hideAnswer());
+    dispatch(hideAnswerOverlay());
 
     dispatch(setQuestionIndex(questionIndex + 1));
   }
 
   const handleStartNextQuestionButtonClick = () => {
-    dispatch(hideAnswer());
+    dispatch(hideAnswerOverlay());
 
     dispatch(startQuestion({
       quizId: quiz.id as string,
@@ -52,7 +52,7 @@ const AnswerOverlay: React.FC = () => {
   }
 
   const handleSeeResultsButtonClick = () => {
-    dispatch(hideAnswer());
+    dispatch(hideAnswerOverlay());
 
     navigate('/scores');
   }

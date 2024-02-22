@@ -4,12 +4,18 @@ import { useDispatch, useSelector } from '../../hooks/redux';
 import { selectAuthentication } from '../../reducers/UserReducer';
 import './LoginForm.scss';
 import { login } from '../../actions/UserActions';
+import { useTranslation } from 'react-i18next';
+import { showWelcomeOverlay } from '../../reducers/OverlaysReducer';
 
 type Props = {
   quizId?: string,
 }
 
 const LoginForm: React.FC<Props> = (props) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const [quizId, setQuizId] = useState(props.quizId ?? '');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -17,12 +23,10 @@ const LoginForm: React.FC<Props> = (props) => {
   
   const auth = useSelector(selectAuthentication);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   // Redirect to current quiz question on successful login
   useEffect(() => {
     if (auth.status === 'succeeded') {
+      dispatch(showWelcomeOverlay());
       navigate(`/quiz`);
     }
   }, [auth.status]);
@@ -47,7 +51,7 @@ const LoginForm: React.FC<Props> = (props) => {
         id='login-quiz-id'
         type='text'
         value={quizId}
-        placeholder='Enter a quiz ID'
+        placeholder={t('FORMS.LOGIN.QUIZ_ID')}
         onChange={(e) => setQuizId(e.target.value)}
         required
       />
@@ -56,7 +60,7 @@ const LoginForm: React.FC<Props> = (props) => {
         id='login-username'
         type='text'
         value={username}
-        placeholder='Enter a username'
+        placeholder={t('FORMS.LOGIN.USERNAME')}
         onChange={(e) => setUsername(e.target.value)}
         required
       />
@@ -65,7 +69,7 @@ const LoginForm: React.FC<Props> = (props) => {
         id='login-password'
         type='password'
         value={password}
-        placeholder='Enter a password'
+        placeholder={t('FORMS.LOGIN.PASSWORD')}
         onChange={(e) => setPassword(e.target.value)}
         required
       />
@@ -73,7 +77,7 @@ const LoginForm: React.FC<Props> = (props) => {
       {error && <p className='login-error'>{error}</p>}
 
       <button className='login-button' type='submit'>
-        Let's go!
+        {t('FORMS.LOGIN.SUBMIT')}
       </button>
     </form>
   );

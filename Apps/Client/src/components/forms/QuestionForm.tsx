@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { showAnswer } from '../../reducers/OverlaysReducer';
+import { showAnswerOverlay } from '../../reducers/OverlaysReducer';
 import './QuestionForm.scss';
 import { vote } from '../../actions/UserActions';
 
@@ -45,7 +45,7 @@ const QuestionForm: React.FC<Question> = (props) => {
       return;
     }
 
-    dispatch(showAnswer());
+    dispatch(showAnswerOverlay());
   }
 
   useEffect(() => {

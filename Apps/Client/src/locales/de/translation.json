@@ -1,3 +1,11 @@
 {
-  "HOME_PAGE_TITLE": "Liköre aus aller Welt"
+  "HOME_PAGE_TITLE": "Liköre aus aller Welt",
+  "FORMS": {
+    "LOGIN": {
+      "QUIZ_ID": "Quiz ID",
+      "USERNAME": "Benutzername",
+      "PASSWORD": "Passwort",
+      "SUBMIT": "Los geht's!"
+    }
+  }
 }

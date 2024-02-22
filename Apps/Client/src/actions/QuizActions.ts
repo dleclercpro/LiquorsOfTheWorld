@@ -6,7 +6,6 @@ import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
-import { setQuestionIndex } from '../reducers/AppReducer';
 import { CallStartQuiz } from '../calls/quiz/CallStartQuiz';
 import { CallStartQuestion } from '../calls/quiz/CallStartQuestion';
 
@@ -98,28 +97,28 @@ export const fetchData = createAsyncThunk(
   'quiz/fetchData',
   async (quizId: string, { dispatch, getState, rejectWithValue }) => {
     try {
-      const res = await Promise.all([
+      const result = await Promise.all([
         dispatch(fetchQuestions()),
         dispatch(fetchVotes(quizId)),
         dispatch(fetchScores(quizId)),
         dispatch(fetchStatus(quizId)),
       ]);
 
-      const someFetchActionFailed = res
+      const someFetchActionFailed = result
         .map(({ type }) => type)
         .some(type => type.endsWith('/rejected'));
 
       if (someFetchActionFailed) {
-        return;
+        throw new Error('COULD_NOT_FETCH_DATA');
       }
       
       const { quiz } = getState() as RootState;
       const status = quiz.status.data as StatusData;
       const questionIndex = status.questionIndex;
 
-      // After first data fetch, set current question index in the app to match
-      // the one on the server
-      dispatch(setQuestionIndex(questionIndex));
+      // After first data fetch, pass on current server question index
+      // so it can be set in the app in the corresponding reducer
+      return questionIndex;
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';
@@ -158,13 +157,11 @@ export const start = createAsyncThunk(
 
 export const startQuestion = createAsyncThunk(
   'quiz/question/start',
-  async ({ quizId, questionIndex }: { quizId: string, questionIndex: number }, { dispatch, rejectWithValue }) => {
+  async ({ quizId, questionIndex }: { quizId: string, questionIndex: number }, { rejectWithValue }) => {
     try {
       await new CallStartQuestion(quizId, questionIndex).execute();
 
-      dispatch(setQuestionIndex(questionIndex));
-
-      return;
+      return questionIndex;
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';

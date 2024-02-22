@@ -1,3 +1,11 @@
 {
-  "HOME_PAGE_TITLE": "Liquors of the World"
+  "HOME_PAGE_TITLE": "Liquors of the World",
+  "FORMS": {
+    "LOGIN": {
+      "QUIZ_ID": "Enter a quiz ID",
+      "USERNAME": "Enter a username",
+      "PASSWORD": "Enter a password",
+      "SUBMIT": "Let's go!"
+    }
+  }
 }

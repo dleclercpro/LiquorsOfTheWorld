@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { logout } from '../actions/UserActions';
+import { fetchData, startQuestion } from '../actions/QuizActions';
 
 interface AppState {
   questionIndex: number, // Current question index in the app
@@ -23,7 +24,15 @@ export const appSlice = createSlice({
     builder
       // Reset state on logout, no matter if successful or not
       .addCase(logout.fulfilled, () => initialState)
-      .addCase(logout.rejected, () => initialState);
+      .addCase(logout.rejected, () => initialState)
+      .addCase(fetchData.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.questionIndex = action.payload as number;
+      })
+      .addCase(startQuestion.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.questionIndex = action.payload as number;
+      });
   },
 });
 
