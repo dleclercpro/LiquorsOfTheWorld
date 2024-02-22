@@ -34,13 +34,13 @@ const QuestionForm: React.FC<Question> = (props) => {
       return;
     }
     
-    const res = await dispatch(vote({
+    const result = await dispatch(vote({
       quizId,
       questionIndex: index, // Vote for question that's currently being displayed in the app
       vote: options.findIndex(option => option === choice),
     }));
 
-    if (res.type.endsWith('/rejected')) {
+    if (result.type.endsWith('/rejected')) {
       alert(`Could not vote!`);
       return;
     }

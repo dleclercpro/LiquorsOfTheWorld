@@ -134,7 +134,7 @@ export const fetchData = createAsyncThunk(
   }
 );
 
-export const startQuiz = createAsyncThunk(
+export const start = createAsyncThunk(
   'quiz/start',
   async ({ quizId, isSupervised }: { quizId: string, isSupervised: boolean }, { rejectWithValue }) => {
     try {

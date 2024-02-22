@@ -26,8 +26,17 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(ping.fulfilled, (state, action) => {
+        state.isAdmin = action.payload.isAdmin;
+        state.isAuthenticated = true;
+      })
+      .addCase(ping.rejected, (state) => {
+        state.isAdmin = false;
+        state.isAuthenticated = false;
+      })
       .addCase(login.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.status = 'succeeded';
@@ -41,15 +50,17 @@ export const userSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload as string;
 
+        // Login failed: delete all user-related data
         state.username = null;
         state.isAdmin = false;
         state.isAuthenticated = false;
       })
       .addCase(logout.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
-      // Reset state on log out
       .addCase(logout.fulfilled, (state) => {
+        // Reset state on log out
         state.status = 'idle';
         state.error = null;
 
@@ -60,12 +71,9 @@ export const userSlice = createSlice({
       .addCase(logout.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
-      })
-      .addCase(ping.fulfilled, (state, action) => {
-        state.isAdmin = action.payload.isAdmin;
-        state.isAuthenticated = true;
-      })
-      .addCase(ping.rejected, (state) => {
+
+        // Logout failed: delete all user-related data anyways
+        state.username = null;
         state.isAdmin = false;
         state.isAuthenticated = false;
       });

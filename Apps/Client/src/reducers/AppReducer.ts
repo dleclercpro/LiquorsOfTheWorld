@@ -21,8 +21,8 @@ export const appSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Reset state on log out
       .addCase(logout.fulfilled, (state, action) => {
+        // Reset state on log out
         state.questionIndex = 0;
       })
   },

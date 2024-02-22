@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import './StartQuizForm.scss';
-import { startQuiz } from '../../actions/QuizActions';
+import { start } from '../../actions/QuizActions';
 
 const StartQuizForm: React.FC = () => {
   const [isSupervised, setIsSupervised] = useState(false);
@@ -22,9 +22,9 @@ const StartQuizForm: React.FC = () => {
       return;
     }
     
-    const res = await dispatch(startQuiz({ quizId, isSupervised }));
+    const result = await dispatch(start({ quizId, isSupervised }));
 
-    if (res.type.endsWith('/rejected')) {
+    if (result.type.endsWith('/rejected')) {
       alert(`Could not start quiz!`);
       return;
     }

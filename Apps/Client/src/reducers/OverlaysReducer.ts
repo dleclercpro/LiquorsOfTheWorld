@@ -46,8 +46,8 @@ export const overlaysSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Reset state on log out
       .addCase(logout.fulfilled, (state, action) => {
+        // Reset state on log out
         state.loading = {
           show: false,
           opaque: false,
