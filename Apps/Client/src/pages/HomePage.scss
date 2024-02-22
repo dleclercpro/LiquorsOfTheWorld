@@ -1,6 +1,6 @@
 @import '../styles/common';
 
-.login-page {
+.home-page-page {
   position: relative;
   display: flex;
   justify-content: center;
@@ -8,7 +8,7 @@
   width: 100%;
   height: 100%;
 
-  > .login-box {
+  > .home-page-box {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -28,11 +28,11 @@
       width: 620px;
     }
 
-    > .login-title {
+    > .home-page-title {
       margin-bottom: 10px;
     }
 
-    > .login-text {
+    > .home-page-text {
       margin-bottom: 20px;
       font-size: 18px;
       text-align: right;

@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.scss';
-import LoginPage from './pages/LoginPage';
+import HomePage from './pages/HomePage';
 import QuizPage from './pages/QuizPage';
 import ScoresPage from './pages/ScoresPage';
 import { DEBUG } from './config';
@@ -40,10 +40,10 @@ function App() {
             </AuthRoute>
           )} />
           <Route path='/:quizId' element={(
-            <LoginPage />
+            <HomePage />
           )} />
           <Route path='/' element={(
-            <LoginPage />
+            <HomePage />
           )} />
           <Route path='*' element={(
             <Navigate to='/' />
