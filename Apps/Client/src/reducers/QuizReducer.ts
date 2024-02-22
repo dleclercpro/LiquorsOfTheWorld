@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { FetchedData, ScoreData, StatusData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
-import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, startQuiz, startQuestion } from '../actions/QuizActions';
+import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, startQuiz } from '../actions/QuizActions';
 import { login, logout, ping, vote } from '../actions/UserActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';

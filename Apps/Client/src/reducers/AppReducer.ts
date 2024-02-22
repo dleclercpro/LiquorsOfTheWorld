@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { logout } from '../actions/UserActions';
-import { startQuestion } from '../actions/QuizActions';
 
 interface AppState {
   questionIndex: number, // Current question index in the app
@@ -25,9 +24,6 @@ export const appSlice = createSlice({
       // Reset state on log out
       .addCase(logout.fulfilled, (state, action) => {
         state.questionIndex = 0;
-      })
-      .addCase(startQuestion.fulfilled, (state) => {
-        state.questionIndex = state.questionIndex + 1;
       })
   },
 });

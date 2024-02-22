@@ -24,7 +24,7 @@ const StartQuizForm: React.FC = () => {
     
     const res = await dispatch(startQuiz({ quizId, isSupervised }));
 
-    if (res.type === 'quiz/start/rejected') {
+    if (res.type.endsWith('/rejected')) {
       alert(`Could not start quiz!`);
       return;
     }

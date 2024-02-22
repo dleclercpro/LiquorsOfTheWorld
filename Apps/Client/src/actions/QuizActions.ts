@@ -158,9 +158,11 @@ export const startQuiz = createAsyncThunk(
 
 export const startQuestion = createAsyncThunk(
   'quiz/question/start',
-  async ({ quizId, questionIndex }: { quizId: string, questionIndex: number }, { rejectWithValue }) => {
+  async ({ quizId, questionIndex }: { quizId: string, questionIndex: number }, { dispatch, rejectWithValue }) => {
     try {
       await new CallStartQuestion(quizId, questionIndex).execute();
+
+      dispatch(setQuestionIndex(questionIndex));
 
       return;
 
