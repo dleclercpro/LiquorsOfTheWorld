@@ -80,7 +80,7 @@ const AnswerOverlay: React.FC = () => {
               ) : (
                 <>
                   <Icon className={`answer-overlay-icon ${isRight ? 'is-right' : 'is-wrong'}`} />
-                  <h2 className='answer-overlay-title'>{`You're ${isRight ? 'right!' : 'wrong...'}`}</h2>
+                  <h2 className='answer-overlay-title'>{`${isRight ? 'Congrats' : 'Unfortunately'}, you're ${isRight ? 'right!' : 'wrong...'}`}</h2>
                 </>
               )}
             </div>

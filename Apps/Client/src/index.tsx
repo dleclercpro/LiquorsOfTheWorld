@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './stores/store';
 import { ENV } from './utils/env';
 import { setLogLevel } from './utils/logging';
 import App from './App';
 import './index.scss';
-import { BrowserRouter } from 'react-router-dom';
+import './i18n';
 
 setLogLevel(ENV);
 
