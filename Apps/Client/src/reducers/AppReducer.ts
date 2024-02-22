@@ -21,10 +21,9 @@ export const appSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(logout.fulfilled, (state, action) => {
-        // Reset state on log out
-        state.questionIndex = 0;
-      })
+      // Reset state on logout, no matter if successful or not
+      .addCase(logout.fulfilled, () => initialState)
+      .addCase(logout.rejected, () => initialState);
   },
 });
 

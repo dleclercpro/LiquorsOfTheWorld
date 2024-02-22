@@ -91,20 +91,6 @@ export const quizSlice = createSlice({
 
 
       // Other actions
-      .addCase(ping.fulfilled, (state, action) => {
-        state.id = action.payload.quizId;
-      })
-      .addCase(login.fulfilled, (state, action) => {
-        state.id = action.payload.quizId;
-      })
-      .addCase(logout.fulfilled, (state, action) => {
-        // Reset state on log out
-        state.id = null;
-        state.questions = getInitialFetchedData();
-        state.status = getInitialFetchedData();
-        state.votes = getInitialFetchedData();
-        state.scores = getInitialFetchedData();
-      })
       .addCase(vote.fulfilled, (state, action) => {
         state.status.data = action.payload.status;
         state.votes.data = action.payload.votes;
@@ -113,7 +99,19 @@ export const quizSlice = createSlice({
         if (state.status.data === null) return;
 
         state.status.data.hasStarted = true;
-      });
+      })
+
+      // Auth actions
+      .addCase(ping.fulfilled, (state, action) => {
+        state.id = action.payload.quizId;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.id = action.payload.quizId
+      })
+      // Reset state on logout, no matter if successful or not
+      .addCase(logout.fulfilled, () => initialState)
+      .addCase(logout.rejected, () => initialState);
+;
   },
 });
 

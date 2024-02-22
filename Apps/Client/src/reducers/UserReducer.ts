@@ -59,24 +59,9 @@ export const userSlice = createSlice({
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(logout.fulfilled, (state) => {
-        // Reset state on log out
-        state.status = 'idle';
-        state.error = null;
-
-        state.username = null;
-        state.isAdmin = false;
-        state.isAuthenticated = false;
-      })
-      .addCase(logout.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload as string;
-
-        // Logout failed: delete all user-related data anyways
-        state.username = null;
-        state.isAdmin = false;
-        state.isAuthenticated = false;
-      });
+      // Reset state on logout, no matter if successful or not
+      .addCase(logout.fulfilled, () => initialState)
+      .addCase(logout.rejected, () => initialState);
   },
 });
 
