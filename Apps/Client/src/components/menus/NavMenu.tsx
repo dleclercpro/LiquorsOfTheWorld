@@ -14,6 +14,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ScoreboardIcon from '@mui/icons-material/Scoreboard';
 import { useTranslation } from 'react-i18next';
 import { DEBUG } from '../../config';
+import { Language } from '../../constants';
 
 const NavMenu: React.FC = () => {
   const dispatch = useDispatch();
@@ -58,10 +59,10 @@ const NavMenu: React.FC = () => {
   }
 
   const toggleLanguage = () => {
-    if (lang === 'en') {
-      setLang('de');
+    if (lang === Language.EN) {
+      setLang(Language.DE);
     } else {
-      setLang('en');
+      setLang(Language.EN);
     }
   }
 
@@ -98,14 +99,14 @@ const NavMenu: React.FC = () => {
 
           <li>
             <button onClick={handleLanguageSwitch}>
-              {language === 'en' ? (
+              {language === Language.EN ? (
                 <>
-                  {t('COMMON.GERMAN')}
+                  Deutsch
                   <GermanyIcon className='nav-menu-link-icon' />
                 </>
                 ) : (
                 <>
-                  {t('COMMON.ENGLISH')}
+                  English
                   <UnitedKingdoIcon className='nav-menu-link-icon' />
                 </>
               )}

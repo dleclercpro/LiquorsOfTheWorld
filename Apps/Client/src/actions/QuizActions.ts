@@ -8,10 +8,11 @@ import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
 import { CallStartQuiz } from '../calls/quiz/CallStartQuiz';
 import { CallStartQuestion } from '../calls/quiz/CallStartQuestion';
+import { Language } from '../constants';
 
 export const fetchQuestions = createAsyncThunk(
   'quiz/fetchQuestions',
-  async (lang: 'en' | 'de', { rejectWithValue }) => {
+  async (lang: Language, { rejectWithValue }) => {
     try {
       const { data } = await new CallGetQuestions(lang).execute();
       
@@ -95,7 +96,7 @@ export const fetchScores = createAsyncThunk(
 
 export const fetchData = createAsyncThunk(
   'quiz/fetchData',
-  async ({ quizId, lang }: { quizId: string, lang: 'en' | 'de' } , { dispatch, getState, rejectWithValue }) => {
+  async ({ quizId, lang }: { quizId: string, lang: Language } , { dispatch, getState, rejectWithValue }) => {
     try {
       const result = await Promise.all([
         dispatch(fetchQuestions(lang)),

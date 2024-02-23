@@ -5,6 +5,13 @@ import questionsDE from '../../data/de/questions.json';
 
 export const ENVIRONMENTS = Object.values(Environment);
 
+export enum Language {
+  EN = 'en',
+  DE = 'de',
+}
+
+export const LANGUAGES = Object.values(Language);
+
 export const QUESTIONS_EN = questionsEN;
 export const QUESTIONS_DE = questionsDE;
 export const ANSWERS_EN = QUESTIONS_EN.map(({ answer }) => answer);

@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import translationEN from './locales/en/translation.json';
 import translationDE from './locales/de/translation.json';
 import { DEBUG } from './config';
+import { Language } from './constants';
 
 const resources = {
   en: {
@@ -18,8 +19,8 @@ i18n
   .init({
     debug: DEBUG,
     resources,
-    lng: 'de',         // Initial language
-    fallbackLng: 'en', // Default fallback language
+    lng: Language.DE,         // Initial language
+    fallbackLng: Language.EN, // Default fallback language
     interpolation: {
       escapeValue: false,
     },

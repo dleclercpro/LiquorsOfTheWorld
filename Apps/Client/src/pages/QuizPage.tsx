@@ -9,10 +9,11 @@ import { hideAnswerOverlay, hideLoadingOverlay, showAnswerOverlay, showLoadingOv
 import StartQuizForm from '../components/forms/StartQuizForm';
 import { useTranslation } from 'react-i18next';
 import NavMenu from '../components/menus/NavMenu';
+import { Language } from '../constants';
 
 const QuizPage: React.FC = () => {
   const { i18n } = useTranslation();
-  const lang = i18n.language as 'en' | 'de';
+  const lang = i18n.language as Language;
 
   const quiz = useSelector(({ quiz }) => quiz);
   const isAdmin = useSelector(({ user }) => user.isAdmin);
