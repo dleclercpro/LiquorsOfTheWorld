@@ -18,19 +18,19 @@
       "TITLE": "Spirituosen der Welt",
       "WELCOME_HEAD": "Willkommen zum Quiz heute Abend!",
       "WELCOME_TEXT": "Bereite dich darauf vor, dein Meisterwissen über die Spirituosen der Welt in einem epischen Quiz zu zeigen, wo nur die schlauesten Schnapskenner den Sieg erringen werden...",
-      "WELCOME_CTA": "Bist du bereit?"
+      "WELCOME_CTA": "Bist Du bereit?"
     }
   },
   "FORMS": {
     "LOGIN": {
-      "QUIZ_ID": "Geben Sie eine Quiz-ID ein",
-      "USERNAME": "Geben Sie einen Benutzernamen ein",
-      "PASSWORD": "Geben Sie ein Passwort ein",
+      "QUIZ_ID": "Gebe eine Quiz-ID ein",
+      "USERNAME": "Gebe einen Benutzernamen ein",
+      "PASSWORD": "Gebe ein Passwort ein",
       "SUBMIT": "Los geht's!"
     },
     "START_QUIZ": {
       "TITLE": "Start",
-      "TEXT": "Bist du bereit, das Quiz zu beginnen? Neue Spieler können danach nicht mehr beitreten!",
+      "TEXT": "Bist Du bereit, das Quiz zu beginnen? Neue Spieler können danach nicht mehr beitreten!",
       "SUPERVISE": "Quiz überwachen",
       "SUBMIT": "Ja, los geht's!"
     },
@@ -51,8 +51,8 @@
       "CURRENT_STATUS": "Bis jetzt haben {{voteCount}} von {{playersCount}} Spielern abgestimmt.",
       "RIGHT_ANSWER_TEXT": "Tatsächlich war die richtige Antwort:",
       "WRONG_ANSWER_TEXT": "Eigentlich war die richtige Antwort:",
-      "RIGHT_ANSWER_ICON_TEXT": "Glückwunsch, du hast recht!",
-      "WRONG_ANSWER_ICON_TEXT": "Leider liegst du falsch..."
+      "RIGHT_ANSWER_ICON_TEXT": "Glückwunsch, Du hast recht!",
+      "WRONG_ANSWER_ICON_TEXT": "Leider liegst Du falsch..."
     }
   }
 }
