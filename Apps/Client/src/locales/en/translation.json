@@ -1,11 +1,58 @@
 {
-  "HOME_PAGE_TITLE": "Liquors of the World",
+  "COMMON": {
+    "YES": "Yes",
+    "NO": "No",
+    "WELCOME": "Welcome",
+    "EXIT": "Exit",
+    "LOG_IN": "Log in",
+    "LOG_OUT": "Log out",
+    "USERNAME": "Username",
+    "QUIZ": "Quiz",
+    "QUESTION": "Question",
+    "SCOREBOARD": "Scoreboard",
+    "SCORE": "Score",
+    "RANK": "Rank"
+  },
+  "PAGES": {
+    "HOME": {
+      "TITLE": "Liquors of the World",
+      "WELCOME_HEAD": "Welcome to tonight's quiz!",
+      "WELCOME_TEXT": "Get ready to showcase your mastery of the world's spirits in an epic quiz, where only the savviest liquor aficionados will manage to claim victory...",
+      "WELCOME_CTA": "Are you ready?"
+    }
+  },
   "FORMS": {
     "LOGIN": {
       "QUIZ_ID": "Enter a quiz ID",
       "USERNAME": "Enter a username",
       "PASSWORD": "Enter a password",
       "SUBMIT": "Let's go!"
+    },
+    "START_QUIZ": {
+      "TITLE": "Start",
+      "TEXT": "Are you ready to start the quiz? New players won't be able to join afterwards!",
+      "SUPERVISE": "Supervise quiz",
+      "SUBMIT": "Yes, let's go!"
+    },
+    "QUESTION": {
+      "PICK_ANSWER": "Pick an answer",
+      "SUBMIT_ANSWER": "Submit your answer"
+    }
+  },
+  "OVERLAYS": {
+    "LOADING": {
+      "PLEASE_WAIT": "Hello {{username}}! Please wait for quiz to start..."
+    },
+    "ANSWER": {
+      "SEE_RESULTS": "See results",
+      "NEXT_QUESTION": "Next question",
+      "START_NEXT_QUESTION": "Start next question",
+      "WAIT_FOR_PLAYERS": "Please wait for all players to answer the question...",
+      "CURRENT_STATUS": "So far, {{voteCount}} out of {{playersCount}} players have voted.",
+      "RIGHT_ANSWER_TEXT": "Indeed, the correct answer was:",
+      "WRONG_ANSWER_TEXT": "Actually, the correct answer was:",
+      "RIGHT_ANSWER_ICON_TEXT": "Congrats, you're right!",
+      "WRONG_ANSWER_ICON_TEXT": "Unfortunately, you're wrong..."
     }
   }
 }

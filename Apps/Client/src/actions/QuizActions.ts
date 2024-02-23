@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { StatusData, ScoreData } from '../types/DataTypes';
-import { CallGetQuiz } from '../calls/quiz/CallGetQuiz';
+import { CallGetQuestions } from '../calls/quiz/CallGetQuestions';
 import { CallGetStatus } from '../calls/quiz/CallGetStatus';
 import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
@@ -11,9 +11,9 @@ import { CallStartQuestion } from '../calls/quiz/CallStartQuestion';
 
 export const fetchQuestions = createAsyncThunk(
   'quiz/fetchQuestions',
-  async (_, { rejectWithValue }) => {
+  async (lang: 'en' | 'de', { rejectWithValue }) => {
     try {
-      const { data } = await new CallGetQuiz().execute();
+      const { data } = await new CallGetQuestions(lang).execute();
       
       return data as QuizJSON;
 
@@ -95,10 +95,10 @@ export const fetchScores = createAsyncThunk(
 
 export const fetchData = createAsyncThunk(
   'quiz/fetchData',
-  async (quizId: string, { dispatch, getState, rejectWithValue }) => {
+  async ({ quizId, lang }: { quizId: string, lang: 'en' | 'de' } , { dispatch, getState, rejectWithValue }) => {
     try {
       const result = await Promise.all([
-        dispatch(fetchQuestions()),
+        dispatch(fetchQuestions(lang)),
         dispatch(fetchVotes(quizId)),
         dispatch(fetchScores(quizId)),
         dispatch(fetchStatus(quizId)),

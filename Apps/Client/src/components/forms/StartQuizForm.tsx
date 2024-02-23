@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import './StartQuizForm.scss';
 import { start } from '../../actions/QuizActions';
+import { useTranslation } from 'react-i18next';
 
 const StartQuizForm: React.FC = () => {
+  const { t } = useTranslation();
   const [isSupervised, setIsSupervised] = useState(false);
 
   const quiz = useSelector(({ quiz }) => quiz);
@@ -32,8 +34,8 @@ const StartQuizForm: React.FC = () => {
 
   return (
     <form className='start-quiz-form' onSubmit={handleSubmit}>
-      <h2 className='start-quiz-form-title'>Start</h2>
-      <p className='start-quiz-form-text'>Are you ready to start the quiz? New players won't be able to join afterwards!</p>
+      <h2 className='start-quiz-form-title'>{t('FORMS.START_QUIZ.TITLE')}</h2>
+      <p className='start-quiz-form-text'>{t('FORMS.START_QUIZ.TEXT')}</p>
 
       <div className='checkbox'>
         <input
@@ -43,10 +45,10 @@ const StartQuizForm: React.FC = () => {
           checked={isSupervised}
           onChange={handleChange}
         />
-        <label htmlFor='option'>Supervise quiz</label>
+        <label htmlFor='option'>{t('FORMS.START_QUIZ.SUPERVISE')}</label>
       </div>
 
-      <button type='submit'>Yes, let's go!</button>
+      <button type='submit'>{t('FORMS.START_QUIZ.SUBMIT')}</button>
     </form>
   );
 };

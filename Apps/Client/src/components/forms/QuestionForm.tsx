@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from '../../hooks/redux';
 import { showAnswerOverlay } from '../../reducers/OverlaysReducer';
 import './QuestionForm.scss';
 import { vote } from '../../actions/UserActions';
+import { useTranslation } from 'react-i18next';
 
 type Question = {
   index: number,
@@ -17,6 +18,7 @@ type Question = {
 const QuestionForm: React.FC<Question> = (props) => {
   const { index, question, theme, options, disabled, choice, setChoice } = props;
 
+  const { t } = useTranslation();
   const quiz = useSelector(({ quiz }) => quiz);
   const quizId = quiz.id;
   const questions = quiz.questions.data;
@@ -60,7 +62,7 @@ const QuestionForm: React.FC<Question> = (props) => {
   return (
     <form className='question-form' onSubmit={handleSubmit}>
       <div className='question-form-theme-container'>
-        <p className='question-form-index'>Question: {index + 1}/{questions.length}</p>
+        <p className='question-form-index'>{t('COMMON.QUESTION')}: {index + 1}/{questions.length}</p>
         <p className='question-form-theme'>{theme}</p>
       </div>
 
@@ -80,7 +82,7 @@ const QuestionForm: React.FC<Question> = (props) => {
         </div>
       ))}
 
-      <button type='submit' disabled={disabled}>{choice === '' ? 'Pick an answer' : 'Submit your answer'}</button>
+      <button type='submit' disabled={disabled}>{t(choice === '' ? 'FORMS.QUESTION.PICK_ANSWER' : 'FORMS.QUESTION.SUBMIT_ANSWER')}</button>
     </form>
   );
 };

@@ -1,7 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import { useSelector } from '../../hooks/redux';
 import './LoadingOverlay.scss';
 
 const LoadingOverlay: React.FC = () => {
+  const { t } = useTranslation();
+
   const { username } = useSelector(({ user }) => user);
   const { show } = useSelector(({ overlays }) => overlays.loading);
 
@@ -13,7 +16,7 @@ const LoadingOverlay: React.FC = () => {
     <div id='loading-overlay' className={`${!show ? 'hidden' : ''} opaque`}>
       <div className='loading-overlay-box'>
         <h2 className='loading-overlay-title'>
-          {`Hello ${username}! Please wait for quiz to start...`}
+          {t('OVERLAYS.LOADING.PLEASE_WAIT', { username })}
         </h2>
       </div>
     </div>

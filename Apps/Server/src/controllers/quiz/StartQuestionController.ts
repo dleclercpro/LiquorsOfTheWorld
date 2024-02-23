@@ -4,7 +4,7 @@ import { APP_DB } from '../..';
 import { errorResponse, successResponse } from '../../utils/calls';
 import { HttpStatusCode, HttpStatusMessage } from '../../types/HTTPTypes';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { QUESTIONS } from '../../constants';
+import { N_QUESTIONS } from '../../constants';
 import { QuizGame } from '../../types/QuizTypes';
 
 const validateParams = async (params: ParamsDictionary) => {
@@ -19,7 +19,7 @@ const validateParams = async (params: ParamsDictionary) => {
     }
 
     const questionIndex = Number(_questionIndex);
-    if (questionIndex + 1 > QUESTIONS.length) {
+    if (questionIndex + 1 > N_QUESTIONS) {
         throw new Error('INVALID_QUESTION_INDEX');
     }
 
@@ -63,7 +63,7 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
         }
 
         await APP_DB.incrementQuestionIndex(quizId);
-        logger.info(`Question ${questionIndex + 1}/${QUESTIONS.length} of quiz '${quizId}' has been started by admin '${username}'.`);
+        logger.info(`Question ${questionIndex + 1}/${N_QUESTIONS} of quiz '${quizId}' has been started by admin '${username}'.`);
 
         return res.json(successResponse());
 

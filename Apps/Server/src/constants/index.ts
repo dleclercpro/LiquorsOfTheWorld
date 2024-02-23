@@ -1,10 +1,15 @@
 import { name, version, label } from '../../package.json';
 import { Environment } from '../types';
-import questions from '../../data/questions.json';
+import questionsEN from '../../data/en/questions.json';
+import questionsDE from '../../data/de/questions.json';
 
 export const ENVIRONMENTS = Object.values(Environment);
-export const QUESTIONS = questions;
-export const ANSWERS = QUESTIONS.map(({ answer }) => answer);
+
+export const QUESTIONS_EN = questionsEN;
+export const QUESTIONS_DE = questionsDE;
+export const ANSWERS_EN = QUESTIONS_EN.map(({ answer }) => answer);
+export const ANSWERS_DE = QUESTIONS_DE.map(({ answer }) => answer);
+export const N_QUESTIONS = QUESTIONS_EN.length;
 
 export const PACKAGE_NAME = name;
 export const PACKAGE_VERSION = version;

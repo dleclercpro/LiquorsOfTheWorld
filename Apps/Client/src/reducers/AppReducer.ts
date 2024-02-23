@@ -26,7 +26,6 @@ export const appSlice = createSlice({
       .addCase(logout.fulfilled, () => initialState)
       .addCase(logout.rejected, () => initialState)
       .addCase(fetchData.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.questionIndex = action.payload as number;
       })
       .addCase(startQuestion.fulfilled, (state, action) => {

@@ -15,10 +15,10 @@ const HomePage: React.FC = () => {
     <div className='home-page-page'>
       {!isAuthenticated && (
         <div className='home-page-box'>
-          <h1 className='home-page-title'>{t('HOME_PAGE_TITLE')}</h1>
-          <p className='home-page-text'>Welcome to tonight's quiz!</p>
-          <p className='home-page-text'>Get ready to showcase your mastery of the world's spirits in an epic quiz, where only the savviest liquor aficionados will manage to claim victory...</p>
-          <p className='home-page-text'>Are you ready?</p>
+          <h1 className='home-page-title'>{t('PAGES.HOME.TITLE')}</h1>
+          <p className='home-page-text'>{t('PAGES.HOME.WELCOME_HEAD')}</p>
+          <p className='home-page-text'>{t('PAGES.HOME.WELCOME_TEXT')}</p>
+          <p className='home-page-text'>{t('PAGES.HOME.WELCOME_CTA')}</p>
           
           <LoginForm quizId={quizId} />
         </div>

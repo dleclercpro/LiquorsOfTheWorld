@@ -8,10 +8,13 @@ import RightIcon from '@mui/icons-material/Check';
 import WrongIcon from '@mui/icons-material/Close';
 import WaitIcon from '@mui/icons-material/Schedule';
 import { startQuestion } from '../../actions/QuizActions';
+import { useTranslation } from 'react-i18next';
 
 const AnswerOverlay: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const app = useSelector(({ app }) => app);
   const quiz = useSelector(({ quiz }) => quiz);
@@ -62,9 +65,11 @@ const AnswerOverlay: React.FC = () => {
   const voteCount = votesCount[questionIndex];
 
   const Icon = isRight ? RightIcon : WrongIcon;
-  const adminText = 'The correct answer was:';
-  const userText = `${isRight ? 'Indeed' : 'Actually'}, the correct answer was:`;
-  const buttonText = isAdmin && isSupervised ? `Start next question (${questionIndex + 1}/${questions.length})` : `Next question (${questionIndex + 1}/${questions.length})`;
+  const iconText = t(isRight ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_ICON_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_ICON_TEXT');
+
+  const title = t('OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount, playersCount: players.length });
+  const text = t(isRight ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_TEXT');
+  const buttonText = `${t(isAdmin && isSupervised ? 'OVERLAYS.ANSWER.START_NEXT_QUESTION' : 'OVERLAYS.ANSWER.NEXT_QUESTION')} (${questionIndex + 1}/${questions.length})`;
   const handleButtonClick = isAdmin && isSupervised ? handleStartNextQuestionButtonClick : handleSeeNextQuestionButtonClick;
 
   return (
@@ -75,23 +80,23 @@ const AnswerOverlay: React.FC = () => {
               {mustWait ? (
                 <>
                   <WaitIcon className='answer-overlay-icon wait' />
-                  <p className='answer-overlay-title'>Please wait for {isAdmin ? 'all' : 'other'} players to answer the question...</p>
+                  <p className='answer-overlay-title'>{t('OVERLAYS.ANSWER.WAIT_FOR_PLAYERS')}</p>
                 </>
               ) : (
                 <>
                   <Icon className={`answer-overlay-icon ${isRight ? 'is-right' : 'is-wrong'}`} />
-                  <h2 className='answer-overlay-title'>{`${isRight ? 'Congrats' : 'Unfortunately'}, you're ${isRight ? 'right!' : 'wrong...'}`}</h2>
+                  <h2 className='answer-overlay-title'>{iconText}</h2>
                 </>
               )}
             </div>
             <div className='answer-overlay-box-right'>
               {mustWait ? (
                 <>
-                  <p className='answer-overlay-title'>So far, <strong>{voteCount} out of {players.length}</strong> players have voted.</p>
+                  <p className='answer-overlay-title'>{title}</p>
                 </>
               ) : (
                 <>
-                  <p className='answer-overlay-text'>{isAdmin ? adminText : userText}</p>
+                  <p className='answer-overlay-text'>{text}</p>
                   <p className='answer-overlay-value'>{rightAnswer}</p>
                   {!isOver && (!isSupervised || isAdmin) && (
                     <button className='answer-overlay-button' onClick={handleButtonClick}>
@@ -100,7 +105,7 @@ const AnswerOverlay: React.FC = () => {
                   )}
                   {isOver && (
                     <button className='answer-overlay-button' onClick={handleSeeResultsButtonClick}>
-                      See results
+                      {t('OVERLAYS.ANSWER.SEE_RESULTS')}
                     </button>
                   )}
                 </>

@@ -8,8 +8,12 @@ import { fetchStatus, fetchData } from '../actions/QuizActions';
 import { selectVote } from '../reducers/QuizReducer';
 import { hideAnswerOverlay, hideLoadingOverlay, showAnswerOverlay, showLoadingOverlay } from '../reducers/OverlaysReducer';
 import StartQuizForm from '../components/forms/StartQuizForm';
+import { useTranslation } from 'react-i18next';
 
 const QuizPage: React.FC = () => {
+  const { i18n } = useTranslation();
+  const lang = i18n.language as 'en' | 'de';
+
   const quiz = useSelector(({ quiz }) => quiz);
   const isAdmin = useSelector(({ user }) => user.isAdmin);
 
@@ -31,7 +35,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    dispatch(fetchData(quizId));
+    dispatch(fetchData({ quizId, lang }));
   }, []);
 
   // Regularly fetch current quiz status from server

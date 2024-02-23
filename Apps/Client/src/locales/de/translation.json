@@ -1,11 +1,58 @@
 {
-  "HOME_PAGE_TITLE": "Liköre aus aller Welt",
+  "COMMON": {
+    "YES": "Ja",
+    "NO": "Nein",
+    "WELCOME": "Willkommen",
+    "EXIT": "Beenden",
+    "LOG_IN": "Einloggen",
+    "LOG_OUT": "Ausloggen",
+    "USERNAME": "Benutzername",
+    "QUIZ": "Quiz",
+    "QUESTION": "Frage",
+    "SCOREBOARD": "Punktestand",
+    "SCORE": "Punktzahl",
+    "RANK": "Rang"
+  },
+  "PAGES": {
+    "HOME": {
+      "TITLE": "Spirituosen der Welt",
+      "WELCOME_HEAD": "Willkommen zum Quiz heute Abend!",
+      "WELCOME_TEXT": "Bereite dich darauf vor, dein Meisterwissen über die Spirituosen der Welt in einem epischen Quiz zu zeigen, wo nur die schlauesten Schnapskenner den Sieg erringen werden...",
+      "WELCOME_CTA": "Bist du bereit?"
+    }
+  },
   "FORMS": {
     "LOGIN": {
-      "QUIZ_ID": "Quiz ID",
-      "USERNAME": "Benutzername",
-      "PASSWORD": "Passwort",
+      "QUIZ_ID": "Geben Sie eine Quiz-ID ein",
+      "USERNAME": "Geben Sie einen Benutzernamen ein",
+      "PASSWORD": "Geben Sie ein Passwort ein",
       "SUBMIT": "Los geht's!"
+    },
+    "START_QUIZ": {
+      "TITLE": "Start",
+      "TEXT": "Bist du bereit, das Quiz zu beginnen? Neue Spieler können danach nicht mehr beitreten!",
+      "SUPERVISE": "Quiz überwachen",
+      "SUBMIT": "Ja, los geht's!"
+    },
+    "QUESTION": {
+      "PICK_ANSWER": "Wähle eine Antwort",
+      "SUBMIT_ANSWER": "Antwort einreichen"
+    }
+  },
+  "OVERLAYS": {
+    "LOADING": {
+      "PLEASE_WAIT": "Hallo {{username}}! Bitte warte, bis das Quiz beginnt..."
+    },
+    "ANSWER": {
+      "SEE_RESULTS": "Ergebnisse ansehen",
+      "NEXT_QUESTION": "Nächste Frage",
+      "START_NEXT_QUESTION": "Nächste Frage starten",
+      "WAIT_FOR_PLAYERS": "Bitte warte, bis alle Spieler die Frage beantwortet haben...",
+      "CURRENT_STATUS": "Bis jetzt haben {{voteCount}} von {{playersCount}} Spielern abgestimmt.",
+      "RIGHT_ANSWER_TEXT": "Tatsächlich war die richtige Antwort:",
+      "WRONG_ANSWER_TEXT": "Eigentlich war die richtige Antwort:",
+      "RIGHT_ANSWER_ICON_TEXT": "Glückwunsch, du hast recht!",
+      "WRONG_ANSWER_ICON_TEXT": "Leider liegst du falsch..."
     }
   }
 }

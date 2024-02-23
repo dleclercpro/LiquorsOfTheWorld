@@ -5,7 +5,7 @@ import { errorResponse, successResponse } from '../../utils/calls';
 import { HttpStatusCode, HttpStatusMessage } from '../../types/HTTPTypes';
 import { QuizGame, QuizVote } from '../../types/QuizTypes';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { QUESTIONS } from '../../constants';
+import { N_QUESTIONS } from '../../constants';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId, questionIndex: _questionIndex } = params;
@@ -19,7 +19,7 @@ const validateParams = async (params: ParamsDictionary) => {
     }
 
     const questionIndex = Number(_questionIndex);
-    if (questionIndex + 1 > QUESTIONS.length) {
+    if (questionIndex + 1 > N_QUESTIONS) {
         throw new Error('INVALID_QUESTION_INDEX');
     }
 

@@ -5,7 +5,7 @@ import PingController from '../controllers/auth/PingController';
 import LoginController from '../controllers/auth/LoginController';
 import LogoutController from '../controllers/auth/LogoutController';
 import GetUserController from '../controllers/user/GetUserController';
-import GetQuizController from '../controllers/quiz/GetQuizController';
+import GetQuestionsController from '../controllers/quiz/GetQuestionsController';
 import VoteController from '../controllers/quiz/VoteController';
 import AuthMiddleware from '../middleware/AuthMiddleware';
 import GetScoresController from '../controllers/quiz/GetScoresController';
@@ -40,9 +40,11 @@ router.delete('/auth', [AuthMiddleware], LogoutController);
 
 router.get('/user', [AuthMiddleware], GetUserController);
 
-router.get('/quiz', GetQuizController);
+router.get('/questions/:lang', GetQuestionsController);
+
 router.get('/quiz/:quizId', [AuthMiddleware], GetStatusController);
 router.put('/quiz/:quizId/start', [AuthMiddleware], StartQuizController);
+// router.put('/quiz/:quizId/end', [AuthMiddleware], EndQuizController);
 router.get('/quiz/:quizId/votes', [AuthMiddleware], GetVotesController);
 router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);
 router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);

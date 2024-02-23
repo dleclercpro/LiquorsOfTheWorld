@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { N_SALT_ROUNDS } from '../../config';
-import { ANSWERS, QUESTIONS } from '../../constants';
+import { N_QUESTIONS, ANSWERS_EN } from '../../constants';
 import logger from '../../logger';
 import { getLast, getRange, unique } from '../../utils/array';
 import { sum } from '../../utils/math';
@@ -156,7 +156,7 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async getVotesCount(quizId: string) {
-        const votesCount = new Array(QUESTIONS.length).fill(0);
+        const votesCount = new Array(N_QUESTIONS).fill(0);
 
         const votes = await this.getAllVotes(quizId);
         const players = Object.keys(votes);
@@ -195,10 +195,12 @@ class AppDatabase extends RedisDatabase {
         const votes = await this.getAllVotes(quizId);
 
         const scores = Object.entries(votes)
-            .reduce((prev, [username, vote]) => {
-                const userScore = sum(ANSWERS
-                    .map((ans, i) => i < vote.length && ans === vote[i])
-                    .map(Number));
+            .reduce((prev, [username, playerVotes]) => {
+                const userScore = sum(
+                    ANSWERS_EN
+                        .map((answerIndex, i) => i < playerVotes.length && answerIndex === playerVotes[i])
+                        .map(Number)
+                );
         
                 return {
                     ...prev,
@@ -258,7 +260,7 @@ class AppDatabase extends RedisDatabase {
         const questionIndex = await this.getQuestionIndex(quizId);
         const quiz = await this.getQuiz(quizId) as QuizGame;
 
-        if (questionIndex + 1 === QUESTIONS.length) {
+        if (questionIndex + 1 === N_QUESTIONS) {
             await this.updateQuiz(quizId, {
                 ...quiz,
                 isOver: true,

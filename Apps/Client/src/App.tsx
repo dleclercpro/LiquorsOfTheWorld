@@ -11,7 +11,6 @@ import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
 import { useDispatch } from './hooks/redux';
 import { ping } from './actions/UserActions';
-import WelcomeOverlay from './components/overlays/WelcomeOverlay';
 
 function App() {
   const dispatch = useDispatch();
@@ -53,7 +52,6 @@ function App() {
       </div>
       
       <LoadingOverlay />
-      <WelcomeOverlay />
       <AnswerOverlay />
     </div>
   );

@@ -4,6 +4,7 @@ import HamburgerMenu from '../components/menus/HamburgerMenu';
 import Scoreboard from '../components/Scoreboard';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { fetchScores } from '../actions/QuizActions';
+import { Navigate } from 'react-router-dom';
 
 const ScoresPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -26,12 +27,14 @@ const ScoresPage: React.FC = () => {
     dispatch(fetchScores(quizId));
   }, [questionIndex, isOver]);
 
-  if (quizId === null || scores === null) {
+  if (quizId === null || status === null || scores === null) {
     return null;
   }
 
-  if (scores === null) {
-    return null;
+  const hasStarted = status.hasStarted;
+
+  if (!hasStarted) {
+    return <Navigate to='/quiz' />;
   }
   
   return (

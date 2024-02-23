@@ -1,0 +1,142 @@
+[
+  {
+    "theme": "Zutaten",
+    "question": "Was ist die Hauptzutat im traditionellen russischen Wodka?",
+    "options": ["Kartoffeln", "Trauben", "Weizen"],
+    "type": "text",
+    "answer": 2
+  },
+  {
+    "theme": "Geografie",
+    "question": "Tequila ist berühmt aus welchem Land?",
+    "options": ["Mexiko", "Spanien", "Brasilien"],
+    "type": "text",
+    "answer": 0
+  },
+  {
+    "theme": "Cocktails",
+    "question": "Welcher Cocktail wird mit Gin, Zitronensaft, Zucker und kohlensäurehaltigem Wasser gemacht?",
+    "options": ["Mojito", "Tom Collins", "Martini"],
+    "type": "text",
+    "answer": 1
+  },
+  {
+    "theme": "Geschichte",
+    "question": "Wahr oder Falsch: Gin wurde ursprünglich als Heilmittel in den Niederlanden entwickelt.",
+    "options": ["Wahr", "Falsch"],
+    "type": "text",
+    "answer": 0
+  },
+  {
+    "theme": "Popkultur",
+    "question": "In welchem Film kommt das Zitat 'The Dude abides' vor und ist bekannt für die Vorliebe des Charakters für White Russians?",
+    "options": ["The Big Lebowski", "Casablanca", "Pulp Fiction"],
+    "type": "text",
+    "answer": 0
+  },
+  {
+    "theme": "Trivia",
+    "question": "Wahr oder Falsch: Absinth ist traditionell grün.",
+    "options": ["Wahr", "Falsch"],
+    "type": "text",
+    "answer": 0
+  },
+  {
+    "theme": "Marken",
+    "question": "Welcher Whiskey ist bekannt für seine markante quadratische Flasche und das schwarze Etikett?",
+    "options": ["Jameson", "Jack Daniel's", "Johnnie Walker"],
+    "type": "text",
+    "answer": 1
+  },
+  {
+    "theme": "Zutaten",
+    "question": "Welcher Schnaps wird aus Wacholderbeeren hergestellt?",
+    "options": ["Rum", "Gin", "Brandy"],
+    "type": "text",
+    "answer": 1
+  },
+  {
+    "theme": "Geografie",
+    "question": "Sake ist ein traditionelles alkoholisches Getränk aus welchem Land?",
+    "options": ["China", "Japan", "Südkorea"],
+    "type": "text",
+    "answer": 1
+  },
+  {
+    "theme": "Cocktails",
+    "question": "Was sind die Hauptzutaten eines Margarita?",
+    "options": ["Tequila, Limettensaft, Triple Sec", "Rum, Minze, Zucker", "Wodka, Cranberrysaft, Grapefruitsaft"],
+    "type": "text",
+    "answer": 0
+  },
+  {
+    "theme": "Geschichte",
+    "question": "Bourbon, eine Art von Whiskey, muss in welchem Land hergestellt werden?",
+    "options": ["Schottland", "Irland", "Vereinigte Staaten"],
+    "type": "text",
+    "answer": 2
+  },
+  {
+    "theme": "Berühmte Zitate",
+    "question": "Wer sagte berühmt: 'Ich hätte nie von Scotch zu Martinis wechseln sollen'?",
+    "options": ["Winston Churchill", "Ernest Hemingway", "Humphrey Bogart"],
+    "type": "text",
+    "answer": 2
+  },
+  {
+    "theme": "Trivia",
+    "question": "Wahr oder Falsch: Champagner darf nur 'Champagner' genannt werden, wenn er aus der Champagne-Region in Frankreich kommt.",
+    "options": ["Wahr", "Falsch"],
+    "type": "text",
+    "answer": 0
+  },
+  {
+    "theme": "Marken",
+    "question": "Welche berühmte Wodkamarke zeigt ein rotes Wachssiegel auf ihrem Etikett?",
+    "options": ["Grey Goose", "Smirnoff", "Maker's Mark"],
+    "type": "text",
+    "answer": 2
+  },
+  {
+    "theme": "Geografie",
+    "question": "Cachaça, verwendet in einem Caipirinha, ist ein Spirituosen aus welchem Land?",
+    "options": ["Portugal", "Brasilien", "Argentinien"],
+    "type": "text",
+    "answer": 1
+  },
+  {
+    "theme": "Geografie",
+    "question": "Pisco ist eine Art von Brandy aus welchen zwei Ländern?",
+    "options": ["Argentinien und Brasilien", "Peru und Chile", "Spanien und Portugal"],
+    "type": "text",
+    "answer": 1
+  },
+  {
+    "theme": "Cocktails",
+    "question": "Ein Old Fashioned wird typischerweise mit welcher Art von Schnaps gemacht?",
+    "options": ["Bourbon oder Roggenwhiskey", "Scotch Whisky", "Rum"],
+    "type": "text",
+    "answer": 0
+  },
+  {
+    "theme": "Geschichte",
+    "question": "Welches Land wird mit der Erfindung des Gins in Verbindung gebracht?",
+    "options": ["England", "Niederlande", "Deutschland"],
+    "type": "text",
+    "answer": 1
+  },
+  {
+    "theme": "Popkultur",
+    "question": "Diese Zeile stammt aus welchem klassischen Film: 'Ich hätte gerne noch einen... und mach ihn doppelt.'?",
+    "options": ["Der große Gatsby", "Vom Winde verweht", "Frühstück bei Tiffany"],
+    "type": "text",
+    "answer": 2
+  },
+  {
+    "theme": "Trivia",
+    "question": "Wahr oder Falsch: Ein echter italienischer Limoncello muss mit Zitronen von der Amalfiküste hergestellt werden.",
+    "options": ["Wahr", "Falsch"],
+    "type": "text",
+    "answer": 1
+  }
+]

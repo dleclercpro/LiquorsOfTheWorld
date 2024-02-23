@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useSelector } from '../hooks/redux';
 import { ScoreData } from '../types/DataTypes';
 import { toSortedArr } from '../utils/array';
@@ -9,6 +10,8 @@ interface Props {
 
 const Scoreboard: React.FC<Props> = (props) => {
   const { scores } = props;
+
+  const { t } = useTranslation();
 
   const quiz = useSelector((state) => state.quiz);
   const quizId = quiz.id;
@@ -38,9 +41,9 @@ const Scoreboard: React.FC<Props> = (props) => {
       <table className='scoreboard-table'>
         <thead>
           <tr>
-              <th>Rank</th>
-              <th>Username</th>
-              <th>Score</th>
+              <th>{t('COMMON.RANK')}</th>
+              <th>{t('COMMON.USERNAME')}</th>
+              <th>{t('COMMON.SCORE')}</th>
           </tr>
         </thead>
         <tbody>
