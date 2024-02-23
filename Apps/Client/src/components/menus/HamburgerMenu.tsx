@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './HamburgerMenu.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { Link, useLocation } from 'react-router-dom';
@@ -20,13 +20,34 @@ const HamburgerMenu: React.FC = () => {
 
   const [lang, setLang] = useState(language);
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const status = useSelector((state) => state.quiz.status.data);
   const user = useSelector((state) => state.user);
 
+  // Change language in i18n when it is changed in the component's state
   useEffect(() => {
     changeLanguage(lang);
   }, [lang]);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      // Add event listener when the menu is open
+      document.addEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      // Clean up the event listener when the component unmounts or when the menu is closed
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isOpen]);
   
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -57,7 +78,7 @@ const HamburgerMenu: React.FC = () => {
   const Icon = isOpen ? CloseIcon : OpenIcon;
 
   return (
-    <div className='hamburger-menu'>
+    <div className='hamburger-menu' ref={menuRef}>
       <div className='hamburger-menu-icon-container' onClick={handleClickOnMenu}>
         <Icon className='hamburger-menu-icon' />
       </div>
