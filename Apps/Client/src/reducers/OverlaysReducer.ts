@@ -31,6 +31,7 @@ export const overlaysSlice = createSlice({
   name: 'overlays',
   initialState,
   reducers: {
+    hideAllOverlays: () => initialState,
     showLoadingOverlay: (state) => {
       state.loading.show = true;
     },
@@ -58,6 +59,6 @@ export const overlaysSlice = createSlice({
     },
 });
 
-export const { showLoadingOverlay, hideLoadingOverlay, showWelcomeOverlay, hideWelcomeOverlay, showAnswerOverlay, hideAnswerOverlay } = overlaysSlice.actions;
+export const { hideAllOverlays, showLoadingOverlay, hideLoadingOverlay, showWelcomeOverlay, hideWelcomeOverlay, showAnswerOverlay, hideAnswerOverlay } = overlaysSlice.actions;
 
 export default overlaysSlice.reducer;

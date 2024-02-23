@@ -1,8 +1,14 @@
 import React from 'react';
 import './TestPage.scss';
 import NavMenu from '../components/menus/NavMenu';
+import { useDispatch } from '../hooks/redux';
+import { hideAllOverlays } from '../reducers/OverlaysReducer';
 
 const TestPage: React.FC = () => {
+  const dispatch = useDispatch();
+
+  dispatch(hideAllOverlays());
+
   return (
     <div className='test-page'>
       <NavMenu />
