@@ -1,6 +1,6 @@
 @import '../../styles/common';
 
-.hamburger-menu {
+.nav-menu {
   position: absolute;
   top: 0;
   right: 50%;
@@ -19,9 +19,9 @@
     width: auto;
   }
 
-  > .hamburger-menu-icon-container {
+  > .nav-menu-icon-container {
     
-    > .hamburger-menu-icon {
+    > .nav-menu-icon {
       width: 50px;
       height: 50px;
       cursor: pointer;
@@ -29,7 +29,7 @@
     }
   }
 
-  > .hamburger-menu-content {
+  > .nav-menu-content {
     position: absolute;
     top: 100%;
     right: 50%;
@@ -100,7 +100,7 @@
             background-color: darken(#f9f9f9, 10%);
           }
 
-          > .hamburger-menu-link-icon {
+          > .nav-menu-link-icon {
             width: 32px;
             height: 32px;
             color: $color-black;
