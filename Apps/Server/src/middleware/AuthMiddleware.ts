@@ -14,7 +14,7 @@ const AuthMiddleware: RequestHandler = async (req, res, next) => {
   if (!cookie) {
     return res
       .status(HttpStatusCode.UNAUTHORIZED)
-      .send(errorResponse(HttpStatusMessage.UNAUTHORIZED));
+      .send(errorResponse('UNAUTHORIZED'));
   }
 
   // Store user and quiz ID in request
