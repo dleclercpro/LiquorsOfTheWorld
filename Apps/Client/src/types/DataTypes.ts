@@ -31,6 +31,7 @@ export type StatusData = {
   hasStarted: boolean,
   isOver: boolean,
   isSupervised: boolean,
+  players: string[],
   votesCount: number[],
 };
 

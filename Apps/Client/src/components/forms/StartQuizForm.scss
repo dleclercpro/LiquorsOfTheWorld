@@ -1,6 +1,9 @@
 @import '../../styles/common';
 
 .start-quiz-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   padding: 15px;
   background-color: rgba(255, 255, 255, 0.8);
@@ -13,30 +16,29 @@
     right: 0;
     padding: 15px 25px;
     transform: translate(-100px, -50%);
-    align-items: flex-end;
     max-width: 500px;
   }
 
   > .start-quiz-form-title {
+    width: 100%;
     margin-top: 0;
     margin-bottom: 10px;
   }
 
   > .start-quiz-form-text {
+    width: 100%;
     margin-top: 0;
     margin-bottom: 10px;
   }
 
   > .checkbox {
     display: block;
-    margin-bottom: 15px;
+    width: 100%;
+    margin-bottom: 10px;
   
     @include tablet {
       display: inline-block;
-    }
-
-    &:not(:last-of-type) {
-      margin-bottom: 5px;
+      width: auto;
     }
 
     > label {

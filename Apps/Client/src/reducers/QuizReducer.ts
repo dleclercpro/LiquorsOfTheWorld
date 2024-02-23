@@ -118,15 +118,13 @@ export const quizSlice = createSlice({
 // export const { } = quizSlice.actions;
 
 export const selectPlayers = (state: RootState) => {
-  const quiz = state.quiz;
+  const status = state.quiz.status.data;
 
-  const scores = quiz.scores.data;
-
-  if (scores === null) {
-    return null;
+  if (status === null) {
+    return [];
   }
 
-  return Object.keys(scores);
+  return status.players;
 }
 
 export const selectRightAnswer = (state: RootState, questionIndex: number) => {

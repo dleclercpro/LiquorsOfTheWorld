@@ -25,7 +25,7 @@ const AnswerOverlay: React.FC = () => {
   const status = quiz.status.data;
   const votes = quiz.votes.data;
 
-  const players = useSelector((state) => selectPlayers(state));
+  const players = useSelector(selectPlayers);
 
   const rightAnswer = useSelector((state) => selectRightAnswer(state, questionIndex));
   const answer = useSelector((state) => selectAnswer(state, questionIndex));

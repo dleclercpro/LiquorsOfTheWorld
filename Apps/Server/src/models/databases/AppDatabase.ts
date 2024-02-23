@@ -141,7 +141,8 @@ class AppDatabase extends RedisDatabase {
         if (!quiz) {
             throw new Error('INVALID_QUIZ_ID');
         }
-        
+
+        const players = await this.getAllPlayers(quizId);
         const votesCount = await this.getVotesCount(quizId);
 
         const { questionIndex, hasStarted, isOver, isSupervised } = quiz;
@@ -151,6 +152,7 @@ class AppDatabase extends RedisDatabase {
             hasStarted,
             isOver,
             isSupervised,
+            players,
             votesCount,
         };
     }

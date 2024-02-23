@@ -39,9 +39,11 @@
       "SUBMIT": "Let's go!"
     },
     "START_QUIZ": {
-      "TITLE": "Start",
+      "TITLE": "Start the quiz",
       "TEXT": "Are you ready to start the quiz? New players won't be able to join afterwards!",
       "SUPERVISE": "Supervise quiz",
+      "SINGLE_PLAYER_WAITING": "There is currently 1 player waiting to play.",
+      "MANY_PLAYERS_WAITING": "There are currently {{count}} players waiting to play.",
       "SUBMIT": "Yes, let's go!"
     },
     "QUESTION": {

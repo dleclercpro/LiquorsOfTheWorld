@@ -95,38 +95,7 @@ const NavMenu: React.FC = () => {
               </p>
             </li>
           )}
-          {location.pathname !== '/quiz' && isAuthenticated && (
-            <li>
-              <Link to={`/quiz`}>
-                {t('COMMON.QUIZ')}
-                <QuizIcon className='nav-menu-link-icon' />
-              </Link>
-            </li>
-          )}
-          {location.pathname !== '/scores' && isAuthenticated && hasStarted && (
-            <li>
-              <Link to={`/scores`}>
-                {t('COMMON.SCOREBOARD')}
-                <ScoreboardIcon className='nav-menu-link-icon' />
-              </Link>
-            </li>
-          )}
-          {DEBUG && location.pathname !== '/test' && (
-            <li>
-              <Link to={`/test`}>
-                {t('COMMON.TEST')}
-                <SettingsIcon className='nav-menu-link-icon' />
-              </Link>
-            </li>
-          )}
-          {DEBUG && location.pathname === '/test' && (
-            <li>
-              <Link to={`/`}>
-                {t('COMMON.START_PAGE')}
-                <HomeIcon className='nav-menu-link-icon' />
-              </Link>
-            </li>
-          )}
+
           <li>
             <button onClick={handleLanguageSwitch}>
               {language === 'en' ? (
@@ -142,6 +111,43 @@ const NavMenu: React.FC = () => {
               )}
             </button>
           </li>
+
+          {location.pathname !== '/quiz' && isAuthenticated && (
+            <li>
+              <Link to={`/quiz`}>
+                {t('COMMON.QUIZ')}
+                <QuizIcon className='nav-menu-link-icon' />
+              </Link>
+            </li>
+          )}
+
+          {location.pathname !== '/scores' && isAuthenticated && hasStarted && (
+            <li>
+              <Link to={`/scores`}>
+                {t('COMMON.SCOREBOARD')}
+                <ScoreboardIcon className='nav-menu-link-icon' />
+              </Link>
+            </li>
+          )}
+
+          {DEBUG && location.pathname !== '/test' && (
+            <li>
+              <Link to={`/test`}>
+                {t('COMMON.TEST')}
+                <SettingsIcon className='nav-menu-link-icon' />
+              </Link>
+            </li>
+          )}
+
+          {DEBUG && location.pathname === '/test' && (
+            <li>
+              <Link to={`/`}>
+                {t('COMMON.START_PAGE')}
+                <HomeIcon className='nav-menu-link-icon' />
+              </Link>
+            </li>
+          )}
+
           {isAuthenticated && (
             <li>
               <Link to='/' onClick={() => dispatch(logout())}>

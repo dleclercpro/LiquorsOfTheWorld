@@ -39,9 +39,11 @@
       "SUBMIT": "Los geht's!"
     },
     "START_QUIZ": {
-      "TITLE": "Start",
+      "TITLE": "Quiz starten",
       "TEXT": "Bist Du bereit, das Quiz zu beginnen? Neue Spieler können danach nicht mehr beitreten!",
       "SUPERVISE": "Quiz überwachen",
+      "SINGLE_PLAYER_WAITING": "Derzeit wartet 1 Spieler darauf, zu spielen.",
+      "MANY_PLAYERS_WAITING": "Derzeit warten {{count}} Spieler darauf, zu spielen.",
       "SUBMIT": "Ja, los geht's!"
     },
     "QUESTION": {
