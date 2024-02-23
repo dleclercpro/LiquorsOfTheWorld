@@ -1,6 +1,6 @@
 import React from 'react';
 import './TestPage.scss';
-import NavMenu from '../components/menus/NavMenu';
+import NavMenu from '../components/Nav';
 import { useDispatch } from '../hooks/redux';
 import { hideAllOverlays } from '../reducers/OverlaysReducer';
 

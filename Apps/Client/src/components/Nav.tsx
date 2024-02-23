@@ -1,20 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './NavMenu.scss';
-import { useDispatch, useSelector } from '../../hooks/redux';
+import './Nav.scss';
+import { useDispatch, useSelector } from '../hooks/redux';
 import { Link, useLocation } from 'react-router-dom';
-import { logout } from '../../actions/UserActions';
+import { logout } from '../actions/UserActions';
 import OpenIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import QuizIcon from '@mui/icons-material/Quiz';
-import { ReactComponent as GermanyIcon } from '../../icons/germany.svg';
-import { ReactComponent as UnitedKingdoIcon } from '../../icons/uk.svg';
+import { ReactComponent as GermanyIcon } from '../icons/germany.svg';
+import { ReactComponent as UnitedKingdoIcon } from '../icons/uk.svg';
 import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ScoreboardIcon from '@mui/icons-material/Scoreboard';
 import { useTranslation } from 'react-i18next';
-import { DEBUG } from '../../config';
-import { Language } from '../../constants';
+import { DEBUG } from '../config';
+import { Language } from '../constants';
 
 const NavMenu: React.FC = () => {
   const dispatch = useDispatch();
@@ -79,31 +79,31 @@ const NavMenu: React.FC = () => {
   const Icon = isOpen ? CloseIcon : OpenIcon;
 
   return (
-    <div className='nav-menu' ref={menuRef}>
-      <button className='nav-menu-button' onClick={handleClickOnButton}>
-        <Icon className='nav-menu-button-icon' />
+    <nav className='nav' ref={menuRef}>
+      <button className='nav-button' onClick={handleClickOnButton}>
+        <Icon className='nav-button-icon' />
       </button>
-      <nav className={`nav-menu-content ${isOpen ? 'visible' : 'hidden'}`}>
+      <section className={`nav-content ${isOpen ? 'visible' : 'hidden'}`}>
         <ul>
-          {isAuthenticated && (
-            <li>
-              <p>
-                <strong className='nav-menu-username'>{username}</strong>
-              </p>
-            </li>
-          )}
+          <li>
+            <p>
+              <strong className='nav-username'>
+                {isAuthenticated ? username : `${t('COMMON.WELCOME')}!`}
+              </strong>
+            </p>
+          </li>
 
           <li>
             <button onClick={handleLanguageSwitch}>
               {language === Language.EN ? (
                 <>
                   Deutsch
-                  <GermanyIcon className='nav-menu-link-icon flag' />
+                  <GermanyIcon className='nav-link-icon flag' />
                 </>
                 ) : (
                 <>
                   English
-                  <UnitedKingdoIcon className='nav-menu-link-icon flag' />
+                  <UnitedKingdoIcon className='nav-link-icon flag' />
                 </>
               )}
             </button>
@@ -113,7 +113,7 @@ const NavMenu: React.FC = () => {
             <li>
               <Link to={`/quiz`}>
                 {t('COMMON.QUIZ')}
-                <QuizIcon className='nav-menu-link-icon' />
+                <QuizIcon className='nav-link-icon' />
               </Link>
             </li>
           )}
@@ -122,7 +122,7 @@ const NavMenu: React.FC = () => {
             <li>
               <Link to={`/scores`}>
                 {t('COMMON.SCOREBOARD')}
-                <ScoreboardIcon className='nav-menu-link-icon' />
+                <ScoreboardIcon className='nav-link-icon' />
               </Link>
             </li>
           )}
@@ -131,7 +131,7 @@ const NavMenu: React.FC = () => {
             <li>
               <Link to={`/test`}>
                 {t('COMMON.TEST')}
-                <SettingsIcon className='nav-menu-link-icon' />
+                <SettingsIcon className='nav-link-icon' />
               </Link>
             </li>
           )}
@@ -140,7 +140,7 @@ const NavMenu: React.FC = () => {
             <li>
               <Link to={`/`}>
                 {t('COMMON.START_PAGE')}
-                <HomeIcon className='nav-menu-link-icon' />
+                <HomeIcon className='nav-link-icon' />
               </Link>
             </li>
           )}
@@ -149,13 +149,13 @@ const NavMenu: React.FC = () => {
             <li>
               <Link to='/' onClick={() => dispatch(logout())}>
                 {t('COMMON.LOG_OUT')}
-                <LogoutIcon className='nav-menu-link-icon' />
+                <LogoutIcon className='nav-link-icon' />
               </Link>
             </li>
           )}
         </ul>
-      </nav>
-    </div>
+      </section>
+    </nav>
   );
 }
 

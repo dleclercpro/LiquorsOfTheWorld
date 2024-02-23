@@ -1,6 +1,6 @@
-@import '../../styles/common';
+@import '../styles/common';
 
-.nav-menu {
+.nav {
   position: absolute;
   top: 0;
   right: 50%;
@@ -19,10 +19,10 @@
     width: auto;
   }
 
-  > .nav-menu-button {
+  > .nav-button {
     background-color: transparent;
     
-    > .nav-menu-button-icon {
+    > .nav-button-icon {
       width: 50px;
       height: 50px;
       cursor: pointer;
@@ -31,7 +31,7 @@
     }
   }
 
-  > .nav-menu-content {
+  > .nav-content {
     position: absolute;
     top: 100%;
     right: 50%;
@@ -102,7 +102,7 @@
             background-color: darken(#f9f9f9, 10%);
           }
 
-          > .nav-menu-link-icon {
+          > .nav-link-icon {
             width: 32px;
             height: 32px;
             color: $color-black;

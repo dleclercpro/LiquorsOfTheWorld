@@ -5,7 +5,7 @@ import { useSelector } from '../hooks/redux';
 import { useParams } from 'react-router';
 import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import NavMenu from '../components/menus/NavMenu';
+import NavMenu from '../components/Nav';
 
 const HomePage: React.FC = () => {
   const { quizId } = useParams();
