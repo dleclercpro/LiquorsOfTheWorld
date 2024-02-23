@@ -102,6 +102,21 @@ class AppDatabase extends RedisDatabase {
         });
     }
 
+    public async deleteQuiz(quizId: string) {
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new InvalidQuizIdError();
+        }
+
+        const players = await this.getAllPlayers(quizId);
+
+        // Delete all votes associated with quiz
+        await Promise.all(players.map((player) => this.delete(`votes:${quizId}:${player}`)));
+
+        await this.delete(`quiz:${quizId}`);
+    }
+
     public async getUser(username: string) {
         const user = await this.get(`users:${username}`);
 

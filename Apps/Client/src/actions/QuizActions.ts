@@ -9,6 +9,8 @@ import { RootState } from '../stores/store';
 import { CallStartQuiz } from '../calls/quiz/CallStartQuiz';
 import { CallStartQuestion } from '../calls/quiz/CallStartQuestion';
 import { Language } from '../constants';
+import { CallDeleteQuiz } from '../calls/quiz/CallDeleteQuiz';
+import { logout } from './UserActions';
 
 export const fetchQuestions = createAsyncThunk(
   'quiz/fetchQuestions',
@@ -134,11 +136,35 @@ export const fetchData = createAsyncThunk(
   }
 );
 
-export const start = createAsyncThunk(
-  'quiz/start',
+export const startQuiz = createAsyncThunk(
+  'quiz/startQuiz',
   async ({ quizId, isSupervised }: { quizId: string, isSupervised: boolean }, { rejectWithValue }) => {
     try {
       await new CallStartQuiz(quizId).execute({ isSupervised });
+
+      return;
+
+    } catch (err: unknown) {
+      let error = 'UNKNOWN_ERROR';
+      
+      if (err instanceof Error) {
+        error = err.message;
+      }
+
+      console.error(error);
+
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const deleteQuiz = createAsyncThunk(
+  'quiz/deleteQuiz',
+  async (quizId: string, { dispatch, rejectWithValue }) => {
+    try {
+      await new CallDeleteQuiz(quizId).execute();
+
+      dispatch(logout());
 
       return;
 

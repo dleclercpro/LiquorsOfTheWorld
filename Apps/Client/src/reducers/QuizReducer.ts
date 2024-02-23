@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { FetchedData, ScoreData, StatusData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
-import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, start } from '../actions/QuizActions';
+import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, startQuiz } from '../actions/QuizActions';
 import { login, logout, ping, vote } from '../actions/UserActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
@@ -95,7 +95,7 @@ export const quizSlice = createSlice({
         state.status.data = action.payload.status;
         state.votes.data = action.payload.votes;
       })
-      .addCase(start.fulfilled, (state) => {
+      .addCase(startQuiz.fulfilled, (state) => {
         if (state.status.data === null) return;
 
         state.status.data.hasStarted = true;

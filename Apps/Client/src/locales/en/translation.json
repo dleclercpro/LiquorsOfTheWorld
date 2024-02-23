@@ -42,7 +42,8 @@
       "SUPERVISE": "Supervise quiz",
       "SINGLE_PLAYER_WAITING": "There is currently <1>1 player</1> waiting to play.",
       "MANY_PLAYERS_WAITING": "There are currently <1>{{count}} players</1> waiting to play.",
-      "SUBMIT": "Yes, let's go!"
+      "START_QUIZ": "Yes, let's go!",
+      "DELETE_QUIZ": "No, delete the quiz."
     },
     "QUESTION": {
       "PICK_ANSWER": "Pick an answer",

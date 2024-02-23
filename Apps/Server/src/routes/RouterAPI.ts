@@ -14,6 +14,7 @@ import GetStatusController from '../controllers/quiz/GetStatusController';
 import GetVotesController from '../controllers/quiz/GetVotesController';
 import StartQuizController from '../controllers/quiz/StartQuizController';
 import StartQuestionController from '../controllers/quiz/StartQuestionController';
+import DeleteQuizController from '../controllers/quiz/DeleteQuizController';
 
 
 
@@ -43,8 +44,8 @@ router.get('/user', [AuthMiddleware], GetUserController);
 router.get('/questions/:lang', GetQuestionsController);
 
 router.get('/quiz/:quizId', [AuthMiddleware], GetStatusController);
+router.delete('/quiz/:quizId', [AuthMiddleware], DeleteQuizController);
 router.put('/quiz/:quizId/start', [AuthMiddleware], StartQuizController);
-// router.put('/quiz/:quizId/end', [AuthMiddleware], EndQuizController);
 router.get('/quiz/:quizId/votes', [AuthMiddleware], GetVotesController);
 router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);
 router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);

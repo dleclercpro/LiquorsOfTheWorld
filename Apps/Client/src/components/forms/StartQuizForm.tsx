@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import './StartQuizForm.scss';
-import { start } from '../../actions/QuizActions';
+import { deleteQuiz, startQuiz } from '../../actions/QuizActions';
 import { Trans, useTranslation } from 'react-i18next';
 import { selectPlayers } from '../../reducers/QuizReducer';
 
@@ -19,14 +19,14 @@ const StartQuizForm: React.FC = () => {
     setIsSupervised(!isSupervised);
   }
 
-  const handleSubmit: React.ChangeEventHandler<HTMLFormElement> = async (e) => {
+  const handleStart: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
     if (quizId === null) {
       return;
     }
     
-    const result = await dispatch(start({ quizId, isSupervised }));
+    const result = await dispatch(startQuiz({ quizId, isSupervised }));
 
     if (result.type.endsWith('/rejected')) {
       alert(`Could not start quiz!`);
@@ -34,8 +34,23 @@ const StartQuizForm: React.FC = () => {
     }
   }
 
+  const handleDelete: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
+    e.preventDefault();
+
+    if (quizId === null) {
+      return;
+    }
+    
+    const result = await dispatch(deleteQuiz(quizId));
+
+    if (result.type.endsWith('/rejected')) {
+      alert(`Could not delete quiz!`);
+      return;
+    }
+  }
+
   return (
-    <form className='start-quiz-form' onSubmit={handleSubmit}>
+    <form className='start-quiz-form'>
       <h2 className='start-quiz-form-title'>{t('FORMS.START_QUIZ.TITLE')}</h2>
 
       <p className='start-quiz-form-text'>
@@ -60,7 +75,8 @@ const StartQuizForm: React.FC = () => {
 
       <p className='start-quiz-form-text'>{t('FORMS.START_QUIZ.TEXT')}</p>
 
-      <button type='submit'>{t('FORMS.START_QUIZ.SUBMIT')}</button>
+      <button className='start-quiz-form-button' onClick={handleStart}>{t('FORMS.START_QUIZ.START_QUIZ')}</button>
+      <button className='start-quiz-form-button' onClick={handleDelete}>{t('FORMS.START_QUIZ.DELETE_QUIZ')}</button>
     </form>
   );
 };
