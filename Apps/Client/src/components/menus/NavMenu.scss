@@ -19,13 +19,15 @@
     width: auto;
   }
 
-  > .nav-menu-icon-container {
+  > .nav-menu-button {
+    background-color: transparent;
     
-    > .nav-menu-icon {
+    > .nav-menu-button-icon {
       width: 50px;
       height: 50px;
       cursor: pointer;
       user-select: none;
+      color: $color-white;
     }
   }
 
@@ -104,7 +106,7 @@
             width: 32px;
             height: 32px;
             color: $color-black;
-            margin-left: 5px;
+            margin-left: 8px;
           }
         }
       }

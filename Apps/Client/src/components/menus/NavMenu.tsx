@@ -54,10 +54,6 @@ const NavMenu: React.FC = () => {
     };
   }, [isOpen]);
   
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  }
-
   const toggleLanguage = () => {
     if (lang === Language.EN) {
       setLang(Language.DE);
@@ -66,10 +62,10 @@ const NavMenu: React.FC = () => {
     }
   }
 
-  const handleClickOnMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleClickOnButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-
-    toggleMenu();
+    
+    setIsOpen(!isOpen);
   }
 
   const handleLanguageSwitch = () => {
@@ -84,9 +80,9 @@ const NavMenu: React.FC = () => {
 
   return (
     <div className='nav-menu' ref={menuRef}>
-      <div className='nav-menu-icon-container' onClick={handleClickOnMenu}>
-        <Icon className='nav-menu-icon' />
-      </div>
+      <button className='nav-menu-button' onClick={handleClickOnButton}>
+        <Icon className='nav-menu-button-icon' />
+      </button>
       <nav className={`nav-menu-content ${isOpen ? 'visible' : 'hidden'}`}>
         <ul>
           {isAuthenticated && (
@@ -102,12 +98,12 @@ const NavMenu: React.FC = () => {
               {language === Language.EN ? (
                 <>
                   Deutsch
-                  <GermanyIcon className='nav-menu-link-icon' />
+                  <GermanyIcon className='nav-menu-link-icon flag' />
                 </>
                 ) : (
                 <>
                   English
-                  <UnitedKingdoIcon className='nav-menu-link-icon' />
+                  <UnitedKingdoIcon className='nav-menu-link-icon flag' />
                 </>
               )}
             </button>
