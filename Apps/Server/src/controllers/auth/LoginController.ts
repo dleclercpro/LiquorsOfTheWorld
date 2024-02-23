@@ -12,6 +12,7 @@ import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidPasswordError from '../../errors/InvalidPasswordError';
 import UserDoesNotExistError from '../../errors/UserDoesNotExistError';
 import QuizAlreadyStartedError from '../../errors/QuizAlreadyStartedError';
+import { Quiz } from '../../types/QuizTypes';
 
 type RequestBody = Auth & {
     quizId: string,
@@ -59,7 +60,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
             quiz = await APP_DB.createQuiz(quizId, username);
         }
 
-        const isQuizStarted = quiz!.status.isStarted;
+        const isQuizStarted = (quiz as Quiz).status.isStarted;
 
         // If user exists: check if password is valid
         const userExists = await APP_DB.doesUserExist(username);

@@ -41,7 +41,7 @@ class AppDatabase extends RedisDatabase {
             throw new InvalidQuizIdError();
         }
 
-        await this.updateQuiz(quizId, {
+        await this.setQuiz(quizId, {
             ...quiz,
             players: unique([...quiz.players, username]),
         });
@@ -97,7 +97,7 @@ class AppDatabase extends RedisDatabase {
             throw new InvalidQuizIdError();
         }
 
-        await this.updateQuiz(quizId, {
+        await this.setQuiz(quizId, {
             ...quiz,
             status: {
                 ...quiz.status,
@@ -156,7 +156,7 @@ class AppDatabase extends RedisDatabase {
         return this.deserializeQuiz(quiz);
     }
 
-    public async updateQuiz(quizId: string, updatedQuiz: Quiz) {
+    public async setQuiz(quizId: string, updatedQuiz: Quiz) {
         if (!await this.doesQuizExist(quizId)) {
             throw new InvalidQuizIdError();
         }
@@ -284,7 +284,7 @@ class AppDatabase extends RedisDatabase {
             throw new InvalidQuizIdError();
         }
         
-        await this.updateQuiz(quizId, {
+        await this.setQuiz(quizId, {
             ...quiz,
             status: {
                 ...quiz.status,
@@ -298,7 +298,7 @@ class AppDatabase extends RedisDatabase {
         const quiz = await this.getQuiz(quizId) as Quiz;
 
         if (questionIndex + 1 === N_QUESTIONS) {
-            await this.updateQuiz(quizId, {
+            await this.setQuiz(quizId, {
                 ...quiz,
                 status: {
                     ...quiz.status,

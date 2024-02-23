@@ -34,8 +34,6 @@ const ScoresPage: React.FC = () => {
   }
 
   const isStarted = status.isStarted;
-  console.log(isStarted);
-
   if (!isStarted) {
     return <Navigate to='/quiz' />;
   }
