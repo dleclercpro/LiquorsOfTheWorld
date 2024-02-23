@@ -54,5 +54,21 @@
       "RIGHT_ANSWER_ICON_TEXT": "Glückwunsch, Du hast recht!",
       "WRONG_ANSWER_ICON_TEXT": "Leider liegst Du falsch..."
     }
+  },
+  "ERRORS": {
+    "UNKNOWN_ERROR": "Ein unbekannter Fehler ist aufgetreten.",
+    "UNEXPECTED_ERROR": "Ein unerwarteter Fehler ist aufgetreten.",
+    "INVALID_LANGUAGE": "Diese Quiz-ID Sprachoption ist ungültig.",
+    "INVALID_PASSWORD": "Dieses Passwort ist ungültig.",
+    "INVALID_QUIZ_ID": "Diese Quiz-ID ist ungültig.",
+    "INVALID_QUESTION_INDEX": "Dieser Frageindex ist ungültig.",
+    "WRONG_QUESTION_INDEX": "Dieser Frageindex war falsch.",
+    "QUIZ_ID_ALREADY_EXISTS": "Dieses Quiz existiert bereits.",
+    "USER_NOT_PART_OF_QUIZ": "Dieser Benutzer ist nicht Teil des Quiz und letzteres hat bereits begonnen.",
+    "USER_CANNOT_START_QUIZ": "Dieser Benutzer hat nicht die Rechte, ein Quiz zu starten.",
+    "USER_CANNOT_START_QUESTION": "Dieser Benutzer hat nicht die Rechte, eine Frage zu starten.",
+    "CANNOT_START_UNSUPERVISED_QUESTION": "Dieses Quiz wird nicht überwacht. Seine Fragen können nicht gestartet werden.",
+    "CURRENT_QUESTION_INCOMPLETE": "Die aktuelle Frage wurde nicht von allen Spielern beantwortet.",
+    "COULD_NOT_FETCH_DATA": "Etwas ist schiefgelaufen beim Versuch, Daten vom Server abzurufen."
   }
 }

@@ -74,7 +74,7 @@ const LoginForm: React.FC<Props> = (props) => {
         required
       />
 
-      {error && <p className='login-error'>{error}</p>}
+      {error && <p className='login-error'>{t(`ERRORS.${error}`)}</p>}
 
       <button className='login-button' type='submit'>
         {t('FORMS.LOGIN.SUBMIT')}

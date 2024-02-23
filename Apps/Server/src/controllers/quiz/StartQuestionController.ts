@@ -59,7 +59,7 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
 
         // If not: cannot increment quiz's current question index
         if (playersWhoVoted.length !== players.length) {
-            throw new Error('PREVIOUS_QUESTIONS_INCOMPLETE');
+            throw new Error('CURRENT_QUESTION_INCOMPLETE');
         }
 
         await APP_DB.incrementQuestionIndex(quizId);
