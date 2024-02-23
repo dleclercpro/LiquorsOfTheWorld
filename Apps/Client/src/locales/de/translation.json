@@ -40,8 +40,8 @@
       "TITLE": "Quiz starten",
       "TEXT": "Bist Du bereit, das Quiz zu beginnen? Neue Spieler können danach nicht mehr beitreten!",
       "SUPERVISE": "Quiz überwachen",
-      "SINGLE_PLAYER_WAITING": "Derzeit wartet 1 Spieler darauf, zu spielen.",
-      "MANY_PLAYERS_WAITING": "Derzeit warten {{count}} Spieler darauf, zu spielen.",
+      "SINGLE_PLAYER_WAITING": "Derzeit wartet <1>1 Spieler</1> darauf, zu spielen.",
+      "MANY_PLAYERS_WAITING": "Derzeit warten <1>{{count}} Spieler</1> darauf, zu spielen.",
       "SUBMIT": "Ja, los geht's!"
     },
     "QUESTION": {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import './StartQuizForm.scss';
 import { start } from '../../actions/QuizActions';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { selectPlayers } from '../../reducers/QuizReducer';
 
 const StartQuizForm: React.FC = () => {
@@ -39,7 +39,12 @@ const StartQuizForm: React.FC = () => {
       <h2 className='start-quiz-form-title'>{t('FORMS.START_QUIZ.TITLE')}</h2>
 
       <p className='start-quiz-form-text'>
-        {t(players.length === 1 ? 'FORMS.START_QUIZ.SINGLE_PLAYER_WAITING' : 'FORMS.START_QUIZ.MANY_PLAYERS_WAITING', { count: players.length })}
+        <Trans
+          i18nKey={players.length === 1 ? 'FORMS.START_QUIZ.SINGLE_PLAYER_WAITING' : 'FORMS.START_QUIZ.MANY_PLAYERS_WAITING'}
+          values={{ count: players.length }}
+        >
+          ... <strong>...</strong> ...
+        </Trans>
       </p>
       
       <div className='checkbox'>
