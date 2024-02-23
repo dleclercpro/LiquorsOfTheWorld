@@ -7,7 +7,8 @@ import OpenIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import QuizIcon from '@mui/icons-material/Quiz';
-import LanguageIcon from '@mui/icons-material/Translate';
+import { ReactComponent as GermanyIcon } from '../../icons/germany.svg';
+import { ReactComponent as UnitedKingdoIcon } from '../../icons/uk.svg';
 import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ScoreboardIcon from '@mui/icons-material/Scoreboard';
@@ -128,8 +129,17 @@ const NavMenu: React.FC = () => {
           )}
           <li>
             <button onClick={handleLanguageSwitch}>
-              {language === 'en' ? t('COMMON.GERMAN') : t('COMMON.ENGLISH')}
-              <LanguageIcon className='nav-menu-link-icon' />
+              {language === 'en' ? (
+                <>
+                  {t('COMMON.GERMAN')}
+                  <GermanyIcon className='nav-menu-link-icon' />
+                </>
+                ) : (
+                <>
+                  {t('COMMON.ENGLISH')}
+                  <UnitedKingdoIcon className='nav-menu-link-icon' />
+                </>
+              )}
             </button>
           </li>
           {isAuthenticated && (
