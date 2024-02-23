@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from '../hooks/redux';
 import { fetchScores } from '../actions/QuizActions';
 import { Navigate } from 'react-router-dom';
 import NavMenu from '../components/Nav';
+import { hideAllOverlays } from '../reducers/OverlaysReducer';
 
 const ScoresPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const ScoresPage: React.FC = () => {
     }
 
     dispatch(fetchScores(quizId));
+    dispatch(hideAllOverlays());
   }, [questionIndex, isOver]);
 
   if (quizId === null || status === null || scores === null) {
@@ -32,6 +34,7 @@ const ScoresPage: React.FC = () => {
   }
 
   const hasStarted = status.hasStarted;
+  console.log(hasStarted);
 
   if (!hasStarted) {
     return <Navigate to='/quiz' />;
