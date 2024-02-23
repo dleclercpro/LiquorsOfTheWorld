@@ -1,22 +1,21 @@
 @import '../styles/common';
 
 .nav {
-  position: absolute;
-  top: 0;
-  right: 50%;
-  transform: translate(50%, 0);
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   color: $color-white;
   z-index: 50;
+  margin-bottom: 10px;
 
   @include desktop {
+    position: absolute;
     top: 0;
     right: 0;
-    transform: none;
     width: auto;
+    margin-bottom: 0;
   }
 
   > .nav-button {
@@ -76,10 +75,12 @@
           display: flex;
           justify-content: flex-end;
           align-items: center;
+          width: 100%;
           min-width: 320px;
           padding: 18px 16px;
 
           @include desktop {
+            width: auto;
             padding: 12px 16px;
           }
         }
