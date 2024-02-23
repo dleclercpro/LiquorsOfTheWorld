@@ -27,11 +27,45 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0 20px;
     
     > .loading-overlay-title {
       color: $color-white;
+      @include font-title;
+      margin-bottom: 20px;
+    }
+
+    > .loading-overlay-text {
+      color: $color-white;
       @include font-subtitle;
       margin-bottom: 20px;
+    }
+
+    > .loading-overlay-players-box {
+      list-style-type: none;
+      width: 100%;
+      max-width: 1024px;
+      padding: 15px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      column-count: 4; /* Number of columns */
+      column-gap: 20px; /* Gap between columns */
+
+      > li {
+        position: relative;
+        break-inside: avoid-column;
+        font-weight: bold;
+        margin-left: 20px;
+        padding: 5px 0;
+
+        &::before {
+          content: '✔';
+          position: absolute;
+          left: -20px;
+          top: 5px;
+        }
+      }
     }
   }
 }

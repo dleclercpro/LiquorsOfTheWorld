@@ -53,7 +53,7 @@
   },
   "OVERLAYS": {
     "LOADING": {
-      "PLEASE_WAIT": "Hallo {{username}}! Bitte warte, bis das Quiz beginnt..."
+      "PLEASE_WAIT": "Bitte warten..."
     },
     "ANSWER": {
       "SEE_RESULTS": "Ergebnisse ansehen",
