@@ -4,6 +4,9 @@
     "NO": "No",
     "WELCOME": "Welcome",
     "EXIT": "Exit",
+    "TEST": "Test",
+    "START": "Start",
+    "STOP": "Stop",
     "LOG_IN": "Log in",
     "LOG_OUT": "Log out",
     "USERNAME": "Username",
@@ -13,7 +16,8 @@
     "SCORE": "Score",
     "RANK": "Rank",
     "ENGLISH": "English",
-    "GERMAN": "German"
+    "GERMAN": "German",
+    "START_PAGE": "Homepage"
   },
   "PAGES": {
     "HOME": {

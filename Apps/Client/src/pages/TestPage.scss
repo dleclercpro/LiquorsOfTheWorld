@@ -11,4 +11,35 @@
   > *:not(:last-child) {
     margin-bottom: 10px;
   }
+
+  > .test-page-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: $color-white;
+
+    @include desktop {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translate(-100px, -50%);
+      align-items: flex-end;
+      width: 620px;
+    }
+
+    > .test-page-title {
+      margin-bottom: 10px;
+    }
+
+    > .test-page-text {
+      margin-bottom: 20px;
+      font-size: 18px;
+      text-align: right;
+    }
+  }
 }

@@ -11,7 +11,6 @@ import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
 import { useDispatch } from './hooks/redux';
 import { ping } from './actions/UserActions';
-import NavMenu from './components/menus/NavMenu';
 
 function App() {
   const dispatch = useDispatch();
@@ -24,8 +23,6 @@ function App() {
   return (
     <div className='app'>
       <div className='app-container'>
-        <NavMenu />
-
         <Routes>
           {DEBUG && (
             <Route path='/test' element={(

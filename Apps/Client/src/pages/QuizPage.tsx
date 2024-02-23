@@ -8,6 +8,7 @@ import { selectVote } from '../reducers/QuizReducer';
 import { hideAnswerOverlay, hideLoadingOverlay, showAnswerOverlay, showLoadingOverlay } from '../reducers/OverlaysReducer';
 import StartQuizForm from '../components/forms/StartQuizForm';
 import { useTranslation } from 'react-i18next';
+import NavMenu from '../components/menus/NavMenu';
 
 const QuizPage: React.FC = () => {
   const { i18n } = useTranslation();
@@ -83,7 +84,9 @@ const QuizPage: React.FC = () => {
   const { theme, question, options } = questions[questionIndex];
 
   return (
-    <>
+    <div className='quiz-page'>
+      <NavMenu />
+
       {!hasStarted && isAdmin && (
         <StartQuizForm />
       )}
@@ -98,7 +101,7 @@ const QuizPage: React.FC = () => {
           setChoice={setChoice}
         />
       )}
-    </>
+    </div>
   );
 }
 

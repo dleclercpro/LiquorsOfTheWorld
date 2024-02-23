@@ -8,8 +8,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import QuizIcon from '@mui/icons-material/Quiz';
 import LanguageIcon from '@mui/icons-material/Translate';
+import HomeIcon from '@mui/icons-material/Home';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ScoreboardIcon from '@mui/icons-material/Scoreboard';
 import { useTranslation } from 'react-i18next';
+import { DEBUG } from '../../config';
 
 const NavMenu: React.FC = () => {
   const dispatch = useDispatch();
@@ -71,7 +74,7 @@ const NavMenu: React.FC = () => {
     toggleLanguage();
   }
 
-  const username = user.username;
+  const { username } = user;
   const isAuthenticated = username !== null;
   const hasStarted = status?.hasStarted;
 
@@ -104,6 +107,22 @@ const NavMenu: React.FC = () => {
               <Link to={`/scores`}>
                 {t('COMMON.SCOREBOARD')}
                 <ScoreboardIcon className='nav-menu-link-icon' />
+              </Link>
+            </li>
+          )}
+          {DEBUG && location.pathname !== '/test' && (
+            <li>
+              <Link to={`/test`}>
+                {t('COMMON.TEST')}
+                <SettingsIcon className='nav-menu-link-icon' />
+              </Link>
+            </li>
+          )}
+          {DEBUG && location.pathname === '/test' && (
+            <li>
+              <Link to={`/`}>
+                {t('COMMON.START_PAGE')}
+                <HomeIcon className='nav-menu-link-icon' />
               </Link>
             </li>
           )}

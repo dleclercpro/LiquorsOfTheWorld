@@ -5,6 +5,7 @@ import { useSelector } from '../hooks/redux';
 import { useParams } from 'react-router';
 import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import NavMenu from '../components/menus/NavMenu';
 
 const HomePage: React.FC = () => {
   const { quizId } = useParams();
@@ -12,7 +13,9 @@ const HomePage: React.FC = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   return (
-    <div className='home-page-page'>
+    <div className='home-page'>
+      <NavMenu />
+
       {!isAuthenticated && (
         <div className='home-page-box'>
           <h1 className='home-page-title'>{t('PAGES.HOME.TITLE')}</h1>
