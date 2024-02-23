@@ -31,20 +31,6 @@ export const quizSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Fetching actions
-      .addCase(fetchQuestions.pending, (state) => {
-        state.questions.status = 'loading';
-        state.questions.error = null;
-      })
-      .addCase(fetchQuestions.fulfilled, (state, action) => {
-        state.questions.status = 'succeeded';
-        state.questions.error = null;
-        state.questions.data = action.payload;
-      })
-      .addCase(fetchQuestions.rejected, (state, action) => {
-        state.questions.status = 'failed';
-        state.questions.error = action.payload as string;
-        state.questions.data = null;
-      })
       .addCase(fetchStatus.pending, (state) => {
         state.status.status = 'loading';
         state.status.error = null;
@@ -59,6 +45,22 @@ export const quizSlice = createSlice({
         state.status.error = action.payload as string;
         state.status.data = null;
       })
+
+      .addCase(fetchQuestions.pending, (state) => {
+        state.questions.status = 'loading';
+        state.questions.error = null;
+      })
+      .addCase(fetchQuestions.fulfilled, (state, action) => {
+        state.questions.status = 'succeeded';
+        state.questions.error = null;
+        state.questions.data = action.payload;
+      })
+      .addCase(fetchQuestions.rejected, (state, action) => {
+        state.questions.status = 'failed';
+        state.questions.error = action.payload as string;
+        state.questions.data = null;
+      })
+
       .addCase(fetchVotes.pending, (state) => {
         state.votes.status = 'loading';
         state.votes.error = null;
@@ -73,6 +75,7 @@ export const quizSlice = createSlice({
         state.votes.error = action.payload as string;
         state.votes.data = null;
       })
+      
       .addCase(fetchScores.pending, (state) => {
         state.scores.status = 'loading';
         state.scores.error = null;

@@ -10,6 +10,7 @@ import StartQuizForm from '../components/forms/StartQuizForm';
 import { useTranslation } from 'react-i18next';
 import NavMenu from '../components/menus/NavMenu';
 import { Language } from '../constants';
+import { logout } from '../actions/UserActions';
 
 const QuizPage: React.FC = () => {
   const { i18n } = useTranslation();
@@ -46,7 +47,11 @@ const QuizPage: React.FC = () => {
     }
 
     const interval = setInterval(async () => {
-      await dispatch(fetchStatus(quizId));
+      const result = await dispatch(fetchStatus(quizId));
+
+      if (result.type.endsWith('/rejected')) {
+        dispatch(logout());
+      }
 
     }, REFRESH_STATUS_INTERVAL);
   
