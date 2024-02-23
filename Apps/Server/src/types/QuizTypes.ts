@@ -5,9 +5,11 @@ export type Vote = {
 
 export type Quiz = {
   creator: string,
-  hasStarted: boolean,
-  isOver: boolean,
-  isSupervised: boolean,
-  questionIndex: number,
   players: string[],
+  status: {
+    questionIndex: number,
+    isStarted: boolean,
+    isOver: boolean,
+    isSupervised: boolean,
+  },
 };

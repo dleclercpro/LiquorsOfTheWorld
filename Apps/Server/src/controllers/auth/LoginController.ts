@@ -48,7 +48,6 @@ const LoginController: RequestHandler = async (req, res, next) => {
         // Check if quiz exists
         let quiz = await APP_DB.getQuiz(quizId);
         const quizExists = Boolean(quiz);
-        const hasQuizStarted = quiz?.hasStarted;
 
         // In case quiz doesn't exist
         if (!quizExists) {
@@ -59,6 +58,8 @@ const LoginController: RequestHandler = async (req, res, next) => {
             // Only admins can create new quizzes
             quiz = await APP_DB.createQuiz(quizId, username);
         }
+
+        const isQuizStarted = quiz!.status.isStarted;
 
         // If user exists: check if password is valid
         const userExists = await APP_DB.doesUserExist(username);
@@ -85,9 +86,9 @@ const LoginController: RequestHandler = async (req, res, next) => {
         }
 
         // Check if quiz has already started and user is playing
-        const isPlaying = await APP_DB.isUserPlaying(quizId, username);
-        if (!isPlaying) {
-            if (hasQuizStarted) {
+        const isUserPlaying = await APP_DB.isUserPlaying(quizId, username);
+        if (!isUserPlaying) {
+            if (isQuizStarted) {
                 throw new QuizAlreadyStartedError();
             }
             await APP_DB.addUserToQuiz(quizId, username);

@@ -76,11 +76,13 @@ class AppDatabase extends RedisDatabase {
 
         const quiz: Quiz = {
             creator: username,
-            questionIndex: 0,
-            hasStarted: false,
-            isOver: false,
-            isSupervised: false,
             players: [],
+            status: {
+                questionIndex: 0,
+                isSupervised: false,
+                isStarted: false,
+                isOver: false,
+            },
         };
 
         await this.set(`quiz:${quizId}`, this.serializeQuiz(quiz));
@@ -97,8 +99,11 @@ class AppDatabase extends RedisDatabase {
 
         await this.updateQuiz(quizId, {
             ...quiz,
-            hasStarted: true,
-            isSupervised,
+            status: {
+                ...quiz.status,
+                isStarted: true,
+                isSupervised,
+            },
         });
     }
 
@@ -169,13 +174,13 @@ class AppDatabase extends RedisDatabase {
         const players = await this.getAllPlayers(quizId);
         const votesCount = await this.getVotesCount(quizId);
 
-        const { questionIndex, hasStarted, isOver, isSupervised } = quiz;
+        const { status } = quiz;
         
+        // FIXME
+        // Return players as part of a 'status' object, but they aren't part of it
+        // in the data model
         return {
-            questionIndex,
-            hasStarted,
-            isOver,
-            isSupervised,
+            ...status,
             players,
             votesCount,
         };
@@ -269,7 +274,7 @@ class AppDatabase extends RedisDatabase {
             throw new InvalidQuizIdError();
         }
 
-        return quiz.questionIndex;
+        return quiz.status.questionIndex;
     }
 
     public async setQuestionIndex(quizId: string, questionIndex: number) {
@@ -279,7 +284,13 @@ class AppDatabase extends RedisDatabase {
             throw new InvalidQuizIdError();
         }
         
-        await this.updateQuiz(quizId, { ...quiz, questionIndex });
+        await this.updateQuiz(quizId, {
+            ...quiz,
+            status: {
+                ...quiz.status,
+                questionIndex,
+            },
+        });
     }
 
     public async incrementQuestionIndex(quizId: string) {
@@ -289,7 +300,10 @@ class AppDatabase extends RedisDatabase {
         if (questionIndex + 1 === N_QUESTIONS) {
             await this.updateQuiz(quizId, {
                 ...quiz,
-                isOver: true,
+                status: {
+                    ...quiz.status,
+                    isOver: true,
+                },
             });
         } else {
             await this.setQuestionIndex(quizId, questionIndex + 1);

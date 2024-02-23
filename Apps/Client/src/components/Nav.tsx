@@ -74,7 +74,7 @@ const NavMenu: React.FC = () => {
 
   const { username } = user;
   const isAuthenticated = username !== null;
-  const hasStarted = status?.hasStarted;
+  const isStarted = status?.isStarted;
 
   const Icon = isOpen ? CloseIcon : OpenIcon;
 
@@ -118,7 +118,7 @@ const NavMenu: React.FC = () => {
             </li>
           )}
 
-          {location.pathname !== '/scores' && isAuthenticated && hasStarted && (
+          {location.pathname !== '/scores' && isAuthenticated && isStarted && (
             <li>
               <Link to={`/scores`}>
                 {t('COMMON.SCOREBOARD')}

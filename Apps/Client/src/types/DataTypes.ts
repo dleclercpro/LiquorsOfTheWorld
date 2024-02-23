@@ -28,7 +28,7 @@ export type VotesData = {
 
 export type StatusData = {
   questionIndex: number,
-  hasStarted: boolean,
+  isStarted: boolean,
   isOver: boolean,
   isSupervised: boolean,
   players: string[],

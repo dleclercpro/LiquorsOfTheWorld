@@ -60,7 +60,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
 
         // If quiz is not supervised: increment question index
         const quiz = await APP_DB.getQuiz(quizId) as Quiz;
-        if (!quiz.isSupervised) {
+        if (!quiz.status.isSupervised) {
 
             // Find out whether all users have voted up until current question
             const playersWhoVoted = await APP_DB.getPlayersWhoVotedUpUntil(quizId, questionIndex);;

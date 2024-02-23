@@ -46,7 +46,7 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
 
         // Starting a question requires the quiz to be supervised
         const quiz = await APP_DB.getQuiz(quizId) as Quiz;
-        if (!quiz.isSupervised) {
+        if (!quiz.status.isSupervised) {
             throw new UserCannotStartUnsupervisedQuestionError();
         }
 

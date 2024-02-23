@@ -101,7 +101,7 @@ export const quizSlice = createSlice({
       .addCase(startQuiz.fulfilled, (state) => {
         if (state.status.data === null) return;
 
-        state.status.data.hasStarted = true;
+        state.status.data.isStarted = true;
       })
 
       // Auth actions

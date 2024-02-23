@@ -29,7 +29,7 @@ const QuizPage: React.FC = () => {
   const quizId = quiz.id;
   const questions = quiz.questions.data;
   const status = quiz.status.data;
-  const hasStarted = status?.hasStarted;
+  const isStarted = status?.isStarted;
 
   // Fetch data
   useEffect(() => {
@@ -72,13 +72,13 @@ const QuizPage: React.FC = () => {
 
   // Show loading screen in case quiz has not yet been started
   useEffect(() => {
-    if (!hasStarted && !isAdmin) {
+    if (!isStarted && !isAdmin) {
       dispatch(showLoadingOverlay());
     } else {
       dispatch(hideLoadingOverlay());
     }
 
-  }, [hasStarted, isAdmin]);
+  }, [isStarted, isAdmin]);
 
 
 
@@ -93,10 +93,10 @@ const QuizPage: React.FC = () => {
     <div className='quiz-page'>
       <NavMenu />
 
-      {!hasStarted && isAdmin && (
+      {!isStarted && isAdmin && (
         <StartQuizForm />
       )}
-      {hasStarted && (
+      {isStarted && (
         <QuestionForm
           index={questionIndex}
           theme={theme}
