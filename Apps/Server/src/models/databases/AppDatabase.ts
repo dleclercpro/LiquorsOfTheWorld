@@ -7,7 +7,7 @@ import { sum } from '../../utils/math';
 import RedisDatabase from './base/RedisDatabase';
 import { DatabaseUser } from '../../types/UserTypes';
 import { randomUUID } from 'crypto';
-import { QuizGame } from '../../types/QuizTypes';
+import { Quiz } from '../../types/QuizTypes';
 import QuizAlreadyExistsError from '../../errors/QuizAlreadyExistsError';
 import HashError from '../../errors/HashError';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
@@ -74,7 +74,7 @@ class AppDatabase extends RedisDatabase {
             throw new QuizAlreadyExistsError();
         }
 
-        const quiz: QuizGame = {
+        const quiz: Quiz = {
             creator: username,
             questionIndex: 0,
             hasStarted: false,
@@ -151,7 +151,7 @@ class AppDatabase extends RedisDatabase {
         return this.deserializeQuiz(quiz);
     }
 
-    public async updateQuiz(quizId: string, updatedQuiz: QuizGame) {
+    public async updateQuiz(quizId: string, updatedQuiz: Quiz) {
         if (!await this.doesQuizExist(quizId)) {
             throw new InvalidQuizIdError();
         }
@@ -284,7 +284,7 @@ class AppDatabase extends RedisDatabase {
 
     public async incrementQuestionIndex(quizId: string) {
         const questionIndex = await this.getQuestionIndex(quizId);
-        const quiz = await this.getQuiz(quizId) as QuizGame;
+        const quiz = await this.getQuiz(quizId) as Quiz;
 
         if (questionIndex + 1 === N_QUESTIONS) {
             await this.updateQuiz(quizId, {
@@ -315,12 +315,12 @@ class AppDatabase extends RedisDatabase {
         return JSON.parse(user) as DatabaseUser;
     }
 
-    protected serializeQuiz(quiz: QuizGame) {
+    protected serializeQuiz(quiz: Quiz) {
         return JSON.stringify(quiz);
     }
 
     protected deserializeQuiz(quiz: string) {
-        return JSON.parse(quiz) as QuizGame;
+        return JSON.parse(quiz) as Quiz;
     }
 }
 

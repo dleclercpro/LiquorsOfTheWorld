@@ -4,7 +4,7 @@ import { APP_DB } from '../..';
 import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { N_QUESTIONS } from '../../constants';
-import { QuizGame } from '../../types/QuizTypes';
+import { Quiz } from '../../types/QuizTypes';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 import UserCannotStartQuestionError from '../../errors/UserCannotStartQuestionError';
@@ -45,7 +45,7 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
         }
 
         // Starting a question requires the quiz to be supervised
-        const quiz = await APP_DB.getQuiz(quizId) as QuizGame;
+        const quiz = await APP_DB.getQuiz(quizId) as Quiz;
         if (!quiz.isSupervised) {
             throw new UserCannotStartUnsupervisedQuestionError();
         }

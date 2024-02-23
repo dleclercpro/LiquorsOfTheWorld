@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import logger from '../../logger';
 import { APP_DB } from '../..';
 import { successResponse } from '../../utils/calls';
-import { QuizGame, QuizVote } from '../../types/QuizTypes';
+import { Quiz, Vote } from '../../types/QuizTypes';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { N_QUESTIONS } from '../../constants';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
@@ -30,7 +30,7 @@ const validateParams = async (params: ParamsDictionary) => {
 
 
 
-type RequestBody = QuizVote;
+type RequestBody = Vote;
 
 const VoteController: RequestHandler = async (req, res, next) => {
     try {
@@ -59,7 +59,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         await APP_DB.setUserVotes(quizId, username, votes);
 
         // If quiz is not supervised: increment question index
-        const quiz = await APP_DB.getQuiz(quizId) as QuizGame;
+        const quiz = await APP_DB.getQuiz(quizId) as Quiz;
         if (!quiz.isSupervised) {
 
             // Find out whether all users have voted up until current question
