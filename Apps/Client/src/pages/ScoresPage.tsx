@@ -4,7 +4,7 @@ import Scoreboard from '../components/Scoreboard';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { fetchScores } from '../actions/QuizActions';
 import { Navigate } from 'react-router-dom';
-import NavMenu from '../components/Nav';
+import Nav from '../components/Nav';
 import { hideAllOverlays } from '../reducers/OverlaysReducer';
 
 const ScoresPage: React.FC = () => {
@@ -42,7 +42,7 @@ const ScoresPage: React.FC = () => {
   
   return (
     <div className='scores-page'>
-      <NavMenu />
+      <Nav />
       <Scoreboard scores={scores} />
     </div>
   );

@@ -5,7 +5,6 @@ import { selectAuthentication } from '../../reducers/UserReducer';
 import './LoginForm.scss';
 import { login } from '../../actions/UserActions';
 import { useTranslation } from 'react-i18next';
-import { showWelcomeOverlay } from '../../reducers/OverlaysReducer';
 
 type Props = {
   quizId?: string,
@@ -26,7 +25,6 @@ const LoginForm: React.FC<Props> = (props) => {
   // Redirect to current quiz question on successful login
   useEffect(() => {
     if (auth.status === 'succeeded') {
-      dispatch(showWelcomeOverlay());
       navigate(`/quiz`);
     }
   }, [auth.status]);

@@ -5,9 +5,6 @@ interface OverlaysState {
   loading: {
     show: boolean,
   },
-  welcome: {
-    show: boolean,
-  },
   answer: {
     show: boolean,
   },
@@ -15,9 +12,6 @@ interface OverlaysState {
 
 const initialState: OverlaysState = {
   loading: {
-    show: false,
-  },
-  welcome: {
     show: false,
   },
   answer: {
@@ -38,12 +32,6 @@ export const overlaysSlice = createSlice({
     hideLoadingOverlay: (state) => {
       state.loading.show = false;
     },
-    showWelcomeOverlay: (state) => {
-      state.welcome.show = true;
-    },
-    hideWelcomeOverlay: (state) => {
-      state.welcome.show = false;
-    },
     showAnswerOverlay: (state) => {
       state.answer.show = true;
     },
@@ -59,6 +47,6 @@ export const overlaysSlice = createSlice({
     },
 });
 
-export const { hideAllOverlays, showLoadingOverlay, hideLoadingOverlay, showWelcomeOverlay, hideWelcomeOverlay, showAnswerOverlay, hideAnswerOverlay } = overlaysSlice.actions;
+export const { hideAllOverlays, showLoadingOverlay, hideLoadingOverlay, showAnswerOverlay, hideAnswerOverlay } = overlaysSlice.actions;
 
 export default overlaysSlice.reducer;

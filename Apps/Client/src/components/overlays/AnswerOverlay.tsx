@@ -9,6 +9,7 @@ import WrongIcon from '@mui/icons-material/Close';
 import WaitIcon from '@mui/icons-material/Schedule';
 import { startQuestion } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
+import Nav from '../Nav';
 
 const AnswerOverlay: React.FC = () => {
   const dispatch = useDispatch();
@@ -74,6 +75,8 @@ const AnswerOverlay: React.FC = () => {
 
   return (
     <div id='answer-overlay' className={shouldShow ? '' : 'hidden'}>
+      <Nav />
+      
       <div className='answer-overlay-box'>
           <div>
             <div className='answer-overlay-box-left'>

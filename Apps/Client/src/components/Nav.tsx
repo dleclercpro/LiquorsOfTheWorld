@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { DEBUG } from '../config';
 import { Language } from '../constants';
 
-const NavMenu: React.FC = () => {
+const Nav: React.FC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -159,4 +159,4 @@ const NavMenu: React.FC = () => {
   );
 }
 
-export default NavMenu;
+export default Nav;

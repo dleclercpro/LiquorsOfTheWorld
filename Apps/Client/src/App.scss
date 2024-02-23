@@ -6,18 +6,22 @@
   padding: 20px 10px;
   background: url('../public/img/background-7.webp') no-repeat center center;
   background-size: cover;
+  overflow-y: auto;
 
   @include desktop {
-    padding: 20px;
+      padding: 20px;
   }
 
   > .app-container {
     position: relative;
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    @include desktop {
+      height: 100%;
+    }
   }
 }

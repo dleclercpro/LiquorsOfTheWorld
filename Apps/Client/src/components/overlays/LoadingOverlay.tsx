@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from '../../hooks/redux';
 import './LoadingOverlay.scss';
 import { selectPlayers } from '../../reducers/QuizReducer';
+import Nav from '../Nav';
 
 const LoadingOverlay: React.FC = () => {
   const { t } = useTranslation();
@@ -17,6 +18,8 @@ const LoadingOverlay: React.FC = () => {
 
   return (
     <div id='loading-overlay' className={`${!show ? 'hidden' : ''} opaque`}>
+      <Nav />
+
       <div className='loading-overlay-box'>
         <h2 className='loading-overlay-title'>
           {t('OVERLAYS.LOADING.PLEASE_WAIT')}

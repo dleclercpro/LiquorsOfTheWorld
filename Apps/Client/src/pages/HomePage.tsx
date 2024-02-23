@@ -5,7 +5,7 @@ import { useSelector } from '../hooks/redux';
 import { useParams } from 'react-router';
 import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import NavMenu from '../components/Nav';
+import Nav from '../components/Nav';
 
 const HomePage: React.FC = () => {
   const { quizId } = useParams();
@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className='home-page'>
-      <NavMenu />
+      <Nav />
 
       {!isAuthenticated && (
         <div className='home-page-box'>

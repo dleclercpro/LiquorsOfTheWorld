@@ -1,6 +1,6 @@
 import React from 'react';
 import './TestPage.scss';
-import NavMenu from '../components/Nav';
+import Nav from '../components/Nav';
 import { useDispatch } from '../hooks/redux';
 import { hideAllOverlays } from '../reducers/OverlaysReducer';
 
@@ -11,7 +11,7 @@ const TestPage: React.FC = () => {
 
   return (
     <div className='test-page'>
-      <NavMenu />
+      <Nav />
 
       <div className='test-page-box'>
         <h1 className='test-page-title'>Test page</h1>
