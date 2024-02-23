@@ -74,11 +74,14 @@
     "INVALID_QUESTION_INDEX": "Dieser Frageindex ist ungültig.",
     "WRONG_QUESTION_INDEX": "Dieser Frageindex war falsch.",
     "QUIZ_ID_ALREADY_EXISTS": "Dieses Quiz existiert bereits.",
+    "USER_ALREADY_EXISTS": "Dieser Benutzer existiert bereits: wähle einen anderen Benutzernamen.",
     "USER_NOT_PART_OF_QUIZ": "Dieser Benutzer ist nicht Teil des Quiz und letzteres hat bereits begonnen.",
     "USER_CANNOT_START_QUIZ": "Dieser Benutzer hat nicht die Rechte, ein Quiz zu starten.",
     "USER_CANNOT_START_QUESTION": "Dieser Benutzer hat nicht die Rechte, eine Frage zu starten.",
     "CANNOT_START_UNSUPERVISED_QUESTION": "Dieses Quiz wird nicht überwacht. Seine Fragen können nicht gestartet werden.",
     "CURRENT_QUESTION_INCOMPLETE": "Die aktuelle Frage wurde nicht von allen Spielern beantwortet.",
-    "COULD_NOT_FETCH_DATA": "Etwas ist schiefgelaufen beim Versuch, Daten vom Server abzurufen."
+    "COULD_NOT_FETCH_DATA": "Etwas ist schiefgelaufen beim Versuch, Daten vom Server abzurufen.",
+    "INTERNAL_SERVER_ERROR": "Ein interner Fehler ist auf dem Server aufgetreten.",
+    "UNAUTHORIZED": "Sie sind nicht berechtigt, das zu tun."
   }
 }

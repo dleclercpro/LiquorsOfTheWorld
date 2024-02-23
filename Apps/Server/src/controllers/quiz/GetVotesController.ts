@@ -1,7 +1,5 @@
 import { RequestHandler } from 'express';
-import logger from '../../logger';
-import { errorResponse, successResponse } from '../../utils/calls';
-import { HttpStatusCode, HttpStatusMessage } from '../../types/HTTPTypes';
+import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { APP_DB } from '../..';
 
@@ -32,14 +30,6 @@ const GetVotesController: RequestHandler = async (req, res, next) => {
         return res.json(successResponse(votes));
 
     } catch (err: any) {
-        if (err instanceof Error) {
-            logger.warn(err.message);
-
-            return res
-                .status(HttpStatusCode.NOT_IMPLEMENTED)
-                .send(errorResponse(HttpStatusMessage.NOT_IMPLEMENTED));
-        }
-
         next(err);
     }
 }

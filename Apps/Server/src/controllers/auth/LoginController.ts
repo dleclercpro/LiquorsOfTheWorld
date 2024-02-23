@@ -94,7 +94,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
         if (['USER_ALREADY_EXISTS', 'INVALID_PASSWORD'].includes(err.message)) {
             return res
                 .status(HttpStatusCode.UNAUTHORIZED)
-                .json(errorResponse('INVALID_CREDENTIALS'));
+                .json(errorResponse(err.message));
         }
 
         if (['INVALID_QUIZ_ID', 'USER_NOT_PART_OF_QUIZ'].includes(err.message)) {

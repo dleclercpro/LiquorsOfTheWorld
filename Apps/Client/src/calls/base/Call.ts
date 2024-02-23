@@ -71,6 +71,8 @@ class Call<RequestData = void, ResponseData = void> {
     }
 
     async execute(payload?: RequestData) {
+        let err = '';
+
         console.trace(`Executing API call '${this.name}': ${this.url}`);
 
         // Store call's payload
@@ -90,10 +92,15 @@ class Call<RequestData = void, ResponseData = void> {
                 } catch {
                     return { ...res, json: null };
                 }
+            })
+            .catch(() => {
+
+                // There was some issue contacting the server: is it running?
+                err = 'FETCH_ERROR';
             });
 
         // There was valid JSON data in the response
-        if (response.json) {
+        if (response && response.json) {
             const { code, error, data } = response.json;
 
             // There was an error
@@ -108,8 +115,8 @@ class Call<RequestData = void, ResponseData = void> {
         }
 
         // There were other issues
-        const err = `Unexpected Error [${response.statusText}]`;
-        console.warn(`Error in call '${this.name}': ${err} [${response.status}]`);
+        err = err ?? `UNEXPECTED_ERROR`;
+        console.error(`Error in call '${this.name}': ${err} [${response ? response.status : '?'}]`);
 
         // Something went wrong, but we let the processing happen further down the line
         return Promise.reject(new Error(err));
