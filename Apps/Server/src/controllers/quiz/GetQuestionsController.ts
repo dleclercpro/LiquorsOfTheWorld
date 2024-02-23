@@ -2,12 +2,13 @@ import { RequestHandler } from 'express';
 import { successResponse } from '../../utils/calls';
 import { QUESTIONS_EN, QUESTIONS_DE, LANGUAGES, Language } from '../../constants';
 import { ParamsDictionary } from 'express-serve-static-core';
+import InvalidLanguageError from '../../errors/InvalidLanguageError';
 
 const validateParams = (params: ParamsDictionary) => {
     const { lang } = params;
 
     if (!LANGUAGES.includes(lang as Language)) {
-        throw new Error('INVALID_LANGUAGE');
+        throw new InvalidLanguageError();
     }
 
     return { lang };
@@ -29,7 +30,7 @@ const GetQuestionsController: RequestHandler = (req, res, next) => {
                 questions = QUESTIONS_DE;
                 break;
             default:
-                throw new Error('INVALID_LANGUAGE');
+                throw new InvalidLanguageError();
         }
 
         return res.json(

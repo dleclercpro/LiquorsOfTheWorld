@@ -5,21 +5,24 @@ import { successResponse } from '../../utils/calls';
 import { QuizGame, QuizVote } from '../../types/QuizTypes';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { N_QUESTIONS } from '../../constants';
+import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
+import InvalidParamsError from '../../errors/InvalidParamsError';
+import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId, questionIndex: _questionIndex } = params;
 
     if (quizId === undefined || _questionIndex === undefined) {
-        throw new Error('INVALID_PARAMS');
+        throw new InvalidParamsError();
     }
 
     if (!await APP_DB.doesQuizExist(quizId)) {
-        throw new Error('INVALID_QUIZ_ID');
+        throw new InvalidQuizIdError();
     }
 
     const questionIndex = Number(_questionIndex);
     if (questionIndex + 1 > N_QUESTIONS) {
-        throw new Error('INVALID_QUESTION_INDEX');
+        throw new InvalidQuestionIndexError();
     }
 
     return { quizId, questionIndex };
@@ -39,7 +42,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         // Players can only vote on current question index
         const currentQuestionIndex = await APP_DB.getQuestionIndex(quizId);
         if (questionIndex !== currentQuestionIndex) {
-            throw new Error('WRONG_QUESTION_INDEX');
+            throw new InvalidQuestionIndexError();
         }
 
         // Get votes from DB if they exist

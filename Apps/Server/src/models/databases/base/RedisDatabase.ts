@@ -91,12 +91,14 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
         // End reconnecting on a specific error and flush all commands with
         // a individual error
         if (error && error.code === 'ECONNREFUSED') {
-            return new Error('The server refused the connection.');
+            logger.fatal('The server refused the connection.');
+            return new Error('DATABASE_REFUSED_CONNECTION');
         }
         
         // End reconnecting with built in error
         if (retries > REDIS_RETRY_CONNECT_MAX) {
-            return new Error('Number of connection retries exhausted. Stopping connection attempts.');
+            logger.fatal('Number of connection retries exhausted. Stopping connection attempts.')
+            return new Error('NO_CONNECTION_ATTEMPTS_LEFT');
         }
 
         // Reconnect after ... ms

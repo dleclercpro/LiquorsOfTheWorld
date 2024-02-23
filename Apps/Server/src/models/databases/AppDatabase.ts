@@ -8,6 +8,9 @@ import RedisDatabase from './base/RedisDatabase';
 import { DatabaseUser } from '../../types/UserTypes';
 import { randomUUID } from 'crypto';
 import { QuizGame } from '../../types/QuizTypes';
+import QuizAlreadyExistsError from '../../errors/QuizAlreadyExistsError';
+import HashError from '../../errors/HashError';
+import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 
 const SEPARATOR = '|';
 
@@ -35,7 +38,7 @@ class AppDatabase extends RedisDatabase {
         const quiz = await this.getQuiz(quizId);
 
         if (!quiz) {
-            throw new Error('INVALID_QUIZ_ID');
+            throw new InvalidQuizIdError();
         }
 
         await this.updateQuiz(quizId, {
@@ -49,7 +52,7 @@ class AppDatabase extends RedisDatabase {
             bcrypt.hash(password, N_SALT_ROUNDS, async (err, hash) => {
                 if (err) {
                     logger.fatal(`Cannot hash password of user '${username}'.`, err);
-                    reject(new Error('CANNOT_HASH_PASSWORD'));
+                    reject(new HashError());
                 }
       
                 resolve(hash);
@@ -68,7 +71,7 @@ class AppDatabase extends RedisDatabase {
         logger.trace(`Creating a new quiz...`);
 
         if (await this.doesQuizExist(quizId)) {
-            throw new Error('QUIZ_ID_ALREADY_EXISTS');
+            throw new QuizAlreadyExistsError();
         }
 
         const quiz: QuizGame = {
@@ -89,7 +92,7 @@ class AppDatabase extends RedisDatabase {
         const quiz = await this.getQuiz(quizId);
 
         if (!quiz) {
-            throw new Error('INVALID_QUIZ_ID');
+            throw new InvalidQuizIdError();
         }
 
         await this.updateQuiz(quizId, {
@@ -117,7 +120,7 @@ class AppDatabase extends RedisDatabase {
         const quiz = await this.getQuiz(quizId);
 
         if (!quiz) {
-            throw new Error('INVALID_QUIZ_ID');
+            throw new InvalidQuizIdError();
         }
 
         return quiz.players;
@@ -135,7 +138,7 @@ class AppDatabase extends RedisDatabase {
 
     public async updateQuiz(quizId: string, updatedQuiz: QuizGame) {
         if (!await this.doesQuizExist(quizId)) {
-            throw new Error('INVALID_QUIZ_ID');
+            throw new InvalidQuizIdError();
         }
 
         await this.set(`quiz:${quizId}`, this.serializeQuiz(updatedQuiz));
@@ -145,7 +148,7 @@ class AppDatabase extends RedisDatabase {
         const quiz = await this.getQuiz(quizId);
 
         if (!quiz) {
-            throw new Error('INVALID_QUIZ_ID');
+            throw new InvalidQuizIdError();
         }
 
         const players = await this.getAllPlayers(quizId);
@@ -248,7 +251,7 @@ class AppDatabase extends RedisDatabase {
         const quiz = await this.getQuiz(quizId);
 
         if (!quiz) {
-            throw new Error('INVALID_QUIZ_ID');
+            throw new InvalidQuizIdError();
         }
 
         return quiz.questionIndex;
@@ -258,7 +261,7 @@ class AppDatabase extends RedisDatabase {
         const quiz = await this.getQuiz(quizId);
 
         if (!quiz) {
-            throw new Error('INVALID_QUIZ_ID');
+            throw new InvalidQuizIdError();
         }
         
         await this.updateQuiz(quizId, { ...quiz, questionIndex });

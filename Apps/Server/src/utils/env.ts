@@ -37,7 +37,8 @@ export const getEnvironmentVariable = (name: string, required: boolean = false) 
     const variable = process.env[name];
 
     if (required && !variable) {
-        throw new Error(`Environment variable missing: ${name}`);
+        console.error(`Environment variable missing: ${name}`);
+        throw new Error('MISSING_ENVIRONMENT_VARIABLE');
     }
 
     return variable;

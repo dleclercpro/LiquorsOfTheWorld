@@ -8,6 +8,10 @@ import { Auth } from '../../types';
 import { ADMINS, COOKIE_NAME } from '../../config';
 import { encodeCookie } from '../../utils/cookies';
 import { DatabaseUser } from '../../types/UserTypes';
+import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
+import InvalidPasswordError from '../../errors/InvalidPasswordError';
+import UserDoesNotExistError from '../../errors/UserDoesNotExistError';
+import QuizAlreadyStartedError from '../../errors/QuizAlreadyStartedError';
 
 type RequestBody = Auth & {
     quizId: string,
@@ -49,7 +53,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
         // In case quiz doesn't exist
         if (!quizExists) {
             if (!isAdmin) { 
-                throw new Error('INVALID_QUIZ_ID');
+                throw new InvalidQuizIdError();
             }
 
             // Only admins can create new quizzes
@@ -63,14 +67,14 @@ const LoginController: RequestHandler = async (req, res, next) => {
             const user = await APP_DB.getUser(username) as DatabaseUser;
 
             if (!await isPasswordValid(password, user.hashedPassword)) {
-                throw new Error('INVALID_PASSWORD');
+                throw new InvalidPasswordError()
             }
         }
 
         // If neither the quiz, nor the user exist, and they are not an admin:
         // no new user can be created later on
         if (!quizExists && !userExists && !isAdmin) {
-            throw new Error('USER_DOES_NOT_EXIST');
+            throw new UserDoesNotExistError();
         }
 
         // Now that everything worked out well, create user if it does not
@@ -84,7 +88,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
         const isPlaying = await APP_DB.isUserPlaying(quizId, username);
         if (!isPlaying) {
             if (hasQuizStarted) {
-                throw new Error('QUIZ_ALREADY_STARTED');
+                throw new QuizAlreadyStartedError();
             }
             await APP_DB.addUserToQuiz(quizId, username);
             logger.trace(`User '${username}' joined quiz ${quizId}.`);

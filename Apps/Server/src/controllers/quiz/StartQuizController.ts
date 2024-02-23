@@ -3,16 +3,19 @@ import logger from '../../logger';
 import { APP_DB } from '../..';
 import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
+import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
+import InvalidParamsError from '../../errors/InvalidParamsError';
+import UserCannotStartQuizError from '../../errors/UserCannotStartQuizError';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
 
     if (quizId === undefined) {
-        throw new Error('INVALID_PARAMS');
+        throw new InvalidParamsError();
     }
 
     if (!await APP_DB.doesQuizExist(quizId)) {
-        throw new Error('INVALID_QUIZ_ID');
+        throw new InvalidQuizIdError();
     }
 
     return { quizId };
@@ -33,7 +36,7 @@ const StartQuizController: RequestHandler = async (req, res, next) => {
 
         // User needs to be admin to start quiz
         if (!isAdmin) {
-            throw new Error('USER_CANNOT_START_QUIZ');
+            throw new UserCannotStartQuizError();
         }
 
         await APP_DB.startQuiz(quizId, isSupervised);

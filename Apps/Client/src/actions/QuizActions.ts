@@ -110,7 +110,7 @@ export const fetchData = createAsyncThunk(
         .some(type => type.endsWith('/rejected'));
 
       if (someFetchActionFailed) {
-        throw new Error('COULD_NOT_FETCH_DATA');
+        throw new Error('DATA_FETCH');
       }
       
       const { quiz } = getState() as RootState;

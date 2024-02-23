@@ -2,16 +2,18 @@ import { RequestHandler } from 'express';
 import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { APP_DB } from '../..';
+import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
+import InvalidParamsError from '../../errors/InvalidParamsError';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
 
     if (quizId === undefined) {
-        throw new Error('INVALID_PARAMS');
+        throw new InvalidParamsError();
     }
 
     if (!await APP_DB.doesQuizExist(quizId)) {
-        throw new Error('INVALID_QUIZ_ID');
+        throw new InvalidQuizIdError();
     }
 
     return { quizId };

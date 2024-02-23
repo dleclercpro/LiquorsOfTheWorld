@@ -9,6 +9,7 @@ import { CLIENT_ROOT, DEV, ENV, PORT } from '../config';
 import logger from '../logger';
 import Router from '../routes';
 import ErrorMiddleware from '../middleware/ErrorMiddleware';
+import MissingServerError from '../errors/MissingServerError';
 
 // There can only be one app server: singleton!
 class AppServer {
@@ -68,20 +69,20 @@ class AppServer {
     }
 
     public async start() {
-        if (!this.server) throw new Error('MISSING_SERVER');
+        if (!this.server) new MissingServerError();
 
         // Listen to stop signals
         process.on('SIGTERM', () => this.stop('SIGTERM'));
         process.on('SIGINT', () => this.stop('SIGINT'));
 
         // Listen to HTTP traffic on given port
-        this.server.listen(PORT, async () => {
+        this.server!.listen(PORT, async () => {
             logger.debug(`${APP_NAME} app listening on port: ${PORT}`);
         });
     }
 
     public async stop(signal: string = '') {
-        if (!this.server) throw new Error('MISSING_SERVER');
+        if (!this.server) throw new MissingServerError();
 
         if (signal) {
             logger.warn(`Received stop signal: ${signal}`);

@@ -119,7 +119,7 @@ class TimeDuration implements Comparable {
                 amount = ms;
                 break;
             default:
-                throw new Error('Invalid time unit.');
+                throw new Error('INVALID_TIME_UNIT');
         }
 
         return new TimeDuration(amount, unit); 
@@ -145,7 +145,7 @@ class TimeDuration implements Comparable {
                 amount = this.amount;
                 break;
             default:
-                throw new Error('Invalid time unit.');
+                throw new Error('INVALID_TIME_UNIT');
         }
 
         return new TimeDuration(amount, TimeUnit.Milliseconds);
