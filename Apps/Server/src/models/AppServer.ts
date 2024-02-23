@@ -5,7 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { APP_NAME } from '../constants';
-import { CLIENT_ROOT, DEV, ENV, PORT } from '../config';
+import { CLIENT_ROOT, DEV, ENV, PORT, PROD } from '../config';
 import logger from '../logger';
 import Router from '../routes';
 import ErrorMiddleware from '../middleware/ErrorMiddleware';
@@ -77,7 +77,7 @@ class AppServer {
 
         // Listen to HTTP traffic on given port
         this.server!.listen(PORT, async () => {
-            logger.debug(`${APP_NAME} app listening on port: ${PORT}`);
+            logger.debug(`${APP_NAME} app listening on ${PROD ? 'container' : 'local'} port: ${PORT}`);
         });
     }
 
