@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import './QuizPage.scss';
-import HamburgerMenu from '../components/menus/HamburgerMenu';
 import QuestionForm from '../components/forms/QuestionForm';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { REFRESH_STATUS_INTERVAL } from '../config';
@@ -85,7 +84,6 @@ const QuizPage: React.FC = () => {
 
   return (
     <>
-      <HamburgerMenu />
       {!hasStarted && isAdmin && (
         <StartQuizForm />
       )}

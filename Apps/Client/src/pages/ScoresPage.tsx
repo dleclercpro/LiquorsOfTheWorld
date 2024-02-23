@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import './ScoresPage.scss';
-import HamburgerMenu from '../components/menus/HamburgerMenu';
 import Scoreboard from '../components/Scoreboard';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { fetchScores } from '../actions/QuizActions';
@@ -38,10 +37,7 @@ const ScoresPage: React.FC = () => {
   }
   
   return (
-    <>
-      <HamburgerMenu />
-      <Scoreboard scores={scores} />
-    </>
+    <Scoreboard scores={scores} />
   );
 };
 

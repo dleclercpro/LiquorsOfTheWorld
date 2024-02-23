@@ -21,7 +21,6 @@ const HamburgerMenu: React.FC = () => {
   const [lang, setLang] = useState(language);
   const [isOpen, setIsOpen] = useState(false);
 
-  const quiz = useSelector((state) => state.quiz);
   const status = useSelector((state) => state.quiz.status.data);
   const user = useSelector((state) => state.user);
 
@@ -51,12 +50,9 @@ const HamburgerMenu: React.FC = () => {
     toggleLanguage();
   }
 
-  if (quiz.id === null || status === null || user === null) {
-    return null;
-  }
-
-  const username = user.username as string;
-  const hasStarted = status.hasStarted;
+  const username = user.username;
+  const isAuthenticated = username !== null;
+  const hasStarted = status?.hasStarted;
 
   const Icon = isOpen ? CloseIcon : OpenIcon;
 
@@ -65,14 +61,16 @@ const HamburgerMenu: React.FC = () => {
       <div className='hamburger-menu-icon-container' onClick={handleClickOnMenu}>
         <Icon className='hamburger-menu-icon' />
       </div>
-      <div className={`hamburger-menu-content ${isOpen ? 'visible' : 'hidden'}`}>
+      <nav className={`hamburger-menu-content ${isOpen ? 'visible' : 'hidden'}`}>
         <ul>
-          <li>
-            <p>
-              <strong className='hamburger-menu-username'>{username}</strong>
-            </p>
-          </li>
-          {location.pathname !== '/quiz' && (
+          {isAuthenticated && (
+            <li>
+              <p>
+                <strong className='hamburger-menu-username'>{username}</strong>
+              </p>
+            </li>
+          )}
+          {location.pathname !== '/quiz' && isAuthenticated && (
             <li>
               <Link to={`/quiz`}>
                 {t('COMMON.QUIZ')}
@@ -80,7 +78,7 @@ const HamburgerMenu: React.FC = () => {
               </Link>
             </li>
           )}
-          {location.pathname !== '/scores' && hasStarted && (
+          {location.pathname !== '/scores' && isAuthenticated && hasStarted && (
             <li>
               <Link to={`/scores`}>
                 {t('COMMON.SCOREBOARD')}
@@ -94,14 +92,16 @@ const HamburgerMenu: React.FC = () => {
               <LanguageIcon className='hamburger-menu-link-icon' />
             </button>
           </li>
-          <li>
-            <Link to='/' onClick={() => dispatch(logout())}>
-              {t('COMMON.LOG_OUT')}
-              <LogoutIcon className='hamburger-menu-link-icon' />
-            </Link>
-          </li>
+          {isAuthenticated && (
+            <li>
+              <Link to='/' onClick={() => dispatch(logout())}>
+                {t('COMMON.LOG_OUT')}
+                <LogoutIcon className='hamburger-menu-link-icon' />
+              </Link>
+            </li>
+          )}
         </ul>
-      </div>
+      </nav>
     </div>
   );
 }

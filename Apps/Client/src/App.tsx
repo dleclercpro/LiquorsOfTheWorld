@@ -11,6 +11,7 @@ import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
 import { useDispatch } from './hooks/redux';
 import { ping } from './actions/UserActions';
+import HamburgerMenu from './components/menus/HamburgerMenu';
 
 function App() {
   const dispatch = useDispatch();
@@ -23,6 +24,8 @@ function App() {
   return (
     <div className='app'>
       <div className='app-container'>
+        <HamburgerMenu />
+
         <Routes>
           {DEBUG && (
             <Route path='/test' element={(
