@@ -5,7 +5,7 @@ import logger from '../../logger';
 import { APP_DB } from '../..';
 import { errorResponse, successResponse } from '../../utils/calls';
 import { Auth } from '../../types';
-import { ADMIN, COOKIE_NAME } from '../../config';
+import { ADMINS, COOKIE_NAME } from '../../config';
 import { encodeCookie } from '../../utils/cookies';
 import { DatabaseUser } from '../../types/UserTypes';
 
@@ -38,7 +38,7 @@ const isPasswordValid = async (password: string, hashedPassword: string) => {
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
         const { quizId, username, password } = req.body as RequestBody;
-        const isAdmin = username === ADMIN;
+        const isAdmin = ADMINS.includes(username);
         logger.trace(`Attempt to join quiz '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
 
         // If user exists: check if password is valid
