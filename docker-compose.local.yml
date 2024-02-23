@@ -6,7 +6,7 @@ services:
     image: dleclercpro/liquors-quiz:latest
     container_name: liquors-quiz-app
     ports:
-      - 8080:8000
+      - 80:8000
     depends_on:
       - liquors-quiz-redis
     environment:
