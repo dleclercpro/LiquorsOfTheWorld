@@ -11,7 +11,9 @@
     "QUESTION": "Frage",
     "SCOREBOARD": "Punktestand",
     "SCORE": "Punktzahl",
-    "RANK": "Rang"
+    "RANK": "Rang",
+    "ENGLISH": "Englisch",
+    "GERMAN": "Deutsch"
   },
   "PAGES": {
     "HOME": {
@@ -19,6 +21,10 @@
       "WELCOME_HEAD": "Willkommen zum Quiz heute Abend!",
       "WELCOME_TEXT": "Bereite dich darauf vor, dein Meisterwissen über die Spirituosen der Welt in einem epischen Quiz zu zeigen, wo nur die schlauesten Schnapskenner den Sieg erringen werden...",
       "WELCOME_CTA": "Bist Du bereit?"
+    },
+    "SCOREBOARD": {
+      "STATUS_OVER": "Das Quiz ist vorbei. Alle {{questionsCount}} Fragen wurden beantwortet. Hier sind die Endergebnisse:",
+      "STATUS_NOT_OVER": "Bisher wurden {{questionsAnsweredCount}} von {{questionsCount}} Fragen beantwortet. Hier sind die aktuellen Ergebnisse:"
     }
   },
   "FORMS": {

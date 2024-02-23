@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './HamburgerMenu.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { Link, useLocation } from 'react-router-dom';
@@ -7,28 +7,48 @@ import OpenIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import QuizIcon from '@mui/icons-material/Quiz';
+import LanguageIcon from '@mui/icons-material/Translate';
 import ScoreboardIcon from '@mui/icons-material/Scoreboard';
 import { useTranslation } from 'react-i18next';
 
 const HamburgerMenu: React.FC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { t } = useTranslation();
 
+  const { t, i18n } = useTranslation();
+  const { language, changeLanguage } = i18n;
+
+  const [lang, setLang] = useState(language);
   const [isOpen, setIsOpen] = useState(false);
 
   const quiz = useSelector((state) => state.quiz);
   const status = useSelector((state) => state.quiz.status.data);
   const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    changeLanguage(lang);
+  }, [lang]);
   
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  }
+
+  const toggleLanguage = () => {
+    if (lang === 'en') {
+      setLang('de');
+    } else {
+      setLang('en');
+    }
   }
 
   const handleClickOnMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
     toggleMenu();
+  }
+
+  const handleLanguageSwitch = () => {
+    toggleLanguage();
   }
 
   if (quiz.id === null || status === null || user === null) {
@@ -69,6 +89,10 @@ const HamburgerMenu: React.FC = () => {
             </li>
           )}
           <li>
+            <button onClick={handleLanguageSwitch}>
+              {language === 'en' ? t('COMMON.GERMAN') : t('COMMON.ENGLISH')}
+              <LanguageIcon className='hamburger-menu-link-icon' />
+            </button>
           </li>
           <li>
             <Link to='/' onClick={() => dispatch(logout())}>

@@ -11,7 +11,9 @@
     "QUESTION": "Question",
     "SCOREBOARD": "Scoreboard",
     "SCORE": "Score",
-    "RANK": "Rank"
+    "RANK": "Rank",
+    "ENGLISH": "English",
+    "GERMAN": "German"
   },
   "PAGES": {
     "HOME": {
@@ -19,6 +21,10 @@
       "WELCOME_HEAD": "Welcome to tonight's quiz!",
       "WELCOME_TEXT": "Get ready to showcase your mastery of the world's spirits in an epic quiz, where only the savviest liquor aficionados will manage to claim victory...",
       "WELCOME_CTA": "Are you ready?"
+    },
+    "SCOREBOARD": {
+      "STATUS_OVER": "The quiz is over. All {{questionsCount}} questions have been answered. Here are the final results:",
+      "STATUS_NOT_OVER": "So far, {{questionsAnsweredCount}} out of {{questionsCount}} questions have been answered. Here are the current results:"
     }
   },
   "FORMS": {

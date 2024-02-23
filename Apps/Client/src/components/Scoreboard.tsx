@@ -36,7 +36,7 @@ const Scoreboard: React.FC<Props> = (props) => {
         </strong>
       </p>
       <p className='scoreboard-text'>
-        {isOver ? `The quiz is over. All ${questions.length} questions have been answered.` : `So far, ${questionIndex} out of ${questions.length} questions have been answered.`} {`Here are the ${isOver ? 'final' : 'current'} results:`}
+        {t(isOver ? 'PAGES.SCOREBOARD.STATUS_OVER' : 'PAGES.SCOREBOARD.STATUS_NOT_OVER', { questionsCount: questions.length, questionsAnsweredCount: questionIndex })}
       </p>
       <table className='scoreboard-table'>
         <thead>
