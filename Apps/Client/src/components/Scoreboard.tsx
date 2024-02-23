@@ -31,8 +31,9 @@ const Scoreboard: React.FC<Props> = (props) => {
     <div className='scoreboard'>
       <h2 className='scoreboard-title'>Scoreboard</h2>
       <p className='scoreboard-subtitle'>
-        <strong>
-          {`Quiz: ${quizId}`}
+        {t('COMMON.QUIZ')}:
+        <strong className='scoreboard-quiz-label'>
+          {quizId}
         </strong>
       </p>
       <p className='scoreboard-text'>

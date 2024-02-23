@@ -14,8 +14,30 @@
   }
 
   > .scoreboard-subtitle {
-    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
     @include font-subtitle;
+
+    > .scoreboard-quiz-label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px 15px;
+      margin-left: 5px;
+      border-radius: 4px;
+      color: $color-white;
+      background-color: $color-black;
+      font-size: $font-size-caption;
+  
+      @include tablet {
+        font-size: $font-size-tablet-caption;
+      }
+  
+      @include desktop {
+        font-size: $font-size-desktop-caption;
+      }
+    }
   }
 
   > .scoreboard-text {
