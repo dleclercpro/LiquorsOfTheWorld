@@ -100,7 +100,13 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async getUser(username: string) {
-        return this.get(`users:${username}`);
+        const user = await this.get(`users:${username}`);
+
+        if (!user) {
+            return;
+        }
+
+        return this.deserializeUser(user);
     }
 
     public async getAllUsers() {

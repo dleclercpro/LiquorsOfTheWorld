@@ -41,42 +41,55 @@ const LoginController: RequestHandler = async (req, res, next) => {
         const isAdmin = ADMINS.includes(username);
         logger.trace(`Attempt to join quiz '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
 
+        // Check if quiz exists
+        let quiz = await APP_DB.getQuiz(quizId);
+        const quizExists = Boolean(quiz);
+        const hasQuizStarted = quiz?.hasStarted;
+
+        // In case quiz doesn't exist
+        if (!quizExists) {
+            if (!isAdmin) { 
+                throw new Error('INVALID_QUIZ_ID');
+            }
+
+            // Only admins can create new quizzes
+            quiz = await APP_DB.createQuiz(quizId, username);
+        }
+
         // If user exists: check if password is valid
         const userExists = await APP_DB.doesUserExist(username);
         if (userExists) {
             logger.trace(`Validating password for '${username}'...`);
-            const user = JSON.parse(await APP_DB.getUser(username) as string) as DatabaseUser;
+            const user = await APP_DB.getUser(username) as DatabaseUser;
 
             if (!await isPasswordValid(password, user.hashedPassword)) {
                 throw new Error('INVALID_PASSWORD');
             }
         }
 
-        // In case quiz doesn't exist
-        let quiz = await APP_DB.getQuiz(quizId);
-        if (!quiz) {
-            if (!isAdmin) {
-                throw new Error('INVALID_QUIZ_ID');
-            }
-            quiz = await APP_DB.createQuiz(quizId, username);
+        // If neither the quiz, nor the user exist, and they are not an admin:
+        // no new user can be created later on
+        if (!quizExists && !userExists && !isAdmin) {
+            throw new Error('USER_DOES_NOT_EXIST');
         }
 
-        // Check if quiz has already started and user is playing
-        const isPlaying = await APP_DB.isUserPlaying(quizId, username);
-        if (!isPlaying) {
-            if (quiz.hasStarted) {
-                throw new Error('USER_NOT_PART_OF_QUIZ');
-            }
-            await APP_DB.addUserToQuiz(quizId, username);
-        }
-
-        // If user didn't exist, create them, now that everything worked out well
+        // Now that everything worked out well, create user if it does not
+        // already exist
         if (!userExists) {
             logger.trace(`Creating user '${username}'...`);
             await APP_DB.createUser(username, password);
         }
 
-        logger.trace(`User '${username}' joined quiz ${quizId}.`);
+        // Check if quiz has already started and user is playing
+        const isPlaying = await APP_DB.isUserPlaying(quizId, username);
+        if (!isPlaying) {
+            if (hasQuizStarted) {
+                throw new Error('QUIZ_ALREADY_STARTED');
+            }
+            await APP_DB.addUserToQuiz(quizId, username);
+            logger.trace(`User '${username}' joined quiz ${quizId}.`);
+        }
+
         const user = { username, isAdmin };
         const cookie = await encodeCookie({ user, quizId });
         
@@ -89,17 +102,9 @@ const LoginController: RequestHandler = async (req, res, next) => {
             logger.warn(err.message);
         }
 
-        // Do not tell client why user can't sign in: just say that
-        // their credentials are invalid
-        if (['USER_ALREADY_EXISTS', 'INVALID_PASSWORD'].includes(err.message)) {
+        if (['USER_ALREADY_EXISTS', 'USER_DOES_NOT_EXIST', 'QUIZ_ALREADY_STARTED', 'INVALID_QUIZ_ID', 'INVALID_PASSWORD'].includes(err.message)) {
             return res
                 .status(HttpStatusCode.UNAUTHORIZED)
-                .json(errorResponse(err.message));
-        }
-
-        if (['INVALID_QUIZ_ID', 'USER_NOT_PART_OF_QUIZ'].includes(err.message)) {
-            return res
-                .status(HttpStatusCode.BAD_REQUEST)
                 .json(errorResponse(err.message));
         }
 
