@@ -81,6 +81,7 @@
     "USER_CANNOT_START_QUESTION": "Dieser Benutzer hat nicht die Rechte, eine Frage zu starten.",
     "CANNOT_START_UNSUPERVISED_QUESTION": "Dieses Quiz wird nicht überwacht. Seine Fragen können nicht gestartet werden.",
     "PLAYERS_NOT_READY": "Die aktuelle Frage wurde nicht von allen Spielern beantwortet.",
+    "FETCH_ERROR": "Etwas ist schief beim Aufruf des JavaScript Fetch APIs.",
     "DATA_FETCH": "Etwas ist schiefgelaufen beim Versuch, Daten vom Server abzurufen.",
     "INTERNAL_SERVER_ERROR": "Ein interner Fehler ist auf dem Server aufgetreten.",
     "UNAUTHORIZED": "Sie sind nicht berechtigt, das zu tun."

@@ -76,7 +76,7 @@ const AnswerOverlay: React.FC = () => {
   return (
     <div id='answer-overlay' className={shouldShow ? '' : 'hidden'}>
       <Nav />
-      
+
       <div className='answer-overlay-box'>
           <div>
             <div className='answer-overlay-box-left'>
@@ -101,6 +101,12 @@ const AnswerOverlay: React.FC = () => {
                 <>
                   <p className='answer-overlay-text'>{text}</p>
                   <p className='answer-overlay-value'>{rightAnswer}</p>
+
+                  {
+                    // FIXME: admin user should be able to move to next question without having
+                    // everyone answered the question, so the game doesn't get stuck!
+                    //
+                  }
                   {!isOver && (!isSupervised || isAdmin) && (
                     <button className='answer-overlay-button' onClick={handleButtonClick}>
                       {buttonText}

@@ -81,6 +81,7 @@
     "USER_CANNOT_START_QUESTION": "This user does not have the rights to start a question.",
     "CANNOT_START_UNSUPERVISED_QUESTION": "This quiz is unsupervised. Its questions cannot be started.",
     "PLAYERS_NOT_READY": "The current question has not been answered by all players.",
+    "FETCH_ERROR": "Something went wrong with the JavaScript Fetch API.",
     "DATA_FETCH": "Something went wrong when trying to fetch data from the server.",
     "INTERNAL_SERVER_ERROR": "An internal error occurred on the server.",
     "UNAUTHORIZED": "You are not authorized to do that."
