@@ -1,6 +1,6 @@
 {
   "name": "liquors-quiz--client",
-  "version": "latest",
+  "version": "improvements-philipp",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.3",
