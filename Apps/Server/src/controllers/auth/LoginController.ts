@@ -52,6 +52,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
 
         // In case quiz doesn't exist
         if (!quizExists) {
+            logger.trace(`Quiz '${quizId}' doesn't exist.`);
             if (!isAdmin) { 
                 throw new InvalidQuizIdError();
             }
