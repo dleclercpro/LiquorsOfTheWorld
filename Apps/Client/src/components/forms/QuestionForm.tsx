@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { showAnswerOverlay } from '../../reducers/OverlaysReducer';
+import { openAnswerOverlay } from '../../reducers/OverlaysReducer';
 import './QuestionForm.scss';
 import { vote } from '../../actions/UserActions';
 import { useTranslation } from 'react-i18next';
@@ -47,7 +47,7 @@ const QuestionForm: React.FC<Question> = (props) => {
       return;
     }
 
-    dispatch(showAnswerOverlay());
+    dispatch(openAnswerOverlay());
   }
 
   useEffect(() => {

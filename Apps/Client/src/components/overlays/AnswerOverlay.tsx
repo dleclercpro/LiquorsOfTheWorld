@@ -1,7 +1,7 @@
 import './AnswerOverlay.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { mustWaitForOthers, selectAnswer, selectPlayers, selectRightAnswer } from '../../reducers/QuizReducer';
-import { hideAnswerOverlay } from '../../reducers/OverlaysReducer';
+import { closeAnswerOverlay } from '../../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../../reducers/AppReducer';
 import { useNavigate } from 'react-router-dom';
 import RightIcon from '@mui/icons-material/Check';
@@ -32,7 +32,7 @@ const AnswerOverlay: React.FC = () => {
   const answer = useSelector((state) => selectAnswer(state, questionIndex));
   const isRight = answer === rightAnswer;
 
-  const shouldShow = useSelector(({ overlays }) => overlays.answer.show);
+  const isOpen = useSelector(({ overlays }) => overlays.answer.open);
   const mustWait = useSelector(mustWaitForOthers);
 
   // Wait until quiz data has been fetched
@@ -41,13 +41,13 @@ const AnswerOverlay: React.FC = () => {
   }
 
   const handleSeeNextQuestionButtonClick = () => {
-    dispatch(hideAnswerOverlay());
+    dispatch(closeAnswerOverlay());
 
     dispatch(setQuestionIndex(questionIndex + 1));
   }
 
   const handleStartNextQuestionButtonClick = () => {
-    dispatch(hideAnswerOverlay());
+    dispatch(closeAnswerOverlay());
 
     dispatch(startQuestion({
       quizId: quiz.id as string,
@@ -56,7 +56,7 @@ const AnswerOverlay: React.FC = () => {
   }
 
   const handleSeeResultsButtonClick = () => {
-    dispatch(hideAnswerOverlay());
+    dispatch(closeAnswerOverlay());
 
     navigate('/scores');
   }
@@ -74,7 +74,7 @@ const AnswerOverlay: React.FC = () => {
   const handleButtonClick = isAdmin && isSupervised ? handleStartNextQuestionButtonClick : handleSeeNextQuestionButtonClick;
 
   return (
-    <div id='answer-overlay' className={shouldShow ? '' : 'hidden'}>
+    <div id='answer-overlay' className={isOpen ? '' : 'hidden'}>
       <Nav />
 
       <div className='answer-overlay-box'>

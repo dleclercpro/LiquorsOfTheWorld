@@ -8,7 +8,7 @@ const LoadingOverlay: React.FC = () => {
   const { t } = useTranslation();
 
   const { username } = useSelector(({ user }) => user);
-  const { show } = useSelector(({ overlays }) => overlays.loading);
+  const { open } = useSelector(({ overlays }) => overlays.loading);
 
   const players = useSelector(selectPlayers);
 
@@ -17,7 +17,7 @@ const LoadingOverlay: React.FC = () => {
   }
 
   return (
-    <div id='loading-overlay' className={`${!show ? 'hidden' : ''} opaque`}>
+    <div id='loading-overlay' className={`${!open ? 'hidden' : ''} opaque`}>
       <Nav />
 
       <div className='loading-overlay-box'>

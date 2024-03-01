@@ -3,19 +3,19 @@ import { logout } from '../actions/UserActions';
 
 interface OverlaysState {
   loading: {
-    show: boolean,
+    open: boolean,
   },
   answer: {
-    show: boolean,
+    open: boolean,
   },
 }
 
 const initialState: OverlaysState = {
   loading: {
-    show: false,
+    open: false,
   },
   answer: {
-    show: false,
+    open: false,
   },
 };
 
@@ -25,18 +25,18 @@ export const overlaysSlice = createSlice({
   name: 'overlays',
   initialState,
   reducers: {
-    hideAllOverlays: () => initialState,
-    showLoadingOverlay: (state) => {
-      state.loading.show = true;
+    closeAllOverlays: () => initialState,
+    openLoadingOverlay: (state) => {
+      state.loading.open = true;
     },
-    hideLoadingOverlay: (state) => {
-      state.loading.show = false;
+    closeLoadingOverlay: (state) => {
+      state.loading.open = false;
     },
-    showAnswerOverlay: (state) => {
-      state.answer.show = true;
+    openAnswerOverlay: (state) => {
+      state.answer.open = true;
     },
-    hideAnswerOverlay: (state) => {
-      state.answer.show = false;
+    closeAnswerOverlay: (state) => {
+      state.answer.open = false;
     },
   },
   extraReducers: (builder) => {
@@ -47,6 +47,6 @@ export const overlaysSlice = createSlice({
     },
 });
 
-export const { hideAllOverlays, showLoadingOverlay, hideLoadingOverlay, showAnswerOverlay, hideAnswerOverlay } = overlaysSlice.actions;
+export const { closeAllOverlays, openLoadingOverlay, closeLoadingOverlay, openAnswerOverlay, closeAnswerOverlay } = overlaysSlice.actions;
 
 export default overlaysSlice.reducer;

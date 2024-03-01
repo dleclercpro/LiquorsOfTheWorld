@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from '../hooks/redux';
 import { REFRESH_STATUS_INTERVAL } from '../config';
 import { fetchStatus, fetchData } from '../actions/QuizActions';
 import { selectVote } from '../reducers/QuizReducer';
-import { hideAnswerOverlay, hideLoadingOverlay, showAnswerOverlay, showLoadingOverlay } from '../reducers/OverlaysReducer';
+import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoadingOverlay } from '../reducers/OverlaysReducer';
 import StartQuizForm from '../components/forms/StartQuizForm';
 import { useTranslation } from 'react-i18next';
 import Nav from '../components/Nav';
@@ -61,21 +61,21 @@ const QuizPage: React.FC = () => {
   // Set choice if user already voted
   useEffect(() => {
     if (vote === null) {
-      dispatch(hideAnswerOverlay());
+      dispatch(closeAnswerOverlay());
       return;
     }
 
     setChoice(vote);
-    dispatch(showAnswerOverlay());
+    dispatch(openAnswerOverlay());
     
   }, [vote]);
 
   // Show loading screen in case quiz has not yet been started
   useEffect(() => {
     if (!isStarted && !isAdmin) {
-      dispatch(showLoadingOverlay());
+      dispatch(openLoadingOverlay());
     } else {
-      dispatch(hideLoadingOverlay());
+      dispatch(closeLoadingOverlay());
     }
 
   }, [isStarted, isAdmin]);

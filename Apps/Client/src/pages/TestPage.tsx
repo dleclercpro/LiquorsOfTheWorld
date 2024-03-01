@@ -2,12 +2,12 @@ import React from 'react';
 import './TestPage.scss';
 import Nav from '../components/Nav';
 import { useDispatch } from '../hooks/redux';
-import { hideAllOverlays } from '../reducers/OverlaysReducer';
+import { closeAllOverlays } from '../reducers/OverlaysReducer';
 
 const TestPage: React.FC = () => {
   const dispatch = useDispatch();
 
-  dispatch(hideAllOverlays());
+  dispatch(closeAllOverlays());
 
   return (
     <div className='test-page'>
