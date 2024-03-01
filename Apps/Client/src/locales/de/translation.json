@@ -2,6 +2,7 @@
   "COMMON": {
     "YES": "Ja",
     "NO": "Nein",
+    "PLEASE_WAIT": "Bitte warte",
     "WELCOME": "Willkommen",
     "EXIT": "Beenden",
     "TEST": "Test",
@@ -51,14 +52,11 @@
     }
   },
   "OVERLAYS": {
-    "LOADING": {
-      "PLEASE_WAIT": "Bitte warten..."
-    },
     "ANSWER": {
       "SEE_RESULTS": "Ergebnisse ansehen",
       "NEXT_QUESTION": "Nächste Frage",
       "START_NEXT_QUESTION": "Nächste Frage starten",
-      "WAIT_FOR_PLAYERS": "Bitte warte, bis alle Spieler die Frage beantwortet haben...",
+      "PLEASE_WAIT_FOR_NEXT_QUESTION": "Bitte warte, bis die nächste Frage freigeschaltet wird...",
       "CURRENT_STATUS": "Bis jetzt haben {{voteCount}} von {{playersCount}} Spielern abgestimmt.",
       "RIGHT_ANSWER_TEXT": "Tatsächlich war die richtige Antwort:",
       "WRONG_ANSWER_TEXT": "Eigentlich war die richtige Antwort:",

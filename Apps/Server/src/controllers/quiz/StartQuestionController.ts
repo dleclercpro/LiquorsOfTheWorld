@@ -24,7 +24,8 @@ const validateParams = async (params: ParamsDictionary) => {
     }
 
     const questionIndex = Number(_questionIndex);
-    if (questionIndex + 1 > N_QUESTIONS) {
+    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < N_QUESTIONS;
+    if (!isQuestionIndexValid) {
         throw new InvalidQuestionIndexError();
     }
 
@@ -50,7 +51,7 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
             throw new UserCannotStartUnsupervisedQuestionError();
         }
 
-        // Players can only vote on next question index
+        // Admins can only start next question index
         const currentQuestionIndex = await APP_DB.getQuestionIndex(quizId);
         if (questionIndex !== currentQuestionIndex + 1) {
             throw new InvalidQuestionIndexError();
@@ -63,9 +64,9 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
         logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);
 
         // If not: cannot increment quiz's current question index
-        if (playersWhoVoted.length !== players.length) {
-            throw new PlayersNotReadyError();
-        }
+        // if (playersWhoVoted.length !== players.length) {
+        //     throw new PlayersNotReadyError();
+        // }
 
         await APP_DB.incrementQuestionIndex(quizId);
         logger.info(`Question ${questionIndex + 1}/${N_QUESTIONS} of quiz '${quizId}' has been started by admin '${username}'.`);

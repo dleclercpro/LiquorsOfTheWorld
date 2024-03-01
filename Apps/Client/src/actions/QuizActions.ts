@@ -117,10 +117,17 @@ export const fetchData = createAsyncThunk(
       
       const { quiz } = getState() as RootState;
       const status = quiz.status.data as StatusData;
-      const questionIndex = status.questionIndex;
+      const votes = quiz.votes.data as number[];
 
-      // After first data fetch, pass on current server question index
-      // so it can be set in the app in the corresponding reducer
+      // The current question index in the app corresponds to the first question
+      // the user hasn't answered yet, unless the player has answered all the
+      // questions already
+      const questionIndex = status.questionIndex;
+      const playerQuestionIndex = votes.length;
+      
+      if (playerQuestionIndex < questionIndex) {
+        return playerQuestionIndex;
+      }
       return questionIndex;
 
     } catch (err: unknown) {

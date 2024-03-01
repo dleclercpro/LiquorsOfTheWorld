@@ -19,8 +19,8 @@ const QuizPage: React.FC = () => {
   const quiz = useSelector(({ quiz }) => quiz);
   const isAdmin = useSelector(({ user }) => user.isAdmin);
 
-  const questionIndex = useSelector((state) => state.app.questionIndex);
-  const { vote } = useSelector((state) => selectVote(state, questionIndex));
+  const playerQuestionIndex = useSelector((state) => state.app.questionIndex);
+  const { vote } = useSelector((state) => selectVote(state, playerQuestionIndex));
 
   const [choice, setChoice] = useState('');
 
@@ -30,6 +30,8 @@ const QuizPage: React.FC = () => {
   const questions = quiz.questions.data;
   const status = quiz.status.data;
   const isStarted = status?.isStarted;
+
+
 
   // Fetch data
   useEffect(() => {
@@ -87,7 +89,7 @@ const QuizPage: React.FC = () => {
     return null;
   }
 
-  const { theme, question, options } = questions[questionIndex];
+  const { theme, question, options } = questions[playerQuestionIndex];
 
   return (
     <div className='quiz-page'>
@@ -98,7 +100,7 @@ const QuizPage: React.FC = () => {
       )}
       {isStarted && (
         <QuestionForm
-          index={questionIndex}
+          index={playerQuestionIndex}
           theme={theme}
           question={question}
           options={options}

@@ -17,7 +17,12 @@
   align-items: center;
   opacity: 0.8;
   visibility: visible;
+  padding: 20px 10px;
 
+  @include desktop {
+      padding: 20px;
+  }
+  
   &.opaque {
     opacity: 1;
   }

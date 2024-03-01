@@ -2,6 +2,7 @@
   "COMMON": {
     "YES": "Yes",
     "NO": "No",
+    "PLEASE_WAIT": "Please wait",
     "WELCOME": "Welcome",
     "EXIT": "Exit",
     "TEST": "Test",
@@ -51,14 +52,11 @@
     }
   },
   "OVERLAYS": {
-    "LOADING": {
-      "PLEASE_WAIT": "Please wait..."
-    },
     "ANSWER": {
       "SEE_RESULTS": "See results",
       "NEXT_QUESTION": "Next question",
       "START_NEXT_QUESTION": "Start next question",
-      "WAIT_FOR_PLAYERS": "Please wait for all players to answer the question...",
+      "PLEASE_WAIT_FOR_NEXT_QUESTION": "Please wait for the next question to be unlocked...",
       "CURRENT_STATUS": "So far, {{voteCount}} out of {{playersCount}} players have voted.",
       "RIGHT_ANSWER_TEXT": "Indeed, the correct answer was:",
       "WRONG_ANSWER_TEXT": "Actually, the correct answer was:",

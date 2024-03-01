@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { FetchedData, ScoreData, StatusData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
-import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, startQuiz } from '../actions/QuizActions';
+import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, startQuiz, startQuestion } from '../actions/QuizActions';
 import { login, logout, ping, vote } from '../actions/UserActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
@@ -103,6 +103,11 @@ export const quizSlice = createSlice({
 
         state.status.data.isStarted = true;
       })
+      .addCase(startQuestion.fulfilled, (state, action) => {
+        if (state.status.data === null) return;
+
+        state.status.data.questionIndex = action.payload;
+      })
 
       // Auth actions
       .addCase(ping.fulfilled, (state, action) => {
@@ -130,19 +135,17 @@ export const selectPlayers = (state: RootState) => {
   return status.players;
 }
 
-export const selectRightAnswer = (state: RootState, questionIndex: number) => {
+export const selectQuestion = (state: RootState, questionIndex: number) => {
   const quiz = state.quiz;
 
   const questions = quiz.questions.data;
+  const votes = quiz.votes.data;
 
-  if (questions === null) {
+  if (questions === null || votes === null) {
     return null;
   }
   
-  const question = questions[questionIndex];
-  const answer = question.options[question.answer];
-
-  return answer;
+  return questions[questionIndex];
 }
 
 export const selectAnswer = (state: RootState, questionIndex: number) => {
@@ -158,6 +161,21 @@ export const selectAnswer = (state: RootState, questionIndex: number) => {
   const question = questions[questionIndex];
   const vote = votes[questionIndex];
   const answer = question.options[vote];
+
+  return answer;
+}
+
+export const selectCorrectAnswer = (state: RootState, questionIndex: number) => {
+  const quiz = state.quiz;
+
+  const questions = quiz.questions.data;
+
+  if (questions === null) {
+    return null;
+  }
+  
+  const question = questions[questionIndex];
+  const answer = question.options[question.answer];
 
   return answer;
 }
@@ -185,8 +203,7 @@ export const selectVote = (state: RootState, questionIndex: number) => {
   };
 }
 
-export const mustWaitForOthers = (state: RootState) => {
-  const app = state.app;
+export const haveAllPlayersAnswered = (state: RootState, questionIndex: number) => {
   const quiz = state.quiz;
   
   const status = quiz.status.data;
@@ -197,10 +214,9 @@ export const mustWaitForOthers = (state: RootState) => {
     return false;
   }
 
-  const { questionIndex } = app;
-  const { isOver, votesCount } = status;
+  const { votesCount } = status;
 
-  return !isOver && votesCount[questionIndex] < players.length;
+  return votesCount[questionIndex] === players.length;
 }
 
 export default quizSlice.reducer;

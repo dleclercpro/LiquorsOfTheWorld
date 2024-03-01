@@ -21,7 +21,8 @@ const validateParams = async (params: ParamsDictionary) => {
     }
 
     const questionIndex = Number(_questionIndex);
-    if (questionIndex + 1 > N_QUESTIONS) {
+    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < N_QUESTIONS;
+    if (!isQuestionIndexValid) {
         throw new InvalidQuestionIndexError();
     }
 
@@ -38,12 +39,6 @@ const VoteController: RequestHandler = async (req, res, next) => {
         const { username } = req.user!;
 
         const { quizId, questionIndex } = await validateParams(req.params);
-
-        // Players can only vote on current question index
-        const currentQuestionIndex = await APP_DB.getQuestionIndex(quizId);
-        if (questionIndex !== currentQuestionIndex) {
-            throw new InvalidQuestionIndexError();
-        }
 
         // Get votes from DB if they exist
         let votes = await APP_DB.getUserVotes(quizId, username);
@@ -76,7 +71,6 @@ const VoteController: RequestHandler = async (req, res, next) => {
         }
 
         return res.json(successResponse({
-            // FIXME: store quiz status indicators in a 'status' object
             status: await APP_DB.getQuizStatus(quizId),
             votes,
         }));

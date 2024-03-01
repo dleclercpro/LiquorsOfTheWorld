@@ -15,6 +15,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px 10px;
+
+  @include desktop {
+      padding: 20px;
+  }
 
   &.hidden {
     display: none;
@@ -29,6 +34,7 @@
 
     .answer-overlay-title {
       color: $color-white;
+
       @include font-subtitle;
     }
 
@@ -56,14 +62,19 @@
         }
 
         > .answer-overlay-icon {
-          width: 100px;
-          height: 100px;
+          width: 60px;
+          height: 60px;
           margin-bottom: 5px;
           color: $color-white;
 
+          @include tablet {
+            width: 80px;
+            height: 80px;
+          }
+
           @include desktop {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
           }
 
           &.wait {

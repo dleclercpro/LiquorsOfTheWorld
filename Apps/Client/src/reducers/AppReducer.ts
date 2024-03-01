@@ -29,7 +29,6 @@ export const appSlice = createSlice({
         state.questionIndex = action.payload as number;
       })
       .addCase(startQuestion.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.questionIndex = action.payload as number;
       });
   },
