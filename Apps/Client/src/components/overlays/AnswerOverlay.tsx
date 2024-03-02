@@ -1,6 +1,6 @@
 import './AnswerOverlay.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { haveAllPlayersAnswered, selectAnswer, selectPlayers, selectCorrectAnswer } from '../../reducers/QuizReducer';
+import { selectAnswer, selectPlayers, selectCorrectAnswer } from '../../reducers/QuizReducer';
 import { closeAnswerOverlay } from '../../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../../reducers/AppReducer';
 import { useNavigate } from 'react-router-dom';
@@ -31,7 +31,6 @@ const AnswerOverlay: React.FC = () => {
   const answer = useSelector((state) => selectAnswer(state, playerQuestionIndex));
   const correctAnswer = useSelector((state) => selectCorrectAnswer(state, playerQuestionIndex));
   const isAnswerCorrect = answer === correctAnswer;
-  const hasEveryoneAnswered = useSelector((state) => haveAllPlayersAnswered(state, playerQuestionIndex));
 
   // Wait until quiz data has been fetched
   if (quiz.id === null || questions === null || status === null || votes === null || players === null) {

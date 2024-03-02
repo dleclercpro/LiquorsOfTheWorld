@@ -19,7 +19,7 @@ i18n
   .init({
     debug: DEBUG,
     resources,
-    lng: Language.DE,         // Initial language
+    lng: Language.EN,         // Initial language
     fallbackLng: Language.EN, // Default fallback language
     interpolation: {
       escapeValue: false,

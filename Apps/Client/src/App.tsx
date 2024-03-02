@@ -22,34 +22,32 @@ function App() {
 
   return (
     <div className='app'>
-      <div className='app-container'>
-        <Routes>
-          {DEBUG && (
-            <Route path='/test' element={(
-              <TestPage />
-            )} />
-          )}
-          <Route path='/quiz' element={(
-            <AuthRoute>
-              <QuizPage />
-            </AuthRoute>
+      <Routes>
+        {DEBUG && (
+          <Route path='/test' element={(
+            <TestPage />
           )} />
-          <Route path='/scores' element={(
-            <AuthRoute>
-              <ScoresPage />
-            </AuthRoute>
-          )} />
-          <Route path='/:quizId' element={(
-            <HomePage />
-          )} />
-          <Route path='/' element={(
-            <HomePage />
-          )} />
-          <Route path='*' element={(
-            <Navigate to='/' />
-          )} />
-        </Routes>
-      </div>
+        )}
+        <Route path='/quiz' element={(
+          <AuthRoute>
+            <QuizPage />
+          </AuthRoute>
+        )} />
+        <Route path='/scores' element={(
+          <AuthRoute>
+            <ScoresPage />
+          </AuthRoute>
+        )} />
+        <Route path='/:quizId' element={(
+          <HomePage />
+        )} />
+        <Route path='/' element={(
+          <HomePage />
+        )} />
+        <Route path='*' element={(
+          <Navigate to='/' />
+        )} />
+      </Routes>
       
       <LoadingOverlay />
       <AnswerOverlay />

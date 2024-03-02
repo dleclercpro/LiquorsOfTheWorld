@@ -62,10 +62,16 @@ const Nav: React.FC = () => {
     }
   }
 
-  const handleClickOnButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const open = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     
-    setIsOpen(!isOpen);
+    setIsOpen(true);
+  }
+
+  const close = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    
+    setIsOpen(false);
   }
 
   const handleLanguageSwitch = () => {
@@ -76,80 +82,82 @@ const Nav: React.FC = () => {
   const isAuthenticated = username !== null;
   const isStarted = status?.isStarted;
 
-  const Icon = isOpen ? CloseIcon : OpenIcon;
-
   return (
     <nav className='nav' ref={menuRef}>
-      <button className='nav-button' onClick={handleClickOnButton}>
-        <Icon className='nav-button-icon' />
+      <button className='nav-button' onClick={open}>
+        <OpenIcon className='nav-button-icon' />
       </button>
+
       <section className={`nav-content ${isOpen ? 'visible' : 'hidden'}`}>
         <ul>
-          <li>
-            <p>
+          <li className='nav-top-item'>
+            <button className='nav-button' onClick={close}>
+              <CloseIcon className='nav-icon' />
+            </button>
+            <p className='nav-text'>
               <strong className='nav-username'>
-                {isAuthenticated ? username : `${t('COMMON.WELCOME')}!`}
+                {isAuthenticated ? `${t('COMMON.WELCOME')}, ${username}!` : `${t('COMMON.WELCOME')}!`}
               </strong>
             </p>
           </li>
 
-          <li>
-            <button onClick={handleLanguageSwitch}>
+          <li className='nav-item'>
+            <button className='nav-button' onClick={handleLanguageSwitch}>
               {language === Language.EN ? (
                 <>
+                  <GermanyIcon className='nav-icon flag' />
                   Deutsch
-                  <GermanyIcon className='nav-link-icon flag' />
                 </>
                 ) : (
                 <>
+                  <UnitedKingdoIcon className='nav-icon flag' />
                   English
-                  <UnitedKingdoIcon className='nav-link-icon flag' />
                 </>
               )}
             </button>
           </li>
 
           {location.pathname !== '/quiz' && isAuthenticated && (
-            <li>
-              <Link to={`/quiz`}>
+            <li className='nav-item'>
+              <Link className='nav-link' to={`/quiz`}>
+                <QuizIcon className='nav-icon' />
                 {t('COMMON.QUIZ')}
-                <QuizIcon className='nav-link-icon' />
               </Link>
             </li>
           )}
 
           {location.pathname !== '/scores' && isAuthenticated && isStarted && (
-            <li>
-              <Link to={`/scores`}>
+            <li className='nav-item'>
+              <Link className='nav-link' to={`/scores`}>
+                <ScoreboardIcon className='nav-icon' />
                 {t('COMMON.SCOREBOARD')}
-                <ScoreboardIcon className='nav-link-icon' />
               </Link>
             </li>
           )}
 
           {DEBUG && location.pathname !== '/test' && (
-            <li>
-              <Link to={`/test`}>
+            <li className='nav-item'>
+              <Link className='nav-link' to={`/test`}>
+                <SettingsIcon className='nav-icon' />
                 {t('COMMON.TEST')}
-                <SettingsIcon className='nav-link-icon' />
               </Link>
             </li>
           )}
 
           {DEBUG && location.pathname === '/test' && (
-            <li>
-              <Link to={`/`}>
+            <li className='nav-item'>
+              <Link className='nav-link' to={`/`}>
+                <HomeIcon className='nav-icon' />
                 {t('COMMON.START_PAGE')}
-                <HomeIcon className='nav-link-icon' />
               </Link>
             </li>
           )}
 
           {isAuthenticated && (
-            <li>
-              <Link to='/' onClick={() => dispatch(logout())}>
+            <li className='nav-item'>
+              <Link className='nav-link' to='/' onClick={() => dispatch(logout())}>
+                <LogoutIcon className='nav-icon' />
                 {t('COMMON.LOG_OUT')}
-                <LogoutIcon className='nav-link-icon' />
               </Link>
             </li>
           )}

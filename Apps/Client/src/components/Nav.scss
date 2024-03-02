@@ -1,5 +1,7 @@
 @import '../styles/common';
 
+$nav-min-width: 380px;
+
 .nav {
   position: relative;
   display: flex;
@@ -7,34 +9,51 @@
   align-items: center;
   width: 100%;
   color: $color-white;
-  z-index: 50;
+  z-index: 500;
   margin-bottom: 10px;
 
   @include desktop {
     position: absolute;
     top: 0;
-    right: 0;
+    left: 0;
     width: auto;
     margin-bottom: 0;
   }
 
   > .nav-button {
-    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 5px;
+    border-radius: 50%;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+    width: 65px;
+    height: 65px;
+    background-color: $color-black;
+    cursor: pointer;
+    user-select: none;
+
+    @include desktop {
+      top: 0;
+      left: 0;
+      width: 75px;
+      height: 75px;
+    }
     
     > .nav-button-icon {
-      width: 50px;
-      height: 50px;
-      cursor: pointer;
-      user-select: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 50%;
+      height: 50%;
+      transform: translate(-50%, -50%);
       color: $color-white;
     }
   }
 
+
+  
   > .nav-content {
     position: absolute;
-    top: 100%;
-    right: 50%;
-    transform: translate(50%, 10px);
     width: 100%;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
     border-radius: 6px;
@@ -45,10 +64,7 @@
     transition: opacity 0.5s ease, visibility 0.5s;
 
     @include desktop {
-      top: auto;
-      bottom: 0;
-      right: 0;
-      transform: translate(0, calc(100% + 20px));
+      transform: translate(50%, 0);
       width: auto;
     }
 
@@ -70,44 +86,79 @@
         &:not(:last-child) {
           border-bottom: 1px solid $color-grey;
         }
+        
+        &.nav-top-item {
+          position: relative;
 
-        > p, a, button {
-          display: flex;
-          justify-content: flex-end;
-          align-items: center;
-          width: 100%;
-          min-width: 320px;
-          padding: 18px 16px;
+          > .nav-button {
+            position: absolute;
+            top: calc(50% + 5px);
+            left: 15px;
+            transform: translate(0, -50%);
+            cursor: pointer;
+            user-select: none;
+            background-color: transparent;
 
-          @include desktop {
-            width: auto;
-            padding: 12px 16px;
+            > .nav-icon {
+              color: $color-white;
+              width: 30px;
+              height: 30px;
+            }
+          }
+
+          > .nav-text {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            width: 100%;
+            min-width: $nav-min-width;
+            padding: 18px 16px;
+            background-color: $color-black;
+            color: $color-white;
+            font-family: $special-font-stack;
+            @include font-subtitle;
+  
+            @include desktop {
+              padding: 12px 16px;
+            }
           }
         }
 
-        > p {
-          background-color: $color-black;
-          color: $color-white;
-          font-family: $special-font-stack;
-          @include font-subtitle;
-        }
+        &.nav-item {
 
-        > button, a {
-          color: black;
-          text-decoration: none;
-          font-weight: bold;
-          background-color: #f9f9f9;
-          cursor: pointer;
-
-          &:hover {
-            background-color: darken(#f9f9f9, 10%);
+          > .nav-text,
+          > .nav-link,
+          > .nav-button {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            min-width: $nav-min-width;
+            padding: 18px 16px;
+  
+            @include desktop {
+              padding: 12px 16px;
+            }
           }
-
-          > .nav-link-icon {
-            width: 32px;
-            height: 32px;
-            color: $color-black;
-            margin-left: 8px;
+  
+          > .nav-button,
+          > .nav-link {
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+            background-color: #f9f9f9;
+            cursor: pointer;
+  
+            &:hover {
+              background-color: darken(#f9f9f9, 10%);
+            }
+  
+            > .nav-icon {
+              width: 32px;
+              height: 32px;
+              color: $color-black;
+              margin-right: 8px;
+            }
           }
         }
       }
