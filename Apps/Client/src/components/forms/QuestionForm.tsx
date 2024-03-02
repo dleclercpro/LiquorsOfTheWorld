@@ -4,19 +4,32 @@ import { openAnswerOverlay } from '../../reducers/OverlaysReducer';
 import './QuestionForm.scss';
 import { vote } from '../../actions/UserActions';
 import { useTranslation } from 'react-i18next';
+import { SERVER_ROOT } from '../../config';
 
-type Question = {
+type Image = {
+  url: string,
+  desc: string,
+};
+
+type Video = {
+  url: string,
+  desc: string,
+};
+
+type Props = {
   index: number,
-  question: string,
   theme: string,
+  question: string,
+  image?: Image,
+  video?: Video,
   options: string[],
   disabled: boolean,
   choice: string,
   setChoice: (choice: string) => void,
 }
 
-const QuestionForm: React.FC<Question> = (props) => {
-  const { index, question, theme, options, disabled, choice, setChoice } = props;
+const QuestionForm: React.FC<Props> = (props) => {
+  const { index, theme, question, image, video, options, disabled, choice, setChoice } = props;
 
   const { t } = useTranslation();
   const quiz = useSelector(({ quiz }) => quiz);
@@ -61,12 +74,25 @@ const QuestionForm: React.FC<Question> = (props) => {
 
   return (
     <form className='question-form' onSubmit={handleSubmit}>
-      <div className='question-form-theme-container'>
+      <div className='question-form-meta'>
         <p className='question-form-index'>{t('COMMON.QUESTION')}: {index + 1}/{questions.length}</p>
         <p className='question-form-theme'>{theme}</p>
       </div>
 
       <h2 className='question-form-title'>{question}</h2>
+
+      {image && (
+        <img className='question-form-image' src={`${SERVER_ROOT}${image.url}`} alt={image.desc} />
+      )}
+
+      {video && (
+        <>
+          <video className='question-form-image' autoPlay muted loop>
+            <source src={`${SERVER_ROOT}${video.url}`} type='video/mp4' />
+            Your browser does not support the video tag.
+          </video>
+        </>
+      )}
 
       {options.map((option, i) => (
         <div className='checkbox' key={i}>

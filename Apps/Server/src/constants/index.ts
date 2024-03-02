@@ -1,7 +1,7 @@
 import { name, version, label } from '../../package.json';
 import { Environment } from '../types';
-import questionsEN from '../../data/en/questions.json';
-import questionsDE from '../../data/de/questions.json';
+import questionsEN from '../../data/en/quiz.json';
+import questionsDE from '../../data/de/quiz.json';
 
 export const ENVIRONMENTS = Object.values(Environment);
 

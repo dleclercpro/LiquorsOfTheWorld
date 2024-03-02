@@ -1,5 +1,21 @@
 [
   {
+    "theme": "Video",
+    "question": "What is going on in this video?",
+    "options": ["A business meeting", "A wine tasting", "A software demo"],
+    "type": "video",
+    "url": "/static/video/Test.mp4",
+    "answer": 0
+  },
+  {
+    "theme": "Drinks",
+    "question": "With which kind of alcohol is this drink made?",
+    "options": ["Vodka", "Tequila", "Gin"],
+    "type": "image",
+    "url": "/static/img/GinTonic.webp",
+    "answer": 2
+  },
+  {
     "theme": "Ingredients",
     "question": "What is the main ingredient in traditional Russian vodka?",
     "options": ["Potatoes", "Grapes", "Wheat"],

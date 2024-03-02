@@ -9,7 +9,7 @@ import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoading
 import StartQuizForm from '../components/forms/StartQuizForm';
 import { useTranslation } from 'react-i18next';
 import Nav from '../components/Nav';
-import { Language } from '../constants';
+import { Language, QuestionType } from '../constants';
 import { logout } from '../actions/UserActions';
 
 const QuizPage: React.FC = () => {
@@ -89,7 +89,7 @@ const QuizPage: React.FC = () => {
     return null;
   }
 
-  const { theme, question, options } = questions[playerQuestionIndex];
+  const { theme, question, type, url, options } = questions[playerQuestionIndex];
 
   return (
     <div className='quiz-page'>
@@ -103,6 +103,8 @@ const QuizPage: React.FC = () => {
           index={playerQuestionIndex}
           theme={theme}
           question={question}
+          image={type === QuestionType.Image ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
+          video={type === QuestionType.Video ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
           options={options}
           disabled={choice === '' || vote !== null}
           choice={choice}

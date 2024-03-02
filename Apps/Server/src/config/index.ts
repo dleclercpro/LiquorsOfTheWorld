@@ -19,6 +19,7 @@ export const HOST = process.env.HOST!;
 export const PORT = parseNumberText(process.env.PORT);
 export const ROOT = `http://${HOST}:${PORT}`;
 export const ADMINS = process.env.ADMINS!.split(',');
+export const PUBLIC_DIR = path.join(__dirname, `../..`, `public`);
 
 // Client
 export const CLIENT_DIR = path.join(__dirname, `../..`, `client`);

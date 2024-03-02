@@ -1,9 +1,12 @@
+import { QuestionType } from '../constants';
+
 export type QuestionJSON = {
+  type: QuestionType,
   theme: string,
-  answer: number,
   question: string,
   options: string[],
-  type: 'text' | 'image' | 'video',
+  answer: number,
+  url?: string,
 };
 
 export type QuizJSON = QuestionJSON[];

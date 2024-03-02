@@ -1,5 +1,21 @@
 [
   {
+    "theme": "Video",
+    "question": "Was ist in diesem Video los?",
+    "options": ["Ein Business-Meeting", "Eine Weinprobe", "Eine Software-Anleitung"],
+    "type": "video",
+    "url": "/static/video/Test.mp4",
+    "answer": 0
+  },
+  {
+    "theme": "Image",
+    "question": "Aus welchem Alkohol besteht dieses Getränk?",
+    "options": ["Vodka", "Tequila", "Gin"],
+    "type": "image",
+    "url": "/static/img/GinTonic.webp",
+    "answer": 2
+  },
+  {
     "theme": "Zutaten",
     "question": "Was ist die Hauptzutat im traditionellen russischen Wodka?",
     "options": ["Kartoffeln", "Trauben", "Weizen"],

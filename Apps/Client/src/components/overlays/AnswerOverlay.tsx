@@ -21,6 +21,8 @@ const AnswerOverlay: React.FC = () => {
   const user = useSelector(({ user }) => user);
 
   const playerQuestionIndex = app.questionIndex;
+  const nextPlayerQuestionIndex = playerQuestionIndex + 1;
+
   const questions = quiz.questions.data;
   const status = quiz.status.data;
   const votes = quiz.votes.data;
@@ -101,12 +103,12 @@ const AnswerOverlay: React.FC = () => {
 
                   {!isOver && (isAdmin && isSupervised) && (
                     <button className='answer-overlay-button' onClick={startAndGoToNextQuestion}>
-                      {t('OVERLAYS.ANSWER.START_NEXT_QUESTION')} {`(${playerQuestionIndex + 1}/${questions.length})`}
+                      {t('OVERLAYS.ANSWER.START_NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${questions.length})`}
                     </button>
                   )}
                   {!isOver && !(isAdmin && isSupervised) && !mustWait && (
                     <button className='answer-overlay-button' onClick={goToNextQuestion}>
-                      {t('OVERLAYS.ANSWER.NEXT_QUESTION')} {`(${playerQuestionIndex + 1}/${questions.length})`}
+                      {t('OVERLAYS.ANSWER.NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${questions.length})`}
                     </button>
                   )}
                   {isOver && (
