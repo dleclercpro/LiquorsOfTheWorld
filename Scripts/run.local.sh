@@ -8,7 +8,7 @@ composefile="docker-compose.local.yml"
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Fetch newer images
-docker compose -f $composefile pull
+docker-compose -f $composefile pull
 
 # Start app instance
-docker compose -f $composefile up --force-recreate
+docker-compose -f $composefile up --force-recreate
