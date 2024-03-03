@@ -43,7 +43,8 @@ const isPasswordValid = async (password: string, hashedPassword: string) => {
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
         const { quizId, username, password } = req.body as RequestBody;
-        const isAdmin = ADMINS.map(admin => admin.username).includes(username);
+        const admin = ADMINS.find(admin => admin.username === username);
+        const isAdmin = Boolean(admin);
         logger.trace(`Attempt to join quiz '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
 
         // Check if quiz exists
@@ -83,8 +84,16 @@ const LoginController: RequestHandler = async (req, res, next) => {
         // Now that everything worked out well, create user if it does not
         // already exist
         if (!userExists) {
-            logger.trace(`Creating user '${username}'...`);
-            await APP_DB.createUser(username, password);
+            if (isAdmin) {
+                logger.trace(`Creating admin '${username}'...`);
+                if (password !== admin!.password) {
+                    throw new InvalidPasswordError();
+                }
+                await APP_DB.createUser(username, password);
+            } else {
+                logger.trace(`Creating user '${username}'...`);
+                await APP_DB.createUser(username, password);
+            }
         }
 
         // Check if quiz has already started and user is playing
