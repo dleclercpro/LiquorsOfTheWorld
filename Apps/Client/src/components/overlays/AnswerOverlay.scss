@@ -53,12 +53,15 @@
         align-items: center;
 
         &:not(:last-child) {
-          margin-bottom: 60px;
+          margin-bottom: 75px;
         }
 
         @include desktop {
           width: calc(50% - 10px);
-          margin-bottom: 0;
+
+          &:not(:last-child) {
+            margin-bottom: 0;
+          }
         }
 
         > .answer-overlay-icon {
