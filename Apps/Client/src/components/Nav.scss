@@ -59,7 +59,7 @@ $nav-min-width: 380px;
     z-index: 1;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.5s ease, visibility 0.5s;
+    // transition: opacity 0.5s ease, visibility 0.5s;
 
     @include desktop {
       transform: translate(50%, 0);

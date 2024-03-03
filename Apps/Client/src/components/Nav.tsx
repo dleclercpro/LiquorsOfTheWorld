@@ -33,6 +33,7 @@ const Nav: React.FC = () => {
   // Change language in i18n when it is changed in the component's state
   useEffect(() => {
     changeLanguage(lang);
+  
   }, [lang]);
 
   // Close menu when clicking outside
@@ -80,7 +81,7 @@ const Nav: React.FC = () => {
 
   const handleLogout = () => {
     setIsOpen(false);
-    
+
     dispatch(logout());
   }
 
