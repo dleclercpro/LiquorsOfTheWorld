@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from './hooks/redux';
 import { ping } from './actions/UserActions';
 import { getRandom } from './utils/array';
+import Nav from './components/Nav';
 
 function App() {
   const [backgroundUrl, setBackgroundUrl] = useState('');
@@ -28,6 +29,8 @@ function App() {
   return (
     <div className='app' style={{ backgroundImage: backgroundUrl }}>
       <div className='app-container'>
+        <Nav />
+
         <Routes>
           {DEBUG && (
             <Route path='/test' element={(

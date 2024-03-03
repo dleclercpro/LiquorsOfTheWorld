@@ -8,7 +8,6 @@ import { selectVote } from '../reducers/QuizReducer';
 import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoadingOverlay } from '../reducers/OverlaysReducer';
 import StartQuizForm from '../components/forms/StartQuizForm';
 import { useTranslation } from 'react-i18next';
-import Nav from '../components/Nav';
 import { Language, QuestionType } from '../constants';
 import { logout } from '../actions/UserActions';
 
@@ -102,8 +101,6 @@ const QuizPage: React.FC = () => {
 
   return (
     <div className='quiz-page'>
-      <Nav />
-
       {!isStarted && isAdmin && (
         <StartQuizForm />
       )}
