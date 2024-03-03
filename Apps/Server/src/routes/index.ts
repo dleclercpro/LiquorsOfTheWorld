@@ -3,10 +3,14 @@ import path from 'path';
 import { API_VERSION, CLIENT_DIR, PROD, PUBLIC_DIR } from '../config';
 import RouterAPI from './RouterAPI';
 import logger from '../logger';
+import RequestMiddleware from '../middleware/RequestMiddleware';
 
 
 
 const router = Router();
+
+// Log every request
+router.use(RequestMiddleware);
 
 
 

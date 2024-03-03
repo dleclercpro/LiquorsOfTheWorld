@@ -9,7 +9,6 @@ import GetQuestionsController from '../controllers/quiz/GetQuestionsController';
 import VoteController from '../controllers/quiz/VoteController';
 import AuthMiddleware from '../middleware/AuthMiddleware';
 import GetScoresController from '../controllers/quiz/GetScoresController';
-import RequestMiddleware from '../middleware/RequestMiddleware';
 import GetStatusController from '../controllers/quiz/GetStatusController';
 import GetVotesController from '../controllers/quiz/GetVotesController';
 import StartQuizController from '../controllers/quiz/StartQuizController';
@@ -20,11 +19,6 @@ import DeleteDatabaseController from '../controllers/DeleteDatabaseController';
 
 
 const router = Router();
-
-
-
-// Log every request
-router.use(RequestMiddleware);
 
 
 
