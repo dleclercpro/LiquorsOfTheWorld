@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from '../../hooks/redux';
 import './LoadingOverlay.scss';
 import { selectPlayers } from '../../reducers/QuizReducer';
@@ -22,7 +22,10 @@ const LoadingOverlay: React.FC = () => {
           {t('COMMON.PLEASE_WAIT')}...
         </h2>
         <p className='loading-overlay-text'>
-          Hello, <strong>{username}</strong>! The quiz will begin shortly. Here is the list of participants:
+          <Trans i18nKey='OVERLAYS.LOADING.HELLO' values={{ username }}>
+            ... <strong>...</strong> ...
+          </Trans>
+          
         </p>
         <ul className='loading-overlay-players-box'>
           {players.map((player, i) => (
