@@ -3,25 +3,30 @@ import './App.scss';
 import HomePage from './pages/HomePage';
 import QuizPage from './pages/QuizPage';
 import ScoresPage from './pages/ScoresPage';
-import { DEBUG } from './config';
+import { BACKGROUND_URLS, DEBUG } from './config';
 import TestPage from './pages/TestPage';
 import AuthRoute from './routes/AuthRoute';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from './hooks/redux';
 import { ping } from './actions/UserActions';
+import { getRandom } from './utils/array';
 
 function App() {
+  const [backgroundUrl, setBackgroundUrl] = useState('');
+
   const dispatch = useDispatch();
   
   // Check if user is logged in already
   useEffect(() => {
+    setBackgroundUrl(`url(${getRandom(BACKGROUND_URLS)})`);
+
     dispatch(ping());
   }, []);
 
   return (
-    <div className='app'>
+    <div className='app' style={{ backgroundImage: backgroundUrl }}>
       <div className='app-container'>
         <Routes>
           {DEBUG && (

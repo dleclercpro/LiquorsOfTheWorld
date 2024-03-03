@@ -1,3 +1,7 @@
+export const getRandom = <V> (arr: V[]) => {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 export const toSortedArr = (obj: Record<string, number>, order: 'ASC' | 'DESC' = 'ASC') => {
   const arr = Object.entries(obj);
   let sortedArr = arr;

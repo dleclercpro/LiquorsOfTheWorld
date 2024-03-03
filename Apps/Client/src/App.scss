@@ -4,7 +4,9 @@
   width: 100%;
   height: 100%;
   padding: 20px 10px;
-  background: url('../public/img/background-7.webp') no-repeat center center;
+  background-color: $color-black;
+  background-repeat: no-repeat;
+  background-position: center center;
   background-size: cover;
   overflow-y: auto;
 
