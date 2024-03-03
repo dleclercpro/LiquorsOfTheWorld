@@ -74,7 +74,7 @@
     &.ratio-16x9 {
       padding-top: 56.25%;
     }
-
+    
     > .question-form-image,
     > .question-form-video {
       position: absolute;
@@ -82,7 +82,6 @@
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
     }
   }
 

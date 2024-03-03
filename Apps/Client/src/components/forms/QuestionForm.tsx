@@ -6,6 +6,8 @@ import { vote } from '../../actions/UserActions';
 import { useTranslation } from 'react-i18next';
 import { SERVER_ROOT } from '../../config';
 import { AspectRatio } from '../../constants';
+import PlaceholderImage from '../PlaceholderImage';
+import PlaceholderVideo from '../PlaceholderVideo';
 
 type Image = {
   url: string,
@@ -89,13 +91,18 @@ const QuestionForm: React.FC<Props> = (props) => {
       {hasMedia && (
         <div className={`question-form-media-container ${ratioClass}`}>
           {image && (
-            <img className='question-form-image' src={`${SERVER_ROOT}${image.url}`} alt={image.desc} />
+            <PlaceholderImage
+              className='question-form-image'
+              src={`${SERVER_ROOT}${image.url}`}
+              alt={image.desc}
+            />
           )}
           {video && (
-            <video className='question-form-video' autoPlay muted loop>
-              <source src={`${SERVER_ROOT}${video.url}`} type='video/mp4' />
-              {t('ERRORS.NO_VIDEO_TAGS')}
-            </video>
+            <PlaceholderVideo
+              className='question-form-video'
+              src={`${SERVER_ROOT}${video.url}`}
+              alt={video.desc}
+            />
           )}
         </div>
       )}

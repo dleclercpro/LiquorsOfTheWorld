@@ -1,0 +1,32 @@
+@import '../styles/common';
+
+.placeholder-video-container {
+  
+  > .placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: $color-white;
+
+    > .placeholder-icon {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  > .video {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    &.is-loaded {
+      display: block;
+    }
+  }
+}
