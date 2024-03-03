@@ -82,6 +82,7 @@
     "FETCH_ERROR": "Etwas ist schief beim Aufruf des JavaScript Fetch APIs.",
     "DATA_FETCH": "Etwas ist schiefgelaufen beim Versuch, Daten vom Server abzurufen.",
     "INTERNAL_SERVER_ERROR": "Ein interner Fehler ist auf dem Server aufgetreten.",
-    "UNAUTHORIZED": "Sie sind nicht berechtigt, das zu tun."
+    "UNAUTHORIZED": "Sie sind nicht berechtigt, das zu tun.",
+    "NO_VIDEO_TAGS": "Dein Browser unterstützt das Video-Tag nicht."
   }
 }

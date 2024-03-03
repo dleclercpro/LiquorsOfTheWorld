@@ -32,11 +32,15 @@ function App() {
         <Nav />
 
         <Routes>
+          {/* Debugging routes */}
           {DEBUG && (
-            <Route path='/test' element={(
-              <TestPage />
-            )} />
+            <>
+              <Route path='/test' element={(
+                <TestPage />
+              )} />
+            </>
           )}
+
           <Route path='/quiz' element={(
             <AuthRoute>
               <QuizPage />
@@ -53,6 +57,8 @@ function App() {
           <Route path='/' element={(
             <HomePage />
           )} />
+
+          {/* Default route */}
           <Route path='*' element={(
             <Navigate to='/' />
           )} />

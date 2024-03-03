@@ -8,7 +8,7 @@ import { selectVote } from '../reducers/QuizReducer';
 import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoadingOverlay } from '../reducers/OverlaysReducer';
 import StartQuizForm from '../components/forms/StartQuizForm';
 import { useTranslation } from 'react-i18next';
-import { Language, QuestionType } from '../constants';
+import { AspectRatio, Language, QuestionType } from '../constants';
 import { logout } from '../actions/UserActions';
 
 const QuizPage: React.FC = () => {
@@ -111,7 +111,7 @@ const QuizPage: React.FC = () => {
           question={question}
           image={type === QuestionType.Image ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
           video={type === QuestionType.Video ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
-          ratio='16x9'
+          ratio={AspectRatio.Rectangle}
           options={options}
           disabled={choice === '' || vote !== null}
           choice={choice}

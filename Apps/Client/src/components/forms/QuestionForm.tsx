@@ -5,6 +5,7 @@ import './QuestionForm.scss';
 import { vote } from '../../actions/UserActions';
 import { useTranslation } from 'react-i18next';
 import { SERVER_ROOT } from '../../config';
+import { AspectRatio } from '../../constants';
 
 type Image = {
   url: string,
@@ -22,7 +23,7 @@ type Props = {
   question: string,
   image?: Image,
   video?: Video,
-  ratio?: '1x1' | '4x3' | '16x9',
+  ratio?: AspectRatio,
   options: string[],
   disabled: boolean,
   choice: string,
@@ -92,7 +93,7 @@ const QuestionForm: React.FC<Props> = (props) => {
           {video && (
             <video className='question-form-video' autoPlay muted loop>
               <source src={`${SERVER_ROOT}${video.url}`} type='video/mp4' />
-              Your browser does not support the video tag.
+              {t('ERRORS.NO_VIDEO_TAGS')}
             </video>
           )}
         </div>

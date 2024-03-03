@@ -14,3 +14,9 @@ export enum QuestionType {
   Image = 'image',
   Video = 'video',
 };
+
+export enum AspectRatio {
+  Square = '1x1',
+  OldRectangle = '4x3',
+  Rectangle = '16x9',
+}
