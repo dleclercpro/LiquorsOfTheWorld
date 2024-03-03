@@ -3,10 +3,12 @@ import { logout } from '../actions/UserActions';
 import { fetchData, startQuestion } from '../actions/QuizActions';
 
 interface AppState {
+  version: string | null,
   questionIndex: number, // Current question index in the app
 }
 
 const initialState: AppState = {
+  version: null,
   questionIndex: 0,
 };
 
@@ -16,6 +18,9 @@ export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
+    setVersion: (state, action: PayloadAction<string>) => {
+      state.version = action.payload;
+    },
     setQuestionIndex: (state, action: PayloadAction<number>) => {
       state.questionIndex = action.payload;
     },
@@ -34,6 +39,6 @@ export const appSlice = createSlice({
   },
 });
 
-export const { setQuestionIndex } = appSlice.actions;
+export const { setVersion, setQuestionIndex } = appSlice.actions;
 
 export default appSlice.reducer;

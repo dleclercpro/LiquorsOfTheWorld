@@ -11,6 +11,10 @@ export const login = createAsyncThunk(
     try {
       const { data } = await new CallLogIn().execute({ quizId, username, password });
 
+      if (!data) {
+        throw new Error('MISSING_DATA');
+      }
+      
       const user = data as UserData;
 
       return {
@@ -57,6 +61,10 @@ export const ping = createAsyncThunk(
     try {
       const { data } = await new CallPing().execute();
 
+      if (!data) {
+        throw new Error('MISSING_DATA');
+      }
+
       return data as PingData;
 
     } catch (err: unknown) {
@@ -77,6 +85,10 @@ export const vote = createAsyncThunk(
   async ({ quizId, questionIndex, vote }: { quizId: string, questionIndex: number, vote: number }, { rejectWithValue }) => {
     try {
       const { data } = await new CallVote(quizId, questionIndex).execute({ vote });
+
+      if (!data) {
+        throw new Error('MISSING_DATA');
+      }
 
       return data as VotesData;
 

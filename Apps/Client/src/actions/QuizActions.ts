@@ -96,6 +96,8 @@ export const fetchScores = createAsyncThunk(
   }
 );
 
+
+
 export const fetchData = createAsyncThunk(
   'quiz/fetchData',
   async ({ quizId, lang }: { quizId: string, lang: Language } , { dispatch, getState, rejectWithValue }) => {

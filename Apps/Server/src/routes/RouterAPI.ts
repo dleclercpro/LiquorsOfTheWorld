@@ -15,6 +15,7 @@ import StartQuizController from '../controllers/quiz/StartQuizController';
 import StartQuestionController from '../controllers/quiz/StartQuestionController';
 import DeleteQuizController from '../controllers/quiz/DeleteQuizController';
 import DeleteDatabaseController from '../controllers/DeleteDatabaseController';
+import GetVersionController from '../controllers/app/GetVersionController';
 
 
 
@@ -35,6 +36,8 @@ router.delete('/', [AuthMiddleware], DeleteDatabaseController);
 router.put('/auth', LoginController);
 router.get('/auth', [AuthMiddleware], PingController);
 router.delete('/auth', [AuthMiddleware], LogoutController);
+
+router.get('/version', GetVersionController);
 
 router.get('/user', [AuthMiddleware], GetUserController);
 

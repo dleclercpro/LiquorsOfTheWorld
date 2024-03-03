@@ -21,6 +21,10 @@ export type UserData = {
   isAdmin: boolean,
 };
 
+export type VersionData = {
+  version: string,
+};
+
 export type VotesData = {
   status: StatusData,
   votes: number[],

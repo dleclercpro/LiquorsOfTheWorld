@@ -14,6 +14,7 @@ import { ping } from './actions/UserActions';
 import { getRandom } from './utils/array';
 import Nav from './components/Nav';
 import ErrorPage from './pages/ErrorPage';
+import { fetchVersion } from './actions/AppActions';
 
 function App() {
   const [backgroundUrl, setBackgroundUrl] = useState('');
@@ -25,6 +26,8 @@ function App() {
     setBackgroundUrl(`url(${getRandom(BACKGROUND_URLS)})`);
 
     dispatch(ping());
+
+    dispatch(fetchVersion());
   }, []);
 
   return (
