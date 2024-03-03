@@ -59,7 +59,7 @@ class AppDatabase extends RedisDatabase {
             });
         });
       
-        logger.trace(`Creating user '${username}'...`);
+        logger.trace(`Creating ${isAdmin ? 'admin' : 'user'} '${username}'...`);
         const user = { username, isAdmin, hashedPassword };
       
         await this.set(`users:${username}`, this.serializeUser(user));
