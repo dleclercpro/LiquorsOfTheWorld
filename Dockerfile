@@ -43,6 +43,9 @@ COPY --from=build-stage ./apps/Client/build ./client
 # Only install production-related packages
 RUN npm install --omit=dev
 
+# Copy public assets
+COPY ./Apps/Server/public ./public
+
 # Copy environment variables
 COPY ./Apps/Server/.env.production ./.env.production
 
