@@ -18,7 +18,7 @@ export const API_VERSION = `v1`;
 export const HOST = process.env.HOST!;
 export const PORT = parseNumberText(process.env.PORT);
 export const ROOT = `http://${HOST}:${PORT}`;
-export const ADMINS = process.env.ADMINS!.split(',');
+export const ADMINS = process.env.ADMINS!.split(',').map(str => str.split(':')).map(str => ({ username: str[0], password: str[1] }));
 export const PUBLIC_DIR = path.join(__dirname, `../..`, `public`);
 
 // Client

@@ -5,6 +5,7 @@ import { deleteQuiz, startQuiz } from '../../actions/QuizActions';
 import { Trans, useTranslation } from 'react-i18next';
 import { selectPlayers } from '../../reducers/QuizReducer';
 import { deleteDatabase } from '../../actions/DatabaseActions';
+import { logout } from '../../actions/UserActions';
 
 const AdminQuizForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,12 @@ const AdminQuizForm: React.FC = () => {
     await dispatch(deleteDatabase());
   }
 
+  const handleLogout: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
+    e.preventDefault();
+
+    await dispatch(logout());
+  }
+
   return (
     <form className='admin-quiz-form'>
       <h2 className='admin-quiz-form-title'>{t('FORMS.START_QUIZ.TITLE')}</h2>
@@ -80,6 +87,9 @@ const AdminQuizForm: React.FC = () => {
       </button>
       <button className='admin-quiz-form-button delete-db' onClick={handleDeleteDatabase}>
         {t('FORMS.START_QUIZ.DELETE_DATABASE')}
+      </button>
+      <button className='admin-quiz-form-button' onClick={handleLogout}>
+        {t('COMMON.LOG_OUT')}
       </button>
     </form>
   );

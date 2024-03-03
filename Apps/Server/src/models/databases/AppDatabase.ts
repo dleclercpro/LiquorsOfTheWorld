@@ -122,6 +122,16 @@ class AppDatabase extends RedisDatabase {
         await this.delete(`quiz:${quizId}`);
     }
 
+    public async hasUser(username: string) {
+        const user = await this.getUser(username);
+
+        if (user === null) {
+            return false;
+        }
+
+        return true;
+    }
+
     public async getUser(username: string) {
         const user = await this.get(`users:${username}`);
 

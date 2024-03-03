@@ -43,7 +43,7 @@ const isPasswordValid = async (password: string, hashedPassword: string) => {
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
         const { quizId, username, password } = req.body as RequestBody;
-        const isAdmin = ADMINS.includes(username);
+        const isAdmin = ADMINS.map(admin => admin.username).includes(username);
         logger.trace(`Attempt to join quiz '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
 
         // Check if quiz exists
