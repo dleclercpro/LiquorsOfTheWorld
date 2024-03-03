@@ -30,5 +30,9 @@
     color: $color-white;
     font-weight: bold;
     cursor: pointer;
+
+    &:not(:last-of-type) {
+      margin-bottom: 10px;
+    }
   }
 }

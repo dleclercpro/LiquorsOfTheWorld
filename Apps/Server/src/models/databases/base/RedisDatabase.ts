@@ -163,6 +163,10 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
             await this.client.del(prefixedKey);
         }
     }
+
+    public async deleteAll() {
+        await this.client.flushDb();
+    }
 }
 
 export default RedisDatabase;

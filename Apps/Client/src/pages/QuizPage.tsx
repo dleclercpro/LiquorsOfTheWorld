@@ -6,7 +6,7 @@ import { REFRESH_STATUS_INTERVAL } from '../config';
 import { fetchStatus, fetchData, fetchQuestions } from '../actions/QuizActions';
 import { selectVote } from '../reducers/QuizReducer';
 import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoadingOverlay } from '../reducers/OverlaysReducer';
-import StartQuizForm from '../components/forms/StartQuizForm';
+import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
 import { AspectRatio, Language, QuestionType } from '../constants';
 import { logout } from '../actions/UserActions';
@@ -102,7 +102,7 @@ const QuizPage: React.FC = () => {
   return (
     <div className='quiz-page'>
       {!isStarted && isAdmin && (
-        <StartQuizForm />
+        <AdminQuizForm />
       )}
       {isStarted && (
         <QuestionForm

@@ -44,7 +44,8 @@
       "SINGLE_PLAYER_WAITING": "Derzeit wartet <1>1 Spieler</1> darauf, zu spielen.",
       "MANY_PLAYERS_WAITING": "Derzeit warten <1>{{count}} Spieler</1> darauf, zu spielen.",
       "START_QUIZ": "Ja, los geht's!",
-      "DELETE_QUIZ": "Nein, lösche das Quiz."
+      "DELETE_QUIZ": "Nein, lösche das Quiz.",
+      "DELETE_DATABASE": "Datenbank löschen."
     },
     "QUESTION": {
       "PICK_ANSWER": "Wähle eine Antwort",

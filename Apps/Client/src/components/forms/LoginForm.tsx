@@ -21,6 +21,7 @@ const LoginForm: React.FC<Props> = (props) => {
   const [error, setError] = useState('');
   
   const auth = useSelector(selectAuthentication);
+  const isAdmin = useSelector(({ user }) => user.isAdmin);
 
   // Redirect to current quiz question on successful login
   useEffect(() => {

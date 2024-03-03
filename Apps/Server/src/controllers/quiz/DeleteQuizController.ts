@@ -5,7 +5,7 @@ import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
-import UserCannotDeleteQuizError from '../../errors/UserCannotDeleteQuizError copy';
+import UserCannotDeleteQuizError from '../../errors/UserCannotDeleteQuizError';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;

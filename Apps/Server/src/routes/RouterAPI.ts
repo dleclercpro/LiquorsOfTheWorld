@@ -15,6 +15,7 @@ import GetVotesController from '../controllers/quiz/GetVotesController';
 import StartQuizController from '../controllers/quiz/StartQuizController';
 import StartQuestionController from '../controllers/quiz/StartQuestionController';
 import DeleteQuizController from '../controllers/quiz/DeleteQuizController';
+import DeleteDatabaseController from '../controllers/DeleteDatabaseController';
 
 
 
@@ -35,6 +36,8 @@ router.get('/ready', ReadyController);
 
 
 // API
+router.delete('/', [AuthMiddleware], DeleteDatabaseController);
+
 router.put('/auth', LoginController);
 router.get('/auth', [AuthMiddleware], PingController);
 router.delete('/auth', [AuthMiddleware], LogoutController);

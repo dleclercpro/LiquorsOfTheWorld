@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import './StartQuizForm.scss';
+import './AdminQuizForm.scss';
 import { deleteQuiz, startQuiz } from '../../actions/QuizActions';
 import { Trans, useTranslation } from 'react-i18next';
 import { selectPlayers } from '../../reducers/QuizReducer';
+import { deleteDatabase } from '../../actions/DatabaseActions';
 
-const StartQuizForm: React.FC = () => {
+const AdminQuizForm: React.FC = () => {
   const dispatch = useDispatch();
 
   const { t } = useTranslation();
@@ -19,41 +20,37 @@ const StartQuizForm: React.FC = () => {
     setIsSupervised(!isSupervised);
   }
 
-  const handleStart: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
+  const handleStartQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
     if (quizId === null) {
       return;
     }
     
-    const result = await dispatch(startQuiz({ quizId, isSupervised }));
-
-    if (result.type.endsWith('/rejected')) {
-      alert(`Could not start quiz!`);
-      return;
-    }
+    await dispatch(startQuiz({ quizId, isSupervised }));
   }
 
-  const handleDelete: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
+  const handleDeleteQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
     if (quizId === null) {
       return;
     }
     
-    const result = await dispatch(deleteQuiz(quizId));
+    await dispatch(deleteQuiz(quizId));
+  }
 
-    if (result.type.endsWith('/rejected')) {
-      alert(`Could not delete quiz!`);
-      return;
-    }
+  const handleDeleteDatabase: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
+    e.preventDefault();
+
+    await dispatch(deleteDatabase());
   }
 
   return (
-    <form className='start-quiz-form'>
-      <h2 className='start-quiz-form-title'>{t('FORMS.START_QUIZ.TITLE')}</h2>
+    <form className='admin-quiz-form'>
+      <h2 className='admin-quiz-form-title'>{t('FORMS.START_QUIZ.TITLE')}</h2>
 
-      <p className='start-quiz-form-text'>
+      <p className='admin-quiz-form-text'>
         <Trans
           i18nKey={players.length === 1 ? 'FORMS.START_QUIZ.SINGLE_PLAYER_WAITING' : 'FORMS.START_QUIZ.MANY_PLAYERS_WAITING'}
           values={{ count: players.length }}
@@ -73,12 +70,19 @@ const StartQuizForm: React.FC = () => {
         <label htmlFor='option'>{t('FORMS.START_QUIZ.SUPERVISE')}</label>
       </div>
 
-      <p className='start-quiz-form-text'>{t('FORMS.START_QUIZ.TEXT')}</p>
+      <p className='admin-quiz-form-text'>{t('FORMS.START_QUIZ.TEXT')}</p>
 
-      <button className='start-quiz-form-button' onClick={handleStart}>{t('FORMS.START_QUIZ.START_QUIZ')}</button>
-      <button className='start-quiz-form-button' onClick={handleDelete}>{t('FORMS.START_QUIZ.DELETE_QUIZ')}</button>
+      <button className='admin-quiz-form-button' onClick={handleStartQuiz}>
+        {t('FORMS.START_QUIZ.START_QUIZ')}
+      </button>
+      <button className='admin-quiz-form-button' onClick={handleDeleteQuiz}>
+        {t('FORMS.START_QUIZ.DELETE_QUIZ')}
+      </button>
+      <button className='admin-quiz-form-button delete-db' onClick={handleDeleteDatabase}>
+        {t('FORMS.START_QUIZ.DELETE_DATABASE')}
+      </button>
     </form>
   );
 };
 
-export default StartQuizForm;
+export default AdminQuizForm;

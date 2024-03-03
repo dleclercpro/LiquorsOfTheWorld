@@ -1,6 +1,6 @@
 @import '../../styles/common';
 
-.start-quiz-form {
+.admin-quiz-form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,13 +19,13 @@
     max-width: 640px;
   }
 
-  > .start-quiz-form-title {
+  > .admin-quiz-form-title {
     width: 100%;
     margin-top: 0;
     margin-bottom: 10px;
   }
 
-  > .start-quiz-form-text {
+  > .admin-quiz-form-text {
     width: 100%;
     margin-top: 0;
     margin-bottom: 10px;
@@ -85,6 +85,14 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+
+    &.delete-db {
+      background-color: $color-red;
+
+      &:hover {
+        background-color: darken($color-red, 25%);
+      }
+    }
 
     &:hover {
       background-color: darken($color-primary, 10%);
