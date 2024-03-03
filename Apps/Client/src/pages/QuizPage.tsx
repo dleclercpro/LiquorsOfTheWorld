@@ -3,7 +3,7 @@ import './QuizPage.scss';
 import QuestionForm from '../components/forms/QuestionForm';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { REFRESH_STATUS_INTERVAL } from '../config';
-import { fetchStatus, fetchData } from '../actions/QuizActions';
+import { fetchStatus, fetchData, fetchQuestions } from '../actions/QuizActions';
 import { selectVote } from '../reducers/QuizReducer';
 import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoadingOverlay } from '../reducers/OverlaysReducer';
 import StartQuizForm from '../components/forms/StartQuizForm';
@@ -33,7 +33,7 @@ const QuizPage: React.FC = () => {
 
 
 
-  // Fetch data
+  // Fetch initial data
   useEffect(() => {
     if (quizId === null) {
       return;
@@ -41,6 +41,15 @@ const QuizPage: React.FC = () => {
 
     dispatch(fetchData({ quizId, lang }));
   }, []);
+
+  // Refresh quiz data when changing language
+  useEffect(() => {
+    if (quizId === null) {
+      return;
+    }
+
+    dispatch(fetchQuestions(lang));
+  }, [lang]);
 
   // Regularly fetch current quiz status from server
   useEffect(() => {
