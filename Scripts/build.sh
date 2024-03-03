@@ -5,7 +5,7 @@ dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Define constant image details
 user="dleclercpro"
-app="liquors-quiz"
+app="liquors"
 release="latest"
 
 # Build app image

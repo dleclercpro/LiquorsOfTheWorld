@@ -2,18 +2,18 @@ version: '3.8'
 
 
 services:
-  liquors-app:
-    image: dleclercpro/liquors:latest
-    container_name: liquors-app
+  liquors-quiz-app:
+    image: dleclercpro/liquors-quiz:latest
+    container_name: liquors-quiz-app
     networks:
       - custom
     depends_on:
-      - liquors-redis
+      - liquors-quiz-redis
     environment:
       NODE_ENV: production
 
-  liquors-nginx:
-    container_name: liquors-nginx
+  liquors-quiz-nginx:
+    container_name: liquors-quiz-nginx
     image: dleclercpro/ssl-reverse-proxy:latest
     restart: always
     ports:
@@ -24,13 +24,13 @@ services:
     volumes:
       - letsencrypt:/etc/letsencrypt # Keep SSL certificates
     depends_on:
-      - liquors-app
+      - liquors-quiz-app
     env_file:
       - .env
 
-  liquors-redis:
+  liquors-quiz-redis:
     image: redis:latest
-    container_name: liquors-redis
+    container_name: liquors-quiz-redis
     restart: always
     networks:
       - custom
