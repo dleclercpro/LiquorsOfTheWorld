@@ -5,7 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { APP_NAME } from '../constants';
-import { CLIENT_ROOT, DEV, ENV, PORT, PROD } from '../config';
+import { CLIENT_ROOT, DEV, PORT, PROD } from '../config';
 import logger from '../logger';
 import Router from '../routes';
 import ErrorMiddleware from '../middleware/ErrorMiddleware';
