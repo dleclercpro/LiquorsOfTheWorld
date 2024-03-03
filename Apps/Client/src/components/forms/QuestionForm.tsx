@@ -22,6 +22,7 @@ type Props = {
   question: string,
   image?: Image,
   video?: Video,
+  ratio?: '1x1' | '4x3' | '16x9',
   options: string[],
   disabled: boolean,
   choice: string,
@@ -29,12 +30,14 @@ type Props = {
 }
 
 const QuestionForm: React.FC<Props> = (props) => {
-  const { index, theme, question, image, video, options, disabled, choice, setChoice } = props;
+  const { index, theme, question, image, video, ratio, options, disabled, choice, setChoice } = props;
 
   const { t } = useTranslation();
   const quiz = useSelector(({ quiz }) => quiz);
   const quizId = quiz.id;
   const questions = quiz.questions.data;
+
+  const hasMedia = image || video;
 
   const dispatch = useDispatch();
 
@@ -81,17 +84,18 @@ const QuestionForm: React.FC<Props> = (props) => {
 
       <h2 className='question-form-title'>{question}</h2>
 
-      {image && (
-        <img className='question-form-image' src={`${SERVER_ROOT}${image.url}`} alt={image.desc} />
-      )}
-
-      {video && (
-        <>
-          <video className='question-form-image' autoPlay muted loop>
-            <source src={`${SERVER_ROOT}${video.url}`} type='video/mp4' />
-            Your browser does not support the video tag.
-          </video>
-        </>
+      {hasMedia && (
+        <div className={`question-form-media-container ratio-${ratio ? ratio : '1x1'}`}>
+          {image && (
+            <img className='question-form-image' src={`${SERVER_ROOT}${image.url}`} alt={image.desc} />
+          )}
+          {video && (
+            <video className='question-form-video' autoPlay muted loop>
+              <source src={`${SERVER_ROOT}${video.url}`} type='video/mp4' />
+              Your browser does not support the video tag.
+            </video>
+          )}
+        </div>
       )}
 
       {options.map((option, i) => (

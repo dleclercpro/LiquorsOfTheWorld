@@ -105,6 +105,7 @@ const QuizPage: React.FC = () => {
           question={question}
           image={type === QuestionType.Image ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
           video={type === QuestionType.Video ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
+          ratio='16x9'
           options={options}
           disabled={choice === '' || vote !== null}
           choice={choice}
