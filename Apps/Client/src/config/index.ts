@@ -11,4 +11,5 @@ export const BACKGROUND_URLS = [
   `background-2.jpg`,
   `background-3.jpg`,
   `background-4.webp`,
-].map(filename => `${SERVER_ROOT}/static/img/bg/liquors/${filename}`);
+]
+.map(filename => `${SERVER_ROOT}/static/img/bg/liquors/${filename}`);

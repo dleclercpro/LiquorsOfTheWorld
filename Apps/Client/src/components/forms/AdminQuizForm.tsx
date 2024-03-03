@@ -85,7 +85,7 @@ const AdminQuizForm: React.FC = () => {
       <button className='admin-quiz-form-button' onClick={handleDeleteQuiz}>
         {t('FORMS.START_QUIZ.DELETE_QUIZ')}
       </button>
-      <button className='admin-quiz-form-button delete-db' onClick={handleDeleteDatabase}>
+      <button className='admin-quiz-form-button delete-database' onClick={handleDeleteDatabase}>
         {t('FORMS.START_QUIZ.DELETE_DATABASE')}
       </button>
       <button className='admin-quiz-form-button' onClick={handleLogout}>

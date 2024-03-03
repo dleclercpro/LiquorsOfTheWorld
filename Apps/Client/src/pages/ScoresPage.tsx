@@ -3,11 +3,13 @@ import './ScoresPage.scss';
 import Scoreboard from '../components/Scoreboard';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { fetchScores } from '../actions/QuizActions';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
+import Page from './Page';
 
 const ScoresPage: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const quiz = useSelector(({ quiz }) => quiz);
   const quizId = quiz.id;
@@ -34,13 +36,13 @@ const ScoresPage: React.FC = () => {
 
   const isStarted = status.isStarted;
   if (!isStarted) {
-    return <Navigate to='/quiz' />;
+    navigate('/quiz');
   }
   
   return (
-    <div className='scores-page'>
+    <Page className='scores-page'>
       <Scoreboard scores={scores} />
-    </div>
+    </Page>
   );
 };
 

@@ -1,11 +1,10 @@
 @import '../styles/common';
 
-.scores-page {
+.page {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  
-  @include desktop {
-    justify-content: center;
-  }
+  width: 100%;
+  height: 100%;
 }

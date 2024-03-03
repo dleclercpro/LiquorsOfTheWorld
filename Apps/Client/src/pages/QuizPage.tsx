@@ -10,6 +10,7 @@ import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
 import { AspectRatio, Language, QuestionType } from '../constants';
 import { logout } from '../actions/UserActions';
+import Page from './Page';
 
 const QuizPage: React.FC = () => {
   const { i18n } = useTranslation();
@@ -100,7 +101,7 @@ const QuizPage: React.FC = () => {
   const { theme, question, type, url, options } = questions[playerQuestionIndex];
 
   return (
-    <div className='quiz-page'>
+    <Page className='quiz-page'>
       {!isStarted && isAdmin && (
         <AdminQuizForm />
       )}
@@ -118,7 +119,7 @@ const QuizPage: React.FC = () => {
           setChoice={setChoice}
         />
       )}
-    </div>
+    </Page>
   );
 }
 
