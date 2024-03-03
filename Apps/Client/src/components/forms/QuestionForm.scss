@@ -5,7 +5,7 @@
   padding: 15px;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: $box-shadow-light;
 
   @include desktop {
     position: absolute;
@@ -60,7 +60,7 @@
     position: relative;
     margin-bottom: 20px;
     border-radius: 8px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: $box-shadow-dark;
     overflow: hidden;
 
     &.ratio-1x1 {
@@ -148,7 +148,7 @@
     color: $color-white;
     border: none;
     border-radius: 4px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: $box-shadow-dark;
     cursor: pointer;
 
     &:hover {

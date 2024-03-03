@@ -84,7 +84,7 @@
     color: $color-white;
     border: none;
     border-radius: 4px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: $box-shadow-dark;
     cursor: pointer;
 
     &.delete-database {
