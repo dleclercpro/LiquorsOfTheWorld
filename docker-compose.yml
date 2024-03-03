@@ -16,7 +16,7 @@ services:
     container_name: liquors-quiz-nginx
     image: dleclercpro/ssl-reverse-proxy:latest
     restart: always
-    ports:
+    ports:      # Comment out when getting SSL certs for the first time
       - 443:443 # HTTPS
       - 80:80   # HTTP
     networks:

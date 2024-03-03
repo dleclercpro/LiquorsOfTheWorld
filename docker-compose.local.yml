@@ -16,8 +16,8 @@ services:
     image: redis:latest
     container_name: liquors-quiz-redis
     volumes:
-      - data:/data
+      - redis:/data
 
 
 volumes:
-  data:
+  redis:

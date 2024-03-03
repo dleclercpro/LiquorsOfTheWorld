@@ -1,7 +1,14 @@
-# Get the directory containing the script
+# Define constant image details
+user="dleclercpro"
+app="liquors-quiz"
+release="latest"
+composefile="docker-compose.yml"
+
+# Get and move to the directory containing the script
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Move to the root directory
-cd "${dir}/.."
+# Fetch newer images
+docker compose -f $composefile pull
 
-docker compose up --build
+# Start app instance
+docker compose -f $composefile up --force-recreate

@@ -4,11 +4,11 @@ app="liquors-quiz"
 release="latest"
 composefile="docker-compose.local.yml"
 
-# Get the directory containing the script
+# Get and move to the directory containing the script
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Fetch newer images
-docker compose pull
+docker compose -f $composefile pull
 
 # Start app instance
 docker compose -f $composefile up --force-recreate
