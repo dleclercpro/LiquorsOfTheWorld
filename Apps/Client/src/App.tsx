@@ -13,6 +13,7 @@ import { useDispatch } from './hooks/redux';
 import { ping } from './actions/UserActions';
 import { getRandom } from './utils/array';
 import Nav from './components/Nav';
+import ErrorPage from './pages/ErrorPage';
 
 function App() {
   const [backgroundUrl, setBackgroundUrl] = useState('');
@@ -51,16 +52,16 @@ function App() {
               <ScoresPage />
             </AuthRoute>
           )} />
-          <Route path='/:quizId' element={(
-            <HomePage />
+          <Route path='/error' element={(
+            <ErrorPage />
           )} />
           <Route path='/' element={(
             <HomePage />
           )} />
 
-          {/* Default route */}
+          {/* Error route */}
           <Route path='*' element={(
-            <Navigate to='/' />
+            <Navigate to='/error' />
           )} />
         </Routes>
         

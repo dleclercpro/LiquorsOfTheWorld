@@ -28,6 +28,12 @@
     "SCOREBOARD": {
       "STATUS_OVER": "The quiz is over. All {{questionsCount}} questions have been answered. Here are the final results:",
       "STATUS_NOT_OVER": "So far, {{questionsAnsweredCount}} out of {{questionsCount}} questions have been answered. Here are the current results:"
+    },
+    "ERROR": {
+      "TITLE": "Oops!",
+      "TEXT": "Unfortunately, the page you are trying to access does not exist.",
+      "REDIRECTING_SINGLE": "You will be redirected to the home page in <1>{{remainingTime}} second</1>...",
+      "REDIRECTING_MANY": "You will be redirected to the home page in <1>{{remainingTime}} seconds</1>..."
     }
   },
   "FORMS": {

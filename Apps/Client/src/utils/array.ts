@@ -2,6 +2,16 @@ export const getRandom = <V> (arr: V[]) => {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+export const getRange = (size: number, order: 'ASC' | 'DESC' = 'ASC') => {
+  const arr = [...Array(size).keys()];
+
+  if (order === 'DESC') {
+    return [...arr].reverse();
+  }
+
+  return arr;
+}
+
 export const toSortedArr = (obj: Record<string, number>, order: 'ASC' | 'DESC' = 'ASC') => {
   const arr = Object.entries(obj);
   let sortedArr = arr;

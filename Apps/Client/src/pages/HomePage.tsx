@@ -2,20 +2,22 @@ import React from 'react';
 import './HomePage.scss';
 import LoginForm from '../components/forms/LoginForm';
 import { useSelector } from '../hooks/redux';
-import { useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Page from './Page';
 
 const HomePage: React.FC = () => {
-  const { quizId } = useParams();
+  const [searchParams] = useSearchParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
+
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   if (isAuthenticated) {
     navigate('/quiz');
   }
+
+  const quizId = searchParams.get('id');
 
   return (
     <Page className='home-page'>

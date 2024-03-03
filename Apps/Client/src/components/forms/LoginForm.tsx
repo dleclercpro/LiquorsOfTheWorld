@@ -7,7 +7,7 @@ import { login } from '../../actions/UserActions';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
-  quizId?: string,
+  quizId: string | null,
 }
 
 const LoginForm: React.FC<Props> = (props) => {

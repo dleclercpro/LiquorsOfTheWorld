@@ -28,6 +28,12 @@
     "SCOREBOARD": {
       "STATUS_OVER": "Das Quiz ist vorbei. Alle {{questionsCount}} Fragen wurden beantwortet. Hier sind die Endergebnisse:",
       "STATUS_NOT_OVER": "Bisher wurden {{questionsAnsweredCount}} von {{questionsCount}} Fragen beantwortet. Hier sind die aktuellen Ergebnisse:"
+    },
+    "ERROR": {
+      "TITLE": "Oje...",
+      "TEXT": "Leider existiert die Seite, die du gerade versuchst zu erreichen, nicht.",
+      "REDIRECTING_SINGLE": "Du wirst in <1>{{remainingTime}} Sekunde</1> zur Startseite weitergeleitet.",
+      "REDIRECTING_MANY": "Du wirst in <1>{{remainingTime}} Sekunden</1> zur Startseite weitergeleitet."
     }
   },
   "FORMS": {
