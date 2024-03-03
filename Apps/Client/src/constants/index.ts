@@ -16,7 +16,7 @@ export enum QuestionType {
 };
 
 export enum AspectRatio {
-  Square = '1x1',
-  OldRectangle = '4x3',
-  Rectangle = '16x9',
+  Square = '1:1',
+  FourByThree = '4:3',
+  SixteenByNine = '16:9',
 }

@@ -39,6 +39,7 @@ const QuestionForm: React.FC<Props> = (props) => {
   const questions = quiz.questions.data;
 
   const hasMedia = image || video;
+  const ratioClass = ratio ? `ratio-${ratio.replace(':', 'x')}` : 'ratio-1x1';
 
   const dispatch = useDispatch();
 
@@ -86,7 +87,7 @@ const QuestionForm: React.FC<Props> = (props) => {
       <h2 className='question-form-title'>{question}</h2>
 
       {hasMedia && (
-        <div className={`question-form-media-container ratio-${ratio ? ratio : '1x1'}`}>
+        <div className={`question-form-media-container ${ratioClass}`}>
           {image && (
             <img className='question-form-image' src={`${SERVER_ROOT}${image.url}`} alt={image.desc} />
           )}
