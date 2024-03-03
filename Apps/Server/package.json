@@ -1,7 +1,7 @@
 {
   "name": "liquors-quiz--server",
   "label": "Server",
-  "version": "latest",
+  "version": "v2.2.1",
   "author": "David Leclerc",
   "main": "./src/index.ts",
   "scripts": {
