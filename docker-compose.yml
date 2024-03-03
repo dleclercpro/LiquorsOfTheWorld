@@ -1,0 +1,49 @@
+version: '3.8'
+
+
+services:
+  liquors-app:
+    image: dleclercpro/liquors:latest
+    container_name: liquors-app
+    networks:
+      - custom
+    depends_on:
+      - liquors-redis
+    environment:
+      NODE_ENV: production
+
+  liquors-nginx:
+    container_name: liquors-nginx
+    image: dleclercpro/ssl-reverse-proxy:latest
+    restart: always
+    ports:
+      - 443:443 # HTTPS
+      - 80:80   # HTTP
+    networks:
+      - custom
+    volumes:
+      - letsencrypt:/etc/letsencrypt # Keep SSL certificates
+    depends_on:
+      - liquors-app
+    env_file:
+      - .env
+
+  liquors-redis:
+    image: redis:latest
+    container_name: liquors-redis
+    restart: always
+    networks:
+      - custom
+    volumes:
+      - redis:/data
+
+
+volumes:
+  redis:
+  letsencrypt:
+
+
+networks:
+  # Custom network to communicate with external services/containers
+  custom:
+    external: true
