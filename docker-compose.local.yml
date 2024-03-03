@@ -3,7 +3,7 @@ version: '3.8'
 
 services:
   liquors-quiz-app:
-    image: dleclercpro/liquors-quiz:improvements-philipp
+    image: dleclercpro/liquors-quiz:latest
     container_name: liquors-quiz-app
     ports:
       - 80:8000
