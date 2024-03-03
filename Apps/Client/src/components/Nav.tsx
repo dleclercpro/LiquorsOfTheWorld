@@ -78,6 +78,12 @@ const Nav: React.FC = () => {
     toggleLanguage();
   }
 
+  const handleLogout = () => {
+    setIsOpen(false);
+    
+    dispatch(logout());
+  }
+
   const { username } = user;
   const isAuthenticated = username !== null;
   const isStarted = status?.isStarted;
@@ -155,7 +161,7 @@ const Nav: React.FC = () => {
 
           {isAuthenticated && (
             <li className='nav-item'>
-              <Link className='nav-link' to='/' onClick={() => dispatch(logout())}>
+              <Link className='nav-link' to='/' onClick={handleLogout}>
                 <LogoutIcon className='nav-icon' />
                 {t('COMMON.LOG_OUT')}
               </Link>
