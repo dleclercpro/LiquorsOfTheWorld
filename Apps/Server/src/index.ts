@@ -3,9 +3,6 @@ import { REDIS_HOST, REDIS_NAME, REDIS_PORT, ENV, ADMINS } from './config'; // D
 import logger from './logger';
 import APP_SERVER from './models/AppServer';
 import AppDatabase from './models/databases/AppDatabase';
-import { killAfterTimeout } from './utils/process';
-import TimeDuration from './models/units/TimeDuration';
-import { TimeUnit } from './types';
 
 
 
@@ -34,26 +31,6 @@ const execute = async () => {
     await APP_SERVER.setup();
     await APP_SERVER.start();
 }
-
-
-
-// Shut down gracefully
-const TIMEOUT = new TimeDuration(2, TimeUnit.Seconds);
-
-const stopServers = async () => {
-    await Promise.all([
-        APP_SERVER.stop(),
-    ]);
-    process.exit(0);
-};
-
-const handleStopSignal = async (signal: string) => {
-    logger.warn(`Received stop signal: ${signal}`);
-    await Promise.race([stopServers(), killAfterTimeout(TIMEOUT)]);
-}
-
-process.on('SIGTERM', handleStopSignal);
-process.on('SIGINT', handleStopSignal);
 
 
 

@@ -10,6 +10,11 @@ import logger from '../logger';
 import Router from '../routes';
 import ErrorMiddleware from '../middleware/ErrorMiddleware';
 import MissingServerError from '../errors/MissingServerError';
+import TimeDuration from './units/TimeDuration';
+import { TimeUnit } from '../types';
+import { killAfterTimeout } from '../utils/process';
+
+
 
 // There can only be one app server: singleton!
 class AppServer {
@@ -81,28 +86,32 @@ class AppServer {
         });
     }
 
-    public async stop(signal: string = '') {
+    public async stop(signal: string = '', timeout: TimeDuration = new TimeDuration(2, TimeUnit.Seconds)) {
         if (!this.server) throw new MissingServerError();
 
         if (signal) {
-            logger.warn(`Received stop signal: ${signal}`);
+            logger.trace(`Received stop signal: ${signal}`);
         }
 
-        // Shut down gracefully
-        await new Promise<void>((resolve, reject) => {
-            this.server!.close((err) => {
-                if (err) {
-                    logger.fatal(`Could not shut down server gracefully: ${err}`);
-                    reject(err);
-                }
+        // Force server shutdown after timeout
+        await Promise.race([killAfterTimeout(timeout), async () => {
+            
+            // Shut down gracefully
+            await new Promise<void>((resolve, reject) => {
+                this.server!.close((err) => {
+                    if (err) {
+                        logger.fatal(`Could not shut down server gracefully: ${err}`);
+                        reject(err);
+                    }
 
-                logger.debug(`Server shut down gracefully.`);
-                resolve();
+                    logger.debug(`Server shut down gracefully.`);
+                    resolve();
+                });
             });
-        });
 
-        // Exit process
-        process.exit(0);
+            // Exit process
+            process.exit(0);
+        }]);
     }
 }
 
