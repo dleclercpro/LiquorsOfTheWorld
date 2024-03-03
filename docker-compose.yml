@@ -3,7 +3,7 @@ version: '3.8'
 
 services:
   liquors-quiz-app:
-    image: dleclercpro/liquors-quiz:latest
+    image: dleclercpro/liquors-quiz:v2.4.0
     container_name: liquors-quiz-app
     networks:
       - custom
