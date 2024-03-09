@@ -11,7 +11,7 @@ $nav-min-width: 380px;
   color: $color-white;
   z-index: 500;
 
-  @include desktop {
+  @include tablet {
     position: absolute;
     top: 0;
     left: 0;

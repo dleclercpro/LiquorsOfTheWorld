@@ -32,25 +32,8 @@
       display: none !important;
     }
 
-    @include desktop {
-      height: 100%;
-    }
-
-    > .app-version {
-      background-color: $color-black;
-      color: $color-white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      margin-left: auto;
-      font-size: $font-size-caption;
-  
-      @include tablet {
-        font-size: $font-size-tablet-caption;
-      }
-  
-      @include desktop {
-        font-size: $font-size-desktop-caption;
-      }
+    @include tablet {
+      justify-content: center;
     }
   }
 }
