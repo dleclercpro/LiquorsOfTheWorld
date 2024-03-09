@@ -1,7 +1,5 @@
-#!/bin/bash
-
-# Get the directory containing the script
-dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get and move to the directory containing the script
+dir="$(cd "$(dirname "$0")" && pwd)"
 
 # Define constant image details
 user="dleclercpro"

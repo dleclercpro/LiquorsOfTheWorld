@@ -1,10 +1,8 @@
-#!/bin/bash
-
 # Define app directories
 APPS=("Server" "Client")
 
-# Get the directory containing the script
-dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get and move to the directory containing the script
+dir="$(cd "$(dirname "$0")" && pwd)"
 
 # Move to the apps directory
 cd "${dir}/../Apps"

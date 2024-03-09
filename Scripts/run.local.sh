@@ -5,7 +5,7 @@ release="latest"
 composefile="docker-compose.local.yml"
 
 # Get and move to the directory containing the script
-dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+dir="$(cd "$(dirname "$0")" && pwd)"
 
 # Fetch newer images
 docker-compose -f $composefile pull
