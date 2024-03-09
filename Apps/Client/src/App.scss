@@ -24,13 +24,16 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     width: 100%;
     min-height: 100%;
 
     // Hide everything when screen is too small
     @media (max-width: $min-width) {
       display: none !important;
+    }
+
+    @include tablet {
+      justify-content: center;
     }
   }
 }

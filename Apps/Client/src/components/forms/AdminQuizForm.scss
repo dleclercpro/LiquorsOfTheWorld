@@ -11,11 +11,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   @include desktop {
-    position: absolute;
-    top: 50%;
-    right: 0;
     padding: 15px 25px;
-    transform: translate(-100px, -50%);
     max-width: 640px;
   }
 
