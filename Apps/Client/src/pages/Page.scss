@@ -12,5 +12,25 @@
 
   @include desktop {
     margin-top: 0;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  > .app-version {
+    background-color: $color-black;
+    color: $color-white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-top: 5px;
+    margin-left: auto;
+    font-size: $font-size-caption;
+
+    @include tablet {
+      font-size: $font-size-tablet-caption;
+    }
+
+    @include desktop {
+      font-size: $font-size-desktop-caption;
+    }
   }
 }
