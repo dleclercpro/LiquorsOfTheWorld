@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { FetchedData, ScoreData, StatusData } from '../types/DataTypes';
+import { FetchedData, GroupedScoreData, StatusData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
 import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, startQuiz, startQuestion } from '../actions/QuizActions';
 import { login, logout, ping, vote } from '../actions/UserActions';
@@ -11,7 +11,7 @@ interface QuizState {
   questions: FetchedData<QuizJSON>,
   status: FetchedData<StatusData>,
   votes: FetchedData<number[]>,
-  scores: FetchedData<ScoreData>,
+  scores: FetchedData<GroupedScoreData>,
 }
 
 const initialState: QuizState = {

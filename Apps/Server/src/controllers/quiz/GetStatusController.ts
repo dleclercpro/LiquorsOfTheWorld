@@ -25,7 +25,11 @@ const GetStatusController: RequestHandler = async (req, res, next) => {
     try {
         const { quizId } = await validateParams(req.params);
 
-        return res.json(successResponse(await APP_DB.getQuizStatus(quizId)));
+        return res.json(
+            successResponse(
+                await APP_DB.getQuizStatus(quizId)
+            )
+        );
 
     } catch (err: any) {
         next(err);

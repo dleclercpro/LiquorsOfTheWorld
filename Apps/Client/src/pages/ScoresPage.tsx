@@ -41,7 +41,7 @@ const ScoresPage: React.FC = () => {
   
   return (
     <Page className='scores-page'>
-      <Scoreboard scores={scores} />
+      <Scoreboard scores={scores.users} />
     </Page>
   );
 };

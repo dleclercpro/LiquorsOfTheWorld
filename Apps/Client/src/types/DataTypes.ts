@@ -40,3 +40,8 @@ export type StatusData = {
 };
 
 export type ScoreData = Record<string, number>;
+
+export type GroupedScoreData = {
+  admins: ScoreData,
+  users: ScoreData,
+};

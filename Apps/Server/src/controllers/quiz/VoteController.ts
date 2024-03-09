@@ -70,10 +70,12 @@ const VoteController: RequestHandler = async (req, res, next) => {
             }
         }
 
-        return res.json(successResponse({
-            status: await APP_DB.getQuizStatus(quizId),
-            votes,
-        }));
+        return res.json(
+            successResponse({
+                status: await APP_DB.getQuizStatus(quizId),
+                votes,
+            }
+        ));
 
     } catch (err: any) {
         next(err);

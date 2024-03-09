@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { StatusData, ScoreData } from '../types/DataTypes';
+import { StatusData, ScoreData, GroupedScoreData } from '../types/DataTypes';
 import { CallGetQuestions } from '../calls/quiz/CallGetQuestions';
 import { CallGetStatus } from '../calls/quiz/CallGetStatus';
 import { CallGetScores } from '../calls/quiz/CallGetScores';
@@ -81,7 +81,7 @@ export const fetchScores = createAsyncThunk(
     try {
       const { data } = await new CallGetScores(quizId).execute();
       
-      return data as ScoreData;
+      return data as GroupedScoreData;
 
     } catch (err: unknown) {
       let error = 'UNKNOWN_ERROR';
