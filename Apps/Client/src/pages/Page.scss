@@ -10,11 +10,6 @@
   margin-top: 50px;
   margin-bottom: 5px;
 
-  // Hide everything when screen is too small
-  @media (max-width: $min-width) {
-    display: none !important;
-  }
-
   @include desktop {
     margin-top: 0;
   }
