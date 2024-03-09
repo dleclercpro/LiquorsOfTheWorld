@@ -14,13 +14,16 @@ const resources = {
   },
 };
 
+export const INIT_LANGUAGE = Language.DE;
+export const FALLBACK_LANGUAGE = Language.EN;
+
 i18n
   .use(initReactI18next)
   .init({
     debug: DEBUG,
     resources,
-    lng: Language.EN,         // Initial language
-    fallbackLng: Language.EN, // Default fallback language
+    lng: INIT_LANGUAGE,
+    fallbackLng: FALLBACK_LANGUAGE,
     interpolation: {
       escapeValue: false,
     },

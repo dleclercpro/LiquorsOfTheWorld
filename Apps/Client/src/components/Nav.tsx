@@ -15,15 +15,17 @@ import ScoreboardIcon from '@mui/icons-material/Scoreboard';
 import { useTranslation } from 'react-i18next';
 import { DEBUG } from '../config';
 import { Language } from '../constants';
+import { setLanguage } from '../reducers/AppReducer';
 
 const Nav: React.FC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
   const { t, i18n } = useTranslation();
-  const { language, changeLanguage } = i18n;
+  const { changeLanguage } = i18n;
 
-  const [lang, setLang] = useState(language);
+  const { language } = useSelector((state) => state.app);
+  const [lang, setLang] = useState(language as Language);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -33,6 +35,7 @@ const Nav: React.FC = () => {
   // Change language in i18n when it is changed in the component's state
   useEffect(() => {
     changeLanguage(lang);
+    dispatch(setLanguage(lang));
   
   }, [lang]);
 
