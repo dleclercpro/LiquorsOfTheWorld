@@ -12,14 +12,38 @@
   }
 }
 
-@mixin font-subtitle {
-  font-size: $font-size-subtitle;
+@mixin font-sub-title {
+  font-size: $font-size-sub-title;
 
   @include tablet {
-    font-size: $font-size-tablet-subtitle;
+    font-size: $font-size-tablet-sub-title;
   }
 
   @include desktop {
-    font-size: $font-size-desktop-subtitle;
+    font-size: $font-size-desktop-sub-title;
+  }
+}
+
+@mixin font-sub-sub-title {
+  font-size: $font-size-subsub-title;
+
+  @include tablet {
+    font-size: $font-size-tablet-subsub-title;
+  }
+
+  @include desktop {
+    font-size: $font-size-desktop-subsub-title;
+  }
+}
+
+@mixin font-caption {
+  font-size: $font-size-caption;
+  
+  @include tablet {
+    font-size: $font-size-tablet-caption;
+  }
+
+  @include desktop {
+    font-size: $font-size-desktop-caption;
   }
 }

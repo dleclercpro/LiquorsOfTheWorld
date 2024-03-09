@@ -30,7 +30,7 @@ const Scoreboard: React.FC<Props> = (props) => {
   return (
     <div className='scoreboard'>
       <h2 className='scoreboard-title'>{t('COMMON.SCOREBOARD')}</h2>
-      <p className='scoreboard-subtitle'>
+      <p className='scoreboard-sub-title'>
         {t('COMMON.QUIZ')}:
         <strong className='scoreboard-quiz-label'>
           {quizId}

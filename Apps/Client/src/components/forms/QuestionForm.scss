@@ -33,16 +33,8 @@
       border-radius: 4px;
       color: $color-white;
       background-color: $color-black;
-      font-size: $font-size-caption;
       text-align: right;
-  
-      @include tablet {
-        font-size: $font-size-tablet-caption;
-      }
-  
-      @include desktop {
-        font-size: $font-size-desktop-caption;
-      }
+      @include font-caption;
     }
   }
 

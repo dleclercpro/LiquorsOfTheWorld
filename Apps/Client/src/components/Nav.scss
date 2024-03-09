@@ -111,7 +111,7 @@ $nav-min-width: 380px;
             background-color: $color-secondary;
             color: $color-black;
             font-family: $special-font-stack;
-            @include font-subtitle;
+            @include font-sub-title;
   
             @include desktop {
               min-width: $nav-min-width;

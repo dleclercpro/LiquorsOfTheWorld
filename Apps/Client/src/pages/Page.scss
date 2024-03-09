@@ -22,14 +22,6 @@
     border-radius: 8px;
     margin-top: 5px;
     margin-left: auto;
-    font-size: $font-size-caption;
-
-    @include tablet {
-      font-size: $font-size-tablet-caption;
-    }
-
-    @include desktop {
-      font-size: $font-size-desktop-caption;
-    }
+    @include font-caption;
   }
 }

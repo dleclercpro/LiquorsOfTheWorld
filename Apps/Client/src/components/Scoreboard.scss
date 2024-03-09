@@ -13,11 +13,11 @@
     @include font-title;
   }
 
-  > .scoreboard-subtitle {
+  > .scoreboard-sub-title {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
-    @include font-subtitle;
+    @include font-sub-title;
 
     > .scoreboard-quiz-label {
       display: flex;
@@ -28,15 +28,7 @@
       border-radius: 4px;
       color: $color-white;
       background-color: $color-black;
-      font-size: $font-size-caption;
-  
-      @include tablet {
-        font-size: $font-size-tablet-caption;
-      }
-  
-      @include desktop {
-        font-size: $font-size-desktop-caption;
-      }
+      @include font-caption;
     }
   }
 
@@ -65,7 +57,7 @@
     th {
         background-color: #f2f2f2;
         color: #333;
-        @include font-subtitle;
+        @include font-sub-sub-title;
     }
 
     tr:hover {
