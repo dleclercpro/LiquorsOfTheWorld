@@ -9,7 +9,7 @@ import AuthRoute from './routes/AuthRoute';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from './hooks/redux';
+import { useDispatch } from './hooks/redux';
 import { ping } from './actions/UserActions';
 import { getRandom } from './utils/array';
 import Nav from './components/Nav';
@@ -18,8 +18,6 @@ import { fetchVersion } from './actions/AppActions';
 
 function App() {
   const [backgroundUrl, setBackgroundUrl] = useState('');
-
-  const app = useSelector((state) => state.app);
 
   const dispatch = useDispatch();
   
@@ -72,10 +70,6 @@ function App() {
         
         <LoadingOverlay />
         <AnswerOverlay />
-
-        {app.version !== null && (
-          <p className='app-version'>{app.version}</p>
-        )}
       </div>
     </div>
   );

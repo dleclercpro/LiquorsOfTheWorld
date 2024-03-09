@@ -26,25 +26,13 @@
     width: 100%;
     min-height: 100%;
 
-    @include desktop {
-      height: 100%;
+    // Hide everything when screen is too small
+    @media (max-width: $min-width) {
+      display: none !important;
     }
 
-    > .app-version {
-      background-color: $color-black;
-      color: $color-white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      margin-left: auto;
-      font-size: $font-size-caption;
-  
-      @include tablet {
-        font-size: $font-size-tablet-caption;
-      }
-  
-      @include desktop {
-        font-size: $font-size-desktop-caption;
-      }
+    @include desktop {
+      height: 100%;
     }
   }
 }

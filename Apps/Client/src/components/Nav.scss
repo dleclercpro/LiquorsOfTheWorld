@@ -11,11 +11,6 @@ $nav-min-width: 380px;
   color: $color-white;
   z-index: 500;
 
-  // Hide everything when screen is too small
-  @media (max-width: $min-width) {
-    display: none !important;
-  }
-
   @include desktop {
     position: absolute;
     width: auto;
