@@ -25,13 +25,13 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async doesUserExist(username: string) {
-        return this.has(`users:${username}`);
+        return this.has(`users:${username.toLowerCase()}`);
     }
 
     public async isUserPlaying(quizId: string, username: string) {
         const players = await this.getAllPlayers(quizId);
 
-        return players.includes(username);
+        return players.includes(username.toLowerCase());
     }
 
     public async addUserToQuiz(quizId: string, username: string) {
@@ -43,15 +43,17 @@ class AppDatabase extends RedisDatabase {
 
         await this.setQuiz(quizId, {
             ...quiz,
-            players: unique([...quiz.players, username]),
+            players: unique([...quiz.players, username.toLowerCase()]),
         });
     }
 
     public async createUser(username: string, password: string, isAdmin: boolean = false) {
+        const lowercaseUsername = username.toLowerCase();
+
         const hashedPassword = await new Promise<string>((resolve, reject) => {
             bcrypt.hash(password, N_SALT_ROUNDS, async (err, hash) => {
                 if (err) {
-                    logger.fatal(`Cannot hash password of user '${username}'.`, err);
+                    logger.fatal(`Cannot hash password of user '${lowercaseUsername}'.`, err);
                     reject(new HashError());
                 }
       
@@ -59,10 +61,14 @@ class AppDatabase extends RedisDatabase {
             });
         });
       
-        logger.trace(`Creating user '${username}'...`);
-        const user = { username, isAdmin, hashedPassword };
+        logger.trace(`Creating user '${lowercaseUsername}'...`);
+        const user = {
+            username: lowercaseUsername,
+            isAdmin,
+            hashedPassword,
+        };
       
-        await this.set(`users:${username}`, this.serializeUser(user));
+        await this.set(`users:${lowercaseUsername}`, this.serializeUser(user));
       
         return user;
     }
@@ -75,7 +81,7 @@ class AppDatabase extends RedisDatabase {
         }
 
         const quiz: Quiz = {
-            creator: username,
+            creator: username.toLowerCase(),
             players: [],
             status: {
                 questionIndex: 0,
@@ -122,21 +128,11 @@ class AppDatabase extends RedisDatabase {
         await this.delete(`quiz:${quizId}`);
     }
 
-    public async hasUser(username: string) {
-        const user = await this.getUser(username);
-
-        if (user === null) {
-            return false;
-        }
-
-        return true;
-    }
-
     public async getUser(username: string) {
-        const user = await this.get(`users:${username}`);
+        const user = await this.get(`users:${username.toLowerCase()}`);
 
         if (!user) {
-            return;
+            return null;
         }
 
         return this.deserializeUser(user);
@@ -233,19 +229,18 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async getAllScores(quizId: string) {
-        const votes = await this.getAllVotes(quizId);
-
-        const scores = Object.entries(votes)
-            .reduce((prev, [username, playerVotes]) => {
-                const userScore = sum(
+        const scores = Object
+            .entries(await this.getAllVotes(quizId))
+            .reduce((prev, [player, votes]) => {
+                const score = sum(
                     ANSWERS_EN
-                        .map((answerIndex, i) => i < playerVotes.length && answerIndex === playerVotes[i])
+                        .map((answerIndex, i) => i < votes.length && answerIndex === votes[i])
                         .map(Number)
                 );
         
                 return {
                     ...prev,
-                    [username]: userScore,
+                    [player]: score,
                 };
             }, {});
     
@@ -253,7 +248,7 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async getUserVotes(quizId: string, username: string) {
-        const votes = await this.get(`votes:${quizId}:${username}`);
+        const votes = await this.get(`votes:${quizId}:${username.toLowerCase()}`);
 
         if (votes !== null) {
             return this.deserializeUserVotes(votes);
@@ -263,7 +258,7 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async setUserVotes(quizId: string, username: string, votes: number[]) {
-        await this.set(`votes:${quizId}:${username}`, votes.join(SEPARATOR));
+        await this.set(`votes:${quizId}:${username.toLowerCase()}`, votes.join(SEPARATOR));
     }
 
     protected deserializeUserVotes(votes: string) {
@@ -274,7 +269,7 @@ class AppDatabase extends RedisDatabase {
         const votes = await this.getAllVotes(quizId);
         const players = Object.keys(votes);
 
-        return players.filter(player => votes[player].length >= questionIndex + 1);
+        return players.filter((player) => votes[player].length >= questionIndex + 1);
     }
 
     public async getQuestionIndex(quizId: string) {
