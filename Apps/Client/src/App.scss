@@ -10,16 +10,41 @@
   background-size: cover;
   overflow-y: auto;
 
+  // Hide everything when screen is too small
+  @media (max-width: $min-width) {
+    background-color: $color-black !important;
+    background-image: none !important;
+  }
+
   @include desktop {
       padding: 20px;
   }
 
   > .app-container {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    min-height: 100%;
 
     @include desktop {
       height: 100%;
+    }
+
+    > .app-version {
+      background-color: $color-black;
+      color: $color-white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-left: auto;
+      font-size: $font-size-caption;
+  
+      @include tablet {
+        font-size: $font-size-tablet-caption;
+      }
+  
+      @include desktop {
+        font-size: $font-size-desktop-caption;
+      }
     }
   }
 }

@@ -11,10 +11,13 @@ $nav-min-width: 380px;
   color: $color-white;
   z-index: 500;
 
+  // Hide everything when screen is too small
+  @media (max-width: $min-width) {
+    display: none !important;
+  }
+
   @include desktop {
     position: absolute;
-    top: 0;
-    left: 0;
     width: auto;
   }
 
@@ -52,9 +55,10 @@ $nav-min-width: 380px;
   
   > .nav-content {
     position: absolute;
+    top: -5px;
     width: 100%;
     box-shadow: $box-shadow-dark;
-    border-radius: 6px;
+    border-radius: 8px;
     overflow: hidden;
     z-index: 1;
     opacity: 0;
@@ -62,6 +66,7 @@ $nav-min-width: 380px;
     // transition: opacity 0.5s ease, visibility 0.5s;
 
     @include desktop {
+      top: auto;
       transform: translate(50%, 0);
       width: auto;
     }
@@ -105,7 +110,6 @@ $nav-min-width: 380px;
             justify-content: flex-end;
             align-items: center;
             width: 100%;
-            min-width: $nav-min-width;
             padding: 18px 16px;
             background-color: $color-secondary;
             color: $color-black;
@@ -113,34 +117,8 @@ $nav-min-width: 380px;
             @include font-subtitle;
   
             @include desktop {
+              min-width: $nav-min-width;
               padding: 12px 16px;
-            }
-          }
-        }
-
-        &.nav-second-item {
-          position: relative;
-
-          > .nav-text {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            width: 100%;
-            min-width: $nav-min-width;
-            padding: 18px 16px;
-            color: $color-white;
-            font-weight: bold;
-            background-color: $color-black;
-
-            @include desktop {
-              padding: 12px 16px;
-            }
-
-            > .nav-icon {
-              width: 32px;
-              height: 32px;
-              color: $color-white;
-              margin-right: 8px;
             }
           }
         }

@@ -7,7 +7,6 @@ import OpenIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import QuizIcon from '@mui/icons-material/Quiz';
-import TerminalIcon from '@mui/icons-material/Terminal';
 import { ReactComponent as GermanyIcon } from '../icons/germany.svg';
 import { ReactComponent as UnitedKingdoIcon } from '../icons/uk.svg';
 import HomeIcon from '@mui/icons-material/Home';
@@ -30,7 +29,6 @@ const Nav: React.FC = () => {
 
   const status = useSelector((state) => state.quiz.status.data);
   const user = useSelector((state) => state.user);
-  const app = useSelector((state) => state.app)
 
   // Change language in i18n when it is changed in the component's state
   useEffect(() => {
@@ -108,13 +106,6 @@ const Nav: React.FC = () => {
                 {isAuthenticated ? `${t('COMMON.WELCOME')}, ${username}!` : `${t('COMMON.WELCOME')}!`}
               </strong>
             </p>
-          </li>
-
-          <li className='nav-second-item'>
-              <p className='nav-text'>
-                <TerminalIcon className='nav-icon' />
-                {app.version}
-              </p>
           </li>
 
           <li className='nav-item'>

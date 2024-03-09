@@ -28,8 +28,14 @@ export const appSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Reset state on logout, no matter if successful or not
-      .addCase(logout.fulfilled, () => initialState)
-      .addCase(logout.rejected, () => initialState)
+      .addCase(logout.fulfilled, (state) => ({
+        ...initialState,
+        version: state.version,
+      }))
+      .addCase(logout.rejected, (state) => ({
+        ...initialState,
+        version: state.version,
+      }))
       .addCase(fetchData.fulfilled, (state, action) => {
         state.questionIndex = action.payload as number;
       })
