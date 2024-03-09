@@ -13,6 +13,8 @@ $nav-min-width: 380px;
 
   @include desktop {
     position: absolute;
+    top: 0;
+    left: 0;
     width: auto;
   }
 
