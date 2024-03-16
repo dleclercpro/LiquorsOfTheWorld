@@ -1,6 +1,6 @@
 # Define constant image details
 user="dleclercpro"
-app="liquors-quiz"
+app="quiz"
 release="latest"
 composefile="docker-compose.yml"
 

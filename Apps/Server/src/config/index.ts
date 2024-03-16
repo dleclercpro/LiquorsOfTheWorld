@@ -30,12 +30,15 @@ export const CLIENT_ROOT = `http://${CLIENT_HOST}:${CLIENT_PORT}`;
 // Redis
 export const REDIS_HOST = process.env.REDIS_HOST!;
 export const REDIS_PORT = parseNumberText(process.env.REDIS_PORT);
-export const REDIS_NAME = `liquors`;
+export const REDIS_NAME = `quiz`;
 export const REDIS_RETRY_CONNECT_MAX_DELAY = new TimeDuration(3, TimeUnit.Seconds);
 export const REDIS_RETRY_CONNECT_TIMEOUT = new TimeDuration(5, TimeUnit.Seconds);
 export const REDIS_RETRY_CONNECT_MAX = 5;
 
 // Authentication
-export const COOKIE_NAME = `liquors`;
+export const COOKIE_NAME = `quiz`;
 export const TOKEN_SECRET = process.env.TOKEN_SECRET!;
 export const N_SALT_ROUNDS = 10;
+
+// Quiz
+export const QUIZ = process.env.QUIZ as string;

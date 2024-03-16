@@ -1,0 +1,25 @@
+[
+  {
+    "theme": "Video",
+    "question": "Was ist in diesem Video los?",
+    "options": ["Ein Business-Meeting", "Eine Weinprobe", "Eine Software-Anleitung"],
+    "type": "video",
+    "url": "/static/video/Test.mp4",
+    "answer": 0
+  },
+  {
+    "theme": "Bild",
+    "question": "Wer ist auf diesem Bild zu sehen?",
+    "options": ["A", "B", "C"],
+    "type": "image",
+    "url": "/static/img/Kid.webp",
+    "answer": 2
+  },
+  {
+    "theme": "Test",
+    "question": "Was ist die Hauptzutat im traditionellen russischen Wodka?",
+    "options": ["Kartoffeln", "Trauben", "Weizen"],
+    "type": "text",
+    "answer": 2
+  }
+]

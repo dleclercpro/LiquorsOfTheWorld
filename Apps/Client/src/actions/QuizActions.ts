@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { StatusData, ScoreData, GroupedScoreData } from '../types/DataTypes';
+import { StatusData, GroupedScoreData } from '../types/DataTypes';
 import { CallGetQuestions } from '../calls/quiz/CallGetQuestions';
 import { CallGetStatus } from '../calls/quiz/CallGetStatus';
 import { CallGetScores } from '../calls/quiz/CallGetScores';

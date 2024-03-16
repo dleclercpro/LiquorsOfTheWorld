@@ -2,8 +2,8 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import translationEN from './locales/en/translation.json';
 import translationDE from './locales/de/translation.json';
-import { DEBUG } from './config';
-import { Language } from './constants';
+import { DEBUG, QUIZ } from './config';
+import { Language, QuizName } from './constants';
 
 const resources = {
   en: {
@@ -14,7 +14,7 @@ const resources = {
   },
 };
 
-export const INIT_LANGUAGE = Language.DE;
+export const INIT_LANGUAGE = QUIZ === QuizName.KonnyUndJohannes ? Language.DE : Language.EN;
 export const FALLBACK_LANGUAGE = Language.EN;
 
 i18n
