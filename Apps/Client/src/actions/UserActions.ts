@@ -7,9 +7,9 @@ import { CallVote } from '../calls/quiz/CallVote';
 
 export const login = createAsyncThunk(
   'user/login',
-  async ({ quizId, username, password }: LoginData, { rejectWithValue }) => {
+  async ({ quizId, quizName, username, password }: LoginData, { rejectWithValue }) => {
     try {
-      const { data } = await new CallLogIn().execute({ quizId, username, password });
+      const { data } = await new CallLogIn().execute({ quizId, quizName, username, password });
 
       if (!data) {
         throw new Error('MISSING_DATA');

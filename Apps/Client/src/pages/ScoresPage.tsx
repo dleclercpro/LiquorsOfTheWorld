@@ -6,8 +6,11 @@ import { fetchScores } from '../actions/QuizActions';
 import { useNavigate } from 'react-router-dom';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
+import { useTranslation } from 'react-i18next';
 
 const ScoresPage: React.FC = () => {
+  const { t } = useTranslation();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -40,7 +43,7 @@ const ScoresPage: React.FC = () => {
   }
   
   return (
-    <Page className='scores-page'>
+    <Page title={t('common:COMMON:SCOREBOARD')} className='scores-page'>
       <Scoreboard scores={scores.users} />
     </Page>
   );

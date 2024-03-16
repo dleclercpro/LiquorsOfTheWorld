@@ -4,7 +4,7 @@ import { APP_DB } from '../..';
 import { successResponse } from '../../utils/calls';
 import { Quiz, Vote } from '../../types/QuizTypes';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { N_QUESTIONS } from '../../constants';
+import { N_QUESTIONS } from '../../config';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';

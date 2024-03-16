@@ -19,7 +19,7 @@ const LoadingOverlay: React.FC = () => {
     <div id='loading-overlay' className={`${!open ? 'hidden' : ''} opaque`}>
       <div className='loading-overlay-box'>
         <h2 className='loading-overlay-title'>
-          {t('COMMON.PLEASE_WAIT')}...
+          {t('common:COMMON.PLEASE_WAIT')}...
         </h2>
         <p className='loading-overlay-text'>
           <Trans i18nKey='OVERLAYS.LOADING.HELLO' values={{ username }}>

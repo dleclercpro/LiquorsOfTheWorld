@@ -13,7 +13,8 @@ import { logout } from '../actions/UserActions';
 import Page from './Page';
 
 const QuizPage: React.FC = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
+
   const lang = i18n.language as Language;
 
   const quiz = useSelector(({ quiz }) => quiz);
@@ -27,6 +28,7 @@ const QuizPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const quizId = quiz.id;
+  const quizName = quiz.name;
   const questions = quiz.questions.data;
   const status = quiz.status.data;
   const isStarted = status?.isStarted;
@@ -39,7 +41,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    dispatch(fetchData({ quizId, lang }));
+    dispatch(fetchData({ quizId, quizName, lang }));
   }, []);
 
   // Refresh quiz data when changing language
@@ -48,7 +50,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    dispatch(fetchQuestions(lang));
+    dispatch(fetchQuestions({ lang, quizName }));
   }, [lang]);
 
   // Regularly fetch current quiz status from server
@@ -101,7 +103,7 @@ const QuizPage: React.FC = () => {
   const { theme, question, type, url, options } = questions[playerQuestionIndex];
 
   return (
-    <Page className='quiz-page'>
+    <Page title={t('common:COMMON:QUIZ')} className='quiz-page'>
       {!isStarted && isAdmin && (
         <AdminQuizForm />
       )}

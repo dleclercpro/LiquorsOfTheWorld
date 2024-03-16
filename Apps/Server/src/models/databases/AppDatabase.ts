@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { N_SALT_ROUNDS } from '../../config';
-import { N_QUESTIONS, ANSWERS_EN } from '../../constants';
+import { QuizName } from '../../constants';
+import { N_QUESTIONS } from '../../config';
 import logger from '../../logger';
 import { getLast, getRange, unique } from '../../utils/array';
 import { sum } from '../../utils/math';
@@ -11,6 +12,7 @@ import { Quiz } from '../../types/QuizTypes';
 import QuizAlreadyExistsError from '../../errors/QuizAlreadyExistsError';
 import HashError from '../../errors/HashError';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
+import { getQuestions } from '../../utils';
 
 const SEPARATOR = '|';
 
@@ -73,7 +75,7 @@ class AppDatabase extends RedisDatabase {
         return user;
     }
 
-    public async createQuiz(quizId: string, username: string) {
+    public async createQuiz(quizId: string, quizName: QuizName, username: string) {
         logger.trace(`Creating a new quiz...`);
 
         if (await this.doesQuizExist(quizId)) {
@@ -81,6 +83,7 @@ class AppDatabase extends RedisDatabase {
         }
 
         const quiz: Quiz = {
+            name: quizName,
             creator: username.toLowerCase(),
             players: [],
             status: {
@@ -193,6 +196,8 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async getVotesCount(quizId: string) {
+        logger.debug('getVotesCount');
+        logger.debug(N_QUESTIONS);
         const votesCount = new Array(N_QUESTIONS).fill(0);
 
         const votes = await this.getAllVotes(quizId);
@@ -229,11 +234,20 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async getAllScores(quizId: string) {
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new InvalidQuizIdError();
+        }
+
+        const questions = await getQuestions(quiz.name);
+        const answers = questions.map((question) => question.answer);
+
         const scores = Object
             .entries(await this.getAllVotes(quizId))
             .reduce((prev, [player, votes]) => {
                 const score = sum(
-                    ANSWERS_EN
+                    answers
                         .map((answerIndex, i) => i < votes.length && answerIndex === votes[i])
                         .map(Number)
                 );

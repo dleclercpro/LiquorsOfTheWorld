@@ -42,3 +42,4 @@ export const N_SALT_ROUNDS = 10;
 
 // Quiz
 export const QUIZ = process.env.QUIZ as string;
+export const N_QUESTIONS = parseNumberText(process.env.N_QUESTIONS);

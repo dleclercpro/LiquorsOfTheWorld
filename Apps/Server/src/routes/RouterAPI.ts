@@ -41,7 +41,7 @@ router.get('/version', GetVersionController);
 
 router.get('/user', [AuthMiddleware], GetUserController);
 
-router.get('/questions/:lang', GetQuestionsController);
+router.get('/questions/:lang/:quizName', GetQuestionsController);
 
 router.get('/quiz/:quizId', [AuthMiddleware], GetStatusController);
 router.delete('/quiz/:quizId', [AuthMiddleware], DeleteQuizController);

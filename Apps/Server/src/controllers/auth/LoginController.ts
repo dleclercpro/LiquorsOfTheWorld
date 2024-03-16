@@ -13,9 +13,11 @@ import InvalidPasswordError from '../../errors/InvalidPasswordError';
 import UserDoesNotExistError from '../../errors/UserDoesNotExistError';
 import QuizAlreadyStartedError from '../../errors/QuizAlreadyStartedError';
 import { Quiz } from '../../types/QuizTypes';
+import { QuizName } from '../../constants';
 
 type RequestBody = Auth & {
     quizId: string,
+    quizName: QuizName,
 };
 
 const isPasswordValid = async (password: string, hashedPassword: string) => {
@@ -42,10 +44,10 @@ const isPasswordValid = async (password: string, hashedPassword: string) => {
 
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
-        const { quizId, username, password } = req.body as RequestBody;
+        const { quizId, quizName, username, password } = req.body as RequestBody;
         const admin = ADMINS.find(admin => admin.username === username);
         const isAdmin = Boolean(admin);
-        logger.trace(`Attempt to join quiz '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
+        logger.trace(`Attempt to join quiz '${quizName}' with ID '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
 
         // Check if quiz exists
         let quiz = await APP_DB.getQuiz(quizId);
@@ -59,7 +61,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
             }
 
             // Only admins can create new quizzes
-            quiz = await APP_DB.createQuiz(quizId, username);
+            quiz = await APP_DB.createQuiz(quizId, quizName, username);
         }
 
         const isQuizStarted = (quiz as Quiz).status.isStarted;

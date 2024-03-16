@@ -1,4 +1,5 @@
 import { Auth } from '.';
+import { QuizName } from '../constants';
 
 export type FetchedData<Data> = {
   data: Data | null,
@@ -14,6 +15,7 @@ export type PingData = {
 
 export type LoginData = Auth & {
   quizId: string,
+  quizName: QuizName,
 };
 
 export type UserData = {

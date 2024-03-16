@@ -5,9 +5,12 @@ import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, startQuiz, startQ
 import { login, logout, ping, vote } from '../actions/UserActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
+import { QuizName } from '../constants';
+import { QUIZ_NAME } from '../config';
 
 interface QuizState {
   id: string | null,
+  name: QuizName,
   questions: FetchedData<QuizJSON>,
   status: FetchedData<StatusData>,
   votes: FetchedData<number[]>,
@@ -16,6 +19,7 @@ interface QuizState {
 
 const initialState: QuizState = {
   id: null,
+  name: QUIZ_NAME,
   questions: getInitialFetchedData(),
   status: getInitialFetchedData(),
   votes: getInitialFetchedData(),

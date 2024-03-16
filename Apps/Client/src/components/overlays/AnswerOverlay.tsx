@@ -48,7 +48,7 @@ const AnswerOverlay: React.FC = () => {
   const Icon = isAnswerCorrect ? RightIcon : WrongIcon;
   const iconText = t(isAnswerCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_ICON_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_ICON_TEXT');
 
-  const title = t('OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount, playersCount: players.length });
+  const title = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount, playersCount: players.length });
   const text = t(isAnswerCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_TEXT');
 
 
@@ -82,7 +82,7 @@ const AnswerOverlay: React.FC = () => {
               {mustWait ? (
                 <>
                   <WaitIcon className='answer-overlay-icon wait' />
-                  <p className='answer-overlay-title'>{t('OVERLAYS.ANSWER.PLEASE_WAIT_FOR_NEXT_QUESTION')}</p>
+                  <p className='answer-overlay-title'>{t('common:OVERLAYS.ANSWER.PLEASE_WAIT_FOR_NEXT_QUESTION')}</p>
                 </>
               ) : (
                 <>
@@ -103,17 +103,17 @@ const AnswerOverlay: React.FC = () => {
 
                   {!isOver && (isAdmin && isSupervised) && (
                     <button className='answer-overlay-button' onClick={startAndGoToNextQuestion}>
-                      {t('OVERLAYS.ANSWER.START_NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${questions.length})`}
+                      {t('common:OVERLAYS.ANSWER.START_NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${questions.length})`}
                     </button>
                   )}
                   {!isOver && !(isAdmin && isSupervised) && !mustWait && (
                     <button className='answer-overlay-button' onClick={goToNextQuestion}>
-                      {t('OVERLAYS.ANSWER.NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${questions.length})`}
+                      {t('common:OVERLAYS.ANSWER.NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${questions.length})`}
                     </button>
                   )}
                   {isOver && (
                     <button className='answer-overlay-button' onClick={goToScoreboard}>
-                      {t('OVERLAYS.ANSWER.SEE_RESULTS')}
+                      {t('common:OVERLAYS.ANSWER.SEE_RESULTS')}
                     </button>
                   )}
                 </>

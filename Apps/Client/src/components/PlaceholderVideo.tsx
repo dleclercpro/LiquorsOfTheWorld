@@ -34,7 +34,7 @@ const PlaceholderVideo: React.FC<Props> = ({ className, src, alt }) => {
         onLoadedMetadata={showVideo}
       >
         <source src={src} type='video/mp4' />
-        {t('ERRORS.NO_VIDEO_TAGS')}
+        {t('common:ERRORS.NO_VIDEO_TAGS')}
       </video>
     </div>
   );

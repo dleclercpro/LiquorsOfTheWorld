@@ -20,7 +20,7 @@ function App() {
   const [backgroundUrl, setBackgroundUrl] = useState('');
 
   const dispatch = useDispatch();
-  
+
   // Check if user is logged in already
   useEffect(() => {
     setBackgroundUrl(`url(${getRandom(BACKGROUND_URLS)})`);

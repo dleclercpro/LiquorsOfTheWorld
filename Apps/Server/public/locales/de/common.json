@@ -8,6 +8,7 @@
     "TEST": "Test",
     "START": "Start",
     "STOP": "Stop",
+    "ERROR": "Fehler",
     "LOG_IN": "Einloggen",
     "LOG_OUT": "Ausloggen",
     "USERNAME": "Benutzername",
@@ -16,7 +17,7 @@
     "SCOREBOARD": "Punktestand",
     "SCORE": "Punktzahl",
     "RANK": "Rang",
-    "START_PAGE": "Startseite"
+    "HOME": "Startseite"
   },
   "PAGES": {
     "HOME": {

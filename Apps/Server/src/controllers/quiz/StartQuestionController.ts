@@ -3,13 +3,12 @@ import logger from '../../logger';
 import { APP_DB } from '../..';
 import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { N_QUESTIONS } from '../../constants';
+import { N_QUESTIONS } from '../../config';
 import { Quiz } from '../../types/QuizTypes';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 import UserCannotStartQuestionError from '../../errors/UserCannotStartQuestionError';
 import UserCannotStartUnsupervisedQuestionError from '../../errors/UserCannotStartUnsupervisedQuestionError';
-import PlayersNotReadyError from '../../errors/PlayersNotReadyError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 
 const validateParams = async (params: ParamsDictionary) => {

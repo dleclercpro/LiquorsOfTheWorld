@@ -8,15 +8,15 @@ import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
 import { CallStartQuiz } from '../calls/quiz/CallStartQuiz';
 import { CallStartQuestion } from '../calls/quiz/CallStartQuestion';
-import { Language } from '../constants';
+import { Language, QuizName } from '../constants';
 import { CallDeleteQuiz } from '../calls/quiz/CallDeleteQuiz';
 import { logout } from './UserActions';
 
 export const fetchQuestions = createAsyncThunk(
   'quiz/fetchQuestions',
-  async (lang: Language, { rejectWithValue }) => {
+  async ({ lang, quizName }: { lang: Language, quizName: QuizName }, { rejectWithValue }) => {
     try {
-      const { data } = await new CallGetQuestions(lang).execute();
+      const { data } = await new CallGetQuestions(lang, quizName).execute();
       
       return data as QuizJSON;
 
@@ -100,10 +100,10 @@ export const fetchScores = createAsyncThunk(
 
 export const fetchData = createAsyncThunk(
   'quiz/fetchData',
-  async ({ quizId, lang }: { quizId: string, lang: Language } , { dispatch, getState, rejectWithValue }) => {
+  async ({ quizId, quizName, lang }: { quizId: string, quizName: QuizName, lang: Language } , { dispatch, getState, rejectWithValue }) => {
     try {
       const result = await Promise.all([
-        dispatch(fetchQuestions(lang)),
+        dispatch(fetchQuestions({ lang, quizName })),
         dispatch(fetchVotes(quizId)),
         dispatch(fetchScores(quizId)),
         dispatch(fetchStatus(quizId)),

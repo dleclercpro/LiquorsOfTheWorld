@@ -36,6 +36,7 @@ const QuestionForm: React.FC<Props> = (props) => {
   const { index, theme, question, image, video, ratio, options, disabled, choice, setChoice } = props;
 
   const { t } = useTranslation();
+
   const quiz = useSelector(({ quiz }) => quiz);
   const quizId = quiz.id;
   const questions = quiz.questions.data;
@@ -82,7 +83,7 @@ const QuestionForm: React.FC<Props> = (props) => {
   return (
     <form className='question-form' onSubmit={handleSubmit}>
       <div className='question-form-meta'>
-        <p className='question-form-index'>{t('COMMON.QUESTION')}: {index + 1}/{questions.length}</p>
+        <p className='question-form-index'>{t('common:COMMON.QUESTION')}: {index + 1}/{questions.length}</p>
         <p className='question-form-theme'>{theme}</p>
       </div>
 

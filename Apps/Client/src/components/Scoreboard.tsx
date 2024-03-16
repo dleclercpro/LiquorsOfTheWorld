@@ -29,9 +29,9 @@ const Scoreboard: React.FC<Props> = (props) => {
   
   return (
     <div className='scoreboard'>
-      <h2 className='scoreboard-title'>{t('COMMON.SCOREBOARD')}</h2>
+      <h2 className='scoreboard-title'>{t('common:COMMON.SCOREBOARD')}</h2>
       <p className='scoreboard-sub-title'>
-        {t('COMMON.QUIZ')}:
+        {t('common:COMMON.QUIZ')}:
         <strong className='scoreboard-quiz-label'>
           {quizId}
         </strong>
@@ -42,9 +42,9 @@ const Scoreboard: React.FC<Props> = (props) => {
       <table className='scoreboard-table'>
         <thead>
           <tr>
-              <th>{t('COMMON.RANK')}</th>
-              <th>{t('COMMON.USERNAME')}</th>
-              <th>{t('COMMON.SCORE')}</th>
+              <th>{t('common:COMMON.RANK')}</th>
+              <th>{t('common:COMMON.USERNAME')}</th>
+              <th>{t('common:COMMON.SCORE')}</th>
           </tr>
         </thead>
         <tbody>
