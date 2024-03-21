@@ -55,18 +55,26 @@ const VoteController: RequestHandler = async (req, res, next) => {
 
         // If quiz is not supervised: increment question index
         const quiz = await APP_DB.getQuiz(quizId) as Quiz;
-        if (!quiz.status.isSupervised) {
 
-            // Find out whether all users have voted up until current question
-            const playersWhoVoted = await APP_DB.getPlayersWhoVotedUpUntil(quizId, questionIndex);;
-            const players = await APP_DB.getAllPlayers(quizId);
-            logger.trace(`Players: ${players}`);
-            logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);
+        // Find out whether all users have voted up until current question
+        const playersWhoVoted = await APP_DB.getPlayersWhoVotedUpUntil(quizId, questionIndex);;
+        const players = await APP_DB.getAllPlayers(quizId);
+        logger.trace(`Players: ${players}`);
+        logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);
 
-            // If so: increment quiz's current question index
-            if (playersWhoVoted.length === players.length) {
-                logger.info(`All users have voted on question #${questionIndex + 1}: incrementing question index...`);
+        // If so: increment quiz's current question index
+        if (playersWhoVoted.length === players.length) {
+            logger.info(`All users have voted on question #${questionIndex + 1}.`);
+            
+            // That was not the last question and the game is not supervised:
+            // the index can be automatically incremented
+            if (questionIndex + 1 < N_QUESTIONS && !quiz.status.isSupervised) {
                 await APP_DB.incrementQuestionIndex(quizId);
+            }
+
+            // That was the last question: the game is now over
+            else if (questionIndex + 1 === N_QUESTIONS) {
+                await APP_DB.finishQuiz(quizId);
             }
         }
 
