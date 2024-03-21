@@ -46,6 +46,9 @@ RUN npm install --omit=dev
 # Copy public assets
 COPY ./Apps/Server/public ./public
 
+# Copy app data
+COPY ./Apps/Server/data ./data
+
 # Copy environment variables
 COPY ./Apps/Server/.env.production ./.env.production
 
