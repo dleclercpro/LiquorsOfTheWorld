@@ -11,6 +11,7 @@ import { Quiz } from '../../types/QuizTypes';
 import QuizAlreadyExistsError from '../../errors/QuizAlreadyExistsError';
 import HashError from '../../errors/HashError';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
+import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 
 const SEPARATOR = '|';
 
@@ -300,19 +301,24 @@ class AppDatabase extends RedisDatabase {
 
     public async incrementQuestionIndex(quizId: string) {
         const questionIndex = await this.getQuestionIndex(quizId);
+
+        if (questionIndex + 1 > N_QUESTIONS) {
+            throw new InvalidQuestionIndexError();
+        }
+
+        await this.setQuestionIndex(quizId, questionIndex + 1);
+    }
+
+    public async finishQuiz(quizId: string) {
         const quiz = await this.getQuiz(quizId) as Quiz;
 
-        if (questionIndex + 1 === N_QUESTIONS) {
-            await this.setQuiz(quizId, {
-                ...quiz,
-                status: {
-                    ...quiz.status,
-                    isOver: true,
-                },
-            });
-        } else {
-            await this.setQuestionIndex(quizId, questionIndex + 1);
-        }
+        await this.setQuiz(quizId, {
+            ...quiz,
+            status: {
+                ...quiz.status,
+                isOver: true,
+            },
+        });
     }
 
     public async generateQuizId() {
