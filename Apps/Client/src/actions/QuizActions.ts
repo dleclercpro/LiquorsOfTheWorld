@@ -98,8 +98,8 @@ export const fetchScores = createAsyncThunk(
 
 
 
-export const fetchData = createAsyncThunk(
-  'quiz/fetchData',
+export const fetchQuizData = createAsyncThunk(
+  'quiz/fetchQuizData',
   async ({ quizId, quizName, lang }: { quizId: string, quizName: QuizName, lang: Language } , { dispatch, getState, rejectWithValue }) => {
     try {
       const result = await Promise.all([

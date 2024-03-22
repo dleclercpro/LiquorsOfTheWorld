@@ -15,6 +15,7 @@ import { getRandom } from './utils/array';
 import Nav from './components/Nav';
 import ErrorPage from './pages/ErrorPage';
 import { fetchVersion } from './actions/AppActions';
+import { fetchQuizNames } from './actions/DataActions';
 
 function App() {
   const [backgroundUrl, setBackgroundUrl] = useState('');
@@ -28,6 +29,7 @@ function App() {
     dispatch(ping());
 
     dispatch(fetchVersion());
+    dispatch(fetchQuizNames());
   }, []);
 
   return (
@@ -45,7 +47,7 @@ function App() {
             </>
           )}
 
-          <Route path='/quiz' element={(
+          <Route path='/quiz/:name' element={(
             <AuthRoute>
               <QuizPage />
             </AuthRoute>

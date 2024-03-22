@@ -7,6 +7,6 @@ type RequestData = {
 export class CallStartQuiz extends CallPUT<RequestData> {
 
     constructor(quizId: string) {
-        super(`/quiz/${quizId}/start`);
+        super(`/quiz/${quizId}`);
     }
 };
