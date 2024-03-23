@@ -39,7 +39,3 @@ export const REDIS_RETRY_CONNECT_MAX = 5;
 export const COOKIE_NAME = `quiz`;
 export const TOKEN_SECRET = process.env.TOKEN_SECRET!;
 export const N_SALT_ROUNDS = 10;
-
-// Quiz
-export const QUIZ = process.env.QUIZ as string;
-export const N_QUESTIONS = parseNumberText(process.env.N_QUESTIONS);

@@ -4,10 +4,10 @@ import { APP_DB } from '../..';
 import { successResponse } from '../../utils/calls';
 import { Quiz, Vote } from '../../types/QuizTypes';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { N_QUESTIONS } from '../../config';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
+import QuizManager from '../../models/QuizManager';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId, questionIndex: _questionIndex } = params;
@@ -16,12 +16,13 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new InvalidParamsError();
     }
 
-    if (!await APP_DB.doesQuizExist(quizId)) {
+    const quiz = await APP_DB.getQuiz(quizId);
+    if (!quiz) {
         throw new InvalidQuizIdError();
     }
 
     const questionIndex = Number(_questionIndex);
-    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < N_QUESTIONS;
+    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < QuizManager.count(quiz.name);
     if (!isQuestionIndexValid) {
         throw new InvalidQuestionIndexError();
     }
@@ -68,12 +69,12 @@ const VoteController: RequestHandler = async (req, res, next) => {
             
             // That was not the last question and the game is not supervised:
             // the index can be automatically incremented
-            if (questionIndex + 1 < N_QUESTIONS && !quiz.status.isSupervised) {
+            if (questionIndex + 1 < QuizManager.count(quiz.name) && !quiz.status.isSupervised) {
                 await APP_DB.incrementQuestionIndex(quizId);
             }
 
             // That was the last question: the game is now over
-            else if (questionIndex + 1 === N_QUESTIONS) {
+            else if (questionIndex + 1 === QuizManager.count(quiz.name)) {
                 await APP_DB.finishQuiz(quizId);
             }
         }

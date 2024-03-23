@@ -3,7 +3,7 @@ import { successResponse } from '../../utils/calls';
 import { LANGUAGES, Language, QUIZ_NAMES, QuizName } from '../../constants';
 import { ParamsDictionary } from 'express-serve-static-core';
 import InvalidLanguageError from '../../errors/InvalidLanguageError';
-import { getQuestions } from '../../utils';
+import QuizManager from '../../models/QuizManager';
 
 const validateParams = (params: ParamsDictionary) => {
     const { lang, quizName } = params;
@@ -26,7 +26,7 @@ const GetQuestionsController: RequestHandler = async (req, res, next) => {
     try {
         const { lang, quizName } = validateParams(req.params);
 
-        const questions = await getQuestions(quizName, lang);
+        const questions = await QuizManager.get(quizName, lang);
 
         return res.json(
             successResponse(questions)

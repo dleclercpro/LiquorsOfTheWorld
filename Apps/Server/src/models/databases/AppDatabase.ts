@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import { N_SALT_ROUNDS } from '../../config';
 import { QuizName } from '../../constants';
-import { N_QUESTIONS } from '../../config';
 import logger from '../../logger';
 import { getLast, getRange, unique } from '../../utils/array';
 import { sum } from '../../utils/math';
@@ -12,8 +11,8 @@ import { Quiz } from '../../types/QuizTypes';
 import QuizAlreadyExistsError from '../../errors/QuizAlreadyExistsError';
 import HashError from '../../errors/HashError';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
-import { getQuestions } from '../../utils';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
+import QuizManager from '../QuizManager';
 
 const SEPARATOR = '|';
 
@@ -197,9 +196,13 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async getVotesCount(quizId: string) {
-        logger.debug('getVotesCount');
-        logger.debug(N_QUESTIONS);
-        const votesCount = new Array(N_QUESTIONS).fill(0);
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new InvalidQuizIdError();
+        }
+
+        const votesCount = new Array(QuizManager.count(quiz.name)).fill(0);
 
         const votes = await this.getAllVotes(quizId);
         const players = Object.keys(votes);
@@ -241,7 +244,7 @@ class AppDatabase extends RedisDatabase {
             throw new InvalidQuizIdError();
         }
 
-        const questions = await getQuestions(quiz.name);
+        const questions = await QuizManager.get(quiz.name);
         const answers = questions.map((question) => question.answer);
 
         const scores = Object
@@ -314,9 +317,15 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async incrementQuestionIndex(quizId: string) {
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new InvalidQuizIdError();
+        }
+
         const questionIndex = await this.getQuestionIndex(quizId);
 
-        if (questionIndex + 1 > N_QUESTIONS) {
+        if (questionIndex + 1 > QuizManager.count(quiz.name)) {
             throw new InvalidQuestionIndexError();
         }
 
