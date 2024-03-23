@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { N_SALT_ROUNDS } from '../../config';
-import { QuizName } from '../../constants';
+import { QUIZ_NAMES, QuizName } from '../../constants';
 import logger from '../../logger';
 import { getLast, getRange, unique } from '../../utils/array';
 import { sum } from '../../utils/math';
@@ -13,6 +13,7 @@ import HashError from '../../errors/HashError';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 import QuizManager from '../QuizManager';
+import InvalidQuizNameError from '../../errors/InvalidQuizNameError';
 
 const SEPARATOR = '|';
 
@@ -77,6 +78,10 @@ class AppDatabase extends RedisDatabase {
 
     public async createQuiz(quizId: string, quizName: QuizName, username: string) {
         logger.trace(`Creating a new quiz...`);
+
+        if (!QUIZ_NAMES.includes(quizName)) {
+            throw new InvalidQuizNameError();
+        }
 
         if (await this.doesQuizExist(quizId)) {
             throw new QuizAlreadyExistsError();

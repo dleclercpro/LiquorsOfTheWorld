@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { CallGetQuizNames } from '../calls/quiz/CallGetQuizNames';
+import { CallGetQuizNames } from '../calls/data/CallGetQuizNames';
 
 export const fetchQuizNames = createAsyncThunk(
   'quiz/fetchQuizNames',

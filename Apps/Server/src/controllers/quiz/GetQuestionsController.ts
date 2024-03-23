@@ -4,6 +4,7 @@ import { LANGUAGES, Language, QUIZ_NAMES, QuizName } from '../../constants';
 import { ParamsDictionary } from 'express-serve-static-core';
 import InvalidLanguageError from '../../errors/InvalidLanguageError';
 import QuizManager from '../../models/QuizManager';
+import InvalidQuizNameError from '../../errors/InvalidQuizNameError';
 
 const validateParams = (params: ParamsDictionary) => {
     const { lang, quizName } = params;
@@ -13,8 +14,7 @@ const validateParams = (params: ParamsDictionary) => {
     }
 
     if (!QUIZ_NAMES.includes(quizName as QuizName)) {
-        // Fixme
-        throw new Error('Invalid quiz name.');
+        throw new InvalidQuizNameError();
     }
 
     return { lang: lang as Language, quizName: quizName as QuizName };

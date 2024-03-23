@@ -18,7 +18,7 @@ const HomePage: React.FC = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   const paramQuizId = searchParams.get('id');
-  const paramQuizName = searchParams.get('q');
+  const paramQuizName = searchParams.get('quiz');
 
   const quizId = paramQuizId;
   const quizName = quiz.name || paramQuizName as QuizName;

@@ -3,7 +3,7 @@ import './App.scss';
 import HomePage from './pages/HomePage';
 import QuizPage from './pages/QuizPage';
 import ScoresPage from './pages/ScoresPage';
-import { DEBUG } from './config';
+import { DEBUG, SERVER_ROOT } from './config';
 import TestPage from './pages/TestPage';
 import AuthRoute from './routes/AuthRoute';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
@@ -11,21 +11,18 @@ import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from './hooks/redux';
 import { ping } from './actions/UserActions';
-import { getRandom } from './utils/array';
 import Nav from './components/Nav';
 import ErrorPage from './pages/ErrorPage';
 import { fetchVersion } from './actions/AppActions';
 import { fetchQuizNames } from './actions/DataActions';
-import { getBackgroundUrls } from './utils';
+import { CallGetBackgroundUrl } from './calls/data/CallGetBackgroundUrl';
 
 function App() {
   const [backgroundUrl, setBackgroundUrl] = useState('');
 
-  const { name } = useSelector((state) => state.quiz);
-  
-  const backgroundUrls = name ? getBackgroundUrls(name) : [];
-
   const dispatch = useDispatch();
+
+  const quiz = useSelector((state) => state.quiz)
 
   useEffect(() => {
     dispatch(ping());
@@ -35,12 +32,18 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (backgroundUrls.length === 0) {
+    if (quiz.name === null) {
       return;
     }
-    
-    setBackgroundUrl(`url(${getRandom(backgroundUrls)})`);
-  }, [backgroundUrls]);
+
+    new CallGetBackgroundUrl(quiz.name).execute()
+      .then(({ data: path }) => {
+        const url = `${SERVER_ROOT}${path}`;
+        setBackgroundUrl(`url(${url})`);
+      })
+      .catch((err) => console.error(err));
+
+  }, [quiz.name]);
 
   return (
     <div className='app' style={{ backgroundImage: backgroundUrl }}>

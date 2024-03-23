@@ -17,6 +17,7 @@ import DeleteQuizController from '../controllers/quiz/DeleteQuizController';
 import DeleteDatabaseController from '../controllers/DeleteDatabaseController';
 import GetVersionController from '../controllers/app/GetVersionController';
 import GetQuizNamesController from '../controllers/quiz/GetQuizNamesController';
+import GetBackgroundUrlController from '../controllers/app/GetBackgroundUrlController';
 
 
 
@@ -39,6 +40,7 @@ router.get('/auth', [AuthMiddleware], PingController);
 router.delete('/auth', [AuthMiddleware], LogoutController);
 
 router.get('/version', GetVersionController);
+router.get('/bg/:quizName', GetBackgroundUrlController);
 router.get('/user', [AuthMiddleware], GetUserController);
 
 router.get('/quiz/:quizId', [AuthMiddleware], GetStatusController);

@@ -11,7 +11,7 @@ const AuthRoute: React.FC<Props> = ({ children }) => {
   const quiz = useSelector((state) => state.quiz);
 
   if (!isAuthenticated) {
-    return <Navigate to={quiz.name ? `/?q=${quiz.name}` : `/`} />;
+    return <Navigate to={quiz.name ? `/?quiz=${quiz.name}` : `/`} />;
   }
 
   return (
