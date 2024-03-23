@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../stores/store';
-import { login, logout, ping } from '../actions/UserActions';
+import { login, logout, ping } from '../actions/AuthActions';
 
 interface UserState {
   username: string | null,

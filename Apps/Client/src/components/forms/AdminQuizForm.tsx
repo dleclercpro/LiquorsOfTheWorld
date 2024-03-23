@@ -5,7 +5,7 @@ import { deleteQuiz, startQuiz } from '../../actions/QuizActions';
 import { Trans, useTranslation } from 'react-i18next';
 import { selectPlayers } from '../../reducers/QuizReducer';
 import { deleteDatabase } from '../../actions/DatabaseActions';
-import { logout } from '../../actions/UserActions';
+import { logout } from '../../actions/AuthActions';
 
 const AdminQuizForm: React.FC = () => {
   const dispatch = useDispatch();

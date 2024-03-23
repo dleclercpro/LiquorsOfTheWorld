@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { openAnswerOverlay } from '../../reducers/OverlaysReducer';
 import './QuestionForm.scss';
-import { vote } from '../../actions/UserActions';
+import { vote } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
 import { SERVER_ROOT } from '../../config';
 import { AspectRatio } from '../../constants';

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../hooks/redux';
 import { selectAuthentication } from '../../reducers/UserReducer';
 import './LoginForm.scss';
-import { login } from '../../actions/UserActions';
+import { login } from '../../actions/AuthActions';
 import { useTranslation } from 'react-i18next';
 
 type Props = {

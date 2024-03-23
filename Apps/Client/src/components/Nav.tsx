@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './Nav.scss';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { Link, useLocation } from 'react-router-dom';
-import { logout } from '../actions/UserActions';
+import { logout } from '../actions/AuthActions';
 import OpenIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';

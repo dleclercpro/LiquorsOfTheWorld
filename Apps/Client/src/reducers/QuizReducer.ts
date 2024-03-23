@@ -1,11 +1,12 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { FetchedData, GroupedScoreData, StatusData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
-import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, startQuiz, startQuestion } from '../actions/QuizActions';
-import { login, logout, ping, vote } from '../actions/UserActions';
+import { startQuiz, startQuestion, vote } from '../actions/QuizActions';
+import { login, logout, ping } from '../actions/AuthActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { RootState } from '../stores/store';
 import { QuizName } from '../constants';
+import { fetchStatus, fetchQuestions, fetchVotes, fetchScores } from '../actions/DataActions';
 
 interface QuizState {
   id: string | null,

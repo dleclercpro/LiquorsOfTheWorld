@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './ScoresPage.scss';
 import Scoreboard from '../components/Scoreboard';
 import { useDispatch, useSelector } from '../hooks/redux';
-import { fetchScores } from '../actions/QuizActions';
+import { fetchScores } from '../actions/DataActions';
 import { Navigate } from 'react-router-dom';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
