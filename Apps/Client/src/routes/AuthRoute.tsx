@@ -8,9 +8,10 @@ type Props = {
 
 const AuthRoute: React.FC<Props> = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const quiz = useSelector((state) => state.quiz);
 
   if (!isAuthenticated) {
-    return <Navigate to='/' />;
+    return <Navigate to={quiz.name ? `/?q=${quiz.name}` : `/`} />;
   }
 
   return (

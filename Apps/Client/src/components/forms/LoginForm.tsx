@@ -5,7 +5,6 @@ import { selectAuthentication } from '../../reducers/UserReducer';
 import './LoginForm.scss';
 import { login } from '../../actions/UserActions';
 import { useTranslation } from 'react-i18next';
-import { QUIZ_NAME } from '../../config';
 
 type Props = {
   quizId: string | null,
@@ -16,6 +15,8 @@ const LoginForm: React.FC<Props> = (props) => {
   const navigate = useNavigate();
 
   const { t } = useTranslation();
+
+  const quiz = useSelector((state) => state.quiz);
 
   const [quizId, setQuizId] = useState(props.quizId ?? '');
   const [username, setUsername] = useState('');
@@ -42,7 +43,11 @@ const LoginForm: React.FC<Props> = (props) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await dispatch(login({ quizId, quizName: QUIZ_NAME, username, password }));
+    if (quiz.name === null) {
+      return;
+    }
+
+    await dispatch(login({ quizId, quizName: quiz.name, username, password }));
   };
 
   return (

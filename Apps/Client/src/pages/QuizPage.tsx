@@ -37,7 +37,7 @@ const QuizPage: React.FC = () => {
 
   // Fetch initial data
   useEffect(() => {
-    if (quizId === null) {
+    if (quizId === null || quizName === null) {
       return;
     }
 
@@ -46,7 +46,7 @@ const QuizPage: React.FC = () => {
 
   // Refresh quiz data when changing language
   useEffect(() => {
-    if (quizId === null) {
+    if (quizId === null || quizName === null) {
       return;
     }
 
@@ -55,7 +55,7 @@ const QuizPage: React.FC = () => {
 
   // Regularly fetch current quiz status from server
   useEffect(() => {
-    if (quizId === null) {
+    if (quizId === null || quizName === null) {
       return;
     }
 

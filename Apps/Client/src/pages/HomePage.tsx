@@ -1,33 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './HomePage.scss';
 import LoginForm from '../components/forms/LoginForm';
-import { useSelector } from '../hooks/redux';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from '../hooks/redux';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Page from './Page';
-import { QUIZ_NAME } from '../config';
+import { QuizName } from '../constants';
+import { setName } from '../reducers/QuizReducer';
 
 const HomePage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const quiz = useSelector(({ quiz }) => quiz);
+  const data = useSelector(({ data }) => data);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
-  if (isAuthenticated) {
-    navigate('/quiz');
+  const paramQuizId = searchParams.get('id');
+  const paramQuizName = searchParams.get('q');
+
+  const quizId = paramQuizId;
+  const quizName = quiz.name || paramQuizName as QuizName;
+  const isQuizNameValid = data.quizzes.includes(paramQuizName ?? '');
+
+  useEffect(() => {
+    if (isQuizNameValid) {
+      dispatch(setName(quizName));
+    }
+  }, [isQuizNameValid]);
+
+  if (!isQuizNameValid) {
+    return null;
   }
 
-  const quizId = searchParams.get('id');
+  if (isAuthenticated) {
+    return (
+      <Navigate to='/quiz' />
+    );
+  }
 
   return (
     <Page title={t('common:COMMON:HOME')} className='home-page'>
       {!isAuthenticated && (
         <div className='home-page-box'>
-          <h1 className='home-page-title'>{t(`${QUIZ_NAME}:TITLE`)}</h1>
-          <p className='home-page-text'>{t(`${QUIZ_NAME}:WELCOME_HEAD`)}</p>
-          <p className='home-page-text'>{t(`${QUIZ_NAME}:WELCOME_TEXT`)}</p>
-          <p className='home-page-text'>{t(`${QUIZ_NAME}:WELCOME_CTA`)}</p>
+          <h1 className='home-page-title'>{t(`${quizName}:TITLE`)}</h1>
+          <p className='home-page-text'>{t(`${quizName}:WELCOME_HEAD`)}</p>
+          <p className='home-page-text'>{t(`${quizName}:WELCOME_TEXT`)}</p>
+          <p className='home-page-text'>{t(`${quizName}:WELCOME_CTA`)}</p>
           
           <LoginForm quizId={quizId} />
         </div>

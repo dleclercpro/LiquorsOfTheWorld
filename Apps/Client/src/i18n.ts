@@ -1,11 +1,11 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import HttpBackend from 'i18next-http-backend';
-import { DEBUG, QUIZ_NAME, SERVER_ROOT } from './config';
+import { DEBUG, SERVER_ROOT } from './config';
 import { Language, QuizName } from './constants';
 
-export const INIT_LANGUAGE = QUIZ_NAME === QuizName.KonnyUndJohannes ? Language.DE : Language.EN;
-export const FALLBACK_LANGUAGE = QUIZ_NAME === QuizName.KonnyUndJohannes ? Language.DE : Language.EN;
+export const INIT_LANGUAGE = Language.DE;
+export const FALLBACK_LANGUAGE = Language.DE;
 
 i18n
   .use(HttpBackend)
