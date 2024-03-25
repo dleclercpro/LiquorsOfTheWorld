@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { selectAuthentication } from '../../reducers/UserReducer';
 import './LoginForm.scss';
 import { login } from '../../actions/AuthActions';
 import { useTranslation } from 'react-i18next';
+import { selectAuthentication } from '../../selectors/UserSelectors';
 
 type Props = {
   quizId: string | null,

@@ -1,6 +1,5 @@
 import './AnswerOverlay.scss';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { selectAnswer, selectPlayers, selectCorrectAnswer } from '../../reducers/QuizReducer';
 import { closeAnswerOverlay } from '../../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../../reducers/AppReducer';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +8,7 @@ import WrongIcon from '@mui/icons-material/Close';
 import WaitIcon from '@mui/icons-material/Schedule';
 import { startQuestion } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
+import { selectPlayers, selectAnswer, selectCorrectAnswer } from '../../selectors/QuizSelectors';
 
 const AnswerOverlay: React.FC = () => {
   const dispatch = useDispatch();

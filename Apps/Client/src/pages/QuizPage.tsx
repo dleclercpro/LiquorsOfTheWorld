@@ -4,13 +4,13 @@ import QuestionForm from '../components/forms/QuestionForm';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { REFRESH_STATUS_INTERVAL } from '../config';
 import { fetchStatus, fetchQuizData, fetchQuestions } from '../actions/DataActions';
-import { selectVote } from '../reducers/QuizReducer';
 import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoadingOverlay } from '../reducers/OverlaysReducer';
 import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
 import { AspectRatio, Language, QuestionType } from '../constants';
 import { logout } from '../actions/AuthActions';
 import Page from './Page';
+import { selectVote } from '../selectors/QuizSelectors';
 
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();

@@ -4,7 +4,6 @@ import { getInitialFetchedData } from '../utils';
 import { startQuiz, startQuestion, vote } from '../actions/QuizActions';
 import { login, logout, ping } from '../actions/AuthActions';
 import { QuizJSON } from '../types/JSONTypes';
-import { RootState } from '../stores/store';
 import { QuizName } from '../constants';
 import { fetchStatus, fetchQuestions, fetchVotes, fetchScores } from '../actions/DataActions';
 
@@ -140,102 +139,6 @@ export const quizSlice = createSlice({
 ;
   },
 });
-
-// export const { } = quizSlice.actions;
-
-export const selectPlayers = (state: RootState) => {
-  const status = state.quiz.status.data;
-
-  if (status === null) {
-    return [];
-  }
-
-  return status.players;
-}
-
-export const selectQuestion = (state: RootState, questionIndex: number) => {
-  const quiz = state.quiz;
-
-  const questions = quiz.questions.data;
-  const votes = quiz.votes.data;
-
-  if (questions === null || votes === null) {
-    return null;
-  }
-  
-  return questions[questionIndex];
-}
-
-export const selectAnswer = (state: RootState, questionIndex: number) => {
-  const quiz = state.quiz;
-
-  const questions = quiz.questions.data;
-  const votes = quiz.votes.data;
-
-  if (questions === null || votes === null) {
-    return null;
-  }
-  
-  const question = questions[questionIndex];
-  const vote = votes[questionIndex];
-  const answer = question.options[vote];
-
-  return answer;
-}
-
-export const selectCorrectAnswer = (state: RootState, questionIndex: number) => {
-  const quiz = state.quiz;
-
-  const questions = quiz.questions.data;
-
-  if (questions === null) {
-    return null;
-  }
-  
-  const question = questions[questionIndex];
-  const answer = question.options[question.answer];
-
-  return answer;
-}
-
-export const selectVote = (state: RootState, questionIndex: number) => {
-  const quiz = state.quiz;
-
-  const questions = quiz.questions.data;
-  const votes = quiz.votes.data;
-
-  if (questions === null || votes === null || votes.length < questionIndex + 1) {
-    return {
-      voteIndex: null,
-      vote: null,
-    };
-  }
-  
-  const question = questions[questionIndex];
-  const voteIndex = votes[questionIndex];
-  const vote = question.options[voteIndex];
-
-  return {
-    voteIndex,
-    vote,
-  };
-}
-
-export const haveAllPlayersAnswered = (state: RootState, questionIndex: number) => {
-  const quiz = state.quiz;
-  
-  const status = quiz.status.data;
-  const votes = quiz.votes.data;
-  const players = selectPlayers(state);
-  
-  if (status === null || votes === null || players === null) {
-    return false;
-  }
-
-  const { votesCount } = status;
-
-  return votesCount[questionIndex] === players.length;
-}
 
 export const { setQuizName } = quizSlice.actions;
 

@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from '../../hooks/redux';
 import './AdminQuizForm.scss';
 import { deleteQuiz, startQuiz } from '../../actions/QuizActions';
 import { Trans, useTranslation } from 'react-i18next';
-import { selectPlayers } from '../../reducers/QuizReducer';
 import { deleteDatabase } from '../../actions/DatabaseActions';
 import { logout } from '../../actions/AuthActions';
+import { selectPlayers } from '../../selectors/QuizSelectors';
 
 const AdminQuizForm: React.FC = () => {
   const dispatch = useDispatch();

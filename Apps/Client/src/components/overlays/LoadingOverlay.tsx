@@ -1,7 +1,7 @@
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from '../../hooks/redux';
 import './LoadingOverlay.scss';
-import { selectPlayers } from '../../reducers/QuizReducer';
+import { selectPlayers } from '../../selectors/QuizSelectors';
 
 const LoadingOverlay: React.FC = () => {
   const { t } = useTranslation();
