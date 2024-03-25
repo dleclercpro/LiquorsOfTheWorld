@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../hooks/redux';
-import { selectAuthentication } from '../../reducers/UserReducer';
 import './LoginForm.scss';
-import { login } from '../../actions/UserActions';
+import { login } from '../../actions/AuthActions';
 import { useTranslation } from 'react-i18next';
+import { selectAuthentication } from '../../selectors/UserSelectors';
 
 type Props = {
   quizId: string | null,
@@ -13,7 +13,10 @@ type Props = {
 const LoginForm: React.FC<Props> = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { t } = useTranslation();
+
+  const quiz = useSelector((state) => state.quiz);
 
   const [quizId, setQuizId] = useState(props.quizId ?? '');
   const [username, setUsername] = useState('');
@@ -40,7 +43,11 @@ const LoginForm: React.FC<Props> = (props) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await dispatch(login({ quizId, username, password }));
+    if (quiz.name === null) {
+      return;
+    }
+
+    await dispatch(login({ quizId, quizName: quiz.name, username, password }));
   };
 
   return (
@@ -49,7 +56,7 @@ const LoginForm: React.FC<Props> = (props) => {
         id='login-quiz-id'
         type='text'
         value={quizId}
-        placeholder={t('FORMS.LOGIN.QUIZ_ID')}
+        placeholder={t('common:FORMS.LOGIN.QUIZ_ID')}
         onChange={(e) => setQuizId(e.target.value)}
         required
       />
@@ -58,7 +65,7 @@ const LoginForm: React.FC<Props> = (props) => {
         id='login-username'
         type='text'
         value={username}
-        placeholder={t('FORMS.LOGIN.USERNAME')}
+        placeholder={t('common:FORMS.LOGIN.USERNAME')}
         onChange={(e) => setUsername(e.target.value)}
         required
       />
@@ -67,7 +74,7 @@ const LoginForm: React.FC<Props> = (props) => {
         id='login-password'
         type='password'
         value={password}
-        placeholder={t('FORMS.LOGIN.PASSWORD')}
+        placeholder={t('common:FORMS.LOGIN.PASSWORD')}
         onChange={(e) => setPassword(e.target.value)}
         required
       />
@@ -75,7 +82,7 @@ const LoginForm: React.FC<Props> = (props) => {
       {error && <p className='login-error'>{t(`ERRORS.${error}`)}</p>}
 
       <button className='login-button' type='submit'>
-        {t('FORMS.LOGIN.SUBMIT')}
+        {t('common:FORMS.LOGIN.SUBMIT')}
       </button>
     </form>
   );

@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { N_SALT_ROUNDS } from '../../config';
-import { N_QUESTIONS, ANSWERS_EN } from '../../constants';
+import { QUIZ_NAMES, QuizName } from '../../constants';
 import logger from '../../logger';
 import { getLast, getRange, unique } from '../../utils/array';
 import { sum } from '../../utils/math';
@@ -12,6 +12,8 @@ import QuizAlreadyExistsError from '../../errors/QuizAlreadyExistsError';
 import HashError from '../../errors/HashError';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
+import QuizManager from '../QuizManager';
+import InvalidQuizNameError from '../../errors/InvalidQuizNameError';
 
 const SEPARATOR = '|';
 
@@ -74,14 +76,19 @@ class AppDatabase extends RedisDatabase {
         return user;
     }
 
-    public async createQuiz(quizId: string, username: string) {
+    public async createQuiz(quizId: string, quizName: QuizName, username: string) {
         logger.trace(`Creating a new quiz...`);
+
+        if (!QUIZ_NAMES.includes(quizName)) {
+            throw new InvalidQuizNameError();
+        }
 
         if (await this.doesQuizExist(quizId)) {
             throw new QuizAlreadyExistsError();
         }
 
         const quiz: Quiz = {
+            name: quizName,
             creator: username.toLowerCase(),
             players: [],
             status: {
@@ -194,7 +201,13 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async getVotesCount(quizId: string) {
-        const votesCount = new Array(N_QUESTIONS).fill(0);
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new InvalidQuizIdError();
+        }
+
+        const votesCount = new Array(QuizManager.count(quiz.name)).fill(0);
 
         const votes = await this.getAllVotes(quizId);
         const players = Object.keys(votes);
@@ -230,11 +243,20 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async getAllScores(quizId: string) {
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new InvalidQuizIdError();
+        }
+
+        const questions = await QuizManager.get(quiz.name);
+        const answers = questions.map((question) => question.answer);
+
         const scores = Object
             .entries(await this.getAllVotes(quizId))
             .reduce((prev, [player, votes]) => {
                 const score = sum(
-                    ANSWERS_EN
+                    answers
                         .map((answerIndex, i) => i < votes.length && answerIndex === votes[i])
                         .map(Number)
                 );
@@ -300,9 +322,15 @@ class AppDatabase extends RedisDatabase {
     }
 
     public async incrementQuestionIndex(quizId: string) {
+        const quiz = await this.getQuiz(quizId);
+
+        if (!quiz) {
+            throw new InvalidQuizIdError();
+        }
+
         const questionIndex = await this.getQuestionIndex(quizId);
 
-        if (questionIndex + 1 > N_QUESTIONS) {
+        if (questionIndex + 1 > QuizManager.count(quiz.name)) {
             throw new InvalidQuestionIndexError();
         }
 

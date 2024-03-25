@@ -1,27 +1,12 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { logout } from './UserActions';
+import { logout } from './AuthActions';
 import { CallDeleteDatabase } from '../calls/quiz/CallDeleteDatabase';
+import { ThunkAPI, createServerAction } from './ServerActions';
 
-export const deleteDatabase = createAsyncThunk(
+export const deleteDatabase = createServerAction<void, void>(
   'database/delete',
-  async (_, { dispatch, rejectWithValue }) => {
-    try {
-      await new CallDeleteDatabase().execute();
+  async (_, { dispatch }: ThunkAPI) => {
+    await new CallDeleteDatabase().execute();
 
-      dispatch(logout());
-
-      return;
-
-    } catch (err: unknown) {
-      let error = 'UNKNOWN_ERROR';
-      
-      if (err instanceof Error) {
-        error = err.message;
-      }
-
-      console.error(error);
-
-      return rejectWithValue(error);
-    }
-  }
+    dispatch(logout());
+  },
 );

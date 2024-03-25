@@ -37,10 +37,10 @@ const ErrorPage: React.FC = () => {
   }, []);
 
   return (
-    <Page className='error-page'>
+    <Page title={t('common:COMMON:ERROR')} className='error-page'>
         <div className='error-page-box'>
-          <h1 className='error-page-title'>{t('PAGES.ERROR.TITLE')}</h1>
-          <p className='error-page-text'>{t('PAGES.ERROR.TEXT')}</p>
+          <h1 className='error-page-title'>{t('common:PAGES.ERROR.TITLE')}</h1>
+          <p className='error-page-text'>{t('common:PAGES.ERROR.TEXT')}</p>
           <p className='error-page-text'>
             {remainingTime === 1 ? (
               <Trans i18nKey='PAGES.ERROR.REDIRECTING_SINGLE' values={{ remainingTime }}>

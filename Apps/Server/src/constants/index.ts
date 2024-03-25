@@ -1,7 +1,5 @@
 import { name, version, label } from '../../package.json';
 import { Environment } from '../types';
-import questionsEN from '../../data/en/liquors/quiz.json';
-import questionsDE from '../../data/de/liquors/quiz.json';
 
 export const ENVIRONMENTS = Object.values(Environment);
 
@@ -10,13 +8,19 @@ export enum Language {
   DE = 'de',
 }
 
-export const LANGUAGES = Object.values(Language);
+export enum QuizName {
+  Liquors = 'liquors',
+  KonnyUndJohannes = 'k-und-j',
+}
 
-export const QUESTIONS_EN = questionsEN;
-export const QUESTIONS_DE = questionsDE;
-export const ANSWERS_EN = QUESTIONS_EN.map(({ answer }) => answer);
-export const ANSWERS_DE = QUESTIONS_DE.map(({ answer }) => answer);
-export const N_QUESTIONS = QUESTIONS_EN.length;
+export enum QuestionType {
+  Text = 'text',
+  Image = 'image',
+  Video = 'video',
+};
+
+export const QUIZ_NAMES = Object.values(QuizName);
+export const LANGUAGES = Object.values(Language);
 
 export const PACKAGE_NAME = name;
 export const PACKAGE_VERSION = version;

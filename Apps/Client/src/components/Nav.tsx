@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './Nav.scss';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { Link, useLocation } from 'react-router-dom';
-import { logout } from '../actions/UserActions';
+import { logout } from '../actions/AuthActions';
 import OpenIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -106,7 +106,7 @@ const Nav: React.FC = () => {
             </button>
             <p className='nav-text'>
               <strong className='nav-username'>
-                {isAuthenticated ? `${t('COMMON.WELCOME')}, ${username}!` : `${t('COMMON.WELCOME')}!`}
+                {isAuthenticated ? `${t('common:COMMON.WELCOME')}, ${username}!` : `${t('common:COMMON.WELCOME')}!`}
               </strong>
             </p>
           </li>
@@ -131,7 +131,7 @@ const Nav: React.FC = () => {
             <li className='nav-item'>
               <Link className='nav-link' to={`/quiz`}>
                 <QuizIcon className='nav-icon' />
-                {t('COMMON.QUIZ')}
+                {t('common:COMMON.QUIZ')}
               </Link>
             </li>
           )}
@@ -140,7 +140,7 @@ const Nav: React.FC = () => {
             <li className='nav-item'>
               <Link className='nav-link' to={`/scores`}>
                 <ScoreboardIcon className='nav-icon' />
-                {t('COMMON.SCOREBOARD')}
+                {t('common:COMMON.SCOREBOARD')}
               </Link>
             </li>
           )}
@@ -149,7 +149,7 @@ const Nav: React.FC = () => {
             <li className='nav-item'>
               <Link className='nav-link' to={`/test`}>
                 <SettingsIcon className='nav-icon' />
-                {t('COMMON.TEST')}
+                {t('common:COMMON.TEST')}
               </Link>
             </li>
           )}
@@ -158,7 +158,7 @@ const Nav: React.FC = () => {
             <li className='nav-item'>
               <Link className='nav-link' to={`/`}>
                 <HomeIcon className='nav-icon' />
-                {t('COMMON.START_PAGE')}
+                {t('common:COMMON.HOME')}
               </Link>
             </li>
           )}
@@ -167,7 +167,7 @@ const Nav: React.FC = () => {
             <li className='nav-item'>
               <Link className='nav-link' to='/' onClick={handleLogout}>
                 <LogoutIcon className='nav-icon' />
-                {t('COMMON.LOG_OUT')}
+                {t('common:COMMON.LOG_OUT')}
               </Link>
             </li>
           )}

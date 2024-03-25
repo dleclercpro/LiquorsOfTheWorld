@@ -3,14 +3,13 @@ import logger from '../../logger';
 import { APP_DB } from '../..';
 import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { N_QUESTIONS } from '../../constants';
 import { Quiz } from '../../types/QuizTypes';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 import UserCannotStartQuestionError from '../../errors/UserCannotStartQuestionError';
 import UserCannotStartUnsupervisedQuestionError from '../../errors/UserCannotStartUnsupervisedQuestionError';
-import PlayersNotReadyError from '../../errors/PlayersNotReadyError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
+import QuizManager from '../../models/QuizManager';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId, questionIndex: _questionIndex } = params;
@@ -19,12 +18,13 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new InvalidParamsError();
     }
 
-    if (!await APP_DB.doesQuizExist(quizId)) {
+    const quiz = await APP_DB.getQuiz(quizId);
+    if (!quiz) {
         throw new InvalidQuizIdError();
     }
 
     const questionIndex = Number(_questionIndex);
-    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < N_QUESTIONS;
+    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < QuizManager.count(quiz.name);
     if (!isQuestionIndexValid) {
         throw new InvalidQuestionIndexError();
     }
@@ -69,7 +69,7 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
         // }
 
         await APP_DB.incrementQuestionIndex(quizId);
-        logger.info(`Question ${questionIndex + 1}/${N_QUESTIONS} of quiz '${quizId}' has been started by admin '${username}'.`);
+        logger.info(`Question ${questionIndex + 1}/${QuizManager.count(quiz.name)} of quiz '${quizId}' has been started by admin '${username}'.`);
 
         return res.json(successResponse());
 

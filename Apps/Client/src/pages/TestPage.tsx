@@ -10,7 +10,7 @@ const TestPage: React.FC = () => {
   dispatch(closeAllOverlays());
 
   return (
-    <Page className='test-page'>
+    <Page title='Test' className='test-page'>
       <div className='test-page-box'>
         <h1 className='test-page-title'>Test page</h1>
         <p className='test-page-text'>This is the test page.</p>

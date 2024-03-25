@@ -8,6 +8,7 @@
     "TEST": "Test",
     "START": "Start",
     "STOP": "Stop",
+    "ERROR": "Fehler",
     "LOG_IN": "Einloggen",
     "LOG_OUT": "Ausloggen",
     "USERNAME": "Benutzername",
@@ -16,7 +17,7 @@
     "SCOREBOARD": "Punktestand",
     "SCORE": "Punktzahl",
     "RANK": "Rang",
-    "START_PAGE": "Startseite"
+    "HOME": "Startseite"
   },
   "PAGES": {
     "HOME": {
@@ -39,8 +40,8 @@
   "FORMS": {
     "LOGIN": {
       "QUIZ_ID": "Gib eine Quiz-ID ein",
-      "USERNAME": "Gib einen Benutzernamen ein",
-      "PASSWORD": "Gib ein Passwort ein",
+      "USERNAME": "Gib einen einzigartigen Benutzernamen ein",
+      "PASSWORD": "Gib ein beliebiges Passwort ein",
       "SUBMIT": "Los geht's!"
     },
     "START_QUIZ": {

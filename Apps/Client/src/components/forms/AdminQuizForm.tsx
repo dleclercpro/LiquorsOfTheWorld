@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from '../../hooks/redux';
 import './AdminQuizForm.scss';
 import { deleteQuiz, startQuiz } from '../../actions/QuizActions';
 import { Trans, useTranslation } from 'react-i18next';
-import { selectPlayers } from '../../reducers/QuizReducer';
 import { deleteDatabase } from '../../actions/DatabaseActions';
-import { logout } from '../../actions/UserActions';
+import { logout } from '../../actions/AuthActions';
+import { selectPlayers } from '../../selectors/QuizSelectors';
 
 const AdminQuizForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -55,7 +55,7 @@ const AdminQuizForm: React.FC = () => {
 
   return (
     <form className='admin-quiz-form'>
-      <h2 className='admin-quiz-form-title'>{t('FORMS.START_QUIZ.TITLE')}</h2>
+      <h2 className='admin-quiz-form-title'>{t('common:FORMS.START_QUIZ.TITLE')}</h2>
 
       <p className='admin-quiz-form-text'>
         <Trans
@@ -74,22 +74,22 @@ const AdminQuizForm: React.FC = () => {
           checked={isSupervised}
           onChange={handleChange}
         />
-        <label htmlFor='option'>{t('FORMS.START_QUIZ.SUPERVISE')}</label>
+        <label htmlFor='option'>{t('common:FORMS.START_QUIZ.SUPERVISE')}</label>
       </div>
 
-      <p className='admin-quiz-form-text'>{t('FORMS.START_QUIZ.TEXT')}</p>
+      <p className='admin-quiz-form-text'>{t('common:FORMS.START_QUIZ.TEXT')}</p>
 
       <button className='admin-quiz-form-button' onClick={handleStartQuiz}>
-        {t('FORMS.START_QUIZ.START_QUIZ')}
+        {t('common:FORMS.START_QUIZ.START_QUIZ')}
       </button>
       <button className='admin-quiz-form-button' onClick={handleDeleteQuiz}>
-        {t('FORMS.START_QUIZ.DELETE_QUIZ')}
+        {t('common:FORMS.START_QUIZ.DELETE_QUIZ')}
       </button>
       <button className='admin-quiz-form-button delete-database' onClick={handleDeleteDatabase}>
-        {t('FORMS.START_QUIZ.DELETE_DATABASE')}
+        {t('common:FORMS.START_QUIZ.DELETE_DATABASE')}
       </button>
       <button className='admin-quiz-form-button' onClick={handleLogout}>
-        {t('COMMON.LOG_OUT')}
+        {t('common:COMMON.LOG_OUT')}
       </button>
     </form>
   );

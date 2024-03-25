@@ -2,18 +2,18 @@ version: '3.8'
 
 
 services:
-  liquors-quiz-app:
-    image: dleclercpro/liquors-quiz:latest
-    container_name: liquors-quiz-app
+  quiz-app:
+    image: dleclercpro/quiz:latest
+    container_name: quiz-app
     networks:
       - custom
     depends_on:
-      - liquors-quiz-redis
+      - quiz-redis
     environment:
       NODE_ENV: production
 
-  liquors-quiz-nginx:
-    container_name: liquors-quiz-nginx
+  quiz-nginx:
+    container_name: quiz-nginx
     image: dleclercpro/reverse-proxy:latest
     restart: always
     ports:      # Comment out when getting SSL certs for the first time
@@ -25,13 +25,13 @@ services:
       - letsencrypt:/etc/letsencrypt # Keep SSL certificates
       - dhparams:/usr/dhparams       # Keep DH params file
     depends_on:
-      - liquors-quiz-app
+      - quiz-app
     env_file:
       - .env
 
-  liquors-quiz-redis:
+  quiz-redis:
     image: redis:latest
-    container_name: liquors-quiz-redis
+    container_name: quiz-redis
     restart: always
     networks:
       - custom

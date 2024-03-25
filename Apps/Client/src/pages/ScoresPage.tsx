@@ -2,14 +2,16 @@ import React, { useEffect } from 'react';
 import './ScoresPage.scss';
 import Scoreboard from '../components/Scoreboard';
 import { useDispatch, useSelector } from '../hooks/redux';
-import { fetchScores } from '../actions/QuizActions';
-import { useNavigate } from 'react-router-dom';
+import { fetchScores } from '../actions/DataActions';
+import { Navigate } from 'react-router-dom';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
+import { useTranslation } from 'react-i18next';
 
 const ScoresPage: React.FC = () => {
+  const { t } = useTranslation();
+
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const quiz = useSelector(({ quiz }) => quiz);
   const quizId = quiz.id;
@@ -35,12 +37,15 @@ const ScoresPage: React.FC = () => {
   }
 
   const isStarted = status.isStarted;
+
   if (!isStarted) {
-    navigate('/quiz');
+    return (
+      <Navigate to='/quiz' />
+    );
   }
   
   return (
-    <Page className='scores-page'>
+    <Page title={t('common:COMMON:SCOREBOARD')} className='scores-page'>
       <Scoreboard scores={scores.users} />
     </Page>
   );

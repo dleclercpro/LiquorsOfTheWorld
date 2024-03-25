@@ -1,13 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { FetchedData, GroupedScoreData, StatusData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
-import { fetchQuestions, fetchStatus, fetchVotes, fetchScores, startQuiz, startQuestion } from '../actions/QuizActions';
-import { login, logout, ping, vote } from '../actions/UserActions';
+import { startQuiz, startQuestion, vote } from '../actions/QuizActions';
+import { login, logout, ping } from '../actions/AuthActions';
 import { QuizJSON } from '../types/JSONTypes';
-import { RootState } from '../stores/store';
+import { QuizName } from '../constants';
+import { fetchStatus, fetchQuestions, fetchVotes, fetchScores } from '../actions/DataActions';
 
 interface QuizState {
   id: string | null,
+  name: QuizName | null,
   questions: FetchedData<QuizJSON>,
   status: FetchedData<StatusData>,
   votes: FetchedData<number[]>,
@@ -16,6 +18,7 @@ interface QuizState {
 
 const initialState: QuizState = {
   id: null,
+  name: null,
   questions: getInitialFetchedData(),
   status: getInitialFetchedData(),
   votes: getInitialFetchedData(),
@@ -27,7 +30,11 @@ const initialState: QuizState = {
 export const quizSlice = createSlice({
   name: 'quiz',
   initialState,
-  reducers: {},
+  reducers: {
+    setQuizName: (state, action: PayloadAction<QuizName>) => {
+      state.name = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Fetching actions
@@ -117,106 +124,22 @@ export const quizSlice = createSlice({
         state.id = action.payload.quizId
       })
       // Reset state on logout, no matter if successful or not
-      .addCase(logout.fulfilled, () => initialState)
-      .addCase(logout.rejected, () => initialState);
+      .addCase(logout.fulfilled, (state) => {
+        return {
+          ...initialState,
+          name: state.name,
+        };
+      })
+      .addCase(logout.rejected, (state) => {
+        return {
+          ...initialState,
+          name: state.name,
+        };
+      });
 ;
   },
 });
 
-// export const { } = quizSlice.actions;
-
-export const selectPlayers = (state: RootState) => {
-  const status = state.quiz.status.data;
-
-  if (status === null) {
-    return [];
-  }
-
-  return status.players;
-}
-
-export const selectQuestion = (state: RootState, questionIndex: number) => {
-  const quiz = state.quiz;
-
-  const questions = quiz.questions.data;
-  const votes = quiz.votes.data;
-
-  if (questions === null || votes === null) {
-    return null;
-  }
-  
-  return questions[questionIndex];
-}
-
-export const selectAnswer = (state: RootState, questionIndex: number) => {
-  const quiz = state.quiz;
-
-  const questions = quiz.questions.data;
-  const votes = quiz.votes.data;
-
-  if (questions === null || votes === null) {
-    return null;
-  }
-  
-  const question = questions[questionIndex];
-  const vote = votes[questionIndex];
-  const answer = question.options[vote];
-
-  return answer;
-}
-
-export const selectCorrectAnswer = (state: RootState, questionIndex: number) => {
-  const quiz = state.quiz;
-
-  const questions = quiz.questions.data;
-
-  if (questions === null) {
-    return null;
-  }
-  
-  const question = questions[questionIndex];
-  const answer = question.options[question.answer];
-
-  return answer;
-}
-
-export const selectVote = (state: RootState, questionIndex: number) => {
-  const quiz = state.quiz;
-
-  const questions = quiz.questions.data;
-  const votes = quiz.votes.data;
-
-  if (questions === null || votes === null || votes.length < questionIndex + 1) {
-    return {
-      voteIndex: null,
-      vote: null,
-    };
-  }
-  
-  const question = questions[questionIndex];
-  const voteIndex = votes[questionIndex];
-  const vote = question.options[voteIndex];
-
-  return {
-    voteIndex,
-    vote,
-  };
-}
-
-export const haveAllPlayersAnswered = (state: RootState, questionIndex: number) => {
-  const quiz = state.quiz;
-  
-  const status = quiz.status.data;
-  const votes = quiz.votes.data;
-  const players = selectPlayers(state);
-  
-  if (status === null || votes === null || players === null) {
-    return false;
-  }
-
-  const { votesCount } = status;
-
-  return votesCount[questionIndex] === players.length;
-}
+export const { setQuizName } = quizSlice.actions;
 
 export default quizSlice.reducer;

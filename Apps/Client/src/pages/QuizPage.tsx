@@ -3,17 +3,18 @@ import './QuizPage.scss';
 import QuestionForm from '../components/forms/QuestionForm';
 import { useDispatch, useSelector } from '../hooks/redux';
 import { REFRESH_STATUS_INTERVAL } from '../config';
-import { fetchStatus, fetchData, fetchQuestions } from '../actions/QuizActions';
-import { selectVote } from '../reducers/QuizReducer';
+import { fetchStatus, fetchQuizData, fetchQuestions } from '../actions/DataActions';
 import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoadingOverlay } from '../reducers/OverlaysReducer';
 import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
 import { AspectRatio, Language, QuestionType } from '../constants';
-import { logout } from '../actions/UserActions';
+import { logout } from '../actions/AuthActions';
 import Page from './Page';
+import { selectVote } from '../selectors/QuizSelectors';
 
-const QuizPage: React.FC = () => {
-  const { i18n } = useTranslation();
+const QuizPage: React.FC = () => {  
+  const { t, i18n } = useTranslation();
+
   const lang = i18n.language as Language;
 
   const quiz = useSelector(({ quiz }) => quiz);
@@ -27,6 +28,7 @@ const QuizPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const quizId = quiz.id;
+  const quizName = quiz.name;
   const questions = quiz.questions.data;
   const status = quiz.status.data;
   const isStarted = status?.isStarted;
@@ -35,25 +37,25 @@ const QuizPage: React.FC = () => {
 
   // Fetch initial data
   useEffect(() => {
-    if (quizId === null) {
+    if (quizId === null || quizName === null) {
       return;
     }
 
-    dispatch(fetchData({ quizId, lang }));
+    dispatch(fetchQuizData({ quizId, quizName, lang }));
   }, []);
 
   // Refresh quiz data when changing language
   useEffect(() => {
-    if (quizId === null) {
+    if (quizId === null || quizName === null) {
       return;
     }
 
-    dispatch(fetchQuestions(lang));
+    dispatch(fetchQuestions({ lang, quizName }));
   }, [lang]);
 
   // Regularly fetch current quiz status from server
   useEffect(() => {
-    if (quizId === null) {
+    if (quizId === null || quizName === null) {
       return;
     }
 
@@ -101,7 +103,7 @@ const QuizPage: React.FC = () => {
   const { theme, question, type, url, options } = questions[playerQuestionIndex];
 
   return (
-    <Page className='quiz-page'>
+    <Page title={t('common:COMMON:QUIZ')} className='quiz-page'>
       {!isStarted && isAdmin && (
         <AdminQuizForm />
       )}

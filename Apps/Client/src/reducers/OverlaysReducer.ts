@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { logout } from '../actions/UserActions';
+import { logout } from '../actions/AuthActions';
 
 interface OverlaysState {
   loading: {

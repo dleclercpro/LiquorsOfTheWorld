@@ -3,7 +3,7 @@ dir="$(cd "$(dirname "$0")" && pwd)"
 
 # Define constant image details
 user="dleclercpro"
-app="liquors-quiz"
+app="quiz"
 release="latest"
 
 # Build app image

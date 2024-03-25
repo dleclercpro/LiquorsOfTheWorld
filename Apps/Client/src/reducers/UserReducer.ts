@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../stores/store';
-import { login, logout, ping } from '../actions/UserActions';
+import { login, logout, ping } from '../actions/AuthActions';
 
 interface UserState {
   username: string | null,
@@ -66,7 +65,5 @@ export const userSlice = createSlice({
       .addCase(logout.rejected, () => initialState);
   },
 });
-
-export const selectAuthentication = (state: RootState) => state.user;
 
 export default userSlice.reducer;

@@ -9,6 +9,11 @@ export enum Language {
   DE = 'de',
 };
 
+export enum QuizName {
+  Liquors = 'liquors',
+  KonnyUndJohannes = 'k-und-j',
+}
+
 export enum QuestionType {
   Text = 'text',
   Image = 'image',

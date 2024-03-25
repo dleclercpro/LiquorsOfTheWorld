@@ -16,6 +16,8 @@ import StartQuestionController from '../controllers/quiz/StartQuestionController
 import DeleteQuizController from '../controllers/quiz/DeleteQuizController';
 import DeleteDatabaseController from '../controllers/DeleteDatabaseController';
 import GetVersionController from '../controllers/app/GetVersionController';
+import GetQuizNamesController from '../controllers/quiz/GetQuizNamesController';
+import GetBackgroundUrlController from '../controllers/app/GetBackgroundUrlController';
 
 
 
@@ -38,18 +40,21 @@ router.get('/auth', [AuthMiddleware], PingController);
 router.delete('/auth', [AuthMiddleware], LogoutController);
 
 router.get('/version', GetVersionController);
-
+router.get('/bg/:quizName', GetBackgroundUrlController);
 router.get('/user', [AuthMiddleware], GetUserController);
 
-router.get('/questions/:lang', GetQuestionsController);
-
 router.get('/quiz/:quizId', [AuthMiddleware], GetStatusController);
+router.put('/quiz/:quizId', [AuthMiddleware], StartQuizController);
 router.delete('/quiz/:quizId', [AuthMiddleware], DeleteQuizController);
-router.put('/quiz/:quizId/start', [AuthMiddleware], StartQuizController);
+
+router.put('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], StartQuestionController);
+router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);
+
 router.get('/quiz/:quizId/votes', [AuthMiddleware], GetVotesController);
 router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);
-router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);
-router.put('/quiz/:quizId/question/:questionIndex/start', [AuthMiddleware], StartQuestionController);
+
+router.get('/quiz', GetQuizNamesController);
+router.get('/questions/:lang/:quizName', GetQuestionsController);
 
 
 

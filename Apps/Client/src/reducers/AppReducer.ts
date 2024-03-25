@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { logout } from '../actions/UserActions';
-import { fetchData, startQuestion } from '../actions/QuizActions';
+import { logout } from '../actions/AuthActions';
+import { startQuestion } from '../actions/QuizActions';
 import { Language } from '../constants';
 import { INIT_LANGUAGE } from '../i18n';
+import { fetchQuizData } from '../actions/DataActions';
 
 interface AppState {
   language: Language,
@@ -45,7 +46,7 @@ export const appSlice = createSlice({
         language: state.language,
         version: state.version,
       }))
-      .addCase(fetchData.fulfilled, (state, action) => {
+      .addCase(fetchQuizData.fulfilled, (state, action) => {
         state.questionIndex = action.payload as number;
       })
       .addCase(startQuestion.fulfilled, (state, action) => {

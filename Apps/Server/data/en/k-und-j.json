@@ -1,0 +1,25 @@
+[
+  {
+    "theme": "Video",
+    "question": "What is going on in this video?",
+    "options": ["A business meeting", "A wine tasting", "A software demo"],
+    "type": "video",
+    "url": "/static/video/Test.mp4",
+    "answer": 0
+  },
+  {
+    "theme": "Image",
+    "question": "Who is on this picture?",
+    "options": ["A", "B", "C"],
+    "type": "image",
+    "url": "/static/img/Kid.webp",
+    "answer": 2
+  },
+  {
+    "theme": "Test",
+    "question": "What is the main ingredient in traditional Russian vodka?",
+    "options": ["Potatoes", "Grapes", "Wheat"],
+    "type": "text",
+    "answer": 2
+  }
+]
