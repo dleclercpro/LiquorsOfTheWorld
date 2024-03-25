@@ -6,10 +6,16 @@ import { Navigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Page from './Page';
 import { QuizName } from '../constants';
-import { setName } from '../reducers/QuizReducer';
+import { setQuizName } from '../reducers/QuizReducer';
+
+const QUIZ_ID_PARAM = 'id';
+const QUIZ_NAME_PARAM = 'q';
+
+
 
 const HomePage: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -17,18 +23,28 @@ const HomePage: React.FC = () => {
   const data = useSelector(({ data }) => data);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
-  const paramQuizId = searchParams.get('id');
-  const paramQuizName = searchParams.get('quiz');
+  const paramQuizId = searchParams.get(QUIZ_ID_PARAM);
+  const paramQuizName = searchParams.get(QUIZ_NAME_PARAM);
 
   const quizId = paramQuizId;
-  const quizName = quiz.name || paramQuizName as QuizName;
-  const isQuizNameValid = data.quizzes.includes(paramQuizName ?? '');
+  const quizName = paramQuizName as QuizName ?? quiz.name;
+  const isQuizNameValid = data.quizzes.includes(quizName);
 
+  // Store quiz name in app state when valid
   useEffect(() => {
     if (isQuizNameValid) {
-      dispatch(setName(quizName));
+      dispatch(setQuizName(quizName));
     }
   }, [isQuizNameValid]);
+
+  // Clean up URL from quiz name
+  useEffect(() => {
+    if (searchParams.has(QUIZ_NAME_PARAM)) {
+      searchParams.delete(QUIZ_NAME_PARAM);
+
+      setSearchParams(searchParams);
+    }
+  }, [searchParams, setSearchParams]);
 
   if (!isQuizNameValid) {
     return null;

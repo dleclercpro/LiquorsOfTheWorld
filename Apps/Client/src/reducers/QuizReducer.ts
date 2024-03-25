@@ -32,7 +32,7 @@ export const quizSlice = createSlice({
   name: 'quiz',
   initialState,
   reducers: {
-    setName: (state, action: PayloadAction<QuizName>) => {
+    setQuizName: (state, action: PayloadAction<QuizName>) => {
       state.name = action.payload;
     },
   },
@@ -237,6 +237,6 @@ export const haveAllPlayersAnswered = (state: RootState, questionIndex: number) 
   return votesCount[questionIndex] === players.length;
 }
 
-export const { setName } = quizSlice.actions;
+export const { setQuizName } = quizSlice.actions;
 
 export default quizSlice.reducer;
