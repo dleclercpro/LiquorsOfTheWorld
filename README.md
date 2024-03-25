@@ -1,6 +1,6 @@
-# Liquors of the World
+# Quiz App
 
-Welcome to Liquors of the World! This project is an online quiz web app, which can host as many players as you want. The quiz explores and various liquors from around the world.
+This project is an implementation of an online quiz web app, which can host as many players as needed.
 
 ## Technologies Used
 
