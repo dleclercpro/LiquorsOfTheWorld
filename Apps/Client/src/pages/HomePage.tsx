@@ -47,7 +47,9 @@ const HomePage: React.FC = () => {
   }, [searchParams, setSearchParams]);
 
   if (!isQuizNameValid) {
-    return null;
+    return (
+      <Navigate to='/error' />
+    );
   }
 
   if (isAuthenticated) {
@@ -57,7 +59,7 @@ const HomePage: React.FC = () => {
   }
 
   return (
-    <Page title={t('common:COMMON:HOME')} className='home-page'>
+    <Page title={t('common:COMMON:HOMEPAGE')} className='home-page'>
       {!isAuthenticated && (
         <div className='home-page-box'>
           <h1 className='home-page-title'>{t(`${quizName}:TITLE`)}</h1>

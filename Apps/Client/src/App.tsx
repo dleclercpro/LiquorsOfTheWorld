@@ -4,7 +4,7 @@ import HomePage from './pages/HomePage';
 import QuizPage from './pages/QuizPage';
 import ScoresPage from './pages/ScoresPage';
 import { DEBUG, SERVER_ROOT } from './config';
-import TestPage from './pages/TestPage';
+import AdminPage from './pages/AdminPage';
 import AuthRoute from './routes/AuthRoute';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
@@ -54,8 +54,8 @@ function App() {
           {/* Debugging routes */}
           {DEBUG && (
             <>
-              <Route path='/test' element={(
-                <TestPage />
+              <Route path='/admin' element={(
+                <AdminPage />
               )} />
             </>
           )}

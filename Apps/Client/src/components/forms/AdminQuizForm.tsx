@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from '../../hooks/redux';
 import './AdminQuizForm.scss';
 import { deleteQuiz, startQuiz } from '../../actions/QuizActions';
 import { Trans, useTranslation } from 'react-i18next';
-import { deleteDatabase } from '../../actions/DatabaseActions';
 import { logout } from '../../actions/AuthActions';
 import { selectPlayers } from '../../selectors/QuizSelectors';
 
@@ -39,12 +38,6 @@ const AdminQuizForm: React.FC = () => {
     }
     
     await dispatch(deleteQuiz(quizId));
-  }
-
-  const handleDeleteDatabase: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
-    e.preventDefault();
-
-    await dispatch(deleteDatabase());
   }
 
   const handleLogout: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
@@ -84,9 +77,6 @@ const AdminQuizForm: React.FC = () => {
       </button>
       <button className='admin-quiz-form-button' onClick={handleDeleteQuiz}>
         {t('common:FORMS.START_QUIZ.DELETE_QUIZ')}
-      </button>
-      <button className='admin-quiz-form-button delete-database' onClick={handleDeleteDatabase}>
-        {t('common:FORMS.START_QUIZ.DELETE_DATABASE')}
       </button>
       <button className='admin-quiz-form-button' onClick={handleLogout}>
         {t('common:COMMON.LOG_OUT')}

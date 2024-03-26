@@ -5,6 +5,7 @@
     "PLEASE_WAIT": "Bitte warte",
     "WELCOME": "Willkommen",
     "EXIT": "Beenden",
+    "ADMIN": "Admin",
     "TEST": "Test",
     "START": "Start",
     "STOP": "Stop",
@@ -17,7 +18,7 @@
     "SCOREBOARD": "Punktestand",
     "SCORE": "Punktzahl",
     "RANK": "Rang",
-    "HOME": "Startseite"
+    "HOMEPAGE": "Startseite"
   },
   "PAGES": {
     "HOME": {
@@ -32,9 +33,7 @@
     },
     "ERROR": {
       "TITLE": "Oje...",
-      "TEXT": "Leider existiert die Seite, die du gerade versuchst zu erreichen, nicht.",
-      "REDIRECTING_SINGLE": "Du wirst in <1>{{remainingTime}} Sekunde</1> zur Startseite weitergeleitet.",
-      "REDIRECTING_MANY": "Du wirst in <1>{{remainingTime}} Sekunden</1> zur Startseite weitergeleitet."
+      "TEXT": "Leider existiert die Seite, die du gerade versuchst zu erreichen, nicht."
     }
   },
   "FORMS": {
@@ -51,8 +50,7 @@
       "SINGLE_PLAYER_WAITING": "Derzeit wartet <1>1 Spieler</1> darauf, zu spielen.",
       "MANY_PLAYERS_WAITING": "Derzeit warten <1>{{count}} Spieler</1> darauf, zu spielen.",
       "START_QUIZ": "Ja, los geht's!",
-      "DELETE_QUIZ": "Nein, lösche das Quiz.",
-      "DELETE_DATABASE": "Datenbank löschen."
+      "DELETE_QUIZ": "Nein, lösche das Quiz."
     },
     "QUESTION": {
       "PICK_ANSWER": "Wähle eine Antwort",

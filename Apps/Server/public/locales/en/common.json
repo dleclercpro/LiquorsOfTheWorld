@@ -5,6 +5,7 @@
     "PLEASE_WAIT": "Please wait",
     "WELCOME": "Welcome",
     "EXIT": "Exit",
+    "ADMIN": "Admin",
     "TEST": "Test",
     "START": "Start",
     "STOP": "Stop",
@@ -17,7 +18,7 @@
     "SCOREBOARD": "Scoreboard",
     "SCORE": "Score",
     "RANK": "Rank",
-    "HOME": "Homepage"
+    "HOMEPAGE": "Home"
   },
   "PAGES": {
     "HOME": {
@@ -32,9 +33,7 @@
     },
     "ERROR": {
       "TITLE": "Oops!",
-      "TEXT": "Unfortunately, the page you are trying to access does not exist.",
-      "REDIRECTING_SINGLE": "You will be redirected to the home page in <1>{{remainingTime}} second</1>...",
-      "REDIRECTING_MANY": "You will be redirected to the home page in <1>{{remainingTime}} seconds</1>..."
+      "TEXT": "Unfortunately, the page you are trying to access does not exist."
     }
   },
   "FORMS": {
@@ -51,8 +50,7 @@
       "SINGLE_PLAYER_WAITING": "There is currently <1>1 player</1> waiting to play.",
       "MANY_PLAYERS_WAITING": "There are currently <1>{{count}} players</1> waiting to play.",
       "START_QUIZ": "Yes, let's go!",
-      "DELETE_QUIZ": "No, delete the quiz.",
-      "DELETE_DATABASE": "Delete database."
+      "DELETE_QUIZ": "No, delete the quiz."
     },
     "QUESTION": {
       "PICK_ANSWER": "Pick an answer",

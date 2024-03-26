@@ -145,20 +145,20 @@ const Nav: React.FC = () => {
             </li>
           )}
 
-          {DEBUG && location.pathname !== '/test' && (
+          {DEBUG && location.pathname !== '/admin' && (
             <li className='nav-item'>
-              <Link className='nav-link' to={`/test`}>
+              <Link className='nav-link' to={`/admin`}>
                 <SettingsIcon className='nav-icon' />
-                {t('common:COMMON.TEST')}
+                {t('common:COMMON.ADMIN')}
               </Link>
             </li>
           )}
 
-          {DEBUG && location.pathname === '/test' && (
+          {DEBUG && location.pathname === '/admin' && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/`}>
                 <HomeIcon className='nav-icon' />
-                {t('common:COMMON.HOME')}
+                {t('common:COMMON.HOMEPAGE')}
               </Link>
             </li>
           )}

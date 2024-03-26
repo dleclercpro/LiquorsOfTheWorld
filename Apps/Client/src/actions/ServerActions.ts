@@ -19,7 +19,7 @@ export const createServerAction = <ActionArgs, ActionResult> (name: string, acti
         error = err.message;
       }
 
-      console.error(`Could not execute fetch action '${name}': ${error}`);
+      console.error(`Could not execute server action '${name}': ${error}`);
       return thunkAPI.rejectWithValue(error);
     }
   }

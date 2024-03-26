@@ -1,0 +1,63 @@
+@import '../styles/common';
+
+.admin-page {
+
+  > *:not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  > .admin-page-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: auto 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: $box-shadow-light;
+    text-align: center;
+    color: $color-white;
+
+    @include desktop {
+      align-items: flex-end;
+      width: 620px;
+    }
+
+    > .admin-page-title {
+      margin-bottom: 10px;
+    }
+
+    > .admin-page-text {
+      margin-bottom: 20px;
+      font-size: 18px;
+      text-align: right;
+    }
+
+    > .admin-page-button {
+      width: 100%;
+      padding: 20px;
+      background-color: $color-primary;
+      transition: background-color 0.3s, color 0.3s;
+      color: $color-white;
+      border: none;
+      border-radius: 4px;
+      box-shadow: $box-shadow-dark;
+      cursor: pointer;
+  
+      &:hover {
+        background-color: darken($color-primary, 10%);
+      }
+  
+      &:not(:last-of-type) {
+        margin-bottom: 5px;
+      }
+    }
+  }
+
+  > .admin-page-snackbar {
+
+    .admin-page-snackbar-content {
+      background-color: $color-black;
+    }
+  }
+}
