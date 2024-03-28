@@ -3,26 +3,24 @@ import './App.scss';
 import HomePage from './pages/HomePage';
 import QuizPage from './pages/QuizPage';
 import ScoresPage from './pages/ScoresPage';
-import { DEBUG, SERVER_ROOT } from './config';
+import { DEBUG } from './config';
 import AdminPage from './pages/AdminPage';
 import AuthRoute from './routes/AuthRoute';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from './hooks/redux';
 import { ping } from './actions/AuthActions';
 import Nav from './components/Nav';
 import ErrorPage from './pages/ErrorPage';
-import { updateVersion } from './actions/AppActions';
+import { updateBackground, updateVersion } from './actions/AppActions';
 import { fetchQuizNames } from './actions/DataActions';
-import { CallGetBackgroundUrl } from './calls/data/CallGetBackgroundUrl';
 
 function App() {
-  const [backgroundUrl, setBackgroundUrl] = useState('');
-
   const dispatch = useDispatch();
 
-  const quiz = useSelector((state) => state.quiz)
+  const app = useSelector((state) => state.app);
+  const quiz = useSelector((state) => state.quiz);
 
   useEffect(() => {
     dispatch(ping());
@@ -36,17 +34,12 @@ function App() {
       return;
     }
 
-    new CallGetBackgroundUrl(quiz.name).execute()
-      .then(({ data: path }) => {
-        const url = `${SERVER_ROOT}${path}`;
-        setBackgroundUrl(`url(${url})`);
-      })
-      .catch((err) => console.error(err));
+    dispatch(updateBackground());
 
   }, [quiz.name]);
-
+  
   return (
-    <div className='app' style={{ backgroundImage: backgroundUrl }}>
+    <div className='app' style={{ backgroundImage: `url(${app.styles.bg})` }}>
       <div className='app-container'>
         <Nav />
 

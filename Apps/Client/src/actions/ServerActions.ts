@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { DEBUG } from '../config';
 
 export type ThunkAPI = {
   dispatch: Function, 
@@ -10,6 +11,10 @@ export const createServerAction = <ActionArgs, ActionResult> (name: string, acti
   name,
   async (args: ActionArgs, thunkAPI: ThunkAPI) => {
     try {
+      if (DEBUG) {
+        console.log(`Executing action '${name}'...`);
+      }
+
       return await action(args, thunkAPI);
 
     } catch (err: unknown) {

@@ -25,16 +25,6 @@ export const deleteQuiz = createServerAction<string, void>(
   },
 );
 
-type StartQuestionActionArgs = { quizId: string, questionIndex: number };
-export const startQuestion = createServerAction<StartQuestionActionArgs, number>(
-  'question/start',
-  async ({ quizId, questionIndex }: StartQuestionActionArgs) => {
-    await new CallStartQuestion(quizId, questionIndex).execute();
-
-    return questionIndex;
-  },
-);
-
 type VoteActionArgs = { quizId: string, questionIndex: number, vote: number };
 export const vote = createServerAction<VoteActionArgs, VotesData>(
   'quiz/vote',
@@ -46,5 +36,15 @@ export const vote = createServerAction<VoteActionArgs, VotesData>(
     }
 
     return data as VotesData;
+  },
+);
+
+type StartQuestionActionArgs = { quizId: string, questionIndex: number };
+export const startQuestion = createServerAction<StartQuestionActionArgs, number>(
+  'question/start',
+  async ({ quizId, questionIndex }: StartQuestionActionArgs) => {
+    await new CallStartQuestion(quizId, questionIndex).execute();
+
+    return questionIndex;
   },
 );

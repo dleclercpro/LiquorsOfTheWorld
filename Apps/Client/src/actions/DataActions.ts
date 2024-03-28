@@ -10,7 +10,7 @@ import { QuizJSON } from '../types/JSONTypes';
 import { ThunkAPI, createServerAction } from './ServerActions';
 
 export const fetchQuizNames = createServerAction<void, string[]>(
-  'data/fetchQuizNames',
+  'data/quiz-names',
   async () => {
     const { data } = await new CallGetQuizNames().execute();
       
@@ -20,7 +20,7 @@ export const fetchQuizNames = createServerAction<void, string[]>(
 
 type FetchQuestionsActionArgs = { lang: Language, quizName: QuizName };
 export const fetchQuestions = createServerAction<FetchQuestionsActionArgs, QuizJSON>(
-  'data/fetchQuestions',
+  'data/questions',
   async ({ lang, quizName }: FetchQuestionsActionArgs) => {
     const { data } = await new CallGetQuestions(lang, quizName).execute();
       
@@ -29,7 +29,7 @@ export const fetchQuestions = createServerAction<FetchQuestionsActionArgs, QuizJ
 );
 
 export const fetchStatus = createServerAction<string, StatusData>(
-  'data/fetchStatus',
+  'data/status',
   async (quizId: string) => {
     const { data } = await new CallGetStatus(quizId).execute();
       
@@ -38,7 +38,7 @@ export const fetchStatus = createServerAction<string, StatusData>(
 );
 
 export const fetchVotes = createServerAction<string, number[]>(
-  'data/fetchVotes',
+  'data/votes',
   async (quizId: string) => {
     const { data } = await new CallGetVotes(quizId).execute();
       
@@ -47,7 +47,7 @@ export const fetchVotes = createServerAction<string, number[]>(
 );
 
 export const fetchScores = createServerAction<string, GroupedScoreData>(
-  'data/fetchScores',
+  'data/scores',
   async (quizId: string) => {
     const { data } = await new CallGetScores(quizId).execute();
       
@@ -59,7 +59,7 @@ export const fetchScores = createServerAction<string, GroupedScoreData>(
 
 type FetchQuizDataActionArgs = { quizId: string, quizName: QuizName, lang: Language };
 export const fetchQuizData = createServerAction<FetchQuizDataActionArgs, number>(
-  'data/fetchQuizData',
+  'data/quiz',
   async ({ quizId, quizName, lang }: FetchQuizDataActionArgs, { dispatch, getState }: ThunkAPI) => {
     const result = await Promise.all([
       dispatch(fetchQuestions({ lang, quizName })),

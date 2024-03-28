@@ -9,12 +9,18 @@ interface AppState {
   language: Language,
   version: string | null,
   questionIndex: number, // Current question index in the app
+  styles: {
+    bg: string | null,
+  },
 }
 
 const initialState: AppState = {
   language: INIT_LANGUAGE,
   version: null,
   questionIndex: 0,
+  styles: {
+    bg: null,
+  },
 };
 
 
@@ -31,6 +37,9 @@ export const appSlice = createSlice({
     },
     setQuestionIndex: (state, action: PayloadAction<number>) => {
       state.questionIndex = action.payload;
+    },
+    setBackgroundUrl: (state, action: PayloadAction<string>) => {
+      state.styles.bg = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -55,6 +64,6 @@ export const appSlice = createSlice({
   },
 });
 
-export const { setLanguage, setVersion, setQuestionIndex } = appSlice.actions;
+export const { setLanguage, setVersion, setQuestionIndex, setBackgroundUrl } = appSlice.actions;
 
 export default appSlice.reducer;
