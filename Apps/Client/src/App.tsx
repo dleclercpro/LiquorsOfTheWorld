@@ -24,7 +24,6 @@ function App() {
 
   useEffect(() => {
     dispatch(ping());
-
     dispatch(updateVersion());
     dispatch(fetchQuizNames());
   }, []);
