@@ -8,6 +8,7 @@ import { Navigate } from 'react-router-dom';
 import { deleteCookie, deleteFromLocalStorage } from '../utils/cookie';
 import { Snackbar, SnackbarContent, SnackbarOrigin } from '@mui/material';
 import Fade from '@mui/material/Fade';
+import { COOKIE_NAME } from '../config';
 
 interface SnackbarState extends SnackbarOrigin {
   open: boolean,
@@ -38,7 +39,7 @@ const AdminPage: React.FC = () => {
     e.preventDefault();
 
     if (quiz.name) {
-      deleteCookie(quiz.name);
+      deleteCookie(COOKIE_NAME);
 
       setState({
         ...state,
