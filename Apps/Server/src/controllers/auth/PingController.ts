@@ -14,6 +14,7 @@ const PingController: RequestHandler = async (req, res, next) => {
         return res
             .json(successResponse({
                 quizId: cookie ? cookie.quizId : null,
+                quizName: cookie ? cookie.quizName : null,
                 username: cookie ? cookie.user.username : null,
                 isAdmin: cookie ? cookie.user.isAdmin : false,
                 isAuthenticated: Boolean(cookie),

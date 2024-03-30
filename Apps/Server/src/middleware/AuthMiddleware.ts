@@ -20,6 +20,7 @@ const AuthMiddleware: RequestHandler = async (req, res, next) => {
   // Store user and quiz ID in request
   req.user = cookie.user;
   req.quizId = cookie.quizId;
+  req.quizName = cookie.quizName;
 
   next();
 }
