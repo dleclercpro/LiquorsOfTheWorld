@@ -26,7 +26,7 @@ $nav-min-width: 380px;
     box-shadow: $box-shadow-dark;
     width: 65px;
     height: 65px;
-    background-color: $color-secondary;
+    background-color: $color-black;
     cursor: pointer;
     user-select: none;
 
@@ -44,7 +44,7 @@ $nav-min-width: 380px;
       width: 50%;
       height: 50%;
       transform: translate(-50%, -50%);
-      color: $color-black;
+      color: $color-white;
     }
   }
 
@@ -108,8 +108,8 @@ $nav-min-width: 380px;
             align-items: center;
             width: 100%;
             padding: 18px 16px;
-            background-color: $color-secondary;
-            color: $color-black;
+            background-color: $color-black;
+            color: $color-white;
             font-family: $special-font-stack;
             @include font-sub-title;
   
