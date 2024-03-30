@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from '../hooks/redux';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
 import { deleteDatabase } from '../actions/AppActions';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { deleteCookie, deleteFromLocalStorage } from '../utils/cookie';
 import { Snackbar, SnackbarContent, SnackbarOrigin } from '@mui/material';
 import Fade from '@mui/material/Fade';
@@ -26,8 +26,11 @@ const AdminPage: React.FC = () => {
   const { open, message, vertical, horizontal } = state;
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const quiz = useSelector((state) => state.quiz);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const isAdmin = useSelector(({ user }) => user.isAdmin);
 
   dispatch(closeAllOverlays());
 
@@ -73,6 +76,8 @@ const AdminPage: React.FC = () => {
         open: true,
         message: 'Deleted database.',
     });
+
+    navigate('/');
   }
 
   if (!quiz.name) {
@@ -92,9 +97,11 @@ const AdminPage: React.FC = () => {
         <button className='admin-page-button' onClick={handleDeleteLocalStorage}>
           Delete local storage
         </button>
-        <button className='admin-page-button' onClick={handleDeleteDatabase}>
-          Delete database
-        </button>
+        {isAuthenticated && isAdmin && (
+          <button className='admin-page-button' onClick={handleDeleteDatabase}>
+            Delete database
+          </button>
+        )}
       </div>
 
       <Snackbar

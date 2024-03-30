@@ -10,7 +10,9 @@ const ReadyController: RequestHandler = async (req, res, next) => {
         return res.sendStatus(status);
 
     } catch (err: any) {
-        logger.error(err);
+        if (err instanceof Error) {
+            logger.warn(err.message);
+        }
 
         next(err);
     }

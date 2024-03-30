@@ -19,6 +19,10 @@ const DeleteDatabaseController: RequestHandler = async (req, res, next) => {
         return res.json(successResponse());
 
     } catch (err: any) {
+        if (err instanceof Error) {
+            logger.warn(err.message);
+        }
+        
         next(err);
     }
 }
