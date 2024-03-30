@@ -1,7 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import HttpBackend from 'i18next-http-backend';
-import { DEBUG, SERVER_ROOT } from './config';
+import { DEBUG_I18N, SERVER_ROOT } from './config';
 import { Language, QuizName } from './constants';
 
 export const INIT_LANGUAGE = Language.DE;
@@ -11,7 +11,7 @@ i18n
   .use(HttpBackend)
   .use(initReactI18next)
   .init({
-    debug: DEBUG,
+    debug: DEBUG_I18N,
     lng: INIT_LANGUAGE,
     fallbackLng: FALLBACK_LANGUAGE,
     ns: ['common', QuizName.Liquors, QuizName.KonnyUndJohannes],
