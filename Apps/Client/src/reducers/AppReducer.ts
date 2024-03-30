@@ -4,14 +4,13 @@ import { startQuestion } from '../actions/QuizActions';
 import { Language } from '../constants';
 import { INIT_LANGUAGE } from '../i18n';
 import { fetchQuizData } from '../actions/DataActions';
-import { SERVER_ROOT } from '../config';
 
 interface AppState {
   language: Language,
   version: string | null,
   questionIndex: number, // Current question index in the app
   styles: {
-    bg: string,
+    bg: string | null,
   },
 }
 
@@ -20,7 +19,7 @@ const initialState: AppState = {
   version: null,
   questionIndex: 0,
   styles: {
-    bg: `${SERVER_ROOT}/static/img/bg/default.webp`,
+    bg: null,
   },
 };
 
@@ -48,11 +47,9 @@ export const appSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.questionIndex = 0; // Only reset question index on log out
       })
-      .addCase(logout.rejected, (state) => ({
-        ...initialState,
-        language: state.language,
-        version: state.version,
-      }))
+      .addCase(logout.rejected, (state) => {
+        state.questionIndex = 0; // Only reset question index on log out
+      })
       .addCase(fetchQuizData.fulfilled, (state, action) => {
         state.questionIndex = action.payload as number;
       })

@@ -27,6 +27,12 @@
       "WELCOME_TEXT": "Get ready to showcase your mastery of the world's spirits in an epic quiz, where only the savviest liquor aficionados will manage to claim victory...",
       "WELCOME_CTA": "Are you ready?"
     },
+    "ADMIN": {
+      "DELETE_COOKIE": "Delete cookie",
+      "DELETE_LOCAL_STORAGE": "Delete local storage",
+      "DELETE_DATABASE": "Delete database",
+      "NOTHING_TO_DO": "There is nothing to do here!"
+    },
     "SCOREBOARD": {
       "STATUS_OVER": "The quiz is over. All {{questionsCount}} questions have been answered. Here are the final results:",
       "STATUS_NOT_OVER": "So far, {{questionsAnsweredCount}} out of {{questionsCount}} questions have been answered. Here are the current results:"
