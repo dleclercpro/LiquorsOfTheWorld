@@ -9,6 +9,7 @@ import { deleteCookie, deleteFromLocalStorage } from '../utils/cookie';
 import { Snackbar, SnackbarContent, SnackbarOrigin } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import { COOKIE_NAME } from '../config';
+import { useTranslation } from 'react-i18next';
 
 interface SnackbarState extends SnackbarOrigin {
   open: boolean,
@@ -27,6 +28,7 @@ const AdminPage: React.FC = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const quiz = useSelector((state) => state.quiz);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -89,7 +91,7 @@ const AdminPage: React.FC = () => {
   return (
     <Page title='Admin' className='admin-page'>
       <div className='admin-page-box'>
-        <h1 className='admin-page-title'>Administration</h1>
+        <h1 className='admin-page-title'>{t('common:COMMON.ADMIN')}</h1>
         <p className='admin-page-text'>Here are your options:</p>
         <button className='admin-page-button' onClick={handleDeleteCookie}>
           Delete cookie

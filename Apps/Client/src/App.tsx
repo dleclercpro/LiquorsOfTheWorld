@@ -21,6 +21,7 @@ function App() {
 
   const app = useSelector((state) => state.app);
   const quiz = useSelector((state) => state.quiz);
+  const isAdmin = useSelector(({ user }) => user.isAdmin);
 
   useEffect(() => {
     dispatch(ping());
@@ -43,13 +44,10 @@ function App() {
         <Nav />
 
         <Routes>
-          {/* Debugging routes */}
-          {DEBUG && (
-            <>
-              <Route path='/admin' element={(
-                <AdminPage />
-              )} />
-            </>
+          {(DEBUG || isAdmin) && (
+            <Route path='/admin' element={(
+              <AdminPage />
+            )} />
           )}
 
           <Route path='/quiz' element={(
