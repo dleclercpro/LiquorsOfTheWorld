@@ -19,6 +19,8 @@ const LoginForm: React.FC<Props> = (props) => {
   const quiz = useSelector((state) => state.quiz);
 
   const [quizId, setQuizId] = useState(props.quizId ?? '');
+  const [disableQuizId] = useState(!!props.quizId);
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -54,8 +56,10 @@ const LoginForm: React.FC<Props> = (props) => {
     <form className='login-form' onSubmit={(e) => handleSubmit(e)}>
         <input
         id='login-quiz-id'
+        className={`${disableQuizId ? 'is-disabled' : ''}`}
         type='text'
         value={quizId}
+        disabled={disableQuizId}
         placeholder={t('common:FORMS.LOGIN.QUIZ_ID')}
         onChange={(e) => setQuizId(e.target.value)}
         required

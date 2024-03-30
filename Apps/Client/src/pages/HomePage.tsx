@@ -14,7 +14,7 @@ const QUIZ_NAME_PARAM = 'q';
 
 
 const HomePage: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -36,15 +36,6 @@ const HomePage: React.FC = () => {
       dispatch(setQuizName(quizName));
     }
   }, [isQuizNameValid]);
-
-  // Clean up URL from quiz name
-  useEffect(() => {
-    if (searchParams.has(QUIZ_NAME_PARAM)) {
-      searchParams.delete(QUIZ_NAME_PARAM);
-
-      setSearchParams(searchParams);
-    }
-  }, [searchParams, setSearchParams]);
 
   if (!isQuizNameValid) {
     return (
