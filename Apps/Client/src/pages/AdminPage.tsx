@@ -53,7 +53,7 @@ const AdminPage: React.FC = () => {
     e.preventDefault();
 
     if (quiz.name) {
-      deleteFromLocalStorage(quiz.name);
+      deleteFromLocalStorage('persist:root'); // Delete Redux Persist storage
 
       setState({
         ...state,
