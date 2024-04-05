@@ -14,6 +14,11 @@
     padding: 10px;
     margin-bottom: 10px;
     text-align: center;
+
+    &.is-disabled {
+      background-color: $color-light-grey;
+      font-weight: bold;
+    }
   }
 
   > .login-error {

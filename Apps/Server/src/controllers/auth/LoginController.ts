@@ -53,9 +53,9 @@ const LoginController: RequestHandler = async (req, res, next) => {
         let quiz = await APP_DB.getQuiz(quizId);
         const quizExists = Boolean(quiz);
 
-        // In case quiz doesn't exist
+        // In case quiz session doesn't exist
         if (!quizExists) {
-            logger.trace(`Quiz '${quizId}' doesn't exist.`);
+            logger.trace(`Quiz ID '${quizId}' doesn't exist.`);
             if (!isAdmin) { 
                 throw new InvalidQuizIdError();
             }
@@ -109,7 +109,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
         }
 
         const user = { username, isAdmin };
-        const cookie = await encodeCookie({ user, quizId });
+        const cookie = await encodeCookie({ user, quizName, quizId });
         
         return res
             .cookie(COOKIE_NAME, cookie)

@@ -118,10 +118,10 @@ export const quizSlice = createSlice({
 
       // Auth actions
       .addCase(ping.fulfilled, (state, action) => {
-        state.id = action.payload.quizId;
+        state.id = action.payload.quizId as string | null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.id = action.payload.quizId
+        state.id = action.payload.quizId as string | null;
       })
       // Reset state on logout, no matter if successful or not
       .addCase(logout.fulfilled, (state) => {

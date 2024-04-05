@@ -71,4 +71,24 @@
       }
     }
   }
+
+  > .admin-quiz-form-button {
+    width: 100%;
+    padding: 20px;
+    background-color: $color-primary;
+    transition: background-color 0.3s, color 0.3s;
+    color: $color-white;
+    border: none;
+    border-radius: 4px;
+    box-shadow: $box-shadow-dark;
+    cursor: pointer;
+
+    &:hover {
+      background-color: darken($color-primary, 10%);
+    }
+
+    &:not(:last-of-type) {
+      margin-bottom: 5px;
+    }
+  }
 }

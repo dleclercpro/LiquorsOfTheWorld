@@ -25,16 +25,16 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(ping.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
       .addCase(ping.fulfilled, (state, action) => {
         state.username = action.payload.username;
         state.isAdmin = action.payload.isAdmin;
-        state.isAuthenticated = true;
+        state.isAuthenticated = action.payload.isAuthenticated;
       })
-      .addCase(ping.rejected, (state) => {
-        state.username = null;
-        state.isAdmin = false;
-        state.isAuthenticated = false;
-      })
+      .addCase(ping.rejected, () => initialState)
       .addCase(login.pending, (state) => {
         state.status = 'loading';
         state.error = null;

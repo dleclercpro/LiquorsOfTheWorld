@@ -8,9 +8,11 @@ export type FetchedData<Data> = {
 };
 
 export type PingData = {
-  quizId: string,
-  username: string,
+  quizId: string | null,
+  quizName: string | null,
+  username: string | null,
   isAdmin: boolean,
+  isAuthenticated: boolean,
 };
 
 export type LoginData = Auth & {

@@ -4,10 +4,13 @@ import { useDispatch, useSelector } from '../hooks/redux';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
 import { deleteDatabase } from '../actions/AppActions';
-import { Navigate } from 'react-router-dom';
-import { deleteCookie, deleteFromLocalStorage } from '../utils/cookie';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { deleteCookie, deleteFromLocalStorage, getCookie, getFromLocalStorage } from '../utils/storage';
 import { Snackbar, SnackbarContent, SnackbarOrigin } from '@mui/material';
 import Fade from '@mui/material/Fade';
+import { COOKIE_NAME } from '../config';
+import { useTranslation } from 'react-i18next';
+import { logout } from '../actions/AuthActions';
 
 interface SnackbarState extends SnackbarOrigin {
   open: boolean,
@@ -25,8 +28,22 @@ const AdminPage: React.FC = () => {
   const { open, message, vertical, horizontal } = state;
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const quiz = useSelector((state) => state.quiz);
+  // const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const isAdmin = useSelector(({ user }) => user.isAdmin);
+  const hasCookie = Boolean(getCookie(COOKIE_NAME));
+  const hasLocalStorage = Boolean(getFromLocalStorage('persist:root'));
+
+  let nothing = true;
+
+  if (isAdmin) {
+    nothing = !hasCookie && !hasLocalStorage;
+  } else {
+    nothing = !hasCookie;
+  }
 
   dispatch(closeAllOverlays());
 
@@ -38,13 +55,17 @@ const AdminPage: React.FC = () => {
     e.preventDefault();
 
     if (quiz.name) {
-      deleteCookie(quiz.name);
+      deleteCookie(COOKIE_NAME);
+
+      dispatch(logout());
 
       setState({
         ...state,
         open: true,
         message: 'Deleted cookie.',
       });
+
+      navigate('/');
     }
   }
 
@@ -52,13 +73,17 @@ const AdminPage: React.FC = () => {
     e.preventDefault();
 
     if (quiz.name) {
-      deleteFromLocalStorage(quiz.name);
+      alert(`This might break the app's UI!`);
+
+      deleteFromLocalStorage('persist:root'); // Delete Redux Persist storage
 
       setState({
         ...state,
         open: true,
         message: 'Deleted local storage.',
       });
+
+      navigate(`/?q=${quiz.name}`);
     }
   }
 
@@ -72,6 +97,8 @@ const AdminPage: React.FC = () => {
         open: true,
         message: 'Deleted database.',
     });
+
+    navigate('/');
   }
 
   if (!quiz.name) {
@@ -80,20 +107,31 @@ const AdminPage: React.FC = () => {
     );
   }
 
+  console.log(`hasCookie: ${hasCookie}, hasLocalStorage: ${hasLocalStorage}, isAdmin: ${isAdmin}`);
+
   return (
-    <Page title='Admin' className='admin-page'>
+    <Page title={t('common:COMMON.ADMIN')} className='admin-page'>
       <div className='admin-page-box'>
-        <h1 className='admin-page-title'>Administration</h1>
-        <p className='admin-page-text'>Here are your options:</p>
-        <button className='admin-page-button' onClick={handleDeleteCookie}>
-          Delete cookie
-        </button>
-        <button className='admin-page-button' onClick={handleDeleteLocalStorage}>
-          Delete local storage
-        </button>
-        <button className='admin-page-button' onClick={handleDeleteDatabase}>
-          Delete database
-        </button>
+        <h1 className='admin-page-title'>{t('common:COMMON.ADMIN')}</h1>
+        {!hasCookie && !isAdmin && (
+          <p className='admin-page-text'>{t('common:PAGES.ADMIN.NOTHING_TO_DO')}</p>
+        )}
+
+        {hasCookie && (
+          <button className='admin-page-button' onClick={handleDeleteCookie}>
+            {t('common:PAGES.ADMIN.DELETE_COOKIE')}
+          </button>
+        )}
+        {hasLocalStorage && isAdmin && (
+          <button className='admin-page-button' onClick={handleDeleteLocalStorage}>
+            {t('common:PAGES.ADMIN.DELETE_LOCAL_STORAGE')}
+          </button>
+        )}
+        {isAdmin && (
+          <button className='admin-page-button' onClick={handleDeleteDatabase}>
+          {t('common:PAGES.ADMIN.DELETE_DATABASE')}
+          </button>
+        )}
       </div>
 
       <Snackbar

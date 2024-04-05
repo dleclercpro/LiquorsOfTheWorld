@@ -10,10 +10,6 @@ export const login = createServerAction<LoginData, UserData>(
     const { quizId } = args;
     const { data } = await new CallLogIn().execute(args);
 
-    if (!data) {
-      throw new Error('MISSING_DATA');
-    }
-    
     const user = data as UserData;
 
     return {
@@ -35,10 +31,6 @@ export const ping = createServerAction<void, PingData>(
   'auth/ping',
   async () => {
     const { data } = await new CallPing().execute();
-
-    if (!data) {
-      throw new Error('MISSING_DATA');
-    }
 
     return data as PingData;
   },

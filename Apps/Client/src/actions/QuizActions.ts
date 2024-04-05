@@ -31,10 +31,6 @@ export const vote = createServerAction<VoteActionArgs, VotesData>(
   async ({ quizId, questionIndex, vote }: VoteActionArgs) => {
     const { data } = await new CallVote(quizId, questionIndex).execute({ vote });
 
-    if (!data) {
-      throw new Error('MISSING_DATA');
-    }
-
     return data as VotesData;
   },
 );

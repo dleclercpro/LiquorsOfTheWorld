@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { COOKIE_NAME } from '../config';
 import { decodeCookie } from '../utils/cookies';
-import { HttpStatusCode, HttpStatusMessage } from '../types/HTTPTypes';
+import { HttpStatusCode } from '../types/HTTPTypes';
 import { errorResponse } from '../utils/calls';
 
 const AuthMiddleware: RequestHandler = async (req, res, next) => {
@@ -20,6 +20,7 @@ const AuthMiddleware: RequestHandler = async (req, res, next) => {
   // Store user and quiz ID in request
   req.user = cookie.user;
   req.quizId = cookie.quizId;
+  req.quizName = cookie.quizName;
 
   next();
 }

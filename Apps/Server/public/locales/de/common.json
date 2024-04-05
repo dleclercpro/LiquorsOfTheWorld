@@ -5,7 +5,7 @@
     "PLEASE_WAIT": "Bitte warte",
     "WELCOME": "Willkommen",
     "EXIT": "Beenden",
-    "ADMIN": "Admin",
+    "ADMIN": "Verwaltung",
     "TEST": "Test",
     "START": "Start",
     "STOP": "Stop",
@@ -26,6 +26,12 @@
       "WELCOME_HEAD": "Willkommen zum Quiz heute Abend!",
       "WELCOME_TEXT": "Bereite dich darauf vor, dein Meisterwissen über die Spirituosen der Welt in einem epischen Quiz zu zeigen, wo nur die schlauesten Schnapskenner den Sieg erringen werden...",
       "WELCOME_CTA": "Bist Du bereit?"
+    },
+    "ADMIN": {
+      "DELETE_COOKIE": "Cookie löschen",
+      "DELETE_LOCAL_STORAGE": "Local Storage löschen",
+      "DELETE_DATABASE": "Datenbank löschen",
+      "NOTHING_TO_DO": "Hier gibt es nichts zu tun!"
     },
     "SCOREBOARD": {
       "STATUS_OVER": "Das Quiz ist vorbei. Alle {{questionsCount}} Fragen wurden beantwortet. Hier sind die Endergebnisse:",

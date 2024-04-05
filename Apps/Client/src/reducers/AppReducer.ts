@@ -44,17 +44,12 @@ export const appSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Reset state on logout, no matter if successful or not
-      .addCase(logout.fulfilled, (state) => ({
-        ...initialState,
-        language: state.language,
-        version: state.version,
-      }))
-      .addCase(logout.rejected, (state) => ({
-        ...initialState,
-        language: state.language,
-        version: state.version,
-      }))
+      .addCase(logout.fulfilled, (state) => {
+        state.questionIndex = 0; // Only reset question index on log out
+      })
+      .addCase(logout.rejected, (state) => {
+        state.questionIndex = 0; // Only reset question index on log out
+      })
       .addCase(fetchQuizData.fulfilled, (state, action) => {
         state.questionIndex = action.payload as number;
       })
