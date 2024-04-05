@@ -37,12 +37,12 @@ const AdminPage: React.FC = () => {
   const hasCookie = Boolean(getCookie(COOKIE_NAME));
   const hasLocalStorage = Boolean(getFromLocalStorage('persist:root'));
 
-  let nothing = true;
+  let hasNoOptions = true;
 
   if (isAdmin) {
-    nothing = !hasCookie && !hasLocalStorage;
+    hasNoOptions = !hasCookie && !hasLocalStorage;
   } else {
-    nothing = !hasCookie;
+    hasNoOptions = !hasCookie;
   }
 
   dispatch(closeAllOverlays());
@@ -113,7 +113,7 @@ const AdminPage: React.FC = () => {
     <Page title={t('common:COMMON.ADMIN')} className='admin-page'>
       <div className='admin-page-box'>
         <h1 className='admin-page-title'>{t('common:COMMON.ADMIN')}</h1>
-        {!hasCookie && !isAdmin && (
+        {hasNoOptions && (
           <p className='admin-page-text'>{t('common:PAGES.ADMIN.NOTHING_TO_DO')}</p>
         )}
 

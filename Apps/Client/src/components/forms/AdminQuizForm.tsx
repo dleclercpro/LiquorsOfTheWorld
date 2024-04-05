@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from '../../hooks/redux';
 import './AdminQuizForm.scss';
 import { deleteQuiz, startQuiz } from '../../actions/QuizActions';
 import { Trans, useTranslation } from 'react-i18next';
-import { logout } from '../../actions/AuthActions';
 import { selectPlayers } from '../../selectors/QuizSelectors';
 
 const AdminQuizForm: React.FC = () => {
@@ -40,12 +39,6 @@ const AdminQuizForm: React.FC = () => {
     await dispatch(deleteQuiz(quizId));
   }
 
-  const handleLogout: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
-    e.preventDefault();
-
-    await dispatch(logout());
-  }
-
   return (
     <form className='admin-quiz-form'>
       <h2 className='admin-quiz-form-title'>{t('common:FORMS.START_QUIZ.TITLE')}</h2>
@@ -75,11 +68,9 @@ const AdminQuizForm: React.FC = () => {
       <button className='admin-quiz-form-button' onClick={handleStartQuiz}>
         {t('common:FORMS.START_QUIZ.START_QUIZ')}
       </button>
+      
       <button className='admin-quiz-form-button' onClick={handleDeleteQuiz}>
         {t('common:FORMS.START_QUIZ.DELETE_QUIZ')}
-      </button>
-      <button className='admin-quiz-form-button' onClick={handleLogout}>
-        {t('common:COMMON.LOG_OUT')}
       </button>
     </form>
   );
