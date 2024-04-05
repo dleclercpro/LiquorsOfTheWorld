@@ -56,7 +56,7 @@ class AppDatabase extends RedisDatabase {
         const hashedPassword = await new Promise<string>((resolve, reject) => {
             bcrypt.hash(password, N_SALT_ROUNDS, async (err, hash) => {
                 if (err) {
-                    logger.fatal(`Cannot hash password of user '${lowercaseUsername}'.`, err);
+                    logger.error(`Cannot hash password of user '${lowercaseUsername}'.`, err);
                     reject(new HashError());
                 }
       

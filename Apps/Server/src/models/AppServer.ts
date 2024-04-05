@@ -100,7 +100,7 @@ class AppServer {
             await new Promise<void>((resolve, reject) => {
                 this.server!.close((err) => {
                     if (err) {
-                        logger.fatal(`Could not shut down server gracefully: ${err}`);
+                        logger.warn(`Could not shut down server gracefully: ${err}`);
                         reject(err);
                     }
 

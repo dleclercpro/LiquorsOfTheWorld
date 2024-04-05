@@ -31,7 +31,7 @@ export const CLIENT_ROOT = `http://${CLIENT_HOST}:${CLIENT_PORT}`;
 export const REDIS_HOST = process.env.REDIS_HOST!;
 export const REDIS_PORT = parseNumberText(process.env.REDIS_PORT);
 export const REDIS_NAME = `quiz`;
-export const REDIS_RETRY_CONNECT_MAX_DELAY = new TimeDuration(3, TimeUnit.Seconds);
+export const REDIS_RETRY_CONNECT_MAX_DELAY = new TimeDuration(10, TimeUnit.Seconds);
 export const REDIS_RETRY_CONNECT_TIMEOUT = new TimeDuration(5, TimeUnit.Seconds);
 export const REDIS_RETRY_CONNECT_MAX = 5;
 

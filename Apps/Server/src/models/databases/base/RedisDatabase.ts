@@ -46,13 +46,10 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
     }
 
     public async start() {
-
-        // Listen to events it emits
         this.listen();
 
         logger.debug(`Trying to connect to: ${this.getAnonymousURI()}`);
 
-        // Connect to database
         await this.client.connect();
     }
 
@@ -91,14 +88,13 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
         // End reconnecting on a specific error and flush all commands with
         // a individual error
         if (error && error.code === 'ECONNREFUSED') {
-            logger.fatal('The server refused the connection.');
-            return new Error('DATABASE_REFUSED_CONNECTION');
+            logger.error('The Redis database refused the connection.');
         }
         
         // End reconnecting with built in error
         if (retries > REDIS_RETRY_CONNECT_MAX) {
             logger.fatal('Number of connection retries exhausted. Stopping connection attempts.')
-            return new Error('NO_CONNECTION_ATTEMPTS_LEFT');
+            process.exit(1);
         }
 
         // Reconnect after ... ms
