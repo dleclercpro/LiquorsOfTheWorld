@@ -3,7 +3,7 @@ version: '3.8'
 
 services:
   quiz-app:
-    image: dleclercpro/quiz:latest
+    image: dleclercpro/quiz:v3.0.0
     container_name: quiz-app
     ports:
       - 80:8000
