@@ -50,7 +50,7 @@ class AppServer {
 
         // Allow all origins in dev mode
         if (DEV) {
-            logger.debug(`Enabling CORS...`);
+            logger.debug(`Enabling CORS.`);
 
             this.app.use(cors({
                 origin: CLIENT_ROOT,
@@ -74,7 +74,7 @@ class AppServer {
     }
 
     public async start() {
-        if (!this.server) new MissingServerError();
+        if (!this.server) throw new MissingServerError();
 
         // Listen to stop signals
         process.on('SIGTERM', () => this.stop('SIGTERM'));
