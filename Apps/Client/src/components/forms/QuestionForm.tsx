@@ -10,6 +10,7 @@ import PlaceholderImage from '../PlaceholderImage';
 import PlaceholderVideo from '../PlaceholderVideo';
 import TimeDuration from '../../models/TimeDuration';
 import { TimeUnit } from '../../types/TimeTypes';
+import useCountdownTimer from '../../hooks/timer';
 
 type Image = {
   url: string,
@@ -50,7 +51,13 @@ const QuestionForm: React.FC<Props> = (props) => {
   const ratioClass = ratio ? `ratio-${ratio.replace(':', 'x')}` : 'ratio-1x1';
 
   const isTimed = quiz.status.data?.isTimed;
-  const timer = { remainingTime: new TimeDuration(5, TimeUnit.Second) };
+  const timer = useCountdownTimer({ duration: new TimeDuration(1, TimeUnit.Minute) });
+
+
+
+  useEffect(() => {
+    timer.start();
+  }, []);
 
 
   
@@ -92,7 +99,7 @@ const QuestionForm: React.FC<Props> = (props) => {
     <form className='question-form' onSubmit={handleSubmit}>
       <div className='question-form-meta'>
         {isTimed && (
-          <p className='question-form-timer'>{t('common:COMMON.TIME_LEFT')}: <span className='question-form-timer-value'>{timer.remainingTime.format()}</span></p>
+          <p className='question-form-timer'>{t('common:COMMON.TIME_LEFT')}: <span className='question-form-timer-value'>{timer.time.format()}</span></p>
         )}
         <p className='question-form-index'>{t('common:COMMON.QUESTION')}: {index + 1}/{questions.length}</p>
         <p className='question-form-topic'>{t('common:COMMON.TOPIC')}: {topic}</p>
@@ -134,7 +141,7 @@ const QuestionForm: React.FC<Props> = (props) => {
       ))}
 
       <button type='submit' disabled={disabled}>
-        {t(choice === '' ? 'FORMS.QUESTION.PICK_ANSWER' : 'FORMS.QUESTION.SUBMIT_ANSWER')}{isTimed ? ` (${timer.remainingTime.format()})` : ''}
+        {t(choice === '' ? 'FORMS.QUESTION.PICK_ANSWER' : 'FORMS.QUESTION.SUBMIT_ANSWER')}{isTimed ? ` (${timer.time.format()})` : ''}
       </button>
     </form>
   );
