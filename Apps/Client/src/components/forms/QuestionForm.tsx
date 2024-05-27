@@ -21,7 +21,7 @@ type Video = {
 
 type Props = {
   index: number,
-  theme: string,
+  topic: string,
   question: string,
   image?: Image,
   video?: Video,
@@ -33,7 +33,7 @@ type Props = {
 }
 
 const QuestionForm: React.FC<Props> = (props) => {
-  const { index, theme, question, image, video, ratio, options, disabled, choice, setChoice } = props;
+  const { index, topic, question, image, video, ratio, options, disabled, choice, setChoice } = props;
 
   const { t } = useTranslation();
 
@@ -84,7 +84,7 @@ const QuestionForm: React.FC<Props> = (props) => {
     <form className='question-form' onSubmit={handleSubmit}>
       <div className='question-form-meta'>
         <p className='question-form-index'>{t('common:COMMON.QUESTION')}: {index + 1}/{questions.length}</p>
-        <p className='question-form-theme'>{theme}</p>
+        <p className='question-form-topic'>{topic}</p>
       </div>
 
       <h2 className='question-form-title'>{question}</h2>

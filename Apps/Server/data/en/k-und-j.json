@@ -1,6 +1,6 @@
 [
   {
-    "theme": "Video",
+    "topic": "Video",
     "question": "What is going on in this video?",
     "options": ["A business meeting", "A wine tasting", "A software demo"],
     "type": "video",
@@ -8,7 +8,7 @@
     "answer": 0
   },
   {
-    "theme": "Image",
+    "topic": "Image",
     "question": "Who is on this picture?",
     "options": ["A", "B", "C"],
     "type": "image",
@@ -16,7 +16,7 @@
     "answer": 2
   },
   {
-    "theme": "Test",
+    "topic": "Test",
     "question": "What is the main ingredient in traditional Russian vodka?",
     "options": ["Potatoes", "Grapes", "Wheat"],
     "type": "text",

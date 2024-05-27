@@ -100,7 +100,7 @@ const QuizPage: React.FC = () => {
     return null;
   }
 
-  const { theme, question, type, url, options } = questions[playerQuestionIndex];
+  const { topic, question, type, url, options } = questions[playerQuestionIndex];
 
   return (
     <Page title={t('common:COMMON:QUIZ')} className='quiz-page'>
@@ -110,7 +110,7 @@ const QuizPage: React.FC = () => {
       {isStarted && (
         <QuestionForm
           index={playerQuestionIndex}
-          theme={theme}
+          topic={topic}
           question={question}
           image={type === QuestionType.Image ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
           video={type === QuestionType.Video ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
