@@ -14,5 +14,6 @@ export type Quiz = {
     isStarted: boolean,
     isOver: boolean,
     isSupervised: boolean,
+    isTimed: boolean,
   },
 };

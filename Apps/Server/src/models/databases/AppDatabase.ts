@@ -93,9 +93,10 @@ class AppDatabase extends RedisDatabase {
             players: [],
             status: {
                 questionIndex: 0,
-                isSupervised: false,
                 isStarted: false,
                 isOver: false,
+                isSupervised: false,
+                isTimed: false,
             },
         };
 
@@ -104,7 +105,7 @@ class AppDatabase extends RedisDatabase {
         return quiz;
     }
 
-    public async startQuiz(quizId: string, isSupervised: boolean) {
+    public async startQuiz(quizId: string, isSupervised: boolean, isTimed: boolean) {
         const quiz = await this.getQuiz(quizId);
 
         if (!quiz) {
@@ -117,6 +118,7 @@ class AppDatabase extends RedisDatabase {
                 ...quiz.status,
                 isStarted: true,
                 isSupervised,
+                isTimed,
             },
         });
     }

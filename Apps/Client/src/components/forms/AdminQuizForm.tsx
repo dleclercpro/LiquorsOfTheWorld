@@ -10,13 +10,18 @@ const AdminQuizForm: React.FC = () => {
 
   const { t } = useTranslation();
   const [isSupervised, setIsSupervised] = useState(false);
+  const [isTimed, setIsTimed] = useState(false);
 
   const quiz = useSelector(({ quiz }) => quiz);
   const quizId = quiz.id;
   const players = useSelector(selectPlayers);
 
-  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleSuperviseCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setIsSupervised(!isSupervised);
+  }
+
+  const handleTimerCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setIsTimed(!isTimed);
   }
 
   const handleStartQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
@@ -26,7 +31,7 @@ const AdminQuizForm: React.FC = () => {
       return;
     }
     
-    await dispatch(startQuiz({ quizId, isSupervised }));
+    await dispatch(startQuiz({ quizId, isSupervised, isTimed }));
   }
 
   const handleDeleteQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
@@ -55,12 +60,21 @@ const AdminQuizForm: React.FC = () => {
       <div className='checkbox'>
         <input
           type='checkbox'
-          id='option'
-          name='option'
+          id='option-supervise'
+          name='option-supervise'
           checked={isSupervised}
-          onChange={handleChange}
+          onChange={handleSuperviseCheckboxChange}
         />
-        <label htmlFor='option'>{t('common:FORMS.START_QUIZ.SUPERVISE')}</label>
+        <label htmlFor='option-supervise'>{t('common:FORMS.START_QUIZ.SUPERVISE')}</label>
+
+        <input
+          type='checkbox'
+          id='option-timer'
+          name='option-timer'
+          checked={isTimed}
+          onChange={handleTimerCheckboxChange}
+        />
+        <label htmlFor='option-timer'>{t('common:FORMS.START_QUIZ.TIMER')}</label>
       </div>
 
       <p className='admin-quiz-form-text'>{t('common:FORMS.START_QUIZ.TEXT')}</p>

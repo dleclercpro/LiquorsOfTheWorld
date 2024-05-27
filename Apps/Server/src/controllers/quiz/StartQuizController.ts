@@ -25,11 +25,12 @@ const validateParams = async (params: ParamsDictionary) => {
 
 type RequestBody = {
     isSupervised: boolean,
+    isTimed: boolean,
 };
 
 const StartQuizController: RequestHandler = async (req, res, next) => {
     try {
-        const { isSupervised } = req.body as RequestBody;
+        const { isSupervised, isTimed } = req.body as RequestBody;
         const { username, isAdmin } = req.user!;
 
         const { quizId } = await validateParams(req.params);
@@ -39,8 +40,8 @@ const StartQuizController: RequestHandler = async (req, res, next) => {
             throw new UserCannotStartQuizError();
         }
 
-        await APP_DB.startQuiz(quizId, isSupervised);
-        logger.info(`A ${isSupervised ? '' : 'non-'}supervised quiz (ID='${quizId}') has been started by admin '${username}'.`);
+        await APP_DB.startQuiz(quizId, isSupervised, isTimed);
+        logger.info(`A quiz (ID='${quizId}') has been started by admin '${username}'.`);
 
         return res.json(successResponse());
 
