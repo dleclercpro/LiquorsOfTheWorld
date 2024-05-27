@@ -8,6 +8,8 @@ import { SERVER_ROOT } from '../../config';
 import { AspectRatio } from '../../constants';
 import PlaceholderImage from '../PlaceholderImage';
 import PlaceholderVideo from '../PlaceholderVideo';
+import TimeDuration from '../../models/TimeDuration';
+import { TimeUnit } from '../../types/TimeTypes';
 
 type Image = {
   url: string,
@@ -37,15 +39,21 @@ const QuestionForm: React.FC<Props> = (props) => {
 
   const { t } = useTranslation();
 
+  const dispatch = useDispatch();
+
   const quiz = useSelector(({ quiz }) => quiz);
   const quizId = quiz.id;
+  const status = quiz.status.data;
   const questions = quiz.questions.data;
 
   const hasMedia = image || video;
   const ratioClass = ratio ? `ratio-${ratio.replace(':', 'x')}` : 'ratio-1x1';
 
-  const dispatch = useDispatch();
+  const isTimed = quiz.status.data?.isTimed;
+  const timer = { remainingTime: new TimeDuration(5, TimeUnit.Second) };
 
+
+  
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setChoice(e.target.value);
   }
@@ -76,15 +84,18 @@ const QuestionForm: React.FC<Props> = (props) => {
 
   }, [index]);
 
-  if (questions === null) {
+  if (questions === null || status === null) {
     return null;
   }
 
   return (
     <form className='question-form' onSubmit={handleSubmit}>
       <div className='question-form-meta'>
+        {isTimed && (
+          <p className='question-form-timer'>{t('common:COMMON.TIME_LEFT')}: <span className='question-form-timer-value'>{timer.remainingTime.format()}</span></p>
+        )}
         <p className='question-form-index'>{t('common:COMMON.QUESTION')}: {index + 1}/{questions.length}</p>
-        <p className='question-form-topic'>{topic}</p>
+        <p className='question-form-topic'>{t('common:COMMON.TOPIC')}: {topic}</p>
       </div>
 
       <h2 className='question-form-title'>{question}</h2>
@@ -122,7 +133,9 @@ const QuestionForm: React.FC<Props> = (props) => {
         </div>
       ))}
 
-      <button type='submit' disabled={disabled}>{t(choice === '' ? 'FORMS.QUESTION.PICK_ANSWER' : 'FORMS.QUESTION.SUBMIT_ANSWER')}</button>
+      <button type='submit' disabled={disabled}>
+        {t(choice === '' ? 'FORMS.QUESTION.PICK_ANSWER' : 'FORMS.QUESTION.SUBMIT_ANSWER')}{isTimed ? ` (${timer.remainingTime.format()})` : ''}
+      </button>
     </form>
   );
 };

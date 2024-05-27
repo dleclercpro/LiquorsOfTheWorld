@@ -17,6 +17,24 @@
     justify-content: flex-end;
     margin-bottom: 20px;
 
+    > .question-form-timer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      margin-right: auto;
+      border-radius: 4px;
+      color: $color-white;
+      background-color: $color-black;
+      text-align: right;
+      @include font-caption;
+
+      > .question-form-timer-value {
+        margin-left: 5px;
+        @include font-sub-sub-title;
+      }
+    }
+
     > .question-form-index {
       margin-right: 5px;
       padding: 10px;
