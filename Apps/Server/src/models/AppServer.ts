@@ -78,7 +78,7 @@ class AppServer {
         });
     }
 
-    public async stop(signal: string = '', timeout: TimeDuration = new TimeDuration(30, TimeUnit.Seconds)) {
+    public async stop(signal: string = '', timeout: TimeDuration = new TimeDuration(30, TimeUnit.Second)) {
         if (!this.server) throw new Error('MISSING_SERVER');
 
         if (signal) {

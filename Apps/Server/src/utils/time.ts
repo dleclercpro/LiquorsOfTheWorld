@@ -24,7 +24,7 @@ export const getMidnight = (date: Date) => {
 export const getTimeSpentSinceMidnight = (date: Date) => {
     const midnight = getMidnight(date);
 
-    return new TimeDuration(date.getTime() - midnight.getTime(), TimeUnit.Milliseconds);
+    return new TimeDuration(date.getTime() - midnight.getTime(), TimeUnit.Millisecond);
 }
 
 export const computeDate = (date: Date, diff: TimeDuration) => {

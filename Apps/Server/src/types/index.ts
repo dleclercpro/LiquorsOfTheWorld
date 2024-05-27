@@ -10,11 +10,11 @@ export interface Auth {
 }
 
 export enum TimeUnit {
-    Days = 'd',
-    Hours = 'h',
-    Minutes = 'm',
-    Seconds = 's',
-    Milliseconds = 'ms',
+    Day = 'd',
+    Hour = 'h',
+    Minute = 'm',
+    Second = 's',
+    Millisecond = 'ms',
 }
 
 export interface VersionedData <Data> {
