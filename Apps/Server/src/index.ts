@@ -1,16 +1,14 @@
 import _ from './types/Express'; // Do NOT remove!
-import { REDIS_HOST, REDIS_NAME, REDIS_PORT, ENV, ADMINS } from './config'; // Do NOT remove!
+import { ENV } from './config'; // Do NOT remove!
 import logger from './logger';
-import APP_SERVER from './models/AppServer';
 import AppDatabase from './models/databases/AppDatabase';
+import AppServer from './models/AppServer';
+import AppRouter from './routes';
 
 
 
-export const APP_DB = new AppDatabase({
-    host: REDIS_HOST,
-    port: REDIS_PORT,
-    name: REDIS_NAME,
-});
+export const APP_SERVER = new AppServer();
+export const APP_DB = new AppDatabase();
 
 
 
@@ -18,17 +16,9 @@ const execute = async () => {
     logger.debug(`Environment: ${ENV}`);
 
     await APP_DB.start();
+    await APP_DB.setup();
 
-    // Create admin users if they don't already exist
-    ADMINS.forEach(async ({ username, password }) => {
-        const admin = await APP_DB.getUser(username);
-        
-        if (!admin) {
-            await APP_DB.createUser(username, password, true);
-        }
-    });
-
-    await APP_SERVER.setup();
+    await APP_SERVER.setup(AppRouter);
     await APP_SERVER.start();
 }
 

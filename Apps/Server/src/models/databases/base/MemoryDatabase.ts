@@ -1,14 +1,16 @@
-export interface IKeyValueDatabase<R> {
-    has(id: string): Promise<boolean>;
-    get(id: string): Promise<R | null>;
-    set(id: string, record: R): Promise<void>;
-    delete(id: string): Promise<void>;
-}
+import logger from '../../../logger';
+import { IKeyValueDatabase } from '../../../types';
 
-
-
-export class MemoryDatabase<R> implements IKeyValueDatabase<R> {
+class MemoryDatabase<R> implements IKeyValueDatabase<R> {
     protected db = new Map<string, R>();
+
+    public async start() {
+        logger.info(`Using in-memory database.`);
+    }
+
+    public async stop() {
+
+    }
 
     public async has(id: string) {
         return this.db.has(id);
@@ -31,12 +33,24 @@ export class MemoryDatabase<R> implements IKeyValueDatabase<R> {
     }
 
     public async size() {
-        const values = await this.getAll();
-
-        return values.length;
+        return this.db.size;
     }
 
-    public async getAll() {
-        return Object.values(this.db);
+    public async getAllKeys() {
+        return Array.from(this.db.keys());
+    }
+
+    public async getAllValues() {
+        return Array.from(this.db.values());
+    }
+
+    public async getKeysByPattern(pattern: string) {
+        throw new Error('NOT_IMPLEMENTED');
+    }
+
+    public async flush() {
+        this.db = new Map();
     }
 }
+
+export default MemoryDatabase;

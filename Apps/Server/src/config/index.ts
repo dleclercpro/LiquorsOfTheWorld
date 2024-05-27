@@ -8,6 +8,7 @@ import path from 'path';
 // Environment
 export const ENV = loadEnvironment();
 export const DEV = ENV === Environment.Development;
+export const TEST = ENV === Environment.Test;
 export const PROD = ENV === Environment.Production;
 export const LOGGING_LEVEL = (process.env.LOGGING_LEVEL ?? 'trace') as Level;
 
@@ -18,7 +19,6 @@ export const API_VERSION = `v1`;
 export const HOST = process.env.HOST!;
 export const PORT = parseNumberText(process.env.PORT);
 export const ROOT = `http://${HOST}:${PORT}`;
-export const ADMINS = process.env.ADMINS!.split(',').map(str => str.split(':')).map(str => ({ username: str[0], password: str[1] }));
 export const PUBLIC_DIR = path.join(__dirname, `../..`, `public`);
 
 // Client
@@ -28,14 +28,34 @@ export const CLIENT_PORT = parseNumberText(process.env.CLIENT_PORT);
 export const CLIENT_ROOT = `http://${CLIENT_HOST}:${CLIENT_PORT}`;
 
 // Redis
+export const REDIS_ENABLE = [true, 'true'].includes(process.env.REDIS_ENABLE!);
+
+export const REDIS_RETRY_CONN_TIMEOUT = new TimeDuration(5, TimeUnit.Seconds);
+export const REDIS_RETRY_CONN_MAX_BACKOFF = new TimeDuration(30, TimeUnit.Seconds);
+export const REDIS_RETRY_CONN_MAX_ATTEMPTS = 5;
+
+export const REDIS_DATABASE = parseNumberText(process.env.REDIS_DATABASE);
 export const REDIS_HOST = process.env.REDIS_HOST!;
 export const REDIS_PORT = parseNumberText(process.env.REDIS_PORT);
-export const REDIS_NAME = `quiz`;
-export const REDIS_RETRY_CONNECT_MAX_DELAY = new TimeDuration(10, TimeUnit.Seconds);
-export const REDIS_RETRY_CONNECT_TIMEOUT = new TimeDuration(5, TimeUnit.Seconds);
-export const REDIS_RETRY_CONNECT_MAX = 5;
+export const REDIS_NAME = process.env.REDIS_NAME!;
+
+export const REDIS_OPTIONS = {
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+    name: REDIS_NAME,
+};
 
 // Authentication
 export const COOKIE_NAME = `quiz`;
 export const TOKEN_SECRET = process.env.TOKEN_SECRET!;
 export const N_SALT_ROUNDS = 10;
+
+export const ADMINS = process.env.ADMINS!
+    .split(',')
+    .map(str => str.split(':'))
+    .map(([username, password]) => ({ username, password }));
+
+export const USERS = process.env.USERS!
+    .split(',')
+    .map(str => str.split(':'))
+    .map(([username, password]) => ({ username, password }));
