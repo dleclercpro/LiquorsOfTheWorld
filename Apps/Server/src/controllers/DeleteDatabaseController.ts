@@ -13,7 +13,7 @@ const DeleteDatabaseController: RequestHandler = async (req, res, next) => {
             throw new UserCannotDeleteDatabaseError();
         }
 
-        await APP_DB.deleteAll();
+        await APP_DB.flush();
         logger.info(`Database has been deleted by admin '${username}'.`);
 
         return res.json(successResponse());

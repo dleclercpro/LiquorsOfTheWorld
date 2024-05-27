@@ -1,40 +1,25 @@
 import http from 'http';
-import process from 'process';
-import express from 'express';
+import express, { Router } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
-import { APP_NAME } from '../constants';
-import { CLIENT_ROOT, DEV, PORT, PROD } from '../config';
-import logger from '../logger';
-import Router from '../routes';
 import ErrorMiddleware from '../middleware/ErrorMiddleware';
-import MissingServerError from '../errors/MissingServerError';
 import TimeDuration from './units/TimeDuration';
-import { TimeUnit } from '../types';
 import { killAfterTimeout } from '../utils/process';
+import { Socket } from 'net';
+import { DEV, TEST, PROD, CLIENT_ROOT, PORT } from '../config';
+import logger from '../logger';
+import { TimeUnit } from '../types';
 
 
 
 // There can only be one app server: singleton!
 class AppServer {
-    private static instance?: AppServer;
-    
-    protected app?: express.Express;
-    protected server?: http.Server;
+    private app?: express.Express;
+    private server?: http.Server;
+    private connections: Set<Socket> = new Set();
 
-    private constructor() {
-    
-    }
-
-    public static getInstance() {
-        if (!AppServer.instance) {
-            AppServer.instance = new AppServer();
-        }
-        return AppServer.instance;
-    }
-
-    public async setup() {
+    public async setup(router: Router) {
         this.app = express();
         this.server = http.createServer(this.app);
     
@@ -48,18 +33,19 @@ class AppServer {
         // Enable HTTP response compression
         this.app.use(compression());
 
-        // Allow all origins in dev mode
-        if (DEV) {
-            logger.debug(`Enabling CORS.`);
-
-            this.app.use(cors({
+        // CORS
+        if (DEV || TEST) {
+            const CORS_OPTIONS = {
                 origin: CLIENT_ROOT,
                 credentials: true,
-            }));
+            };
+
+            this.app.use(cors(CORS_OPTIONS));
+            logger.debug(`CORS enabled: [${CORS_OPTIONS.origin}]`);
         }
-    
-        // Define server's routes
-        this.app.use(Router);
+
+        // Define server's API endpoints
+        this.app.use('/', router);
 
         // Final error middleware
         this.app.use(ErrorMiddleware);
@@ -74,30 +60,40 @@ class AppServer {
     }
 
     public async start() {
-        if (!this.server) throw new MissingServerError();
+        if (!this.server) throw new Error('MISSING_SERVER');
 
         // Listen to stop signals
         process.on('SIGTERM', () => this.stop('SIGTERM'));
         process.on('SIGINT', () => this.stop('SIGINT'));
 
+        // Track active connections
+        this.server.on('connection', (conn) => {
+            this.connections.add(conn);
+            conn.on('close', () => this.connections.delete(conn));
+        });
+
         // Listen to HTTP traffic on given port
         this.server!.listen(PORT, async () => {
-            logger.debug(`${APP_NAME} app listening on ${PROD ? 'container' : 'local'} port: ${PORT}`);
+            logger.debug(`Server listening on ${PROD ? 'container' : 'local'} port: ${PORT}`);
         });
     }
 
-    public async stop(signal: string = '', timeout: TimeDuration = new TimeDuration(2, TimeUnit.Seconds)) {
-        if (!this.server) throw new MissingServerError();
+    public async stop(signal: string = '', timeout: TimeDuration = new TimeDuration(30, TimeUnit.Seconds)) {
+        if (!this.server) throw new Error('MISSING_SERVER');
 
         if (signal) {
             logger.trace(`Received stop signal: ${signal}`);
         }
 
         // Force server shutdown after timeout
-        await Promise.race([killAfterTimeout(timeout), async () => {
+        await Promise.race([killAfterTimeout(timeout), (async () => {
             
             // Shut down gracefully
             await new Promise<void>((resolve, reject) => {
+                logger.debug(`Closing active ${this.connections.size} connections...`);
+                this.connections.forEach(conn => conn.destroy());
+
+                logger.debug(`Shutting down server...`);
                 this.server!.close((err) => {
                     if (err) {
                         logger.warn(`Could not shut down server gracefully: ${err}`);
@@ -110,9 +106,11 @@ class AppServer {
             });
 
             // Exit process
+            logger.debug(`Exiting process...`);
             process.exit(0);
-        }]);
+
+        })()]);
     }
 }
 
-export default AppServer.getInstance();
+export default AppServer;

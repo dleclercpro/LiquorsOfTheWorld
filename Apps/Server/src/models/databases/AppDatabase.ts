@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { N_SALT_ROUNDS } from '../../config';
+import { ADMINS, N_SALT_ROUNDS, REDIS_DATABASE, REDIS_ENABLE, REDIS_OPTIONS, USERS } from '../../config';
 import { QUIZ_NAMES, QuizName } from '../../constants';
 import logger from '../../logger';
 import { getLast, getRange, unique } from '../../utils/array';
@@ -14,6 +14,7 @@ import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 import QuizManager from '../QuizManager';
 import InvalidQuizNameError from '../../errors/InvalidQuizNameError';
+import MemoryDatabase from './base/MemoryDatabase';
 
 const SEPARATOR = '|';
 
@@ -21,8 +22,92 @@ type Votes = Record<string, number[]>;
 
 
 
-class AppDatabase extends RedisDatabase {
+class AppDatabase {
+    private db: RedisDatabase | MemoryDatabase<string>;
 
+    public constructor() {
+        this.db = (REDIS_ENABLE ?
+            new RedisDatabase(REDIS_OPTIONS, REDIS_DATABASE) :
+            new MemoryDatabase<string>() // Fallback database: in-memory
+        );
+    }
+
+    
+    public async setup() {
+
+        // Create admin users if they don't already exist
+        ADMINS.forEach(async ({ username, password }) => {
+            const admin = await this.getUser(username);
+        
+            if (!admin) {
+                await this.createUser(username, password, true);
+                logger.trace(`Default admin user created: ${username}`);
+            }
+        });
+
+        // Create regular users if they don't already exist
+        USERS.forEach(async ({ username, password }) => {
+            const user = await this.getUser(username);
+        
+            if (!user) {
+                await this.createUser(username, password, true);
+                logger.trace(`Default user created: ${username}`);
+            }
+        });
+    }
+
+    public async start() {
+        if (!this.db) throw new Error('MISSING_DATABASE');
+
+        await this.db.start();
+    }
+
+    public async stop() {
+        if (!this.db) throw new Error('MISSING_DATABASE');
+
+        await this.db.stop();
+    }
+
+    public async has(key: string) {
+        return this.db.has(key);
+    }
+
+    public async get(key: string) {
+        return this.db.get(key);
+    }
+
+    public async set(key: string, value: string) {
+        return this.db.set(key, value);
+    }
+
+    public async delete(key: string) {
+        return this.db.delete(key);
+    }
+
+    public async flush() {
+        return this.db.flush();
+    }
+
+    public async getAllKeys() {
+        return this.db.getAllKeys();
+    }
+
+    public async getAllValues() {
+        return this.db.getAllValues();
+    }
+
+    public async getKeysByPattern(pattern: string) {
+        const keys = await this.db.getKeysByPattern(pattern);
+
+        if (!keys) {
+            return [];
+        }
+
+        return keys;
+    }
+
+
+    
     public async doesQuizExist(quizId: string) {
         return this.has(`quiz:${quizId}`);
     }

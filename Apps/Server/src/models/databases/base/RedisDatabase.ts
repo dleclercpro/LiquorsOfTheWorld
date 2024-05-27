@@ -1,28 +1,41 @@
 import { RedisClientType, createClient } from 'redis';
-import Database, { DatabaseOptions } from './Database';
-import { IKeyValueDatabase } from './MemoryDatabase';
-import TimeDuration from '../../units/TimeDuration';
-import { REDIS_RETRY_CONNECT_MAX, REDIS_RETRY_CONNECT_MAX_DELAY } from '../../../config';
-import { TimeUnit } from '../../../types';
 import logger from '../../../logger';
+import { Auth, DatabaseOptions, IKeyValueDatabase, TimeUnit } from '../../../types';
+import TimeDuration from '../../units/TimeDuration';
+import { REDIS_RETRY_CONN_MAX_ATTEMPTS, REDIS_RETRY_CONN_MAX_BACKOFF } from '../../../config';
 
-class RedisDatabase extends Database implements IKeyValueDatabase<string> {
-    protected client: RedisClientType;
+class RedisDatabase implements IKeyValueDatabase<string> {
+    private host: string;
+    private port: number;
+    private name: string;
+    private auth?: Auth;
+
+    private index: number; // Database index
+    private client: RedisClientType;
     
-    public constructor(options: DatabaseOptions) {
-        super(options);
+    public constructor(options: DatabaseOptions, index: number = 0) {
+        const { host, port, name, auth } = options;
 
-        const url = this.getURI();
+        this.host = host;
+        this.port = port;
+        this.name = name;
+        this.auth = auth;
+
+        if (index < 0 || index > 15) {
+            throw new Error('INVALID_REDIS_DATABASE_INDEX');
+        }
+        this.index = index;
 
         this.client = createClient({
-            url,
+            url: this.getURI(),
+            database: index,
             socket: {
-                reconnectStrategy: this.retry,
+                reconnectStrategy: this.connect,
             },
         });
     }
 
-    protected getURI = () => {
+    private getURI = () => {
         let uri = this.getAnonymousURI();
 
         if (this.auth) {
@@ -35,7 +48,7 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
         return uri;
     }
 
-    protected getAnonymousURI = () => {
+    private getAnonymousURI = () => {
         const uri = `${this.host}:${this.port}`;
 
         if (this.auth) {
@@ -46,6 +59,8 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
     }
 
     public async start() {
+        logger.debug(`Using Redis database '${this.index}'.`);
+
         this.listen();
 
         logger.debug(`Trying to connect to: ${this.getAnonymousURI()}`);
@@ -57,55 +72,65 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
         await this.client.quit();
     }
 
-    protected listen = () => {
+    private listen = () => {
         this.client.on('ready', () => {
-            logger.debug('Ready.');
+            logger.trace('Ready.');
         });
 
         this.client.on('connect', () => {
-            logger.debug('Connected.');
+            logger.trace('Connected.');
         });
 
         this.client.on('reconnecting', () => {
-            logger.debug('Reconnecting...');
+            logger.trace('Reconnecting...');
         });
 
         this.client.on('end', () => {
-            logger.debug('Disconnected.');
+            logger.trace('Disconnected.');
         });
 
         this.client.on('warning', (warning: any) => {
-            logger.warn(warning.message);
+            logger.trace(`Warning: ${warning}`);
         });
 
         this.client.on('error', (error: any) => {
-            logger.error(error.message);
+            logger.trace(`Error: ${error.message}`);
+
+            // Log whenever a database connection is refused
+            if (error && error.code === 'ECONNREFUSED') {
+                logger.error('Redis refused connection. Is it running?');
+            }
         });
     }
 
-    protected retry = (retries: number, error: any) => {
-
-        // End reconnecting on a specific error and flush all commands with
-        // a individual error
-        if (error && error.code === 'ECONNREFUSED') {
-            logger.error('The Redis database refused the connection.');
-        }
-        
-        // End reconnecting with built in error
-        if (retries > REDIS_RETRY_CONNECT_MAX) {
-            logger.fatal('Number of connection retries exhausted. Stopping connection attempts.')
+    private connect = (attempts: number, error: any) => {
+        if (attempts >= REDIS_RETRY_CONN_MAX_ATTEMPTS) {
+            logger.fatal('No more connection attempts allowed: exiting...')
             process.exit(1);
         }
 
-        // Reconnect after ... ms
-        const wait = Math.min(new TimeDuration(retries + 0.5, TimeUnit.Seconds).toMs().getAmount(), REDIS_RETRY_CONNECT_MAX_DELAY.toMs().getAmount());
-        logger.debug(`Waiting ${wait} ms...`);
+        // First connection attempt: do not wait
+        if (attempts === 0) {
+            return 0;
+        }
 
-        return wait;
+        // Reconnect after backing off
+        const wait = this.getConnectionBackoff(attempts);
+        logger.debug(`Connection attempts left: ${REDIS_RETRY_CONN_MAX_ATTEMPTS - attempts}`);
+        logger.debug(`Retrying connection in: ${wait.format()}`);
+
+        return wait.toMs().getAmount();
     }
 
-    private getPrefixedKey(key: string) {
-        return this.name ? `${this.name}:${key}` : key;
+    private getConnectionBackoff(attempts: number) {
+        const maxBackoff = REDIS_RETRY_CONN_MAX_BACKOFF;
+        const exponentialBackoff = new TimeDuration(Math.pow(2, attempts), TimeUnit.Seconds);
+
+        // Backoff exponentially
+        if (exponentialBackoff.smallerThan(maxBackoff)) {
+            return exponentialBackoff;
+        }
+        return maxBackoff;
     }
 
     public async has(key: string) {
@@ -113,54 +138,38 @@ class RedisDatabase extends Database implements IKeyValueDatabase<string> {
     }
 
     public async get(key: string) {
-        return this.client.get(this.getPrefixedKey(key));
-    }
-
-    public async getAllKeys() {
-        return this.client.keys(this.getPrefixedKey('*'));
-    }
-
-    public async getAll() {
-        const keys = await this.getAllKeys();
-        const values = await Promise.all(keys.map((key) => this.client.get(key)));
-
-        return values;
-    }
-
-    public async getKeysByPattern(pattern: string) {
-        let cursor = 0;
-        let keys: string[] = [];
-
-        do {
-            const reply = await this.client.scan(cursor, {
-                MATCH: this.getPrefixedKey(pattern),
-                COUNT: 100,
-            });
-
-            cursor = reply.cursor;
-            keys.push(...reply.keys);
-
-          } while (cursor !== 0);
-    
-        return keys;
+        return await this.client.get(key);
     }
 
     public async set(key: string, value: string) {
-        const prefixedKey = this.getPrefixedKey(key);
-
-        await this.client.set(prefixedKey, value);
+        await this.client.set(key, value);
     }
 
     public async delete(key: string) {
-        const prefixedKey = this.getPrefixedKey(key);
-        const prevValue = await this.client.get(prefixedKey);
-        
+        const prevValue = await this.client.get(key);
+
         if (prevValue) {
-            await this.client.del(prefixedKey);
+            await this.client.del(key);
         }
     }
 
-    public async deleteAll() {
+    public async getAllKeys() {
+        return await this.client.keys('*');
+    }
+
+    public async getAllValues() {
+        const keys = await this.getAllKeys();
+        const values = await Promise.all(keys.map((key) => this.client.get(key)));
+
+        return values as string[];
+    }
+
+    public async getKeysByPattern(pattern: string) {
+        return this.client.keys(pattern);
+    }
+
+    public async flush() {
+        logger.debug(`Flushing Redis database '${this.index}'.`);
         await this.client.flushDb();
     }
 }
