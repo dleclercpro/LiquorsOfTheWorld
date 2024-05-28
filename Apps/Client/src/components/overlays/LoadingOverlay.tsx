@@ -1,8 +1,9 @@
 import { Trans, useTranslation } from 'react-i18next';
-import { useSelector } from '../../hooks/useRedux';
 import './LoadingOverlay.scss';
 import useQuiz from '../../hooks/useQuiz';
 import useUser from '../../hooks/useUser';
+import useOverlay from '../../hooks/useOverlay';
+import { OverlayName } from '../../reducers/OverlaysReducer';
 
 const LoadingOverlay: React.FC = () => {
   const { t } = useTranslation();
@@ -10,14 +11,14 @@ const LoadingOverlay: React.FC = () => {
   const quiz = useQuiz();
   const user = useUser();
 
-  const { open } = useSelector(({ overlays }) => overlays.loading);
+  const overlay = useOverlay(OverlayName.Loading);
 
   if (user.username === null) {
     return null;
   }
 
   return (
-    <div id='loading-overlay' className={`${!open ? 'hidden' : ''} opaque`}>
+    <div id='loading-overlay' className={`${!overlay.isOpen ? 'hidden' : ''} opaque`}>
       <div className='loading-overlay-box'>
         <h2 className='loading-overlay-title'>
           {t('common:COMMON.PLEASE_WAIT')}...

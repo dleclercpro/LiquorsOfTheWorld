@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from '../../hooks/useRedux';
-import { openAnswerOverlay } from '../../reducers/OverlaysReducer';
 import './QuestionForm.scss';
 import { vote } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +10,8 @@ import PlaceholderVideo from '../PlaceholderVideo';
 import TimeDuration from '../../models/TimeDuration';
 import { TimeUnit } from '../../types/TimeTypes';
 import useQuiz from '../../hooks/useQuiz';
+import useOverlay from '../../hooks/useOverlay';
+import { OverlayName } from '../../reducers/OverlaysReducer';
 
 type Image = {
   url: string,
@@ -45,6 +46,8 @@ const QuestionForm: React.FC<Props> = (props) => {
 
   const quiz = useQuiz();
 
+  const answerOverlay = useOverlay(OverlayName.Answer);
+
   const hasMedia = image || video;
   const ratioClass = ratio ? `ratio-${ratio.replace(':', 'x')}` : 'ratio-1x1';
 
@@ -72,7 +75,7 @@ const QuestionForm: React.FC<Props> = (props) => {
       return;
     }
 
-    dispatch(openAnswerOverlay());
+    answerOverlay.open();
   }
 
   useEffect(() => {

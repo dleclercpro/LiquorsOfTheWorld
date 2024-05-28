@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import './Nav.scss';
 import { useDispatch } from '../hooks/useRedux';
 import { Link, useLocation } from 'react-router-dom';
-import { logout } from '../actions/AuthActions';
 import OpenIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -88,7 +87,7 @@ const Nav: React.FC = () => {
   const handleLogout = () => {
     setIsOpen(false);
 
-    dispatch(logout());
+    user.logout();
   }
 
   return (

@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
-import { useDispatch } from '../../hooks/useRedux';
 import './AdminQuizForm.scss';
-import { deleteQuiz, startQuiz } from '../../actions/QuizActions';
 import { Trans, useTranslation } from 'react-i18next';
 import useQuiz from '../../hooks/useQuiz';
 
 const AdminQuizForm: React.FC = () => {
-  const dispatch = useDispatch();
-
   const { t } = useTranslation();
   const [isSupervised, setIsSupervised] = useState(false);
   const [isTimed, setIsTimed] = useState(false);
@@ -24,22 +20,14 @@ const AdminQuizForm: React.FC = () => {
 
   const handleStartQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
-
-    if (quiz.id === null) {
-      return;
-    }
     
-    await dispatch(startQuiz({ quizId: quiz.id, isSupervised, isTimed }));
+    await quiz.start();
   }
 
   const handleDeleteQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
-    if (quiz.id === null) {
-      return;
-    }
-    
-    await dispatch(deleteQuiz(quiz.id));
+    await quiz.delete();
   }
 
   return (
