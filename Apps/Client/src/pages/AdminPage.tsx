@@ -3,7 +3,6 @@ import './AdminPage.scss';
 import { useDispatch } from '../hooks/useRedux';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
-import { deleteDatabase } from '../actions/AppActions';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { deleteCookie, deleteFromLocalStorage, getCookie, getFromLocalStorage } from '../utils/storage';
 import { Snackbar, SnackbarContent, SnackbarOrigin } from '@mui/material';
@@ -12,6 +11,7 @@ import { COOKIE_NAME } from '../config';
 import { useTranslation } from 'react-i18next';
 import useQuiz from '../hooks/useQuiz';
 import useUser from '../hooks/useUser';
+import useDatabase from '../hooks/useDatabase';
 
 interface SnackbarState extends SnackbarOrigin {
   open: boolean,
@@ -34,6 +34,8 @@ const AdminPage: React.FC = () => {
 
   const quiz = useQuiz();
   const user = useUser();
+  const database = useDatabase();
+
   const hasCookie = Boolean(getCookie(COOKIE_NAME));
   const hasLocalStorage = Boolean(getFromLocalStorage('persist:root'));
 
@@ -90,7 +92,7 @@ const AdminPage: React.FC = () => {
   const handleDeleteDatabase: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
-    await dispatch(deleteDatabase());
+    await database.delete();
 
     setState({
       ...state,

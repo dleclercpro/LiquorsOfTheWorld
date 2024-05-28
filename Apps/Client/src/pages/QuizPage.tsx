@@ -3,7 +3,7 @@ import './QuizPage.scss';
 import QuestionForm from '../components/forms/QuestionForm';
 import { useDispatch, useSelector } from '../hooks/useRedux';
 import { REFRESH_STATUS_INTERVAL } from '../config';
-import { fetchQuizData, fetchQuestions } from '../actions/DataActions';
+import { fetchQuizData } from '../actions/DataActions';
 import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
 import { AspectRatio, Language, NO_TIME, QuestionType } from '../constants';
@@ -55,7 +55,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    dispatch(fetchQuestions({ lang, quizName: quiz.name }));
+    quiz.refreshQuestions();
   }, [lang]);
 
 
@@ -113,6 +113,7 @@ const QuizPage: React.FC = () => {
 
   // Start timer if enabled
   useEffect(() => {
+    console.log(timer);
     if (timer.isEnabled && !timer.duration.equals(NO_TIME) && !timer.isRunning) {
       timer.start();
     }

@@ -1,11 +1,15 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from './useRedux';
-import { fetchStatus } from '../actions/DataActions';
+import { fetchQuestions, fetchStatus } from '../actions/DataActions';
 import { startQuiz as doStartQuiz } from '../actions/QuizActions';
 import { deleteQuiz as doDeleteQuiz } from '../actions/QuizActions';
 import useUser from './useUser';
+import { Language } from '../constants';
+import { useTranslation } from 'react-i18next';
 
 const useQuiz = () => {
+  const { i18n } = useTranslation();
+
   const user = useUser();
   const quiz = useSelector(({ quiz }) => quiz);
 
@@ -28,6 +32,18 @@ const useQuiz = () => {
 
 
 
+  const refreshQuestions = useCallback(async () => {
+    if (!quiz.name) return;
+    
+    const result = await dispatch(fetchQuestions({ lang: i18n.language as Language, quizName: quiz.name }));
+
+    if (result.type.endsWith('/rejected')) {
+      await user.logout();
+    }
+  }, [quiz.name]);
+
+
+
   const refreshStatus = useCallback(async () => {
     if (!quiz.id) return;
 
@@ -40,7 +56,7 @@ const useQuiz = () => {
 
 
 
-  const startQuiz = useCallback(async () => {
+  const startQuiz = useCallback(async (isSupervised: boolean, isTimed: boolean) => {
     if (quiz.id === null) return;
 
     return await dispatch(doStartQuiz({ quizId: quiz.id, isSupervised, isTimed }));
@@ -63,11 +79,13 @@ const useQuiz = () => {
     isStarted,
     isOver,
     isSupervised,
+    isTimed,
     questions,
     status,
     players,
     votes,
     scores,
+    refreshQuestions,
     refreshStatus,
     start: startQuiz,
     delete: deleteQuiz,

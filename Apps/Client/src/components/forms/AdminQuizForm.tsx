@@ -21,7 +21,7 @@ const AdminQuizForm: React.FC = () => {
   const handleStartQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
     
-    await quiz.start();
+    await quiz.start(isSupervised, isTimed);
   }
 
   const handleDeleteQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
