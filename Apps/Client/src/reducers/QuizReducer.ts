@@ -50,11 +50,7 @@ export const quizSlice = createSlice({
       .addCase(fetchStatus.fulfilled, (state, action: PayloadAction<CallGetStatusResponseData>) => {
         state.status.status = 'succeeded';
         state.status.error = null;
-        state.status.data = action.payload.status;
-
-        state.players.status = 'succeeded';
-        state.players.error = null;
-        state.players.data = action.payload.players;
+        state.status.data = action.payload;
       })
       .addCase(fetchStatus.rejected, (state, action) => {
         state.status.status = 'failed';
@@ -91,11 +87,7 @@ export const quizSlice = createSlice({
       .addCase(fetchVotes.fulfilled, (state, action: PayloadAction<CallGetVotesResponseData>) => {
         state.votes.status = 'succeeded';
         state.votes.error = null;
-        state.votes.data = action.payload.votes;
-
-        state.status.status = 'succeeded';
-        state.status.error = null;
-        state.status.data = action.payload.status;
+        state.votes.data = action.payload;
       })
       .addCase(fetchVotes.rejected, (state, action) => {
         state.votes.status = 'failed';

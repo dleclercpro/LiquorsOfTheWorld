@@ -78,13 +78,15 @@ export type CallVoteRequestData = {
 
 
 export type CallPingResponseData = PingData;
-export type CallGetVersionResponseData = VersionData;
 export type CallLogInResponseData = UserData;
+
+export type CallGetVersionResponseData = VersionData;
 export type CallGetQuizNamesResponseData = string[];
 export type CallGetQuestionsResponseData = QuizJSON;
 export type CallGetUserResponseData = UserData;
-export type CallGetStatusResponseData = { status: StatusData, players: PlayersData };
-export type CallGetVotesResponseData = { status: StatusData, votes: VotesData };
+export type CallGetStatusResponseData = StatusData;
+export type CallGetVotesResponseData = VotesData;
 export type CallGetPlayersResponseData = PlayersData;
 export type CallGetScoresResponseData = GroupedScoresData;
+
 export type CallVoteResponseData = { status: StatusData, votes: VotesData };

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from './ReduxHooks';
-import { fetchQuestions, fetchStatus } from '../actions/DataActions';
+import { fetchQuestions, fetchQuizData, fetchStatus } from '../actions/DataActions';
 import { startQuiz as doStartQuiz } from '../actions/QuizActions';
 import { deleteQuiz as doDeleteQuiz } from '../actions/QuizActions';
 import useUser from './useUser';
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 const useQuiz = () => {
   const { i18n } = useTranslation();
+  const lang = i18n.language as Language;
 
   const user = useUser();
   const quiz = useSelector(({ quiz }) => quiz);
@@ -32,15 +33,23 @@ const useQuiz = () => {
 
 
 
+  const fetchData = useCallback(async () => {
+    if (quiz.id === null || !quiz.name) return;
+
+    dispatch(fetchQuizData({ quizId: quiz.id, quizName: quiz.name, lang }))
+  }, [quiz.id, quiz.name, lang]);
+
+
+
   const refreshQuestions = useCallback(async () => {
     if (!quiz.name) return;
     
-    const result = await dispatch(fetchQuestions({ lang: i18n.language as Language, quizName: quiz.name }));
+    const result = await dispatch(fetchQuestions({ quizName: quiz.name, lang }));
 
     if (result.type.endsWith('/rejected')) {
       await user.logout();
     }
-  }, [quiz.name]);
+  }, [quiz.name, lang, user]);
 
 
 
@@ -52,7 +61,7 @@ const useQuiz = () => {
     if (result.type.endsWith('/rejected')) {
       await user.logout();
     }
-  }, [quiz.id]);
+  }, [quiz.id, user]);
 
 
 
@@ -85,6 +94,7 @@ const useQuiz = () => {
     players,
     votes,
     scores,
+    fetchData,
     refreshQuestions,
     refreshStatus,
     start: startQuiz,

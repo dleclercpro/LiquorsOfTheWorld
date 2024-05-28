@@ -72,7 +72,6 @@ export const fetchQuizData = createServerAction<FetchQuizDataActionArgs, number>
   async ({ quizId, quizName, lang }: FetchQuizDataActionArgs, { dispatch, getState }: ThunkAPI) => {
     const result = await Promise.all([
       dispatch(fetchQuestions({ lang, quizName })),
-      dispatch(fetchPlayers(quizId)),
       dispatch(fetchVotes(quizId)),
       dispatch(fetchScores(quizId)),
       dispatch(fetchStatus(quizId)),

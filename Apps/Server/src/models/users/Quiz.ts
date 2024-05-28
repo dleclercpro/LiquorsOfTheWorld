@@ -165,17 +165,18 @@ class Quiz {
     public async start(isSupervised: boolean, isTimed: boolean) {
         this.status.isStarted = true;
         this.status.isSupervised = isSupervised;
-        this.status.timer = {
-            ...this.status.timer,
-            ...(isTimed ? {
-                isEnabled: true,
-                startedAt: new Date(),
-                duration: {
-                  amount: TIMER_DURATION.getAmount(),
-                  unit: TIMER_DURATION.getUnit(),
-                },
-            } : {}),
-        }
+
+        // Create a timer
+        this.status.timer = isTimed ? {
+            isEnabled: true,
+            startedAt: new Date(),
+            duration:  {
+                amount: TIMER_DURATION.getAmount(),
+                unit: TIMER_DURATION.getUnit(),
+            },
+        } : {
+            isEnabled: false,
+        };
 
         await this.save();
     }

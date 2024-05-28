@@ -32,10 +32,7 @@ const GetVotesController: RequestHandler = async (req, res, next) => {
 
         const votes = await APP_DB.getUserVotes(quiz.getId(), username);
 
-        const response: CallGetVotesResponseData = {
-            status: quiz.getStatus(),
-            votes,
-        };
+        const response: CallGetVotesResponseData = votes;
 
         return res.json(
             successResponse(response)

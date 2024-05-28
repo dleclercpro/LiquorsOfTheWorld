@@ -34,6 +34,7 @@ const useServerCountdownTimer = () => {
     time: timer.time,
     start: timer.start,
     stop: timer.stop,
+    restart: timer.restart,
   };
 };
 

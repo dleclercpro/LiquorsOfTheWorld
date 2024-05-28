@@ -1,10 +1,10 @@
 import { CallLogIn } from '../calls/auth/CallLogIn';
-import { LoginData, PingData, UserData } from '../types/DataTypes';
+import { CallLogInResponseData, CallPingResponseData, LoginData, PingData, UserData } from '../types/DataTypes';
 import { CallPing } from '../calls/auth/CallPing';
 import { CallLogOut } from '../calls/auth/CallLogOut';
 import { createServerAction } from './ServerActions';
 
-export const login = createServerAction<LoginData, UserData>(
+export const login = createServerAction<LoginData, CallLogInResponseData>(
   'auth/login',
   async (args: LoginData) => {
     const { quizId } = args;
@@ -27,7 +27,7 @@ export const logout = createServerAction<void, void>(
   },
 );
 
-export const ping = createServerAction<void, PingData>(
+export const ping = createServerAction<void, CallPingResponseData>(
   'auth/ping',
   async () => {
     const { data } = await new CallPing().execute();

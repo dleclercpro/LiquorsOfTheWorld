@@ -27,10 +27,7 @@ const GetStatusController: RequestHandler = async (req, res, next) => {
     try {
         const { quiz } = await validateParams(req.params);
 
-        const response: CallGetStatusResponseData = {
-            status: quiz.getStatus(),
-            players: quiz.getPlayers(),
-        };
+        const response: CallGetStatusResponseData = quiz.getStatus();
 
         return res.json(
             successResponse(response)

@@ -13,6 +13,8 @@ export const startQuiz = createServerAction<StartQuizActionArgs, void>(
   'quiz/start',
   async ({ quizId, isSupervised, isTimed }: StartQuizActionArgs) => {
     await new CallStartQuiz(quizId).execute({ isSupervised, isTimed });
+
+    return;
   },
 );
 
@@ -22,6 +24,8 @@ export const deleteQuiz = createServerAction<string, void>(
     await new CallDeleteQuiz(quizId).execute();
 
     dispatch(logout());
+
+    return;
   },
 );
 

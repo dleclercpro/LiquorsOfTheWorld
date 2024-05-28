@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './QuizPage.scss';
 import QuestionForm from '../components/forms/QuestionForm';
-import { useDispatch, useSelector } from '../hooks/ReduxHooks';
+import { useSelector } from '../hooks/ReduxHooks';
 import { REFRESH_STATUS_INTERVAL } from '../config';
-import { fetchQuizData } from '../actions/DataActions';
 import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
 import { AspectRatio, Language, NO_TIME, QuestionType } from '../constants';
@@ -34,17 +33,11 @@ const QuizPage: React.FC = () => {
 
   const [choice, setChoice] = useState('');
 
-  const dispatch = useDispatch();
-
 
 
   // Fetch initial data
   useEffect(() => {
-    if (quiz.id === null || quiz.name === null) {
-      return;
-    }
-
-    dispatch(fetchQuizData({ quizId: quiz.id, quizName: quiz.name, lang }));
+    quiz.fetchData();
   }, []);
 
 
@@ -66,9 +59,15 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    console.log(`Refreshing quiz status...`);
+    // Do not run for first question
+    if (playerQuestionIndex === 0) {
+      return;
+    }
 
-    quiz.refreshStatus();
+    quiz.refreshStatus()
+      .then(() => {
+        timer.restart();
+      });
 
   }, [playerQuestionIndex]);
 
@@ -119,17 +118,16 @@ const QuizPage: React.FC = () => {
 
   // Start timer if enabled
   useEffect(() => {
-    if (timer.isEnabled && !timer.duration.equals(NO_TIME) && !timer.isRunning) {
+    if (timer.isEnabled && !timer.isRunning && quiz.isStarted) {
       timer.start();
     }
-  }, [timer.isEnabled, timer.duration]);
+  }, [timer.isEnabled, timer.isRunning, quiz.isStarted]);
 
 
 
   // Show answer once timer has expired
   useEffect(() => {
     if (timer.isDone) {
-      console.log('timer.isDone');
       answerOverlay.open();
     }
 
