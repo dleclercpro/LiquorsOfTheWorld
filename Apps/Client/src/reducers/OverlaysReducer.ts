@@ -1,20 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { logout } from '../actions/AuthActions';
 
-interface OverlaysState {
-  loading: {
-    open: boolean,
-  },
-  answer: {
-    open: boolean,
-  },
+export enum OverlayName {
+  Loading = 'loading',
+  Answer = 'answer',
 }
 
+type OverlayState = {
+  open: boolean,
+};
+
+type OverlaysState = Record<OverlayName, OverlayState>;
+
 const initialState: OverlaysState = {
-  loading: {
+  [OverlayName.Loading]: {
     open: false,
   },
-  answer: {
+  [OverlayName.Answer]: {
     open: false,
   },
 };
@@ -25,19 +27,13 @@ export const overlaysSlice = createSlice({
   name: 'overlays',
   initialState,
   reducers: {
+    openOverlay: (state, action: PayloadAction<OverlayName>) => {
+      state[action.payload].open = true;
+    },
+    closeOverlay: (state, action: PayloadAction<OverlayName>) => {
+      state[action.payload].open = false;
+    },
     closeAllOverlays: () => initialState,
-    openLoadingOverlay: (state) => {
-      state.loading.open = true;
-    },
-    closeLoadingOverlay: (state) => {
-      state.loading.open = false;
-    },
-    openAnswerOverlay: (state) => {
-      state.answer.open = true;
-    },
-    closeAnswerOverlay: (state) => {
-      state.answer.open = false;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -47,6 +43,6 @@ export const overlaysSlice = createSlice({
     },
 });
 
-export const { closeAllOverlays, openLoadingOverlay, closeLoadingOverlay, openAnswerOverlay, closeAnswerOverlay } = overlaysSlice.actions;
+export const { openOverlay, closeOverlay, closeAllOverlays } = overlaysSlice.actions;
 
 export default overlaysSlice.reducer;

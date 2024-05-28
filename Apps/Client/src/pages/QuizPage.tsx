@@ -4,7 +4,6 @@ import QuestionForm from '../components/forms/QuestionForm';
 import { useDispatch, useSelector } from '../hooks/useRedux';
 import { REFRESH_STATUS_INTERVAL } from '../config';
 import { fetchQuizData, fetchQuestions } from '../actions/DataActions';
-import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoadingOverlay } from '../reducers/OverlaysReducer';
 import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
 import { AspectRatio, Language, NO_TIME, QuestionType } from '../constants';
@@ -14,6 +13,8 @@ import useServerCountdownTimer from '../hooks/useServerCountdownTimer';
 import useQuiz from '../hooks/useQuiz';
 import useUser from '../hooks/useUser';
 import useApp from '../hooks/useApp';
+import useOverlay from '../hooks/useOverlay';
+import { OverlayName } from '../reducers/OverlaysReducer';
 
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();
@@ -23,6 +24,9 @@ const QuizPage: React.FC = () => {
   const quiz = useQuiz();
   const user = useUser();
   const app = useApp();
+  
+  const loadingOverlay = useOverlay(OverlayName.Loading);
+  const answerOverlay = useOverlay(OverlayName.Answer);
 
   const playerQuestionIndex = app.playerQuestionIndex;
   const { vote } = useSelector((state) => selectVote(state, playerQuestionIndex));
@@ -84,12 +88,12 @@ const QuizPage: React.FC = () => {
   // Set choice if user already voted
   useEffect(() => {
     if (vote === null) {
-      dispatch(closeAnswerOverlay());
+      answerOverlay.close();
       return;
     }
 
     setChoice(vote);
-    dispatch(openAnswerOverlay());
+    answerOverlay.open();
     
   }, [vote]);
 
@@ -98,9 +102,9 @@ const QuizPage: React.FC = () => {
   // Show loading screen in case quiz has not yet been started
   useEffect(() => {
     if (!quiz.isStarted && !user.isAdmin) {
-      dispatch(openLoadingOverlay());
+      loadingOverlay.open();
     } else {
-      dispatch(closeLoadingOverlay());
+      loadingOverlay.close();
     }
 
   }, [quiz.isStarted, user.isAdmin]);
@@ -119,7 +123,7 @@ const QuizPage: React.FC = () => {
   // Show answer once timer has expired
   useEffect(() => {
     if (timer.isDone) {
-      dispatch(openAnswerOverlay());
+      answerOverlay.open();
     }
 
   }, [timer.isDone]);

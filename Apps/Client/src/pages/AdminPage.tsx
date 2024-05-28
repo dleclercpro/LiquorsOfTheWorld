@@ -10,7 +10,6 @@ import { Snackbar, SnackbarContent, SnackbarOrigin } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import { COOKIE_NAME } from '../config';
 import { useTranslation } from 'react-i18next';
-import { logout } from '../actions/AuthActions';
 import useQuiz from '../hooks/useQuiz';
 import useUser from '../hooks/useUser';
 
@@ -58,7 +57,7 @@ const AdminPage: React.FC = () => {
     if (quiz.name) {
       deleteCookie(COOKIE_NAME);
 
-      dispatch(logout());
+      await user.logout();
 
       setState({
         ...state,
