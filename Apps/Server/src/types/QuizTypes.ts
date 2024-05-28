@@ -19,7 +19,7 @@ export type QuizStatus = {
   },
 }
 
-export type Quiz = {
+export type QuizData = {
   name: QuizName,
   creator: string,
   players: PlayerData[],

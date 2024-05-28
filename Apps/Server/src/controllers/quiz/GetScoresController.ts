@@ -6,6 +6,7 @@ import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import { GroupedScoreData, ScoreData } from '../../types/DataTypes';
 import { ADMINS } from '../../config';
+import Quiz from '../../models/users/Quiz';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -14,20 +15,21 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new InvalidParamsError();
     }
 
-    if (!await APP_DB.doesQuizExist(quizId)) {
+    const quiz = await Quiz.get(quizId);
+    if (!quiz) {
         throw new InvalidQuizIdError();
     }
 
-    return { quizId };
+    return { quiz };
 }
 
 
 
 const GetScoresController: RequestHandler = async (req, res, next) => {
     try {
-        const { quizId } = await validateParams(req.params);
+        const { quiz } = await validateParams(req.params);
 
-        const scores: ScoreData = await APP_DB.getAllScores(quizId);
+        const scores: ScoreData = await APP_DB.getAllScores(quiz.getId());
 
         const admins = ADMINS.map((admin) => admin.username);
 

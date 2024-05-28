@@ -5,8 +5,9 @@ import { QuizName } from '../constants';
 
 type Cookie = {
   user: SessionUser,
-  quizId: string,
   quizName: QuizName,
+  quizId: string,
+  teamId: string,
 }
 
 type JWTCookie = Cookie & {

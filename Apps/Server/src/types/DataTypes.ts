@@ -1,6 +1,5 @@
 import { Auth } from '.';
 import { QuizName } from '../constants';
-import TimeDuration from '../models/units/TimeDuration';
 import { QuizStatus } from './QuizTypes';
 
 export type FetchedData<Data> = {

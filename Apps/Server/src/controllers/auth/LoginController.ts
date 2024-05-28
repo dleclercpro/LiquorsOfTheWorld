@@ -2,7 +2,6 @@ import bcrypt from 'bcrypt';
 import { RequestHandler } from 'express';
 import { HttpStatusCode } from '../../types/HTTPTypes';
 import logger from '../../logger';
-import { APP_DB } from '../..';
 import { errorResponse, successResponse } from '../../utils/calls';
 import { Auth } from '../../types';
 import { ADMINS, COOKIE_NAME, TEAMS } from '../../config';
@@ -11,10 +10,10 @@ import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidPasswordError from '../../errors/InvalidPasswordError';
 import UserDoesNotExistError from '../../errors/UserDoesNotExistError';
 import QuizAlreadyStartedError from '../../errors/QuizAlreadyStartedError';
-import { Quiz } from '../../types/QuizTypes';
 import { QuizName } from '../../constants';
 import InvalidTeamIdError from '../../errors/InvalidTeamIdError';
 import User from '../../models/users/User';
+import Quiz from '../../models/users/Quiz';
 
 type RequestBody = Auth & {
     quizName: QuizName,
@@ -52,25 +51,22 @@ const LoginController: RequestHandler = async (req, res, next) => {
         logger.trace(`Attempt to join quiz '${quizName}' with ID '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
 
         // Check if quiz exists
-        let quiz = await APP_DB.getQuiz(quizId);
-        const quizExists = Boolean(quiz);
+        let quiz = await Quiz.get(quizId);
 
         // In case quiz session doesn't exist
-        if (!quizExists) {
+        if (!quiz) {
             logger.trace(`Quiz ID '${quizId}' doesn't exist.`);
             if (!isAdmin) { 
                 throw new InvalidQuizIdError();
             }
 
             // Only admins can create new quizzes
-            quiz = await APP_DB.createQuiz(quizId, quizName, username);
+            quiz = await Quiz.create(quizId, quizName, username);
         }
 
-        const isQuizStarted = (quiz as Quiz).status.isStarted;
-
         // If user exists: check if password is valid
-        const userExists = await User.get(username);
-        if (userExists) {
+        const user = await User.get(username);
+        if (user) {
             logger.trace(`Validating password for '${username}'...`);
             const user = await User.get(username);
 
@@ -81,7 +77,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
 
         // If neither the quiz, nor the user exist, and they are not an admin:
         // no new user can be created later on
-        if (!quizExists && !userExists && !isAdmin) {
+        if (!quiz && !user && !User.isAdmin(username)) {
             throw new UserDoesNotExistError();
         }
 
@@ -96,7 +92,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
 
         // Now that everything worked out well, create user if it does not
         // already exist
-        if (!userExists) {
+        if (!user) {
             if (isAdmin) {
                 logger.trace(`Creating admin '${username}'...`);
                 if (password !== admin!.password) {
@@ -110,21 +106,26 @@ const LoginController: RequestHandler = async (req, res, next) => {
         }
 
         // Check if quiz has already started and user is playing
-        const isUserPlaying = await APP_DB.isUserPlaying(quizId, username);
+        const isUserPlaying = await quiz.isUserPlaying(user!, teamId);
         if (!isUserPlaying) {
-            if (isQuizStarted) {
+            if (quiz.isStarted()) {
                 throw new QuizAlreadyStartedError();
             }
-            await APP_DB.addUserToQuiz(quizId, username);
+            await quiz.addUser(user!, teamId);
             logger.trace(`User '${username}' joined quiz ${quizId}.`);
         }
 
-        const user = { username, isAdmin };
-        const cookie = await encodeCookie({ user, quizName, quizId });
+        const cookieUser = { username, isAdmin };
+        const cookie = await encodeCookie({
+            user: cookieUser,
+            quizName,
+            quizId,
+            teamId,
+        });
         
         return res
             .cookie(COOKIE_NAME, cookie)
-            .json(successResponse(user));
+            .json(successResponse(cookieUser));
 
     } catch (err: any) {
         if (err instanceof Error) {

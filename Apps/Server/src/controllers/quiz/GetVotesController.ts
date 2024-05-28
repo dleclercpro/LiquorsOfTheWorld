@@ -4,6 +4,7 @@ import { ParamsDictionary } from 'express-serve-static-core';
 import { APP_DB } from '../..';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
+import Quiz from '../../models/users/Quiz';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -12,11 +13,12 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new InvalidParamsError();
     }
 
-    if (!await APP_DB.doesQuizExist(quizId)) {
+    const quiz = await Quiz.get(quizId);
+    if (!quiz) {
         throw new InvalidQuizIdError();
     }
 
-    return { quizId };
+    return { quiz };
 }
 
 
@@ -25,9 +27,9 @@ const GetVotesController: RequestHandler = async (req, res, next) => {
     try {
         const { username } = req.user!;
 
-        const { quizId } = await validateParams(req.params);
+        const { quiz } = await validateParams(req.params);
 
-        const votes = await APP_DB.getUserVotes(quizId, username);
+        const votes = await APP_DB.getUserVotes(quiz.getId(), username);
 
         return res.json(successResponse(votes));
 

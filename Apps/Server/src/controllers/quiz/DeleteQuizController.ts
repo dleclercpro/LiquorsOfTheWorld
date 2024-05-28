@@ -1,11 +1,11 @@
 import { RequestHandler } from 'express';
 import logger from '../../logger';
-import { APP_DB } from '../..';
 import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import UserCannotDeleteQuizError from '../../errors/UserCannotDeleteQuizError';
+import Quiz from '../../models/users/Quiz';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -14,11 +14,12 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new InvalidParamsError();
     }
 
-    if (!await APP_DB.doesQuizExist(quizId)) {
+    const quiz = await Quiz.get(quizId);
+    if (!quiz) {
         throw new InvalidQuizIdError();
     }
 
-    return { quizId };
+    return { quiz };
 }
 
 
@@ -27,15 +28,15 @@ const DeleteQuizController: RequestHandler = async (req, res, next) => {
     try {
         const { username, isAdmin } = req.user!;
 
-        const { quizId } = await validateParams(req.params);
+        const { quiz } = await validateParams(req.params);
 
         // User needs to be admin to delete quiz
         if (!isAdmin) {
             throw new UserCannotDeleteQuizError();
         }
 
-        await APP_DB.deleteQuiz(quizId);
-        logger.info(`Quiz (ID='${quizId}') has been deleted by admin '${username}'.`);
+        await quiz.delete();
+        logger.info(`Quiz (ID='${quiz.getId()}') has been deleted by admin '${username}'.`);
 
         return res.json(successResponse());
 

@@ -1,31 +1,39 @@
 import bcrypt from 'bcrypt';
-import { N_SALT_ROUNDS } from '../../config';
+import { ADMINS, N_SALT_ROUNDS } from '../../config';
 import logger from '../../logger';
 import HashError from '../../errors/HashError';
 import { Auth } from '../../types';
 import { APP_DB } from '../..';
 
-type UserArgs = Auth & { isAdmin: boolean };
+type UserArgs = Auth & { admin: boolean };
 
 
 
 class User {
     protected username: string;
     protected password: string;
-    protected isAdmin: boolean;
+    protected admin: boolean;
 
     public constructor(args: UserArgs) {
         this.username = args.username;
         this.password = args.password;
-        this.isAdmin = args.isAdmin;
+        this.admin = args.admin;
     }
 
-    protected serialize() {
+    public serialize() {
         const { username, password, isAdmin } = this;
 
         return JSON.stringify({
             username, password, isAdmin,
         });
+    }
+
+    public static deserialize(user: string) {
+        return new User(JSON.parse(user));
+    }
+
+    public static async exists(username: string) {
+        return APP_DB.has(`users:${username.toLowerCase()}`);
     }
 
     public getUsername() {
@@ -36,12 +44,12 @@ class User {
         return this.password;
     }
 
-    public static deserialize(user: string) {
-        return new User(JSON.parse(user));
+    public isAdmin() {
+        return this.admin;
     }
 
-    public static async exists(username: string) {
-        return APP_DB.has(`users:${username.toLowerCase()}`);
+    public static isAdmin(username: string) {
+        return ADMINS.map((admin) => admin.username).includes(username);
     }
 
     public static async get(username: string) {
@@ -60,7 +68,11 @@ class User {
         return usersAsString.map((user) => User.deserialize(user));
     }
 
-    public static async create(auth: Auth, isAdmin: boolean = false) {
+    public async save() {
+        await APP_DB.set(`users:${this.username}`, this.serialize());
+    }
+
+    public static async create(auth: Auth, admin: boolean = false) {
         const { username, password } = auth;
         
         const lowercaseUsername = username.toLowerCase();
@@ -69,11 +81,11 @@ class User {
         const user = new User({
             username: lowercaseUsername,
             password: await User.hashPassword(password),
-            isAdmin,
+            admin,
         });
       
         // Store user in DB
-        await APP_DB.set(`users:${lowercaseUsername}`, user.serialize());
+        await user.save();
       
         return user;
     }

@@ -6,6 +6,7 @@ import { ParamsDictionary } from 'express-serve-static-core';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import UserCannotStartQuizError from '../../errors/UserCannotStartQuizError';
+import Quiz from '../../models/users/Quiz';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -14,11 +15,12 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new InvalidParamsError();
     }
 
-    if (!await APP_DB.doesQuizExist(quizId)) {
+    const quiz = await Quiz.get(quizId);
+    if (!quiz) {
         throw new InvalidQuizIdError();
     }
 
-    return { quizId };
+    return { quiz };
 }
 
 
@@ -33,15 +35,15 @@ const StartQuizController: RequestHandler = async (req, res, next) => {
         const { isSupervised, isTimed } = req.body as RequestBody;
         const { username, isAdmin } = req.user!;
 
-        const { quizId } = await validateParams(req.params);
+        const { quiz } = await validateParams(req.params);
 
         // User needs to be admin to start quiz
         if (!isAdmin) {
             throw new UserCannotStartQuizError();
         }
 
-        await APP_DB.startQuiz(quizId, isSupervised, isTimed);
-        logger.info(`A quiz (ID='${quizId}') has been started by admin '${username}'.`);
+        await quiz.start(isSupervised, isTimed);
+        logger.info(`A quiz (ID='${quiz.getId()}') has been started by admin '${username}'.`);
 
         return res.json(successResponse());
 
