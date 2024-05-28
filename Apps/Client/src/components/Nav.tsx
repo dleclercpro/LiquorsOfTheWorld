@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Nav.scss';
-import { useDispatch, useSelector } from '../hooks/useRedux';
+import { useDispatch } from '../hooks/useRedux';
 import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../actions/AuthActions';
 import OpenIcon from '@mui/icons-material/Menu';
@@ -16,25 +16,28 @@ import { useTranslation } from 'react-i18next';
 import { DEBUG } from '../config';
 import { Language } from '../constants';
 import { setLanguage } from '../reducers/AppReducer';
+import useUser from '../hooks/useUser';
+import useQuiz from '../hooks/useQuiz';
+import useApp from '../hooks/useApp';
 
 const Nav: React.FC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { t, i18n } = useTranslation();
-  const { changeLanguage } = i18n;
+  const { t } = useTranslation();
 
-  const { language } = useSelector((state) => state.app);
-  const [lang, setLang] = useState(language as Language);
+  const app = useApp();
+  
+  const [lang, setLang] = useState(app.language as Language);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const status = useSelector((state) => state.quiz.status.data);
-  const user = useSelector((state) => state.user);
+  const quiz = useQuiz();
+  const user = useUser();
 
   // Change language in i18n when it is changed in the component's state
   useEffect(() => {
-    changeLanguage(lang);
+    app.changeLanguage(lang);
     dispatch(setLanguage(lang));
   
   }, [lang]);
@@ -88,10 +91,6 @@ const Nav: React.FC = () => {
     dispatch(logout());
   }
 
-  const { username } = user;
-  const isAuthenticated = username !== null;
-  const isStarted = status?.isStarted;
-
   return (
     <nav className='nav' ref={menuRef}>
       <button className='nav-button' onClick={open}>
@@ -106,14 +105,14 @@ const Nav: React.FC = () => {
             </button>
             <p className='nav-text'>
               <strong className='nav-username'>
-                {isAuthenticated ? `${t('common:COMMON.WELCOME')}, ${username}!` : `${t('common:COMMON.WELCOME')}!`}
+                {user.isAuthenticated ? `${t('common:COMMON.WELCOME')}, ${user.username}!` : `${t('common:COMMON.WELCOME')}!`}
               </strong>
             </p>
           </li>
 
           <li className='nav-item'>
             <button className='nav-button' onClick={handleLanguageSwitch}>
-              {language === Language.EN ? (
+              {app.language === Language.EN ? (
                 <>
                   <GermanyIcon className='nav-icon flag' />
                   Deutsch
@@ -127,7 +126,7 @@ const Nav: React.FC = () => {
             </button>
           </li>
 
-          {location.pathname !== '/quiz' && isAuthenticated && (
+          {location.pathname !== '/quiz' && user.isAuthenticated && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/quiz`}>
                 <QuizIcon className='nav-icon' />
@@ -136,7 +135,7 @@ const Nav: React.FC = () => {
             </li>
           )}
 
-          {location.pathname !== '/scores' && isAuthenticated && isStarted && (
+          {location.pathname !== '/scores' && user.isAuthenticated && quiz.isStarted && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/scores`}>
                 <ScoreboardIcon className='nav-icon' />
@@ -163,7 +162,7 @@ const Nav: React.FC = () => {
             </li>
           )}
 
-          {isAuthenticated && (
+          {user.isAuthenticated && (
             <li className='nav-item'>
               <Link className='nav-link' to='/' onClick={handleLogout}>
                 <LogoutIcon className='nav-icon' />

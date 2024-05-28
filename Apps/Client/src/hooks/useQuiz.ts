@@ -5,6 +5,7 @@ import { logout } from '../actions/AuthActions';
 
 const useQuiz = () => {
   const quiz = useSelector(({ quiz }) => quiz);
+  
   const questions = quiz.questions.data;
   const status = quiz.status.data;
   const players = quiz.status.data?.players ?? [];
@@ -14,7 +15,7 @@ const useQuiz = () => {
   const dispatch = useDispatch();
 
 
-  
+
   const refreshStatus = useCallback(async () => {
     if (!quiz.id) return;
 

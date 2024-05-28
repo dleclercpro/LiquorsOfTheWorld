@@ -90,7 +90,7 @@ const QuestionForm: React.FC<Props> = (props) => {
         {remainingTime && (
           <p className={`
             question-form-timer
-            ${remainingTime.smallerThan(QUIZ_TIMER_URGENT_TIME) ? 'urgent' : ''}
+            ${remainingTime.smallerThanOrEquals(QUIZ_TIMER_URGENT_TIME) ? 'urgent' : ''}
             ${remainingTime.equals(NO_TIME) ? 'done' : ''}
           `}>
             {t('common:COMMON.TIME_LEFT')}:

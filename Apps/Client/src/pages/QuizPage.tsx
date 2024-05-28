@@ -12,6 +12,8 @@ import Page from './Page';
 import { selectVote } from '../selectors/QuizSelectors';
 import useServerCountdownTimer from '../hooks/useServerCountdownTimer';
 import useQuiz from '../hooks/useQuiz';
+import useUser from '../hooks/useUser';
+import useApp from '../hooks/useApp';
 
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();
@@ -19,10 +21,10 @@ const QuizPage: React.FC = () => {
   const lang = i18n.language as Language;
 
   const quiz = useQuiz();
+  const user = useUser();
+  const app = useApp();
 
-  const isAdmin = useSelector(({ user }) => user.isAdmin);
-
-  const playerQuestionIndex = useSelector((state) => state.app.questionIndex);
+  const playerQuestionIndex = app.playerQuestionIndex;
   const { vote } = useSelector((state) => selectVote(state, playerQuestionIndex));
   const timer = useServerCountdownTimer();
 
@@ -54,13 +56,25 @@ const QuizPage: React.FC = () => {
 
 
 
+  // Fetch current quiz status from server when moving to next question
+  useEffect(() => {
+    if (quiz.id === null || quiz.name === null) {
+      return;
+    }
+
+    quiz.refreshStatus();
+
+  }, [playerQuestionIndex]);
+
+
+
   // Regularly fetch current quiz status from server
   useEffect(() => {
     if (quiz.id === null || quiz.name === null) {
       return;
     }
 
-    const interval = setInterval(quiz.refreshStatus, REFRESH_STATUS_INTERVAL);
+    const interval = setInterval(() => quiz.refreshStatus(), REFRESH_STATUS_INTERVAL);
   
     return () => clearInterval(interval);
   }, []);
@@ -83,13 +97,13 @@ const QuizPage: React.FC = () => {
 
   // Show loading screen in case quiz has not yet been started
   useEffect(() => {
-    if (!quiz.isStarted && !isAdmin) {
+    if (!quiz.isStarted && !user.isAdmin) {
       dispatch(openLoadingOverlay());
     } else {
       dispatch(closeLoadingOverlay());
     }
 
-  }, [quiz.isStarted, isAdmin]);
+  }, [quiz.isStarted, user.isAdmin]);
 
 
 
@@ -121,7 +135,7 @@ const QuizPage: React.FC = () => {
 
   return (
     <Page title={t('common:COMMON:QUIZ')} className='quiz-page'>
-      {!quiz.isStarted && isAdmin && (
+      {!quiz.isStarted && user.isAdmin && (
         <AdminQuizForm />
       )}
       {quiz.isStarted && (

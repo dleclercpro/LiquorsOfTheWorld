@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './Page.scss';
-import { useSelector } from '../hooks/useRedux';
+import useApp from '../hooks/useApp';
 
 type Props = {
   children: React.ReactNode,
@@ -11,7 +11,7 @@ type Props = {
 const Page: React.FC<Props> = (props) => {
   const { children, className, title } = props;
 
-  const app = useSelector((state) => state.app);
+  const app = useApp();
 
   // Set page title
   useEffect(() => {

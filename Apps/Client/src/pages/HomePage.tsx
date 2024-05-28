@@ -8,6 +8,7 @@ import Page from './Page';
 import { QuizName } from '../constants';
 import { setQuizName } from '../reducers/QuizReducer';
 import useQuiz from '../hooks/useQuiz';
+import useUser from '../hooks/useUser';
 
 const QUIZ_ID_PARAM = 'id';
 const QUIZ_NAME_PARAM = 'q';
@@ -21,9 +22,9 @@ const HomePage: React.FC = () => {
   const dispatch = useDispatch();
 
   const quiz = useQuiz();
+  const user = useUser();
 
   const data = useSelector(({ data }) => data);
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   const paramQuizId = searchParams.get(QUIZ_ID_PARAM);
   const paramQuizName = searchParams.get(QUIZ_NAME_PARAM);
@@ -45,7 +46,7 @@ const HomePage: React.FC = () => {
     );
   }
 
-  if (isAuthenticated) {
+  if (user.isAuthenticated) {
     return (
       <Navigate to='/quiz' />
     );
@@ -53,7 +54,7 @@ const HomePage: React.FC = () => {
 
   return (
     <Page title={t('common:COMMON:HOMEPAGE')} className='home-page'>
-      {!isAuthenticated && (
+      {!user.isAuthenticated && (
         <div className='home-page-box'>
           <h1 className='home-page-title'>{t(`${quizName}:TITLE`)}</h1>
           <p className='home-page-text'>{t(`${quizName}:WELCOME_HEAD`)}</p>

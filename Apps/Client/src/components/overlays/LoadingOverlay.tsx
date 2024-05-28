@@ -2,16 +2,17 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from '../../hooks/useRedux';
 import './LoadingOverlay.scss';
 import useQuiz from '../../hooks/useQuiz';
+import useUser from '../../hooks/useUser';
 
 const LoadingOverlay: React.FC = () => {
   const { t } = useTranslation();
 
   const quiz = useQuiz();
+  const user = useUser();
 
-  const { username } = useSelector(({ user }) => user);
   const { open } = useSelector(({ overlays }) => overlays.loading);
 
-  if (username === null) {
+  if (user.username === null) {
     return null;
   }
 
@@ -22,7 +23,7 @@ const LoadingOverlay: React.FC = () => {
           {t('common:COMMON.PLEASE_WAIT')}...
         </h2>
         <p className='loading-overlay-text'>
-          <Trans i18nKey='OVERLAYS.LOADING.HELLO' values={{ username }}>
+          <Trans i18nKey='OVERLAYS.LOADING.HELLO' values={{ username: user.username }}>
             ... <strong>...</strong> ...
           </Trans>
           
