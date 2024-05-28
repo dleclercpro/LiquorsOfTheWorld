@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import logger from '../../logger';
 import { APP_DB } from '../..';
 import { successResponse } from '../../utils/calls';
-import { Vote } from '../../types/QuizTypes';
+import { QuizVote } from '../../types/QuizTypes';
 import { ParamsDictionary } from 'express-serve-static-core';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
@@ -33,7 +33,7 @@ const validateParams = async (params: ParamsDictionary) => {
 
 
 
-type RequestBody = Vote;
+type RequestBody = QuizVote;
 
 const VoteController: RequestHandler = async (req, res, next) => {
     try {

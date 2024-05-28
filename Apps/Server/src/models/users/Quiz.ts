@@ -1,23 +1,37 @@
 import { randomUUID } from 'crypto';
 import { APP_DB } from '../..';
-import { TIMER_DURATION } from '../../config';
 import { QUIZ_NAMES, QuizName } from '../../constants';
 import InvalidQuizNameError from '../../errors/InvalidQuizNameError';
 import QuizAlreadyExistsError from '../../errors/QuizAlreadyExistsError';
 import logger from '../../logger';
-import { StatusData } from '../../types/DataTypes';
 import { unique } from '../../utils/array';
 import User from './User';
 import TimeDuration from '../units/TimeDuration';
 import QuizManager from '../QuizManager';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
+import { PlayerData } from '../../types/DataTypes';
+import { TIMER_DURATION } from '../../config';
 
-type QuizArgs = {
+export type QuizArgs = {
     id: string,
     name: QuizName,
     creator: string,
-    status: StatusData,
+    status: QuizStatusArgs,
+    players?: PlayerData[],
+    votesCount?: number[],
 };
+
+export type QuizStatusArgs = {
+    questionIndex: number,
+    isStarted: boolean,
+    isOver: boolean,
+    isSupervised: boolean,
+    timer: {
+      isEnabled: boolean,
+      startedAt?: Date,
+      duration?: TimeDuration,
+    },
+  }
 
 
 
@@ -25,7 +39,9 @@ class Quiz {
     protected id: string;
     protected name: QuizName;
     protected creator: string;
-    protected status: StatusData;
+    protected status: QuizStatusArgs;
+    protected players: PlayerData[];
+    protected votesCount: number[];
 
     protected isPopulated: boolean;
 
@@ -34,6 +50,8 @@ class Quiz {
         this.name = args.name;
         this.creator = args.creator;
         this.status = args.status;
+        this.players = args.players ?? [];
+        this.votesCount = args.votesCount ?? [];
 
         this.isPopulated = false;
     }
@@ -105,11 +123,11 @@ class Quiz {
     }
 
     public getPlayers() {
-        return this.status.players;
+        return this.players;
     }
 
     public getVotesCount() {
-        return this.status.votesCount;
+        return this.votesCount;
     }
 
     public static async get(name: string) {
@@ -129,6 +147,18 @@ class Quiz {
             .map((quiz) => Quiz.deserialize(quiz));
     }
 
+    public async delete() {
+        if (!this.isPopulated) throw new Error('MISSING_QUIZ_DATA');
+
+        // Delete all votes associated with quiz
+        await Promise.all(this.players.map(async (player) => {
+            return APP_DB.delete(`votes:${this.id}:${player}`);
+        }));
+
+        // Delete quiz finally
+        await APP_DB.delete(`quiz:${this.id}`);
+    }
+
     public async start(isSupervised: boolean, isTimed: boolean) {
         if (!this.isPopulated) throw new Error('MISSING_QUIZ_DATA');
 
@@ -145,18 +175,6 @@ class Quiz {
         await this.save();
     }
 
-    public async delete() {
-        if (!this.isPopulated) throw new Error('MISSING_QUIZ_DATA');
-
-        // Delete all votes associated with quiz
-        await Promise.all(this.status.players.map(async (player) => {
-            return APP_DB.delete(`votes:${this.id}:${player}`);
-        }));
-
-        // Delete quiz finally
-        await APP_DB.delete(`quiz:${this.id}`);
-    }
-
     public async finish() {
         if (!this.isPopulated) throw new Error('MISSING_QUIZ_DATA');
 
@@ -168,19 +186,16 @@ class Quiz {
     public async addUser(user: User, teamId: string = '') {
         if (!this.isPopulated) throw new Error('MISSING_QUIZ_DATA');
 
-        this.status = {
-            ...this.status,
-            players: unique([...this.status.players, {
-                username: user.getUsername().toLowerCase(),
-                teamId,
-            }]),
-        };
+        this.players = unique([...this.players, {
+            username: user.getUsername().toLowerCase(),
+            teamId,
+        }]);
 
         await this.save();
     }
 
     public async isUserPlaying(user: User, teamId: string = '') {
-        return this.status.players
+        return this.players
             .filter((player) => player.teamId === teamId)
             .map((player) => player.username.toLowerCase())
             .includes(user.getUsername().toLowerCase());
@@ -244,8 +259,6 @@ class Quiz {
                 isStarted: false,
                 isOver: false,
                 isSupervised: false,
-                players: [],
-                votesCount: [],
                 timer: {
                     isEnabled: false,
                 },

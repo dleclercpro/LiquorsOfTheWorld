@@ -1,6 +1,5 @@
 import { RequestHandler } from 'express';
 import logger from '../../logger';
-import { APP_DB } from '../..';
 import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
