@@ -73,16 +73,19 @@ const LoginForm: React.FC<Props> = (props) => {
         required
       />
 
-      <input
-        id='login-team-id'
-        className={`${disableTeamId ? 'is-disabled' : ''}`}
-        type='text'
-        value={teamId}
-        disabled={disableTeamId}
-        placeholder={t('common:FORMS.LOGIN.TEAM_ID')}
-        onChange={(e) => setTeamId(e.target.value)}
-        required
-      />
+      {
+      /* FIXME: remove teams for now.
+        <input
+          id='login-team-id'
+          className={`${disableTeamId ? 'is-disabled' : ''}`}
+          type='text'
+          value={teamId}
+          disabled={disableTeamId}
+          placeholder={t('common:FORMS.LOGIN.TEAM_ID')}
+          onChange={(e) => setTeamId(e.target.value)}
+          required
+        />
+      */}
 
       <input
         id='login-username'

@@ -1,6 +1,6 @@
 import { Level } from 'pino';
 import { loadEnvironment } from '../utils/env';
-import { parseNumberText } from '../utils/string';
+import { parseBooleanText, parseNumberText } from '../utils/string';
 import TimeDuration from '../models/units/TimeDuration';
 import { Environment, TimeUnit } from '../types';
 import path from 'path';
@@ -62,6 +62,7 @@ export const USERS = process.env.USERS!
 
 // Quiz
 export const TIMER_DURATION = new TimeDuration(1, TimeUnit.Minute);
+export const TEAMS_ENABLE = parseBooleanText(process.env.TEAMS_ENABLE);
 export const TEAMS = process.env.TEAMS!
     .split(',')
     .map(str => str.split(':'))

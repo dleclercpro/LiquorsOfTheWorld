@@ -4,7 +4,7 @@ import { HttpStatusCode } from '../../types/HTTPTypes';
 import logger from '../../logger';
 import { errorResponse, successResponse } from '../../utils/calls';
 import { Auth } from '../../types';
-import { ADMINS, COOKIE_NAME, TEAMS } from '../../config';
+import { ADMINS, COOKIE_NAME, TEAMS, TEAMS_ENABLE } from '../../config';
 import { encodeCookie } from '../../utils/cookies';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidPasswordError from '../../errors/InvalidPasswordError';
@@ -82,7 +82,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
         }
 
         // In case a team is specified, but it doesn't exist
-        if (TEAMS) {
+        if (TEAMS_ENABLE && TEAMS) {
             const teamExists = TEAMS.map(({ id }) => id).includes(teamId);
             if (!teamExists) {
                 logger.trace(`Team ID '${teamId}' doesn't exist.`);
