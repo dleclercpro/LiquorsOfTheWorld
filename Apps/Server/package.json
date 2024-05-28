@@ -1,7 +1,7 @@
 {
   "name": "quiz--server",
   "label": "Server",
-  "version": "latest",
+  "version": "v3.4.0",
   "author": "David Leclerc",
   "main": "./src/index.ts",
   "scripts": {
