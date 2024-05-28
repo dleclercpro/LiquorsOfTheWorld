@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './QuizPage.scss';
 import QuestionForm from '../components/forms/QuestionForm';
-import { useDispatch, useSelector } from '../hooks/redux';
+import { useDispatch, useSelector } from '../hooks/useRedux';
 import { REFRESH_STATUS_INTERVAL } from '../config';
 import { fetchStatus, fetchQuizData, fetchQuestions } from '../actions/DataActions';
 import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoadingOverlay } from '../reducers/OverlaysReducer';
@@ -11,7 +11,7 @@ import { AspectRatio, Language, NO_TIME, QuestionType } from '../constants';
 import { logout } from '../actions/AuthActions';
 import Page from './Page';
 import { selectVote } from '../selectors/QuizSelectors';
-import useCountdownTimer from '../hooks/timer';
+import useCountdownTimer from '../hooks/useCountdownTimer';
 import TimeDuration from '../models/TimeDuration';
 import { TimeUnit } from '../types/TimeTypes';
 
@@ -55,6 +55,19 @@ const QuizPage: React.FC = () => {
 
 
 
+  // Define function to refresh quiz status in app
+  const refreshQuizStatus = useCallback(async () => {
+    if (!quizId) return;
+
+    const result = await dispatch(fetchStatus(quizId));
+
+    if (result.type.endsWith('/rejected')) {
+      dispatch(logout());
+    }
+  }, [quizId]);
+
+
+
   // Fetch initial data
   useEffect(() => {
     if (quizId === null || quizName === null) {
@@ -83,17 +96,20 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    const interval = setInterval(async () => {
-      const result = await dispatch(fetchStatus(quizId));
-
-      if (result.type.endsWith('/rejected')) {
-        dispatch(logout());
-      }
-
-    }, REFRESH_STATUS_INTERVAL);
+    const interval = setInterval(refreshQuizStatus, REFRESH_STATUS_INTERVAL);
   
     return () => clearInterval(interval);
   }, []);
+
+
+
+  // Fetch current quiz status from server when moving to next question
+  useEffect(() => {
+    if (quizId === null || quizName === null) {
+      return;
+    }
+
+  }, [playerQuestionIndex]);
 
 
 
@@ -146,6 +162,7 @@ const QuizPage: React.FC = () => {
       )}
       {isStarted && (
         <QuestionForm
+          remainingTime={timer.time}
           index={playerQuestionIndex}
           topic={topic}
           question={question}
@@ -153,7 +170,6 @@ const QuizPage: React.FC = () => {
           video={type === QuestionType.Video ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
           ratio={AspectRatio.SixteenByNine}
           options={options}
-          remainingTime={timer.time}
           disabled={choice === '' || vote !== null}
           choice={choice}
           setChoice={setChoice}

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Nav.scss';
-import { useDispatch, useSelector } from '../hooks/redux';
+import { useDispatch, useSelector } from '../hooks/useRedux';
 import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../actions/AuthActions';
 import OpenIcon from '@mui/icons-material/Menu';

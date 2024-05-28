@@ -29,7 +29,9 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
     }
   }, [isRunning]);
 
-  const reset = useCallback(() => {
+
+  // Update timer's duration on each change
+  useEffect(() => {
     setTime(duration);
   }, [duration]);
 
@@ -72,7 +74,7 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
   }, [isRunning]);
 
 
-  return { time, isRunning, start, stop, reset };
+  return { time, isRunning, start, stop };
 };
 
 export default useCountdownTimer;

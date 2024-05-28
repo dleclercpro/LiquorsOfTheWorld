@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './Page.scss';
-import { useSelector } from '../hooks/redux';
+import { useSelector } from '../hooks/useRedux';
 
 type Props = {
   children: React.ReactNode,

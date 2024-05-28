@@ -445,6 +445,27 @@ class AppDatabase {
         });
     }
 
+    public async isTimed(quizId: string) {
+        const quiz = await this.getQuiz(quizId) as Quiz;
+
+        return quiz.status.timer.isEnabled;
+    }
+
+    public async restartTimer(quizId: string) {
+        const quiz = await this.getQuiz(quizId) as Quiz;
+
+        await this.setQuiz(quizId, {
+            ...quiz,
+            status: {
+                ...quiz.status,
+                timer: {
+                    ...quiz.status.timer,
+                    startedAt: new Date(),
+                },
+            },
+        });
+    }
+
     public async generateQuizId() {
         let quizId = '';
 

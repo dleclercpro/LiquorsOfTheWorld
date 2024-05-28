@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useSelector } from '../hooks/redux';
+import { useSelector } from '../hooks/useRedux';
 import { ScoreData } from '../types/DataTypes';
 import { toSortedArr } from '../utils/array';
 import './Scoreboard.scss';

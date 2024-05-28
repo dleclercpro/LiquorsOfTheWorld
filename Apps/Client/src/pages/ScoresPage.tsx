@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './ScoresPage.scss';
 import Scoreboard from '../components/Scoreboard';
-import { useDispatch, useSelector } from '../hooks/redux';
+import { useDispatch, useSelector } from '../hooks/useRedux';
 import { fetchScores } from '../actions/DataActions';
 import { Navigate } from 'react-router-dom';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';

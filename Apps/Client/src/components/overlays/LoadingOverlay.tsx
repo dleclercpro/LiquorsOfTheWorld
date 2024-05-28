@@ -1,5 +1,5 @@
 import { Trans, useTranslation } from 'react-i18next';
-import { useSelector } from '../../hooks/redux';
+import { useSelector } from '../../hooks/useRedux';
 import './LoadingOverlay.scss';
 import { selectPlayers } from '../../selectors/QuizSelectors';
 

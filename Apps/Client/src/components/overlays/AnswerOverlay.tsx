@@ -1,5 +1,5 @@
 import './AnswerOverlay.scss';
-import { useDispatch, useSelector } from '../../hooks/redux';
+import { useDispatch, useSelector } from '../../hooks/useRedux';
 import { closeAnswerOverlay } from '../../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../../reducers/AppReducer';
 import { useNavigate } from 'react-router-dom';

@@ -1,6 +1,6 @@
 import React from 'react';
 import './AdminPage.scss';
-import { useDispatch, useSelector } from '../hooks/redux';
+import { useDispatch, useSelector } from '../hooks/useRedux';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
 import { deleteDatabase } from '../actions/AppActions';

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useSelector } from '../hooks/redux';
+import { useSelector } from '../hooks/useRedux';
 
 type Props = {
   children: ReactNode,

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from '../../hooks/redux';
+import { useDispatch, useSelector } from '../../hooks/useRedux';
 import { openAnswerOverlay } from '../../reducers/OverlaysReducer';
 import './QuestionForm.scss';
 import { vote } from '../../actions/QuizActions';

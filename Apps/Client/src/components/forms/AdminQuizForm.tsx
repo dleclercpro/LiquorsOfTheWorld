@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from '../../hooks/redux';
+import { useDispatch, useSelector } from '../../hooks/useRedux';
 import './AdminQuizForm.scss';
 import { deleteQuiz, startQuiz } from '../../actions/QuizActions';
 import { Trans, useTranslation } from 'react-i18next';
