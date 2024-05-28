@@ -14,19 +14,34 @@
 
   > .question-form-meta {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
     margin-bottom: 20px;
 
+    @include desktop {
+      flex-direction: row;
+      justify-content: flex-end;
+      margin-bottom: 40px;
+    }
+
     > .question-form-timer {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-      margin-right: auto;
-      border-radius: 4px;
-      color: $color-white;
-      background-color: $color-black;
-      text-align: right;
+      order: 2;
+      margin-bottom: 10px;
+      text-align: left;
+      font-weight: bold;
+
+      @include desktop {
+        order: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        border-radius: 4px;
+        color: $color-white;
+        background-color: $color-black;
+        font-weight: normal;
+        margin-bottom: 0;
+        margin-right: auto;
+      }
 
       &.urgent {
         animation: breathe 1s ease-in-out infinite;
@@ -35,15 +50,23 @@
       > .question-form-timer-value {
         margin-left: 5px;
         @include font-sub-sub-title;
+        font-weight: bold;
       }
     }
 
     > .question-form-index {
-      margin-right: 5px;
-      padding: 10px;
+      order: 1;
+      margin-bottom: 5px;
       border-radius: 4px;
       font-weight: bold;
       text-align: right;
+
+      @include desktop {
+        order: 2;
+        padding: 10px;
+        margin-bottom: 0;
+        margin-right: 5px;
+      }
 
       > .question-form-index-value {
         margin-left: 5px;
@@ -52,6 +75,7 @@
     }
 
     > .question-form-topic {
+      order: 3;
       display: flex;
       justify-content: center;
       align-items: center;

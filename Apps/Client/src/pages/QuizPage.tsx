@@ -162,7 +162,7 @@ const QuizPage: React.FC = () => {
       )}
       {isStarted && (
         <QuestionForm
-          remainingTime={timer.time}
+          remainingTime={timer.isRunning ? timer.time : undefined}
           index={playerQuestionIndex}
           topic={topic}
           question={question}
