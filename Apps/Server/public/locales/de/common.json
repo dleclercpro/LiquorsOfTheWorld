@@ -48,6 +48,7 @@
   "FORMS": {
     "LOGIN": {
       "QUIZ_ID": "Gib eine Quiz-ID ein",
+      "TEAM_ID": "Gib eine Team-ID ein",
       "USERNAME": "Gib einen einzigartigen Benutzernamen ein",
       "PASSWORD": "Gib ein beliebiges Passwort ein",
       "SUBMIT": "Los geht's!"

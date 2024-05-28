@@ -18,6 +18,7 @@ import DeleteDatabaseController from '../controllers/DeleteDatabaseController';
 import GetVersionController from '../controllers/app/GetVersionController';
 import GetQuizNamesController from '../controllers/quiz/GetQuizNamesController';
 import GetBackgroundUrlController from '../controllers/app/GetBackgroundUrlController';
+import GetPlayersController from '../controllers/quiz/GetPlayersController';
 
 
 
@@ -51,6 +52,7 @@ router.put('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], StartQuest
 router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);
 
 router.get('/quiz/:quizId/votes', [AuthMiddleware], GetVotesController);
+router.get('/quiz/:quizId/players', [AuthMiddleware], GetPlayersController);
 router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);
 
 router.get('/quiz', GetQuizNamesController);

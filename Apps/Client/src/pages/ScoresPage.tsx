@@ -22,7 +22,7 @@ const ScoresPage: React.FC = () => {
   // Fetch scores when loading page or when moving on to next question
   // or when quiz is over
   useEffect(() => {
-    if (quiz.id === null || quiz.status === null) {
+    if (quiz.id === null || !quiz.status) {
       return;
     }
 
@@ -30,7 +30,7 @@ const ScoresPage: React.FC = () => {
     dispatch(closeAllOverlays());
   }, [questionIndex, isOver]);
 
-  if (quiz.id === null || quiz.status === null || quiz.scores === null) {
+  if (quiz.id === null || !quiz.status || !quiz.scores) {
     return null;
   }
 

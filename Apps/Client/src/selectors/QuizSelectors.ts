@@ -6,7 +6,7 @@ export const selectQuestion = (state: RootState, questionIndex: number) => {
   const questions = quiz.questions.data;
   const votes = quiz.votes.data;
 
-  if (questions === null || votes === null) {
+  if (!questions || !votes) {
     return null;
   }
   
@@ -19,7 +19,7 @@ export const selectAnswer = (state: RootState, questionIndex: number) => {
   const questions = quiz.questions.data;
   const votes = quiz.votes.data;
 
-  if (questions === null || votes === null) {
+  if (!questions || !votes || votes.length < questionIndex + 1) {
     return null;
   }
   
@@ -35,14 +35,14 @@ export const selectCorrectAnswer = (state: RootState, questionIndex: number) => 
 
   const questions = quiz.questions.data;
 
-  if (questions === null) {
+  if (!questions) {
     return null;
   }
   
   const question = questions[questionIndex];
-  const answer = question.options[question.answer];
+  const correctAnswer = question.options[question.answer];
 
-  return answer;
+  return correctAnswer;
 }
 
 export const selectVote = (state: RootState, questionIndex: number) => {
@@ -51,7 +51,7 @@ export const selectVote = (state: RootState, questionIndex: number) => {
   const questions = quiz.questions.data;
   const votes = quiz.votes.data;
 
-  if (questions === null || votes === null || votes.length < questionIndex + 1) {
+  if (!questions || !votes || votes.length < questionIndex + 1) {
     return {
       voteIndex: null,
       vote: null,
@@ -73,9 +73,9 @@ export const haveAllPlayersAnswered = (state: RootState, questionIndex: number) 
   
   const status = quiz.status.data;
   const votes = quiz.votes.data;
-  const players = status?.players ?? [];
+  const players = quiz.players.data;
   
-  if (status === null || votes === null || players === null) {
+  if (!status || !votes || !players || players.length === 0) {
     return false;
   }
 

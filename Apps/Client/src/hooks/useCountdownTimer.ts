@@ -20,16 +20,14 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
   }
 
   const start = useCallback(() => {
-    if (!isRunning) {
+    if (!isRunning && !isDone) {
       setIsRunning(true);
-      setIsDone(false);
     }
   }, [isRunning]);
 
   const stop = useCallback(() => {
     if (isRunning) {
       setIsRunning(false);
-      setIsDone(false);
 
       if (timerRef.current) {
         clearInterval(timerRef.current);
@@ -90,7 +88,6 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
   useEffect(() => {
     if (!isRunning && timerRef.current) {
       setIsRunning(false);
-      setIsDone(false);
 
       clearInterval(timerRef.current);
       timerRef.current = null;

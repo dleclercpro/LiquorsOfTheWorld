@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import { ScoreData } from '../types/DataTypes';
+import { ScoresData } from '../types/DataTypes';
 import { toSortedArr } from '../utils/array';
 import './Scoreboard.scss';
 import useQuiz from '../hooks/useQuiz';
 
 interface Props {
-  scores: ScoreData,
+  scores: ScoresData,
 }
 
 const Scoreboard: React.FC<Props> = (props) => {
@@ -15,7 +15,7 @@ const Scoreboard: React.FC<Props> = (props) => {
 
   const quiz = useQuiz();
 
-  if (quiz.questions === null || quiz.status === null) {
+  if (!quiz.questions || !quiz.status) {
     return null;
   }
 

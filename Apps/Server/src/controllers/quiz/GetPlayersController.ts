@@ -1,11 +1,10 @@
 import { RequestHandler } from 'express';
 import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { APP_DB } from '../..';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
+import { PlayersData } from '../../types/DataTypes';
 import Quiz from '../../models/users/Quiz';
-import { CallGetVotesResponseData } from '../../types/DataTypes';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -24,21 +23,14 @@ const validateParams = async (params: ParamsDictionary) => {
 
 
 
-const GetVotesController: RequestHandler = async (req, res, next) => {
+const GetPlayersController: RequestHandler = async (req, res, next) => {
     try {
-        const { username } = req.user!;
-
         const { quiz } = await validateParams(req.params);
 
-        const votes = await APP_DB.getUserVotes(quiz.getId(), username);
-
-        const response: CallGetVotesResponseData = {
-            status: quiz.getStatus(),
-            votes,
-        };
+        const players: PlayersData = quiz.getPlayers();
 
         return res.json(
-            successResponse(response)
+            successResponse(players)
         );
 
     } catch (err: any) {
@@ -46,4 +38,4 @@ const GetVotesController: RequestHandler = async (req, res, next) => {
     }
 }
 
-export default GetVotesController;
+export default GetPlayersController;

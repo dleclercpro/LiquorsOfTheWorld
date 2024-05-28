@@ -28,7 +28,7 @@ const AnswerOverlay: React.FC = () => {
   const question = useQuestion(playerQuestionIndex);
 
   // Wait until quiz data has been fetched
-  if (quiz.id === null || quiz.questions === null || quiz.status === null || quiz.votes === null || quiz.players.length === 0) {
+  if (quiz.id === null || !quiz.questions || !quiz.status) {
     return null;
   }
 

@@ -9,6 +9,7 @@ import InvalidParamsError from '../../errors/InvalidParamsError';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 import QuizManager from '../../models/QuizManager';
 import Quiz from '../../models/users/Quiz';
+import { CallVoteResponseData } from '../../types/DataTypes';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId, questionIndex: _questionIndex } = params;
@@ -23,7 +24,7 @@ const validateParams = async (params: ParamsDictionary) => {
     }
 
     const questionIndex = Number(_questionIndex);
-    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < QuizManager.count(quiz.getName());
+    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < await QuizManager.count(quiz.getName());
     if (!isQuestionIndexValid) {
         throw new InvalidQuestionIndexError();
     }
@@ -60,6 +61,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         if (!quiz) {
             throw new InvalidQuizIdError();
         }
+        const questionCount = await QuizManager.count(quiz.getName());
 
         // Find out whether all users have voted up until current question
         const playersWhoVoted = await APP_DB.getPlayersWhoVotedUpUntil(quizId, questionIndex);;
@@ -73,22 +75,24 @@ const VoteController: RequestHandler = async (req, res, next) => {
             
             // That was not the last question and the game is not supervised:
             // the index can be automatically incremented
-            if (questionIndex + 1 < QuizManager.count(quiz.getName()) && !quiz.isSupervised()) {
+            if (questionIndex + 1 < questionCount && !quiz.isSupervised()) {
                 await quiz.incrementQuestionIndex();
             }
 
             // That was the last question: the game is now over
-            else if (questionIndex + 1 === QuizManager.count(quiz.getName())) {
+            else if (questionIndex + 1 === questionCount) {
                 await quiz.finish();
             }
         }
 
+        const response: CallVoteResponseData = {
+            status: quiz.getStatus(),
+            votes,
+        };
+
         return res.json(
-            successResponse({
-                status: await APP_DB.getQuizStatus(quizId),
-                votes,
-            }
-        ));
+            successResponse(response)
+        );
 
     } catch (err: any) {
         next(err);

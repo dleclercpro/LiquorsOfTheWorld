@@ -40,8 +40,8 @@ class QuizManager {
         return this.quizzes[lang][name] as QuizJSON;
     }
 
-    public count(name: QuizName) {
-        const json = this.quizzes[Language.EN][name];
+    public async count(name: QuizName) {
+        const json = await this.get(name);
 
         if (json === null) {
             throw new Error('QUIZ_DATA_NOT_LOADED');

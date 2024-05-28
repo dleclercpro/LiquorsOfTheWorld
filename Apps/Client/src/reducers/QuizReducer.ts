@@ -1,19 +1,20 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { FetchedData, GroupedScoreData, StatusData } from '../types/DataTypes';
+import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData, CallVoteResponseData, FetchedData, GroupedScoresData, PlayersData, StatusData, VotesData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
 import { startQuiz, startQuestion, vote } from '../actions/QuizActions';
 import { login, logout, ping } from '../actions/AuthActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { QuizName } from '../constants';
-import { fetchStatus, fetchQuestions, fetchVotes, fetchScores } from '../actions/DataActions';
+import { fetchStatus, fetchQuestions, fetchPlayers, fetchVotes, fetchScores } from '../actions/DataActions';
 
 interface QuizState {
   id: string | null,
   name: QuizName | null,
   questions: FetchedData<QuizJSON>,
   status: FetchedData<StatusData>,
-  votes: FetchedData<number[]>,
-  scores: FetchedData<GroupedScoreData>,
+  votes: FetchedData<VotesData>,
+  players: FetchedData<PlayersData>,
+  scores: FetchedData<GroupedScoresData>,
 }
 
 const initialState: QuizState = {
@@ -22,6 +23,7 @@ const initialState: QuizState = {
   questions: getInitialFetchedData(),
   status: getInitialFetchedData(),
   votes: getInitialFetchedData(),
+  players: getInitialFetchedData(),
   scores: getInitialFetchedData(),
 };
 
@@ -41,23 +43,34 @@ export const quizSlice = createSlice({
       .addCase(fetchStatus.pending, (state) => {
         state.status.status = 'loading';
         state.status.error = null;
+
+        state.players.status = 'loading';
+        state.players.error = null;
       })
-      .addCase(fetchStatus.fulfilled, (state, action) => {
+      .addCase(fetchStatus.fulfilled, (state, action: PayloadAction<CallGetStatusResponseData>) => {
         state.status.status = 'succeeded';
         state.status.error = null;
-        state.status.data = action.payload;
+        state.status.data = action.payload.status;
+
+        state.players.status = 'succeeded';
+        state.players.error = null;
+        state.players.data = action.payload.players;
       })
       .addCase(fetchStatus.rejected, (state, action) => {
         state.status.status = 'failed';
         state.status.error = action.payload as string;
         state.status.data = null;
+
+        state.players.status = 'failed';
+        state.players.error = action.payload as string;
+        state.players.data = null;
       })
 
       .addCase(fetchQuestions.pending, (state) => {
         state.questions.status = 'loading';
         state.questions.error = null;
       })
-      .addCase(fetchQuestions.fulfilled, (state, action) => {
+      .addCase(fetchQuestions.fulfilled, (state, action: PayloadAction<CallGetQuestionsResponseData>) => {
         state.questions.status = 'succeeded';
         state.questions.error = null;
         state.questions.data = action.payload;
@@ -71,23 +84,49 @@ export const quizSlice = createSlice({
       .addCase(fetchVotes.pending, (state) => {
         state.votes.status = 'loading';
         state.votes.error = null;
+
+        state.status.status = 'loading';
+        state.status.error = null;
       })
-      .addCase(fetchVotes.fulfilled, (state, action) => {
+      .addCase(fetchVotes.fulfilled, (state, action: PayloadAction<CallGetVotesResponseData>) => {
         state.votes.status = 'succeeded';
         state.votes.error = null;
-        state.votes.data = action.payload;
+        state.votes.data = action.payload.votes;
+
+        state.status.status = 'succeeded';
+        state.status.error = null;
+        state.status.data = action.payload.status;
       })
       .addCase(fetchVotes.rejected, (state, action) => {
         state.votes.status = 'failed';
         state.votes.error = action.payload as string;
         state.votes.data = null;
+
+        state.status.status = 'failed';
+        state.status.error = action.payload as string;
+        state.status.data = null;
+      })
+
+      .addCase(fetchPlayers.pending, (state) => {
+        state.players.status = 'loading';
+        state.players.error = null;
+      })
+      .addCase(fetchPlayers.fulfilled, (state, action: PayloadAction<CallGetPlayersResponseData>) => {
+        state.players.status = 'succeeded';
+        state.players.error = null;
+        state.players.data = action.payload;
+      })
+      .addCase(fetchPlayers.rejected, (state, action) => {
+        state.players.status = 'failed';
+        state.players.error = action.payload as string;
+        state.players.data = null;
       })
       
       .addCase(fetchScores.pending, (state) => {
         state.scores.status = 'loading';
         state.scores.error = null;
       })
-      .addCase(fetchScores.fulfilled, (state, action) => {
+      .addCase(fetchScores.fulfilled, (state, action: PayloadAction<CallGetScoresResponseData>) => {
         state.scores.status = 'succeeded';
         state.scores.error = null;
         state.scores.data = action.payload;
@@ -101,17 +140,17 @@ export const quizSlice = createSlice({
 
 
       // Other actions
-      .addCase(vote.fulfilled, (state, action) => {
+      .addCase(vote.fulfilled, (state, action: PayloadAction<CallVoteResponseData>) => {
         state.status.data = action.payload.status;
         state.votes.data = action.payload.votes;
       })
       .addCase(startQuiz.fulfilled, (state) => {
-        if (state.status.data === null) return;
+        if (!state.status.data) return;
 
         state.status.data.isStarted = true;
       })
       .addCase(startQuestion.fulfilled, (state, action) => {
-        if (state.status.data === null) return;
+        if (!state.status.data) return;
 
         state.status.data.questionIndex = action.payload;
       })

@@ -12,7 +12,7 @@ export const createServerAction = <ActionArgs, ActionResult> (name: string, acti
   async (args: ActionArgs, thunkAPI: ThunkAPI) => {
     try {
       if (DEBUG) {
-        console.log(`Executing action '${name}'...`);
+        console.debug(`Executing action '${name}'...`);
       }
 
       return await action(args, thunkAPI);

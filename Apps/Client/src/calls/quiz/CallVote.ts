@@ -1,11 +1,7 @@
-import { VotesData } from '../../types/DataTypes';
+import { CallVoteRequestData, CallVoteResponseData } from '../../types/DataTypes';
 import CallPOST from '../base/CallPOST';
 
-type RequestData = {
-    vote: number,
-};
-
-export class CallVote extends CallPOST<RequestData, VotesData> {
+export class CallVote extends CallPOST<CallVoteRequestData, CallVoteResponseData> {
 
     constructor(quizId: string, questionIndex: number) {
         super(`/quiz/${quizId}/question/${questionIndex}`);

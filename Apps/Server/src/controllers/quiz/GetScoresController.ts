@@ -4,7 +4,7 @@ import { ParamsDictionary } from 'express-serve-static-core';
 import { APP_DB } from '../..';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
-import { GroupedScoreData, ScoreData } from '../../types/DataTypes';
+import { GroupedScoresData, ScoresData } from '../../types/DataTypes';
 import { ADMINS } from '../../config';
 import Quiz from '../../models/users/Quiz';
 
@@ -29,7 +29,7 @@ const GetScoresController: RequestHandler = async (req, res, next) => {
     try {
         const { quiz } = await validateParams(req.params);
 
-        const scores: ScoreData = await APP_DB.getAllScores(quiz.getId());
+        const scores: ScoresData = await APP_DB.getAllScores(quiz.getId());
 
         const admins = ADMINS.map((admin) => admin.username);
 
@@ -53,7 +53,7 @@ const GetScoresController: RequestHandler = async (req, res, next) => {
                             [player]: score,
                         },
                     };
-                }, { admins: {}, users: {} } as GroupedScoreData),
+                }, { admins: {}, users: {} } as GroupedScoresData),
             )
         );
 

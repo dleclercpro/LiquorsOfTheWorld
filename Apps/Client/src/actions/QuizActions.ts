@@ -4,7 +4,7 @@ import { CallDeleteQuiz } from '../calls/quiz/CallDeleteQuiz';
 import { logout } from './AuthActions';
 import { ThunkAPI, createServerAction } from './ServerActions';
 import { CallVote } from '../calls/quiz/CallVote';
-import { VotesData } from '../types/DataTypes';
+import { CallVoteResponseData } from '../types/DataTypes';
 
 
 
@@ -26,12 +26,12 @@ export const deleteQuiz = createServerAction<string, void>(
 );
 
 type VoteActionArgs = { quizId: string, questionIndex: number, vote: number };
-export const vote = createServerAction<VoteActionArgs, VotesData>(
+export const vote = createServerAction<VoteActionArgs, CallVoteResponseData>(
   'quiz/vote',
   async ({ quizId, questionIndex, vote }: VoteActionArgs) => {
     const { data } = await new CallVote(quizId, questionIndex).execute({ vote });
 
-    return data as VotesData;
+    return data!;
   },
 );
 

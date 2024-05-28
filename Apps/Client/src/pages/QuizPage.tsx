@@ -113,7 +113,6 @@ const QuizPage: React.FC = () => {
 
   // Start timer if enabled
   useEffect(() => {
-    console.log(timer);
     if (timer.isEnabled && !timer.duration.equals(NO_TIME) && !timer.isRunning) {
       timer.start();
     }
@@ -122,7 +121,7 @@ const QuizPage: React.FC = () => {
 
 
   // Show answer once timer has expired
-  useEffect(() => {
+  useEffect(() => {    
     if (timer.isDone) {
       answerOverlay.open();
     }
@@ -132,10 +131,12 @@ const QuizPage: React.FC = () => {
 
 
   // Wait until data has been fetched
-  if (quiz.questions === null || quiz.status === null) {
+  if (!quiz.questions || !quiz.status) {
     return null;
   }
 
+
+  
   const { topic, question, type, url, options } = quiz.questions[playerQuestionIndex];
 
   return (
@@ -145,7 +146,7 @@ const QuizPage: React.FC = () => {
       )}
       {quiz.isStarted && (
         <QuestionForm
-          remainingTime={timer.isRunning ? timer.time : undefined}
+          remainingTime={(timer.isRunning || timer.isDone) ? timer.time : undefined}
           index={playerQuestionIndex}
           topic={topic}
           question={question}

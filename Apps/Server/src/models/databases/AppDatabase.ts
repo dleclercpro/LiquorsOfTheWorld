@@ -4,7 +4,6 @@ import { getLast, getRange } from '../../utils/array';
 import { sum } from '../../utils/math';
 import RedisDatabase from './base/RedisDatabase';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
-import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 import QuizManager from '../QuizManager';
 import MemoryDatabase from './base/MemoryDatabase';
 import User from '../users/User';
@@ -101,52 +100,6 @@ class AppDatabase {
     }
 
 
-    
-
-
-    public async getQuizStatus(quizId: string) {
-        const quiz = await Quiz.get(quizId);
-
-        if (!quiz) {
-            throw new InvalidQuizIdError();
-        }
-
-        const status = quiz.getStatus();
-        const players = quiz.getPlayers();
-        const votesCount = quiz.getVotesCount();
-
-        // FIXME
-        // Return players as part of a 'status' object, but they aren't part of it
-        // in the data model
-        return {
-            ...status,
-            players,
-            votesCount,
-        };
-    }
-
-    public async getVotesCount(quizId: string) {
-        const quiz = await Quiz.get(quizId);
-
-        if (!quiz) {
-            throw new InvalidQuizIdError();
-        }
-
-        const votesCount = new Array(QuizManager.count(quiz.getName())).fill(0);
-
-        const votes = await this.getAllVotes(quizId);
-        const players = Object.keys(votes);
-
-        players.forEach((player) => {
-            const playerVoteCount = votes[player].length;
-
-            getRange(playerVoteCount).forEach((i) => {
-                votesCount[i] += 1;
-            });
-        });
-
-        return votesCount;
-    }
     
     public async getAllVotes(quizId: string) {
         const quiz = await Quiz.get(quizId);

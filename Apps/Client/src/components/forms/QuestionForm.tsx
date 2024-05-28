@@ -83,7 +83,7 @@ const QuestionForm: React.FC<Props> = (props) => {
 
   }, [index]);
 
-  if (quiz.questions === null || quiz.status === null) {
+  if (!quiz.questions || !quiz.status) {
     return null;
   }
 

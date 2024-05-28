@@ -1,7 +1,7 @@
-import { LoginData, UserData } from '../../types/DataTypes';
+import { CallLogInResponseData, LoginData } from '../../types/DataTypes';
 import CallPUT from '../base/CallPUT';
 
-export class CallLogIn extends CallPUT<LoginData, UserData> {
+export class CallLogIn extends CallPUT<LoginData, CallLogInResponseData> {
 
     constructor() {
         super(`/auth`);

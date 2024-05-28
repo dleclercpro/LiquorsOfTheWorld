@@ -1,11 +1,7 @@
+import { CallStartQuizRequestData } from '../../types/DataTypes';
 import CallPUT from '../base/CallPUT';
 
-type RequestData = {
-    isSupervised: boolean,
-    isTimed: boolean,
-};
-
-export class CallStartQuiz extends CallPUT<RequestData> {
+export class CallStartQuiz extends CallPUT<CallStartQuizRequestData> {
 
     constructor(quizId: string) {
         super(`/quiz/${quizId}`);

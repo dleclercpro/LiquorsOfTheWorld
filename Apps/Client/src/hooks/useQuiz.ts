@@ -17,9 +17,9 @@ const useQuiz = () => {
 
   const questions = quiz.questions.data;
   const status = quiz.status.data;
-  const players = quiz.status.data?.players ?? [];
-  const votes = quiz.votes.data;
-  const scores = quiz.scores.data;
+  const players = quiz.players.data ?? [];
+  const votes = quiz.votes.data ?? [];
+  const scores = quiz.scores.data ?? { admins: {}, users: {} };
 
   const questionIndex = status?.questionIndex;
 

@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from '../../hooks/ReduxHooks';
 import './LoginForm.scss';
 import { login } from '../../actions/AuthActions';
 import { useTranslation } from 'react-i18next';
-import { selectAuthentication } from '../../selectors/UserSelectors';
+import { selectUser } from '../../selectors/UserSelectors';
 import useQuiz from '../../hooks/useQuiz';
 
 type Props = {
   quizId: string | null,
+  teamId: string | null,
 }
 
 const LoginForm: React.FC<Props> = (props) => {
@@ -20,13 +21,15 @@ const LoginForm: React.FC<Props> = (props) => {
   const quiz = useQuiz();
 
   const [quizId, setQuizId] = useState(props.quizId ?? '');
+  const [teamId, setTeamId] = useState(props.teamId ?? '');
   const [disableQuizId] = useState(!!props.quizId);
+  const [disableTeamId] = useState(!!props.quizId);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   
-  const auth = useSelector(selectAuthentication);
+  const auth = useSelector(selectUser);
 
   // Redirect to current quiz question on successful login
   useEffect(() => {
@@ -50,7 +53,7 @@ const LoginForm: React.FC<Props> = (props) => {
       return;
     }
 
-    await dispatch(login({ quizId, quizName: quiz.name, username, password }));
+    await dispatch(login({ quizName: quiz.name, quizId, teamId, username, password }));
   };
 
   return (
@@ -63,6 +66,17 @@ const LoginForm: React.FC<Props> = (props) => {
         disabled={disableQuizId}
         placeholder={t('common:FORMS.LOGIN.QUIZ_ID')}
         onChange={(e) => setQuizId(e.target.value)}
+        required
+      />
+
+      <input
+        id='login-team-id'
+        className={`${disableTeamId ? 'is-disabled' : ''}`}
+        type='text'
+        value={teamId}
+        disabled={disableTeamId}
+        placeholder={t('common:FORMS.LOGIN.TEAM_ID')}
+        onChange={(e) => setTeamId(e.target.value)}
         required
       />
 

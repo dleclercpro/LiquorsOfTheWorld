@@ -1,7 +1,7 @@
-import { VersionData } from '../../types/DataTypes';
+import { CallGetVersionResponseData } from '../../types/DataTypes';
 import CallGET from '../base/CallGET';
 
-export class CallGetVersion extends CallGET<void, VersionData> {
+export class CallGetVersion extends CallGET<void, CallGetVersionResponseData> {
 
     constructor() {
         super(`/version`);

@@ -1,6 +1,6 @@
-import { Auth } from '.';
+import { Auth, TimeUnit } from '.';
 import { QuizName } from '../constants';
-import { QuizStatus } from './QuizTypes';
+import { QuizJSON } from './JSONTypes';
 
 export type FetchedData<Data> = {
   data: Data | null,
@@ -13,10 +13,13 @@ export type PingData = {
   quizName: QuizName,
   username: string,
   isAdmin: boolean,
+  isAuthenticated: boolean,
 };
 
 export type LoginData = Auth & {
+  quizName: QuizName,
   quizId: string,
+  teamId: string,
 };
 
 export type UserData = {
@@ -28,24 +31,60 @@ export type VersionData = {
   version: string,
 };
 
-export type VotesData = {
-  status: StatusData,
-  votes: number[],
-};
+export type VotesData = number[];
 
 export type PlayerData = {
   username: string,
   teamId?: string,
 };
 
-export type StatusData = QuizStatus & {
-  players: PlayerData[],
+export type PlayersData = PlayerData[];
+
+export type TimerData = {
+  isEnabled: boolean,
+  startedAt?: Date,
+  duration?: {
+    amount: number,
+    unit: TimeUnit,
+  },
+};
+
+export type StatusData = {
+  isStarted: boolean,
+  isOver: boolean,
+  isSupervised: boolean,
+  questionIndex: number,
   votesCount: number[],
+  timer: TimerData,
 };
 
-export type ScoreData = Record<string, number>;
+export type ScoresData = Record<string, number>;
 
-export type GroupedScoreData = {
-  admins: ScoreData,
-  users: ScoreData,
+export type GroupedScoresData = {
+  admins: ScoresData,
+  users: ScoresData,
 };
+
+
+
+export type CallStartQuizRequestData = {
+  isSupervised: boolean,
+  isTimed: boolean,
+};
+export type CallVoteRequestData = {
+  vote: number,
+};
+
+
+
+export type CallPingResponseData = PingData;
+export type CallGetVersionResponseData = VersionData;
+export type CallLogInResponseData = UserData;
+export type CallGetQuizNamesResponseData = string[];
+export type CallGetQuestionsResponseData = QuizJSON;
+export type CallGetUserResponseData = UserData;
+export type CallGetStatusResponseData = { status: StatusData, players: PlayersData };
+export type CallGetVotesResponseData = { status: StatusData, votes: VotesData };
+export type CallGetPlayersResponseData = PlayersData;
+export type CallGetScoresResponseData = GroupedScoresData;
+export type CallVoteResponseData = { status: StatusData, votes: VotesData };

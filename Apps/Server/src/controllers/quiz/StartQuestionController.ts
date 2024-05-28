@@ -24,7 +24,8 @@ const validateParams = async (params: ParamsDictionary) => {
     }
 
     const questionIndex = Number(_questionIndex);
-    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < QuizManager.count(quiz.getName());
+    const questionCount = await QuizManager.count(quiz.getName());
+    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < questionCount;
     if (!isQuestionIndexValid) {
         throw new InvalidQuestionIndexError();
     }
@@ -63,14 +64,14 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
         logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);
 
         // Restart timer for new question
-        if (await quiz.isTimed()) {
+        if (quiz.isTimed()) {
             await quiz.restartTimer();
             logger.debug(`Restarted timer.`);
         }
 
         // We can finally move on to next question
         await quiz.incrementQuestionIndex();
-        logger.info(`Question ${questionIndex + 1}/${QuizManager.count(quiz.getName())} of quiz '${quiz.getId()}' has been started by admin '${username}'.`);
+        logger.info(`Question ${questionIndex + 1}/${await QuizManager.count(quiz.getName())} of quiz '${quiz.getId()}' has been started by admin '${username}'.`);
 
         return res.json(successResponse());
 

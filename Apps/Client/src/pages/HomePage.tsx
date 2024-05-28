@@ -11,8 +11,9 @@ import useQuiz from '../hooks/useQuiz';
 import useUser from '../hooks/useUser';
 import useData from '../hooks/useData';
 
-const QUIZ_ID_PARAM = 'id';
 const QUIZ_NAME_PARAM = 'q';
+const QUIZ_ID_PARAM = 'id';
+const TEAM_ID_PARAM = 't';
 
 
 
@@ -27,12 +28,18 @@ const HomePage: React.FC = () => {
 
   const data = useData();
 
-  const paramQuizId = searchParams.get(QUIZ_ID_PARAM);
   const paramQuizName = searchParams.get(QUIZ_NAME_PARAM);
+  const paramQuizId = searchParams.get(QUIZ_ID_PARAM);
+  const paramTeamId = searchParams.get(TEAM_ID_PARAM);
 
   const quizId = paramQuizId;
+  const teamId = paramTeamId;
+
   const quizName = paramQuizName as QuizName ?? quiz.name;
+
   const isQuizNameValid = data.quizzes.includes(quizName);
+
+
 
   // Store quiz name in app state when valid
   useEffect(() => {
@@ -62,7 +69,7 @@ const HomePage: React.FC = () => {
           <p className='home-page-text'>{t(`${quizName}:WELCOME_TEXT`)}</p>
           <p className='home-page-text'>{t(`${quizName}:WELCOME_CTA`)}</p>
           
-          <LoginForm quizId={quizId} />
+          <LoginForm quizId={quizId} teamId={teamId} />
         </div>
       )}
     </Page>

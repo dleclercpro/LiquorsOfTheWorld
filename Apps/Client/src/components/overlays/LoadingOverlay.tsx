@@ -32,7 +32,7 @@ const LoadingOverlay: React.FC = () => {
         <ul className='loading-overlay-players-box'>
           {quiz.players.map((player, i) => (
             <li key={i}>
-              {player}
+              {player.username}
             </li>
           ))}
         </ul>
