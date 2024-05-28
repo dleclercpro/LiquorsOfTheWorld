@@ -118,28 +118,28 @@ class TimeDuration implements Comparable {
             result = result !== '' ? result + ` ${d}${TimeUnit.Day}` : `${d}${TimeUnit.Day}`;
         }
         if (resolutionUnit === TimeUnit.Day) {
-            return result;
+            return result === '' ? `0${TimeUnit.Day}` : result;
         }
         if (h > 0) {
             result = result !== '' ? result + ` ${h}${TimeUnit.Hour}` : `${h}${TimeUnit.Hour}`;
         }
         if (resolutionUnit === TimeUnit.Hour) {
-            return result;
+           return result === '' ? `0${TimeUnit.Hour}` : result;
         }
         if (m > 0) {
             result = result !== '' ? result + ` ${m}${TimeUnit.Minute}` : `${m}${TimeUnit.Minute}`;
         }
         if (resolutionUnit === TimeUnit.Minute) {
-            return result;
+           return result === '' ? `0${TimeUnit.Minute}` : result;
         }
         if (s > 0) {
             result = result !== '' ? result + ` ${s}${TimeUnit.Second}` : `${s}${TimeUnit.Second}`;
         }
         if (resolutionUnit === TimeUnit.Second) {
-            return result;
+            return result === '' ? `0${TimeUnit.Second}` : result;
         }
         result = result !== '' ? result + ` ${ms}${TimeUnit.Millisecond}` : `${ms}${TimeUnit.Millisecond}`;
-        return result;
+        return result === '' ? `0${TimeUnit.Millisecond}` : result;
     }
 
     public to(unit: TimeUnit) {

@@ -15,13 +15,15 @@ import Nav from './components/Nav';
 import ErrorPage from './pages/ErrorPage';
 import { updateBackground, updateVersion } from './actions/AppActions';
 import { fetchQuizNames } from './actions/DataActions';
+import useQuiz from './hooks/useQuiz';
 
 function App() {
   const dispatch = useDispatch();
 
   const app = useSelector((state) => state.app);
-  const quiz = useSelector((state) => state.quiz);
   const isAdmin = useSelector(({ user }) => user.isAdmin);
+
+  const quiz = useQuiz();
 
   useEffect(() => {
     dispatch(ping());

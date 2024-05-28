@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from '../../hooks/useRedux';
+import { useDispatch } from '../../hooks/useRedux';
 import { openAnswerOverlay } from '../../reducers/OverlaysReducer';
 import './QuestionForm.scss';
 import { vote } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
 import { QUIZ_TIMER_URGENT_TIME, SERVER_ROOT } from '../../config';
-import { AspectRatio } from '../../constants';
+import { AspectRatio, NO_TIME } from '../../constants';
 import PlaceholderImage from '../PlaceholderImage';
 import PlaceholderVideo from '../PlaceholderVideo';
 import TimeDuration from '../../models/TimeDuration';
 import { TimeUnit } from '../../types/TimeTypes';
+import useQuiz from '../../hooks/useQuiz';
 
 type Image = {
   url: string,
@@ -42,10 +43,7 @@ const QuestionForm: React.FC<Props> = (props) => {
 
   const dispatch = useDispatch();
 
-  const quiz = useSelector(({ quiz }) => quiz);
-  const quizId = quiz.id;
-  const status = quiz.status.data;
-  const questions = quiz.questions.data;
+  const quiz = useQuiz();
 
   const hasMedia = image || video;
   const ratioClass = ratio ? `ratio-${ratio.replace(':', 'x')}` : 'ratio-1x1';
@@ -59,12 +57,12 @@ const QuestionForm: React.FC<Props> = (props) => {
   const handleSubmit: React.ChangeEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    if (quizId === null) {
+    if (quiz.id === null) {
       return;
     }
     
     const result = await dispatch(vote({
-      quizId,
+      quizId: quiz.id,
       questionIndex: index, // Vote for question that's currently being displayed in the app
       vote: options.findIndex(option => option === choice),
     }));
@@ -82,7 +80,7 @@ const QuestionForm: React.FC<Props> = (props) => {
 
   }, [index]);
 
-  if (questions === null || status === null) {
+  if (quiz.questions === null || quiz.status === null) {
     return null;
   }
 
@@ -90,7 +88,11 @@ const QuestionForm: React.FC<Props> = (props) => {
     <form className='question-form' onSubmit={handleSubmit}>
       <div className='question-form-meta'>
         {remainingTime && (
-          <p className={`question-form-timer ${remainingTime.smallerThan(QUIZ_TIMER_URGENT_TIME) ? 'urgent' : ''}`}>
+          <p className={`
+            question-form-timer
+            ${remainingTime.smallerThan(QUIZ_TIMER_URGENT_TIME) ? 'urgent' : ''}
+            ${remainingTime.equals(NO_TIME) ? 'done' : ''}
+          `}>
             {t('common:COMMON.TIME_LEFT')}:
             <span className='question-form-timer-value'>
               {remainingTime.format(TimeUnit.Second)}
@@ -100,7 +102,7 @@ const QuestionForm: React.FC<Props> = (props) => {
         <p className='question-form-index'>
           {t('common:COMMON.QUESTION')}:
           <span className='question-form-index-value'>
-            {index + 1}/{questions.length}
+            {index + 1}/{quiz.questions.length}
           </span>
         </p>
         <p className='question-form-topic'>

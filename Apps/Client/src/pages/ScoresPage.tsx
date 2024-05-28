@@ -1,42 +1,40 @@
 import React, { useEffect } from 'react';
 import './ScoresPage.scss';
 import Scoreboard from '../components/Scoreboard';
-import { useDispatch, useSelector } from '../hooks/useRedux';
+import { useDispatch } from '../hooks/useRedux';
 import { fetchScores } from '../actions/DataActions';
 import { Navigate } from 'react-router-dom';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
 import { useTranslation } from 'react-i18next';
+import useQuiz from '../hooks/useQuiz';
 
 const ScoresPage: React.FC = () => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
 
-  const quiz = useSelector(({ quiz }) => quiz);
-  const quizId = quiz.id;
-  const status = quiz.status.data;
-  const scores = quiz.scores.data;
+  const quiz = useQuiz();
 
-  const questionIndex = status?.questionIndex;
-  const isOver = status?.isOver;
+  const questionIndex = quiz.questionIndex;
+  const isOver = quiz.isOver;
   
   // Fetch scores when loading page or when moving on to next question
   // or when quiz is over
   useEffect(() => {
-    if (quizId === null || status === null) {
+    if (quiz.id === null || quiz.status === null) {
       return;
     }
 
-    dispatch(fetchScores(quizId));
+    dispatch(fetchScores(quiz.id));
     dispatch(closeAllOverlays());
   }, [questionIndex, isOver]);
 
-  if (quizId === null || status === null || scores === null) {
+  if (quiz.id === null || quiz.status === null || quiz.scores === null) {
     return null;
   }
 
-  const isStarted = status.isStarted;
+  const isStarted = quiz.isStarted;
 
   if (!isStarted) {
     return (
@@ -46,7 +44,7 @@ const ScoresPage: React.FC = () => {
   
   return (
     <Page title={t('common:COMMON:SCOREBOARD')} className='scores-page'>
-      <Scoreboard scores={scores.users} />
+      <Scoreboard scores={quiz.scores.users} />
     </Page>
   );
 };

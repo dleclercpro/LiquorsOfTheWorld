@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from '../../hooks/useRedux';
+import { useDispatch } from '../../hooks/useRedux';
 import './AdminQuizForm.scss';
 import { deleteQuiz, startQuiz } from '../../actions/QuizActions';
 import { Trans, useTranslation } from 'react-i18next';
-import { selectPlayers } from '../../selectors/QuizSelectors';
+import useQuiz from '../../hooks/useQuiz';
 
 const AdminQuizForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -12,9 +12,7 @@ const AdminQuizForm: React.FC = () => {
   const [isSupervised, setIsSupervised] = useState(false);
   const [isTimed, setIsTimed] = useState(false);
 
-  const quiz = useSelector(({ quiz }) => quiz);
-  const quizId = quiz.id;
-  const players = useSelector(selectPlayers);
+  const quiz = useQuiz();
 
   const handleSuperviseCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setIsSupervised(!isSupervised);
@@ -27,21 +25,21 @@ const AdminQuizForm: React.FC = () => {
   const handleStartQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
-    if (quizId === null) {
+    if (quiz.id === null) {
       return;
     }
     
-    await dispatch(startQuiz({ quizId, isSupervised, isTimed }));
+    await dispatch(startQuiz({ quizId: quiz.id, isSupervised, isTimed }));
   }
 
   const handleDeleteQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
-    if (quizId === null) {
+    if (quiz.id === null) {
       return;
     }
     
-    await dispatch(deleteQuiz(quizId));
+    await dispatch(deleteQuiz(quiz.id));
   }
 
   return (
@@ -50,8 +48,8 @@ const AdminQuizForm: React.FC = () => {
 
       <p className='admin-quiz-form-text'>
         <Trans
-          i18nKey={players.length === 1 ? 'FORMS.START_QUIZ.SINGLE_PLAYER_WAITING' : 'FORMS.START_QUIZ.MANY_PLAYERS_WAITING'}
-          values={{ count: players.length }}
+          i18nKey={quiz.players.length === 1 ? 'FORMS.START_QUIZ.SINGLE_PLAYER_WAITING' : 'FORMS.START_QUIZ.MANY_PLAYERS_WAITING'}
+          values={{ count: quiz.players.length }}
         >
           ... <strong>...</strong> ...
         </Trans>

@@ -61,4 +61,4 @@ export const USERS = process.env.USERS!
     .map(([username, password]) => ({ username, password }));
 
 // Quiz
-export const TIMER_DURATION = new TimeDuration(60, TimeUnit.Minute);
+export const TIMER_DURATION = new TimeDuration(1, TimeUnit.Minute);

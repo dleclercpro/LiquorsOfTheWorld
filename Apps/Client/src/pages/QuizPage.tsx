@@ -1,24 +1,25 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './QuizPage.scss';
 import QuestionForm from '../components/forms/QuestionForm';
 import { useDispatch, useSelector } from '../hooks/useRedux';
 import { REFRESH_STATUS_INTERVAL } from '../config';
-import { fetchStatus, fetchQuizData, fetchQuestions } from '../actions/DataActions';
+import { fetchQuizData, fetchQuestions } from '../actions/DataActions';
 import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoadingOverlay } from '../reducers/OverlaysReducer';
 import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
 import { AspectRatio, Language, NO_TIME, QuestionType } from '../constants';
-import { logout } from '../actions/AuthActions';
 import Page from './Page';
 import { selectVote } from '../selectors/QuizSelectors';
 import useServerCountdownTimer from '../hooks/useServerCountdownTimer';
+import useQuiz from '../hooks/useQuiz';
 
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();
 
   const lang = i18n.language as Language;
 
-  const quiz = useSelector(({ quiz }) => quiz);
+  const quiz = useQuiz();
+
   const isAdmin = useSelector(({ user }) => user.isAdmin);
 
   const playerQuestionIndex = useSelector((state) => state.app.questionIndex);
@@ -29,71 +30,40 @@ const QuizPage: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const quizId = quiz.id;
-  const quizName = quiz.name;
-  const questions = quiz.questions.data;
-  const status = quiz.status.data;
-  const isStarted = status?.isStarted;
-
-
-
-  // Define function to refresh quiz status in app
-  const refreshQuizStatus = useCallback(async () => {
-    if (!quizId) return;
-
-    const result = await dispatch(fetchStatus(quizId));
-
-    if (result.type.endsWith('/rejected')) {
-      dispatch(logout());
-    }
-  }, [quizId]);
-
 
 
   // Fetch initial data
   useEffect(() => {
-    if (quizId === null || quizName === null) {
+    if (quiz.id === null || quiz.name === null) {
       return;
     }
 
-    dispatch(fetchQuizData({ quizId, quizName, lang }));
+    dispatch(fetchQuizData({ quizId: quiz.id, quizName: quiz.name, lang }));
   }, []);
 
 
 
   // Refresh quiz data when changing language
   useEffect(() => {
-    if (quizId === null || quizName === null) {
+    if (quiz.id === null || quiz.name === null) {
       return;
     }
 
-    dispatch(fetchQuestions({ lang, quizName }));
+    dispatch(fetchQuestions({ lang, quizName: quiz.name }));
   }, [lang]);
 
 
 
   // Regularly fetch current quiz status from server
   useEffect(() => {
-    if (quizId === null || quizName === null) {
+    if (quiz.id === null || quiz.name === null) {
       return;
     }
 
-    const interval = setInterval(refreshQuizStatus, REFRESH_STATUS_INTERVAL);
+    const interval = setInterval(quiz.refreshStatus, REFRESH_STATUS_INTERVAL);
   
     return () => clearInterval(interval);
   }, []);
-
-
-
-  // Fetch current quiz status from server when moving to next question
-  useEffect(() => {
-    if (quizId === null || quizName === null) {
-      return;
-    }
-
-    refreshQuizStatus();
-
-  }, [playerQuestionIndex]);
 
 
 
@@ -113,38 +83,48 @@ const QuizPage: React.FC = () => {
 
   // Show loading screen in case quiz has not yet been started
   useEffect(() => {
-    if (!isStarted && !isAdmin) {
+    if (!quiz.isStarted && !isAdmin) {
       dispatch(openLoadingOverlay());
     } else {
       dispatch(closeLoadingOverlay());
     }
 
-  }, [isStarted, isAdmin]);
+  }, [quiz.isStarted, isAdmin]);
 
 
 
   // Start timer if enabled
   useEffect(() => {
-    if (timer.isEnabled && !timer.isRunning && !timer.duration.equals(NO_TIME)) {
+    if (timer.isEnabled && !timer.duration.equals(NO_TIME) && !timer.isRunning) {
       timer.start();
     }
   }, [timer.isEnabled, timer.duration]);
 
 
 
+  // Show answer once timer has expired
+  useEffect(() => {
+    if (timer.isDone) {
+      dispatch(openAnswerOverlay());
+    }
+
+  }, [timer.isDone]);
+
+
+
   // Wait until data has been fetched
-  if (questions === null || status === null) {
+  if (quiz.questions === null || quiz.status === null) {
     return null;
   }
 
-  const { topic, question, type, url, options } = questions[playerQuestionIndex];
+  const { topic, question, type, url, options } = quiz.questions[playerQuestionIndex];
 
   return (
     <Page title={t('common:COMMON:QUIZ')} className='quiz-page'>
-      {!isStarted && isAdmin && (
+      {!quiz.isStarted && isAdmin && (
         <AdminQuizForm />
       )}
-      {isStarted && (
+      {quiz.isStarted && (
         <QuestionForm
           remainingTime={timer.isRunning ? timer.time : undefined}
           index={playerQuestionIndex}

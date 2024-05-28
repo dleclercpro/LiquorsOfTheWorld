@@ -47,6 +47,11 @@
         animation: breathe 1s ease-in-out infinite;
       }
 
+      &.done {
+        background-color: $color-red;
+        animation: none;
+      }
+
       > .question-form-timer-value {
         margin-left: 5px;
         @include font-sub-sub-title;

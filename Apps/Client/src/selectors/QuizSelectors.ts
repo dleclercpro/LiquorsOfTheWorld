@@ -1,22 +1,4 @@
-import { createSelector } from 'reselect';
 import { RootState } from '../stores/store';
-
-const getStatusData = (state: RootState) => state.quiz.status.data;
-
-export const selectPlayers = createSelector(
-  [getStatusData],
-  (statusData) => {
-    if (statusData === null) {
-      // Here, we ensure that the same array reference is returned for the same input
-      // This is handled by reselect's memoization capability
-      return [];
-    }
-  
-    // Assuming statusData.players does not mutate elsewhere, this should now only recompute
-    // when statusData itself changes, helping prevent unnecessary re-renders
-    return statusData.players;
-  }
-);
 
 export const selectQuestion = (state: RootState, questionIndex: number) => {
   const quiz = state.quiz;
@@ -91,7 +73,7 @@ export const haveAllPlayersAnswered = (state: RootState, questionIndex: number) 
   
   const status = quiz.status.data;
   const votes = quiz.votes.data;
-  const players = selectPlayers(state);
+  const players = status?.players ?? [];
   
   if (status === null || votes === null || players === null) {
     return false;

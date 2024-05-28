@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Page from './Page';
 import { QuizName } from '../constants';
 import { setQuizName } from '../reducers/QuizReducer';
+import useQuiz from '../hooks/useQuiz';
 
 const QUIZ_ID_PARAM = 'id';
 const QUIZ_NAME_PARAM = 'q';
@@ -19,7 +20,8 @@ const HomePage: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const quiz = useSelector(({ quiz }) => quiz);
+  const quiz = useQuiz();
+
   const data = useSelector(({ data }) => data);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 

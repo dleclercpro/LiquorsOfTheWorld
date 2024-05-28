@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import TimeDuration from '../models/TimeDuration';
 import { TimeUnit } from '../types/TimeTypes';
+import { NO_TIME } from '../constants';
 
 interface TimerOptions {
   duration: TimeDuration; // Countdown duration
@@ -11,17 +12,25 @@ interface TimerOptions {
 const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.Second), autoStart = false }: TimerOptions) => {
   const [time, setTime] = useState(duration);
   const [isRunning, setIsRunning] = useState(autoStart);
+  const [isDone, setIsDone] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  if (time.smallerThan(NO_TIME)) {
+    throw new Error('Cannot start a timer with a negative duration!');
+  }
 
   const start = useCallback(() => {
     if (!isRunning) {
       setIsRunning(true);
+      setIsDone(false);
     }
   }, [isRunning]);
 
   const stop = useCallback(() => {
     if (isRunning) {
       setIsRunning(false);
+      setIsDone(false);
+
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
@@ -53,6 +62,9 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
 
           // Less time left than interval: set timer to zero next
           if (prevTime.smallerThanOrEquals(interval)) {
+            setIsRunning(false);
+            setIsDone(true);
+
             clearInterval(timerRef.current!);
             return new TimeDuration(0, TimeUnit.Millisecond);
           }
@@ -77,13 +89,16 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
   // Handle timer stop (clean up interval)
   useEffect(() => {
     if (!isRunning && timerRef.current) {
+      setIsRunning(false);
+      setIsDone(false);
+
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
   }, [isRunning]);
 
 
-  return { time, isRunning, start, stop, restart };
+  return { time, isRunning, isDone, start, stop, restart };
 };
 
 export default useCountdownTimer;
