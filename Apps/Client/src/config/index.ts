@@ -15,6 +15,6 @@ export const STORE_VERSION = 1;
 // Auth
 export const COOKIE_NAME = `quiz`;
 
-// Times
+// Time
 export const REFRESH_STATUS_INTERVAL = 5_000; // (ms)
 export const QUIZ_TIMER_URGENT_TIME = new TimeDuration(15, TimeUnit.Second);

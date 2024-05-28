@@ -34,8 +34,13 @@ export type VotesData = {
   votes: number[],
 };
 
+export type PlayerData = {
+  username: string,
+  teamId?: string,
+};
+
 export type StatusData = QuizStatus & {
-  players: string[],
+  players: PlayerData[],
   votesCount: number[],
 };
 

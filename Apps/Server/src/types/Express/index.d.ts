@@ -1,10 +1,10 @@
-import { User } from '../UserTypes';
+import { SessionUser } from '../UserTypes';
 import { QuizName } from '../../constants';
 
 declare global {
   namespace Express {
     interface Request {
-      user?: User,
+      user?: SessionUser,
       quizId?: string,
       quizName?: QuizName,
     }

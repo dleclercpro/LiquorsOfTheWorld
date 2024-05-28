@@ -1,5 +1,6 @@
-import { QuizName } from "../constants";
-import TimeDuration from "../models/units/TimeDuration";
+import { QuizName } from '../constants';
+import TimeDuration from '../models/units/TimeDuration';
+import { PlayerData } from './DataTypes';
 
 export type Vote = {
   questionIndex: number,
@@ -21,6 +22,11 @@ export type QuizStatus = {
 export type Quiz = {
   name: QuizName,
   creator: string,
-  players: string[],
+  players: PlayerData[],
   status: QuizStatus,
+};
+
+export type QuizTeam = {
+  id: string,
+  name: string,
 };

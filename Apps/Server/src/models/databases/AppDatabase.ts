@@ -1,21 +1,19 @@
-import bcrypt from 'bcrypt';
-import { ADMINS, N_SALT_ROUNDS, REDIS_DATABASE, REDIS_ENABLE, REDIS_OPTIONS, TIMER_DURATION, USERS } from '../../config';
+import { ADMINS, REDIS_DATABASE, REDIS_ENABLE, REDIS_OPTIONS, TIMER_DURATION, USERS } from '../../config';
 import { QUIZ_NAMES, QuizName } from '../../constants';
 import logger from '../../logger';
 import { getLast, getRange, unique } from '../../utils/array';
 import { sum } from '../../utils/math';
 import RedisDatabase from './base/RedisDatabase';
-import { DatabaseUser } from '../../types/UserTypes';
 import { randomUUID } from 'crypto';
 import { Quiz } from '../../types/QuizTypes';
 import QuizAlreadyExistsError from '../../errors/QuizAlreadyExistsError';
-import HashError from '../../errors/HashError';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 import QuizManager from '../QuizManager';
 import InvalidQuizNameError from '../../errors/InvalidQuizNameError';
 import MemoryDatabase from './base/MemoryDatabase';
 import TimeDuration from '../units/TimeDuration';
+import User from '../users/User';
 
 const SEPARATOR = '|';
 
@@ -38,20 +36,20 @@ class AppDatabase {
 
         // Create admin users if they don't already exist
         ADMINS.forEach(async ({ username, password }) => {
-            const admin = await this.getUser(username);
+            const admin = await User.get(username);
         
             if (!admin) {
-                await this.createUser(username, password, true);
+                await User.create({ username, password }, true);
                 logger.trace(`Default admin user created: ${username}`);
             }
         });
 
         // Create regular users if they don't already exist
         USERS.forEach(async ({ username, password }) => {
-            const user = await this.getUser(username);
+            const user = await User.get(username);
         
             if (!user) {
-                await this.createUser(username, password, true);
+                await User.create({ username, password }, false);
                 logger.trace(`Default user created: ${username}`);
             }
         });
@@ -113,17 +111,16 @@ class AppDatabase {
         return this.has(`quiz:${quizId}`);
     }
 
-    public async doesUserExist(username: string) {
-        return this.has(`users:${username.toLowerCase()}`);
-    }
-
-    public async isUserPlaying(quizId: string, username: string) {
+    public async isUserPlaying(quizId: string, username: string, teamId: string = '') {
         const players = await this.getAllPlayers(quizId);
 
-        return players.includes(username.toLowerCase());
+        return players
+            .filter((player) => player.teamId === teamId)
+            .map((player) => player.username.toLowerCase())
+            .includes(username.toLowerCase());
     }
 
-    public async addUserToQuiz(quizId: string, username: string) {
+    public async addUserToQuiz(quizId: string, username: string, teamId: string = '') {
         const quiz = await this.getQuiz(quizId);
 
         if (!quiz) {
@@ -132,34 +129,11 @@ class AppDatabase {
 
         await this.setQuiz(quizId, {
             ...quiz,
-            players: unique([...quiz.players, username.toLowerCase()]),
+            players: unique([...quiz.players, {
+                username: username.toLowerCase(),
+                teamId,
+            }]),
         });
-    }
-
-    public async createUser(username: string, password: string, isAdmin: boolean = false) {
-        const lowercaseUsername = username.toLowerCase();
-
-        const hashedPassword = await new Promise<string>((resolve, reject) => {
-            bcrypt.hash(password, N_SALT_ROUNDS, async (err, hash) => {
-                if (err) {
-                    logger.error(`Cannot hash password of user '${lowercaseUsername}'.`, err);
-                    reject(new HashError());
-                }
-      
-                resolve(hash);
-            });
-        });
-      
-        logger.trace(`Creating user '${lowercaseUsername}'...`);
-        const user = {
-            username: lowercaseUsername,
-            isAdmin,
-            hashedPassword,
-        };
-      
-        await this.set(`users:${lowercaseUsername}`, this.serializeUser(user));
-      
-        return user;
     }
 
     public async createQuiz(quizId: string, quizName: QuizName, username: string) {
@@ -230,20 +204,6 @@ class AppDatabase {
         await Promise.all(players.map((player) => this.delete(`votes:${quizId}:${player}`)));
 
         await this.delete(`quiz:${quizId}`);
-    }
-
-    public async getUser(username: string) {
-        const user = await this.get(`users:${username.toLowerCase()}`);
-
-        if (!user) {
-            return null;
-        }
-
-        return this.deserializeUser(user);
-    }
-
-    public async getAllUsers() {
-        return this.getKeysByPattern(`users:*`);
     }
 
     public async getAllPlayers(quizId: string) {
@@ -324,7 +284,7 @@ class AppDatabase {
         
         // Initialize votes for all players
         const votes: Votes = players.reduce((prev, player) => {
-            return { ...prev, [player]: [] };
+            return { ...prev, [player.username]: [] };
         }, {});
 
         const votesAsStrings = await this.getKeysByPattern(`votes:${quizId}:*`);
@@ -475,14 +435,6 @@ class AppDatabase {
         }
 
         return quizId;
-    }
-
-    protected serializeUser(user: DatabaseUser) {
-        return JSON.stringify(user);
-    }
-
-    protected deserializeUser(user: string) {
-        return JSON.parse(user) as DatabaseUser;
     }
 
     protected serializeQuiz(quiz: Quiz) {

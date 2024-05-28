@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { TOKEN_SECRET } from '../config';
-import { User } from '../types/UserTypes';
+import { SessionUser } from '../types/UserTypes';
 import { QuizName } from '../constants';
 
 type Cookie = {
-  user: User,
+  user: SessionUser,
   quizId: string,
   quizName: QuizName,
 }

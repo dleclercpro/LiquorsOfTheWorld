@@ -1,12 +1,12 @@
 import { RequestHandler } from 'express';
 import { successResponse } from '../../utils/calls';
-import { User } from '../../types/UserTypes';
+import { SessionUser } from '../../types/UserTypes';
 
 const GetUserController: RequestHandler = async (req, res, next) => {
     try {
         const { username, isAdmin } = req.user!;
 
-        return res.json(successResponse<User>({
+        return res.json(successResponse<SessionUser>({
             username,
             isAdmin,
         }));

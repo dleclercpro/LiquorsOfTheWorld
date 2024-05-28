@@ -5,19 +5,21 @@ import logger from '../../logger';
 import { APP_DB } from '../..';
 import { errorResponse, successResponse } from '../../utils/calls';
 import { Auth } from '../../types';
-import { ADMINS, COOKIE_NAME } from '../../config';
+import { ADMINS, COOKIE_NAME, TEAMS } from '../../config';
 import { encodeCookie } from '../../utils/cookies';
-import { DatabaseUser } from '../../types/UserTypes';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidPasswordError from '../../errors/InvalidPasswordError';
 import UserDoesNotExistError from '../../errors/UserDoesNotExistError';
 import QuizAlreadyStartedError from '../../errors/QuizAlreadyStartedError';
 import { Quiz } from '../../types/QuizTypes';
 import { QuizName } from '../../constants';
+import InvalidTeamIdError from '../../errors/InvalidTeamIdError';
+import User from '../../models/users/User';
 
 type RequestBody = Auth & {
-    quizId: string,
     quizName: QuizName,
+    quizId: string,
+    teamId: string,
 };
 
 const isPasswordValid = async (password: string, hashedPassword: string) => {
@@ -44,7 +46,7 @@ const isPasswordValid = async (password: string, hashedPassword: string) => {
 
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
-        const { quizId, quizName, username, password } = req.body as RequestBody;
+        const { quizName, quizId, teamId, username, password } = req.body as RequestBody;
         const admin = ADMINS.find(admin => admin.username === username);
         const isAdmin = Boolean(admin);
         logger.trace(`Attempt to join quiz '${quizName}' with ID '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
@@ -67,12 +69,12 @@ const LoginController: RequestHandler = async (req, res, next) => {
         const isQuizStarted = (quiz as Quiz).status.isStarted;
 
         // If user exists: check if password is valid
-        const userExists = await APP_DB.doesUserExist(username);
+        const userExists = await User.get(username);
         if (userExists) {
             logger.trace(`Validating password for '${username}'...`);
-            const user = await APP_DB.getUser(username) as DatabaseUser;
+            const user = await User.get(username);
 
-            if (!await isPasswordValid(password, user.hashedPassword)) {
+            if (!await isPasswordValid(password, user!.getPassword())) {
                 throw new InvalidPasswordError()
             }
         }
@@ -83,6 +85,15 @@ const LoginController: RequestHandler = async (req, res, next) => {
             throw new UserDoesNotExistError();
         }
 
+        // In case a team is specified, but it doesn't exist
+        if (TEAMS) {
+            const teamExists = TEAMS.map(({ id }) => id).includes(teamId);
+            if (!teamExists) {
+                logger.trace(`Team ID '${teamId}' doesn't exist.`);
+                throw new InvalidTeamIdError();
+            }
+        }
+
         // Now that everything worked out well, create user if it does not
         // already exist
         if (!userExists) {
@@ -91,10 +102,10 @@ const LoginController: RequestHandler = async (req, res, next) => {
                 if (password !== admin!.password) {
                     throw new InvalidPasswordError();
                 }
-                await APP_DB.createUser(username, password);
+                await User.create({ username, password }, true);
             } else {
                 logger.trace(`Creating user '${username}'...`);
-                await APP_DB.createUser(username, password);
+                await User.create({ username, password }, false);
             }
         }
 

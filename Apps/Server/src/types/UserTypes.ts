@@ -1,8 +1,4 @@
-export type User = {
+export type SessionUser = {
     username: string,
     isAdmin: boolean,
-}
-
-export type DatabaseUser = User & {
-    hashedPassword: string,
 }

@@ -62,3 +62,7 @@ export const USERS = process.env.USERS!
 
 // Quiz
 export const TIMER_DURATION = new TimeDuration(1, TimeUnit.Minute);
+export const TEAMS = process.env.TEAMS!
+    .split(',')
+    .map(str => str.split(':'))
+    .map(([id, name]) => ({ id, name }));
