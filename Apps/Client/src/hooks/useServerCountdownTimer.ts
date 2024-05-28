@@ -1,0 +1,36 @@
+import TimeDuration from '../models/TimeDuration';
+import { TimeUnit } from '../types/TimeTypes';
+import useCountdownTimer from './useCountdownTimer';
+import { useSelector } from './useRedux';
+import { NO_TIME } from '../constants';
+
+const useServerCountdownTimer = () => {
+  const quiz = useSelector(({ quiz }) => quiz);
+  const status = quiz.status.data;
+  const data = status?.timer;
+
+  const isEnabled = data?.isEnabled;
+  const duration = data?.duration ? new TimeDuration(data.duration.amount, data.duration.unit) : NO_TIME;
+  const startedAt = data?.startedAt ? new Date(data.startedAt) : new Date();
+
+  const alreadySpentTime = new TimeDuration(new Date().getTime() - startedAt.getTime(), TimeUnit.Millisecond);
+  const remainingTime = duration.subtract(alreadySpentTime);
+
+  const timer = useCountdownTimer({
+    interval: new TimeDuration(1, TimeUnit.Second),
+    duration: remainingTime,
+    autoStart: false,
+  });
+
+  return {
+    isEnabled,
+    duration,
+    startedAt,
+    isRunning: timer.isRunning,
+    time: timer.time,
+    start: timer.start,
+    stop: timer.stop,
+  };
+};
+
+export default useServerCountdownTimer;

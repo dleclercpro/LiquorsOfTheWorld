@@ -11,9 +11,7 @@ import { AspectRatio, Language, NO_TIME, QuestionType } from '../constants';
 import { logout } from '../actions/AuthActions';
 import Page from './Page';
 import { selectVote } from '../selectors/QuizSelectors';
-import useCountdownTimer from '../hooks/useCountdownTimer';
-import TimeDuration from '../models/TimeDuration';
-import { TimeUnit } from '../types/TimeTypes';
+import useServerCountdownTimer from '../hooks/useServerCountdownTimer';
 
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();
@@ -25,6 +23,7 @@ const QuizPage: React.FC = () => {
 
   const playerQuestionIndex = useSelector((state) => state.app.questionIndex);
   const { vote } = useSelector((state) => selectVote(state, playerQuestionIndex));
+  const timer = useServerCountdownTimer();
 
   const [choice, setChoice] = useState('');
 
@@ -35,23 +34,6 @@ const QuizPage: React.FC = () => {
   const questions = quiz.questions.data;
   const status = quiz.status.data;
   const isStarted = status?.isStarted;
-
-
-
-  // Handle question timer
-  const serverTimer = status?.timer;
-
-  const duration = serverTimer?.duration ? new TimeDuration(serverTimer.duration.amount, serverTimer.duration.unit) : NO_TIME;
-  const startedAt = serverTimer?.startedAt ? new Date(serverTimer.startedAt) : new Date();
-
-  const alreadySpentTime = new TimeDuration(new Date().getTime() - startedAt.getTime(), TimeUnit.Millisecond);
-  const remainingTime = duration.subtract(alreadySpentTime);
-
-  const timer = useCountdownTimer({
-    interval: new TimeDuration(1, TimeUnit.Second),
-    duration: remainingTime,
-    autoStart: false,
-  });
 
 
 
@@ -109,6 +91,8 @@ const QuizPage: React.FC = () => {
       return;
     }
 
+    refreshQuizStatus();
+
   }, [playerQuestionIndex]);
 
 
@@ -141,10 +125,10 @@ const QuizPage: React.FC = () => {
 
   // Start timer if enabled
   useEffect(() => {
-    if (serverTimer && serverTimer.isEnabled && !timer.isRunning) {
+    if (timer.isEnabled && !timer.isRunning && !timer.duration.equals(NO_TIME)) {
       timer.start();
     }
-  }, [serverTimer?.isEnabled]);
+  }, [timer.isEnabled, timer.duration]);
 
 
 
