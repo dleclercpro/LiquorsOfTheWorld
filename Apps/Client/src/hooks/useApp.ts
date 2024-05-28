@@ -10,7 +10,7 @@ const useApp = () => {
   return {
     version,
     language,
-    playerQuestionIndex: questionIndex,
+    questionIndex,
     styles,
     changeLanguage,
   };

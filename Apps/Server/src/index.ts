@@ -28,6 +28,7 @@ const execute = async () => {
 execute()
     .catch((err) => {
         logger.fatal(err, `Uncaught error:`);
+        logger.fatal(``);
     });
 
 

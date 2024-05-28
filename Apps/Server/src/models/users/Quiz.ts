@@ -24,7 +24,7 @@ type QuizStatusArgs = {
     isOver: boolean,
     isSupervised: boolean,
     questionIndex: number,
-    votesCount: number[],
+    voteCounts: number[],
     timer: TimerData,
   }
 
@@ -111,8 +111,8 @@ class Quiz {
         return this.players;
     }
 
-    public async updateVotesCount() {
-        const votesCount = new Array(await QuizManager.count(this.name)).fill(0);
+    public async updatevoteCounts() {
+        const voteCounts = new Array(await QuizManager.count(this.name)).fill(0);
 
         const votes = await APP_DB.getAllVotes(this.id);
         const players = Object.keys(votes);
@@ -121,17 +121,17 @@ class Quiz {
             const playerVoteCount = votes[player].length;
 
             getRange(playerVoteCount).forEach((i) => {
-                votesCount[i] += 1;
+                voteCounts[i] += 1;
             });
         });
 
-        this.status.votesCount = votesCount;
+        this.status.voteCounts = voteCounts;
 
         await this.save();
     }
 
-    public getVotesCount() {
-        return this.status.votesCount;
+    public getvoteCounts() {
+        return this.status.voteCounts;
     }
 
     public static async get(name: string) {
@@ -257,7 +257,7 @@ class Quiz {
                 isOver: false,
                 isSupervised: false,
                 questionIndex: 0,
-                votesCount: new Array(await QuizManager.count(quizName)).fill(0),
+                voteCounts: new Array(await QuizManager.count(quizName)).fill(0),
                 timer: {
                     isEnabled: false,
                 },

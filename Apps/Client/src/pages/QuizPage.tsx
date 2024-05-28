@@ -1,34 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import './QuizPage.scss';
 import QuestionForm from '../components/forms/QuestionForm';
-import { useSelector } from '../hooks/ReduxHooks';
 import { REFRESH_STATUS_INTERVAL } from '../config';
 import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
-import { AspectRatio, Language, NO_TIME, QuestionType } from '../constants';
+import { AspectRatio, Language, QuestionType } from '../constants';
 import Page from './Page';
-import { selectVote } from '../selectors/QuizSelectors';
 import useServerCountdownTimer from '../hooks/useServerCountdownTimer';
 import useQuiz from '../hooks/useQuiz';
 import useUser from '../hooks/useUser';
 import useApp from '../hooks/useApp';
 import useOverlay from '../hooks/useOverlay';
 import { OverlayName } from '../reducers/OverlaysReducer';
+import useVote from '../hooks/useVote';
 
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();
 
   const lang = i18n.language as Language;
 
+  const app = useApp();
   const quiz = useQuiz();
   const user = useUser();
-  const app = useApp();
+  const vote = useVote(app.questionIndex);
   
   const loadingOverlay = useOverlay(OverlayName.Loading);
   const answerOverlay = useOverlay(OverlayName.Answer);
 
-  const playerQuestionIndex = app.playerQuestionIndex;
-  const { vote } = useSelector((state) => selectVote(state, playerQuestionIndex));
   const timer = useServerCountdownTimer();
 
   const [choice, setChoice] = useState('');
@@ -60,7 +58,7 @@ const QuizPage: React.FC = () => {
     }
 
     // Do not run for first question
-    if (playerQuestionIndex === 0) {
+    if (app.questionIndex === 0) {
       return;
     }
 
@@ -69,7 +67,7 @@ const QuizPage: React.FC = () => {
         timer.restart();
       });
 
-  }, [playerQuestionIndex]);
+  }, [app.questionIndex]);
 
 
 
@@ -88,19 +86,19 @@ const QuizPage: React.FC = () => {
 
   // Set choice if user already voted
   useEffect(() => {
-    if (vote === null) {
+    if (vote.vote === null) {
       if (answerOverlay.isOpen) {
         answerOverlay.close();
       }
       return;
     }
 
-    setChoice(vote);
+    setChoice(vote.vote);
     if (!answerOverlay.isOpen) {
       answerOverlay.open();
     }
     
-  }, [vote]);
+  }, [vote.vote]);
 
 
 
@@ -142,7 +140,7 @@ const QuizPage: React.FC = () => {
 
 
   
-  const { topic, question, type, url, options } = quiz.questions[playerQuestionIndex];
+  const { topic, question, type, url, options } = quiz.questions[app.questionIndex];
 
   return (
     <Page title={t('common:COMMON:QUIZ')} className='quiz-page'>
@@ -152,14 +150,14 @@ const QuizPage: React.FC = () => {
       {quiz.isStarted && (
         <QuestionForm
           remainingTime={(timer.isRunning || timer.isDone) ? timer.time : undefined}
-          index={playerQuestionIndex}
+          index={app.questionIndex}
           topic={topic}
           question={question}
-          image={type === QuestionType.Image ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
-          video={type === QuestionType.Video ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
+          image={type === QuestionType.Image ? { url: url!, desc: `Question ${app.questionIndex + 1}` } : undefined}
+          video={type === QuestionType.Video ? { url: url!, desc: `Question ${app.questionIndex + 1}` } : undefined}
           ratio={AspectRatio.SixteenByNine}
           options={options}
-          disabled={choice === '' || vote !== null}
+          disabled={choice === '' || vote.vote !== null}
           choice={choice}
           setChoice={setChoice}
         />

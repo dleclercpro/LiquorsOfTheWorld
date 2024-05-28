@@ -22,18 +22,17 @@ const AnswerOverlay: React.FC = () => {
 
   const overlay = useOverlay(OverlayName.Answer);
 
-  const playerQuestionIndex = app.playerQuestionIndex;
-  const nextPlayerQuestionIndex = playerQuestionIndex + 1;
+  const appQuestionIndex = app.questionIndex;
+  const nextAppQuestionIndex = appQuestionIndex + 1;
 
-  const question = useQuestion(playerQuestionIndex);
+  const question = useQuestion(appQuestionIndex);
 
   // Wait until quiz data has been fetched
-  if (quiz.id === null || !quiz.questions || !quiz.status) {
+  if (quiz.id === null || !quiz.questions || !quiz.status || !quiz.status.voteCounts) {
     return null;
   }
 
-  const { votesCount } = quiz.status;
-  const voteCount = votesCount[playerQuestionIndex];
+  const voteCount = quiz.status.voteCounts[appQuestionIndex];
 
   const Icon = question.answer.isCorrect ? RightIcon : WrongIcon;
   const iconText = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_ICON_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_ICON_TEXT');
@@ -78,12 +77,12 @@ const AnswerOverlay: React.FC = () => {
 
                   {!quiz.isOver && (user.isAdmin && quiz.isSupervised) && (
                     <button className='answer-overlay-button' onClick={question.next.startAndGoTo}>
-                      {t('common:OVERLAYS.ANSWER.START_NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${quiz.questions.length})`}
+                      {t('common:OVERLAYS.ANSWER.START_NEXT_QUESTION')} {`(${nextAppQuestionIndex + 1}/${quiz.questions.length})`}
                     </button>
                   )}
                   {!quiz.isOver && !(user.isAdmin && quiz.isSupervised) && !question.next.mustWaitFor && (
                     <button className='answer-overlay-button' onClick={question.next.goTo}>
-                      {t('common:OVERLAYS.ANSWER.NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${quiz.questions.length})`}
+                      {t('common:OVERLAYS.ANSWER.NEXT_QUESTION')} {`(${nextAppQuestionIndex + 1}/${quiz.questions.length})`}
                     </button>
                   )}
                   {quiz.isOver && (

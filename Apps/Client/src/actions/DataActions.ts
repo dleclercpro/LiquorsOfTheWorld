@@ -93,10 +93,10 @@ export const fetchQuizData = createServerAction<FetchQuizDataActionArgs, number>
     // the user hasn't answered yet, unless the player has answered all the
     // questions already
     const questionIndex = status.questionIndex;
-    const playerQuestionIndex = votes.length;
+    const appQuestionIndex = votes.length;
     
-    if (playerQuestionIndex < questionIndex) {
-      return playerQuestionIndex;
+    if (appQuestionIndex < questionIndex) {
+      return appQuestionIndex;
     }
     return questionIndex;
   },

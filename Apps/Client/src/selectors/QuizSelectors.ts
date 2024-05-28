@@ -79,7 +79,7 @@ export const haveAllPlayersAnswered = (state: RootState, questionIndex: number) 
     return false;
   }
 
-  const { votesCount } = status;
+  const { voteCounts } = status;
 
-  return votesCount[questionIndex] === players.length;
+  return voteCounts[questionIndex] === players.length;
 }

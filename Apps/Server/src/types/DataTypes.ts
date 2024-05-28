@@ -54,7 +54,7 @@ export type StatusData = {
   isOver: boolean,
   isSupervised: boolean,
   questionIndex: number,
-  votesCount: number[],
+  voteCounts: number[],
   timer: TimerData,
 };
 
