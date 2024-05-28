@@ -20,6 +20,14 @@ class TimeDuration implements Comparable {
         this.unit = unit;
     }
 
+    public serialize() {
+        return this.toMs().getAmount();
+    }
+
+    public static deserialize(str: string) {
+        return new TimeDuration(parseInt(str, 10), TimeUnit.Millisecond);
+    }
+
     public isZero() {
         return this.amount === 0;
     }

@@ -7,10 +7,13 @@ import { fetchStatus, fetchQuizData, fetchQuestions } from '../actions/DataActio
 import { closeAnswerOverlay, closeLoadingOverlay, openAnswerOverlay, openLoadingOverlay } from '../reducers/OverlaysReducer';
 import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
-import { AspectRatio, Language, QuestionType } from '../constants';
+import { AspectRatio, Language, NO_TIME, QuestionType } from '../constants';
 import { logout } from '../actions/AuthActions';
 import Page from './Page';
 import { selectVote } from '../selectors/QuizSelectors';
+import useCountdownTimer from '../hooks/timer';
+import TimeDuration from '../models/TimeDuration';
+import { TimeUnit } from '../types/TimeTypes';
 
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();
@@ -35,6 +38,23 @@ const QuizPage: React.FC = () => {
 
 
 
+  // Handle question timer
+  const serverTimer = status?.timer;
+
+  const duration = serverTimer?.duration ? new TimeDuration(serverTimer.duration.amount, serverTimer.duration.unit) : NO_TIME;
+  const startedAt = serverTimer?.startedAt ? new Date(serverTimer.startedAt) : new Date();
+
+  const alreadySpentTime = new TimeDuration(new Date().getTime() - startedAt.getTime(), TimeUnit.Millisecond);
+  const remainingTime = duration.subtract(alreadySpentTime);
+
+  const timer = useCountdownTimer({
+    interval: new TimeDuration(1, TimeUnit.Second),
+    duration: remainingTime,
+    autoStart: false,
+  });
+
+
+
   // Fetch initial data
   useEffect(() => {
     if (quizId === null || quizName === null) {
@@ -44,6 +64,8 @@ const QuizPage: React.FC = () => {
     dispatch(fetchQuizData({ quizId, quizName, lang }));
   }, []);
 
+
+
   // Refresh quiz data when changing language
   useEffect(() => {
     if (quizId === null || quizName === null) {
@@ -52,6 +74,8 @@ const QuizPage: React.FC = () => {
 
     dispatch(fetchQuestions({ lang, quizName }));
   }, [lang]);
+
+
 
   // Regularly fetch current quiz status from server
   useEffect(() => {
@@ -71,6 +95,8 @@ const QuizPage: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+
+
   // Set choice if user already voted
   useEffect(() => {
     if (vote === null) {
@@ -83,6 +109,8 @@ const QuizPage: React.FC = () => {
     
   }, [vote]);
 
+
+
   // Show loading screen in case quiz has not yet been started
   useEffect(() => {
     if (!isStarted && !isAdmin) {
@@ -92,6 +120,15 @@ const QuizPage: React.FC = () => {
     }
 
   }, [isStarted, isAdmin]);
+
+
+
+  // Start timer if enabled
+  useEffect(() => {
+    if (serverTimer && serverTimer.isEnabled && !timer.isRunning) {
+      timer.start();
+    }
+  }, [serverTimer?.isEnabled]);
 
 
 
@@ -116,6 +153,7 @@ const QuizPage: React.FC = () => {
           video={type === QuestionType.Video ? { url: url!, desc: `Question ${playerQuestionIndex + 1}` } : undefined}
           ratio={AspectRatio.SixteenByNine}
           options={options}
+          remainingTime={timer.time}
           disabled={choice === '' || vote !== null}
           choice={choice}
           setChoice={setChoice}

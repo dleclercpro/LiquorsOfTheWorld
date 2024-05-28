@@ -1,6 +1,6 @@
+import { NO_TIME } from '../constants';
 import { Comparable } from '../types';
 import { TimeUnit } from '../types/TimeTypes';
-import { round } from '../utils/math';
 
 class TimeDurationComparator {
     public static compare(a: TimeDuration, b: TimeDuration) {
@@ -19,6 +19,14 @@ class TimeDuration implements Comparable {
     public constructor(amount: number, unit: TimeUnit) {
         this.amount = amount;
         this.unit = unit;
+    }
+
+    public serialize() {
+        return this.toMs().getAmount();
+    }
+
+    public static deserialize(str: string) {
+        return new TimeDuration(parseInt(str, 10), TimeUnit.Millisecond);
     }
 
     public isZero() {
@@ -65,37 +73,73 @@ class TimeDuration implements Comparable {
         return this.greaterThan(other) || this.equals(other);
     }
 
-    public format() {
-        const duration = this.toMs();
+    public format(resolutionUnit: TimeUnit = TimeUnit.Second) {
+        let remaining = this.add(NO_TIME);
 
-        let amount = duration.getAmount();
-        let unit = TimeUnit.Millisecond;
-    
-        // ms -> s
-        if (amount >= 1_000) {
-            amount /= 1_000;
-            unit = TimeUnit.Second;
-    
-            // s -> m
-            if (amount >= 60) {
-                amount /= 60;
-                unit = TimeUnit.Minute;
-    
-                // m -> h
-                if (amount >= 60) {
-                    amount /= 60;
-                    unit = TimeUnit.Hour;
-    
-                    // h -> d
-                    if (amount >= 24) {
-                        amount /= 24;
-                        unit = TimeUnit.Day;
-                    }
-                }
-            }
+        let d = 0;
+        let h = 0;
+        let m = 0;
+        let s = 0;
+        let ms = 0;
+
+        const days = remaining.to(TimeUnit.Day).getAmount();
+        if (days >= 1) {
+            d = Math.floor(days);
+            remaining = remaining.subtract(new TimeDuration(d, TimeUnit.Day));
         }
-    
-        return `${round(amount, 1)}${unit}`;
+
+        const hours = remaining.to(TimeUnit.Hour).getAmount();
+        if (hours >= 1) {
+            h = Math.floor(hours);
+            remaining = remaining.subtract(new TimeDuration(h, TimeUnit.Hour));
+        }
+
+        const minutes = remaining.to(TimeUnit.Minute).getAmount();
+        if (minutes >= 1) {
+            m = Math.floor(minutes);
+            remaining = remaining.subtract(new TimeDuration(m, TimeUnit.Minute));
+        }
+
+        const seconds = remaining.to(TimeUnit.Second).getAmount();
+        if (seconds >= 1) {
+            s = Math.floor(seconds);
+            remaining = remaining.subtract(new TimeDuration(s, TimeUnit.Second));
+        }
+
+        const milliseconds = remaining.to(TimeUnit.Millisecond).getAmount();
+        if (milliseconds >= 1) {
+            ms = Math.floor(milliseconds);
+            remaining = remaining.subtract(new TimeDuration(ms, TimeUnit.Millisecond));
+        }
+
+        // Return up to the given time unit
+        let result = '';
+        if (d > 0) {
+            result = result !== '' ? result + ` ${d}${TimeUnit.Day}` : `${d}${TimeUnit.Day}`;
+        }
+        if (resolutionUnit === TimeUnit.Day) {
+            return result;
+        }
+        if (h > 0) {
+            result = result !== '' ? result + ` ${h}${TimeUnit.Hour}` : `${h}${TimeUnit.Hour}`;
+        }
+        if (resolutionUnit === TimeUnit.Hour) {
+            return result;
+        }
+        if (m > 0) {
+            result = result !== '' ? result + ` ${m}${TimeUnit.Minute}` : `${m}${TimeUnit.Minute}`;
+        }
+        if (resolutionUnit === TimeUnit.Minute) {
+            return result;
+        }
+        if (s > 0) {
+            result = result !== '' ? result + ` ${s}${TimeUnit.Second}` : `${s}${TimeUnit.Second}`;
+        }
+        if (resolutionUnit === TimeUnit.Second) {
+            return result;
+        }
+        result = result !== '' ? result + ` ${ms}${TimeUnit.Millisecond}` : `${ms}${TimeUnit.Millisecond}`;
+        return result;
     }
 
     public to(unit: TimeUnit) {

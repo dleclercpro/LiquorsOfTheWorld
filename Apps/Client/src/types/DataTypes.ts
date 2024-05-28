@@ -1,5 +1,7 @@
 import { Auth } from '.';
 import { QuizName } from '../constants';
+import TimeDuration from '../models/TimeDuration';
+import { TimeUnit } from './TimeTypes';
 
 export type FetchedData<Data> = {
   data: Data | null,
@@ -34,14 +36,23 @@ export type VotesData = {
   votes: number[],
 };
 
+export type TimerData = {
+  isEnabled: boolean,
+  startedAt?: string,
+  duration?: {
+    amount: number,
+    unit: TimeUnit,
+  },
+};
+
 export type StatusData = {
   questionIndex: number,
   isStarted: boolean,
   isOver: boolean,
   isSupervised: boolean,
-  isTimed: boolean,
   players: string[],
   votesCount: number[],
+  timer: TimerData,
 };
 
 export type ScoreData = Record<string, number>;

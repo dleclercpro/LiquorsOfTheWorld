@@ -27,7 +27,10 @@
       color: $color-white;
       background-color: $color-black;
       text-align: right;
-      @include font-caption;
+
+      &.urgent {
+        animation: breathe 1s ease-in-out infinite;
+      }
 
       > .question-form-timer-value {
         margin-left: 5px;
@@ -41,6 +44,11 @@
       border-radius: 4px;
       font-weight: bold;
       text-align: right;
+
+      > .question-form-index-value {
+        margin-left: 5px;
+        @include font-sub-sub-title;
+      }
     }
 
     > .question-form-topic {
@@ -52,7 +60,11 @@
       color: $color-white;
       background-color: $color-black;
       text-align: right;
-      @include font-caption;
+
+      > .question-form-topic-value {
+        margin-left: 5px;
+        @include font-sub-sub-title;
+      }
     }
   }
 
@@ -161,5 +173,14 @@
       background-color: $color-grey;
       cursor: not-allowed;
     }
+  }
+}
+
+@keyframes breathe {
+  0%, 100% {
+    background-color: $color-black;
+  }
+  50% {
+    background-color: red;
   }
 }

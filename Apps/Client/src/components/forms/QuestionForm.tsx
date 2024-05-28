@@ -4,13 +4,12 @@ import { openAnswerOverlay } from '../../reducers/OverlaysReducer';
 import './QuestionForm.scss';
 import { vote } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
-import { SERVER_ROOT } from '../../config';
+import { QUIZ_TIMER_URGENT_TIME, SERVER_ROOT } from '../../config';
 import { AspectRatio } from '../../constants';
 import PlaceholderImage from '../PlaceholderImage';
 import PlaceholderVideo from '../PlaceholderVideo';
 import TimeDuration from '../../models/TimeDuration';
 import { TimeUnit } from '../../types/TimeTypes';
-import useCountdownTimer from '../../hooks/timer';
 
 type Image = {
   url: string,
@@ -30,13 +29,14 @@ type Props = {
   video?: Video,
   ratio?: AspectRatio,
   options: string[],
+  remainingTime?: TimeDuration,
   disabled: boolean,
   choice: string,
   setChoice: (choice: string) => void,
 }
 
 const QuestionForm: React.FC<Props> = (props) => {
-  const { index, topic, question, image, video, ratio, options, disabled, choice, setChoice } = props;
+  const { index, topic, question, image, video, ratio, options, remainingTime, disabled, choice, setChoice } = props;
 
   const { t } = useTranslation();
 
@@ -49,15 +49,6 @@ const QuestionForm: React.FC<Props> = (props) => {
 
   const hasMedia = image || video;
   const ratioClass = ratio ? `ratio-${ratio.replace(':', 'x')}` : 'ratio-1x1';
-
-  const isTimed = quiz.status.data?.isTimed;
-  const timer = useCountdownTimer({ duration: new TimeDuration(1, TimeUnit.Minute) });
-
-
-
-  useEffect(() => {
-    timer.start();
-  }, []);
 
 
   
@@ -98,11 +89,26 @@ const QuestionForm: React.FC<Props> = (props) => {
   return (
     <form className='question-form' onSubmit={handleSubmit}>
       <div className='question-form-meta'>
-        {isTimed && (
-          <p className='question-form-timer'>{t('common:COMMON.TIME_LEFT')}: <span className='question-form-timer-value'>{timer.time.format()}</span></p>
+        {remainingTime && (
+          <p className={`question-form-timer ${remainingTime.smallerThan(QUIZ_TIMER_URGENT_TIME) ? 'urgent' : ''}`}>
+            {t('common:COMMON.TIME_LEFT')}:
+            <span className='question-form-timer-value'>
+              {remainingTime.format(TimeUnit.Second)}
+            </span>
+          </p>
         )}
-        <p className='question-form-index'>{t('common:COMMON.QUESTION')}: {index + 1}/{questions.length}</p>
-        <p className='question-form-topic'>{t('common:COMMON.TOPIC')}: {topic}</p>
+        <p className='question-form-index'>
+          {t('common:COMMON.QUESTION')}:
+          <span className='question-form-index-value'>
+            {index + 1}/{questions.length}
+          </span>
+        </p>
+        <p className='question-form-topic'>
+          {t('common:COMMON.TOPIC')}:
+          <span className='question-form-topic-value'>
+            {topic}
+          </span>
+        </p>
       </div>
 
       <h2 className='question-form-title'>{question}</h2>
@@ -141,7 +147,7 @@ const QuestionForm: React.FC<Props> = (props) => {
       ))}
 
       <button type='submit' disabled={disabled}>
-        {t(choice === '' ? 'FORMS.QUESTION.PICK_ANSWER' : 'FORMS.QUESTION.SUBMIT_ANSWER')}{isTimed ? ` (${timer.time.format()})` : ''}
+        {t(choice === '' ? 'FORMS.QUESTION.PICK_ANSWER' : 'FORMS.QUESTION.SUBMIT_ANSWER')}{remainingTime ? ` (${remainingTime.format()})` : ''}
       </button>
     </form>
   );

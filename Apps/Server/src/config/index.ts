@@ -59,3 +59,6 @@ export const USERS = process.env.USERS!
     .split(',')
     .map(str => str.split(':'))
     .map(([username, password]) => ({ username, password }));
+
+// Quiz
+export const TIMER_DURATION = new TimeDuration(60, TimeUnit.Minute);

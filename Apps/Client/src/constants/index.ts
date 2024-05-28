@@ -1,3 +1,6 @@
+import TimeDuration from "../models/TimeDuration";
+import { TimeUnit } from "../types/TimeTypes";
+
 export enum Environment {
   Production = 'production',
   Development = 'development',
@@ -25,3 +28,5 @@ export enum AspectRatio {
   FourByThree = '4:3',
   SixteenByNine = '16:9',
 }
+
+export const NO_TIME = new TimeDuration(0, TimeUnit.Millisecond);
