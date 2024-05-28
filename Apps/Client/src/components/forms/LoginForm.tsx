@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from '../../hooks/useRedux';
+import { useDispatch, useSelector } from '../../hooks/ReduxHooks';
 import './LoginForm.scss';
 import { login } from '../../actions/AuthActions';
 import { useTranslation } from 'react-i18next';

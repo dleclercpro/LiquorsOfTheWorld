@@ -1,5 +1,5 @@
 import { OverlayName, closeOverlay, openOverlay } from '../reducers/OverlaysReducer';
-import { useDispatch, useSelector } from './useRedux';
+import { useDispatch, useSelector } from './ReduxHooks';
 
 const useOverlay = (overlayName: OverlayName) => {
   const overlays = useSelector(({ overlays }) => overlays);

@@ -1,6 +1,6 @@
 import React from 'react';
 import './AdminPage.scss';
-import { useDispatch } from '../hooks/useRedux';
+import { useDispatch } from '../hooks/ReduxHooks';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
 import { Navigate, useNavigate } from 'react-router-dom';

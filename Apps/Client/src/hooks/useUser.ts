@@ -1,5 +1,5 @@
 import { logout as doLogout } from '../actions/AuthActions';
-import { useDispatch, useSelector } from './useRedux';
+import { useDispatch, useSelector } from './ReduxHooks';
 
 const useUser = () => {
   const user = useSelector(({ user }) => user);

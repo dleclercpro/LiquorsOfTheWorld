@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Nav.scss';
-import { useDispatch } from '../hooks/useRedux';
+import { useDispatch } from '../hooks/ReduxHooks';
 import { Link, useLocation } from 'react-router-dom';
 import OpenIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
