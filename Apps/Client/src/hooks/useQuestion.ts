@@ -18,25 +18,31 @@ const useQuestion = (index: number) => {
   const answer = useSelector((state) => selectAnswer(state, index));
   const correctAnswer = useSelector((state) => selectCorrectAnswer(state, index));
 
-  const isNextQuestionReady = quiz.questionIndex ? index < quiz.questionIndex : false;
+  const nextQuestionIndex = index + 1;
+
+  const isNextQuestionReady = quiz.questionIndex ? nextQuestionIndex < quiz.questionIndex : false;
   const mustWaitForNextQuestion = !user.isAdmin && !isNextQuestionReady;
 
 
 
   const goToNextQuestion = () => {
+    console.log(`goToNextQuestion: ${nextQuestionIndex}`);
+    
     answerOverlay.close();
 
-    dispatch(setQuestionIndex(index + 1));
+    dispatch(setQuestionIndex(nextQuestionIndex));
   }
 
 
 
-  const startAndGoToNextQuestion = () => {
+  const startAndGoToNextQuestion = async () => {
+    console.log(`startAndGoToNextQuestion: ${nextQuestionIndex}`);
+    
     answerOverlay.close();
 
-    dispatch(startQuestion({
+    await dispatch(startQuestion({
       quizId: quiz.id as string,
-      questionIndex: index + 1,
+      questionIndex: nextQuestionIndex,
     }));
   }
 

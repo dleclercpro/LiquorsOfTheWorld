@@ -10,20 +10,23 @@ interface TimerOptions {
 }
 
 const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.Second), autoStart = false }: TimerOptions) => {
-  const [time, setTime] = useState(duration);
+  const [time, setTime] = useState(NO_TIME);
+  const [totalTime, setTotalTime] = useState(duration);
   const [isRunning, setIsRunning] = useState(autoStart);
   const [isDone, setIsDone] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  if (time.smallerThan(NO_TIME)) {
+  if (duration.smallerThan(NO_TIME)) {
     throw new Error('Cannot start a timer with a negative duration!');
   }
 
   const start = useCallback(() => {
     if (!isRunning && !isDone) {
+      setTime(totalTime); // Set time on timer for this run
+
       setIsRunning(true);
     }
-  }, [isRunning]);
+  }, [isRunning, isDone]);
 
   const stop = useCallback(() => {
     if (isRunning) {
@@ -37,19 +40,18 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
   }, [isRunning]);
 
   const restart = useCallback(() => {
-    if (isRunning) {
-      stop();
-    }
-    start();
-  }, [isRunning]);
+    isRunning ? stop() : start();
+  }, [isRunning, stop, start]);
 
 
-  // Update timer's duration on each change
+
+  // Update original time in case the timer needs to be restarted
   useEffect(() => {
-    if (!duration.equals(time)) {
-      setTime(duration);
+    if (!totalTime.equals(duration)) {
+      setTotalTime(duration);
     }
   }, [duration]);
+
 
   
   // Handle timer start

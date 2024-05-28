@@ -66,6 +66,8 @@ const QuizPage: React.FC = () => {
       return;
     }
 
+    console.log(`Refreshing quiz status...`);
+
     quiz.refreshStatus();
 
   }, [playerQuestionIndex]);
@@ -88,12 +90,16 @@ const QuizPage: React.FC = () => {
   // Set choice if user already voted
   useEffect(() => {
     if (vote === null) {
-      answerOverlay.close();
+      if (answerOverlay.isOpen) {
+        answerOverlay.close();
+      }
       return;
     }
 
     setChoice(vote);
-    answerOverlay.open();
+    if (!answerOverlay.isOpen) {
+      answerOverlay.open();
+    }
     
   }, [vote]);
 
@@ -121,8 +127,9 @@ const QuizPage: React.FC = () => {
 
 
   // Show answer once timer has expired
-  useEffect(() => {    
+  useEffect(() => {
     if (timer.isDone) {
+      console.log('timer.isDone');
       answerOverlay.open();
     }
 

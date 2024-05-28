@@ -214,8 +214,9 @@ class Quiz {
 
     public async incrementQuestionIndex() {
         const questionIndex = this.getQuestionIndex();
+        const questionCount = await QuizManager.count(this.name);
 
-        if (questionIndex + 1 > await QuizManager.count(this.name)) {
+        if (questionIndex + 1 > questionCount) {
             throw new InvalidQuestionIndexError();
         }
 

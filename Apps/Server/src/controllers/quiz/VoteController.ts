@@ -24,7 +24,8 @@ const validateParams = async (params: ParamsDictionary) => {
     }
 
     const questionIndex = Number(_questionIndex);
-    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < await QuizManager.count(quiz.getName());
+    const questionCount = await QuizManager.count(quiz.getName());
+    const isQuestionIndexValid = (0 <= questionIndex) && (questionIndex + 1 <= questionCount);
     if (!isQuestionIndexValid) {
         throw new InvalidQuestionIndexError();
     }

@@ -78,6 +78,7 @@ const QuestionForm: React.FC<Props> = (props) => {
     answerOverlay.open();
   }
 
+  // Reset choice when changing question
   useEffect(() => {
     setChoice('');
 

@@ -50,10 +50,13 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
         if (!quiz.isSupervised()) {
             throw new UserCannotStartUnsupervisedQuestionError();
         }
+        const questionCount = await QuizManager.count(quiz.getName());
 
         // Admins can only start next question index
         const currentQuestionIndex = await quiz.getQuestionIndex();
-        if (questionIndex !== currentQuestionIndex + 1) {
+        const nextQuestionIndex = currentQuestionIndex + 1;
+        if (questionIndex !== nextQuestionIndex) {
+            logger.error(`Trying to start question #${questionIndex} while the next one is #${nextQuestionIndex}!`);
             throw new InvalidQuestionIndexError();
         }
 
@@ -71,7 +74,7 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
 
         // We can finally move on to next question
         await quiz.incrementQuestionIndex();
-        logger.info(`Question ${questionIndex + 1}/${await QuizManager.count(quiz.getName())} of quiz '${quiz.getId()}' has been started by admin '${username}'.`);
+        logger.info(`Question ${questionIndex + 1}/${questionCount} of quiz '${quiz.getId()}' has been started by admin '${username}'.`);
 
         return res.json(successResponse());
 

@@ -31,6 +31,8 @@ const LoginForm: React.FC<Props> = (props) => {
   
   const auth = useSelector(selectUser);
 
+
+  
   // Redirect to current quiz question on successful login
   useEffect(() => {
     if (auth.status === 'succeeded') {
@@ -44,6 +46,8 @@ const LoginForm: React.FC<Props> = (props) => {
       setError(auth.error);
     }
   }, [auth.status, auth.error]);
+
+
 
   // Send login data to server
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

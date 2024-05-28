@@ -149,7 +149,7 @@ export const quizSlice = createSlice({
 
         state.status.data.isStarted = true;
       })
-      .addCase(startQuestion.fulfilled, (state, action) => {
+      .addCase(startQuestion.fulfilled, (state, action: PayloadAction<number>) => {
         if (!state.status.data) return;
 
         state.status.data.questionIndex = action.payload;
