@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from '../../hooks/redux';
+import { useDispatch, useSelector } from '../../hooks/useRedux';
 import './LoginForm.scss';
 import { login } from '../../actions/AuthActions';
 import { useTranslation } from 'react-i18next';
 import { selectAuthentication } from '../../selectors/UserSelectors';
+import useQuiz from '../../hooks/useQuiz';
 
 type Props = {
   quizId: string | null,
@@ -16,7 +17,7 @@ const LoginForm: React.FC<Props> = (props) => {
 
   const { t } = useTranslation();
 
-  const quiz = useSelector((state) => state.quiz);
+  const quiz = useQuiz();
 
   const [quizId, setQuizId] = useState(props.quizId ?? '');
   const [disableQuizId] = useState(!!props.quizId);

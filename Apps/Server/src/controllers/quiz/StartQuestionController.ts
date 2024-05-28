@@ -63,11 +63,13 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
         logger.trace(`Players: ${players}`);
         logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);
 
-        // If not: cannot increment quiz's current question index
-        // if (playersWhoVoted.length !== players.length) {
-        //     throw new PlayersNotReadyError();
-        // }
+        // Restart timer for new question
+        if (await APP_DB.isTimed(quizId)) {
+            await APP_DB.restartTimer(quizId);
+            logger.debug(`Restarted timer.`);
+        }
 
+        // We can finally move on to next question
         await APP_DB.incrementQuestionIndex(quizId);
         logger.info(`Question ${questionIndex + 1}/${QuizManager.count(quiz.name)} of quiz '${quizId}' has been started by admin '${username}'.`);
 

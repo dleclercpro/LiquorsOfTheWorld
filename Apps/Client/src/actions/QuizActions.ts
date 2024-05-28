@@ -8,11 +8,11 @@ import { VotesData } from '../types/DataTypes';
 
 
 
-type StartQuizActionArgs = { quizId: string, isSupervised: boolean };
+type StartQuizActionArgs = { quizId: string, isSupervised: boolean, isTimed: boolean };
 export const startQuiz = createServerAction<StartQuizActionArgs, void>(
   'quiz/start',
-  async ({ quizId, isSupervised }: StartQuizActionArgs) => {
-    await new CallStartQuiz(quizId).execute({ isSupervised });
+  async ({ quizId, isSupervised, isTimed }: StartQuizActionArgs) => {
+    await new CallStartQuiz(quizId).execute({ isSupervised, isTimed });
   },
 );
 

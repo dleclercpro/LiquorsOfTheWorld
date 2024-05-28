@@ -1,6 +1,6 @@
 import React from 'react';
 import './AdminPage.scss';
-import { useDispatch, useSelector } from '../hooks/redux';
+import { useDispatch, useSelector } from '../hooks/useRedux';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
 import { deleteDatabase } from '../actions/AppActions';
@@ -11,6 +11,7 @@ import Fade from '@mui/material/Fade';
 import { COOKIE_NAME } from '../config';
 import { useTranslation } from 'react-i18next';
 import { logout } from '../actions/AuthActions';
+import useQuiz from '../hooks/useQuiz';
 
 interface SnackbarState extends SnackbarOrigin {
   open: boolean,
@@ -31,7 +32,7 @@ const AdminPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const quiz = useSelector((state) => state.quiz);
+  const quiz = useQuiz();
   // const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const isAdmin = useSelector(({ user }) => user.isAdmin);
   const hasCookie = Boolean(getCookie(COOKIE_NAME));

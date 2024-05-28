@@ -30,8 +30,8 @@ export const CLIENT_ROOT = `http://${CLIENT_HOST}:${CLIENT_PORT}`;
 // Redis
 export const REDIS_ENABLE = [true, 'true'].includes(process.env.REDIS_ENABLE!);
 
-export const REDIS_RETRY_CONN_TIMEOUT = new TimeDuration(5, TimeUnit.Seconds);
-export const REDIS_RETRY_CONN_MAX_BACKOFF = new TimeDuration(30, TimeUnit.Seconds);
+export const REDIS_RETRY_CONN_TIMEOUT = new TimeDuration(5, TimeUnit.Second);
+export const REDIS_RETRY_CONN_MAX_BACKOFF = new TimeDuration(30, TimeUnit.Second);
 export const REDIS_RETRY_CONN_MAX_ATTEMPTS = 5;
 
 export const REDIS_DATABASE = parseNumberText(process.env.REDIS_DATABASE);
@@ -59,3 +59,6 @@ export const USERS = process.env.USERS!
     .split(',')
     .map(str => str.split(':'))
     .map(([username, password]) => ({ username, password }));
+
+// Quiz
+export const TIMER_DURATION = new TimeDuration(1, TimeUnit.Minute);

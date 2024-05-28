@@ -1,6 +1,6 @@
 [
   {
-    "theme": "Video",
+    "topic": "Video",
     "question": "Was ist in diesem Video los?",
     "options": ["Ein Business-Meeting", "Eine Weinprobe", "Eine Software-Anleitung"],
     "type": "video",
@@ -8,7 +8,7 @@
     "answer": 0
   },
   {
-    "theme": "Bild",
+    "topic": "Bild",
     "question": "Wer ist auf diesem Bild zu sehen?",
     "options": ["A", "B", "C"],
     "type": "image",
@@ -16,7 +16,7 @@
     "answer": 2
   },
   {
-    "theme": "Test",
+    "topic": "Test",
     "question": "Was ist die Hauptzutat im traditionellen russischen Wodka?",
     "options": ["Kartoffeln", "Trauben", "Weizen"],
     "type": "text",

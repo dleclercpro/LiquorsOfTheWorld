@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { useSelector } from '../hooks/redux';
 import { ScoreData } from '../types/DataTypes';
 import { toSortedArr } from '../utils/array';
 import './Scoreboard.scss';
+import useQuiz from '../hooks/useQuiz';
 
 interface Props {
   scores: ScoreData,
@@ -13,16 +13,11 @@ const Scoreboard: React.FC<Props> = (props) => {
 
   const { t } = useTranslation();
 
-  const quiz = useSelector((state) => state.quiz);
-  const quizId = quiz.id;
-  const questions = quiz.questions.data;
-  const status = quiz.status.data;
+  const quiz = useQuiz();
 
-  if (questions === null || status === null) {
+  if (quiz.questions === null || quiz.status === null) {
     return null;
   }
-
-  const { isOver, questionIndex } = status;
 
   const sortedScores = toSortedArr(scores, 'DESC')
     .map(({ key, value }) => ({ username: key, score: value }));
@@ -33,11 +28,11 @@ const Scoreboard: React.FC<Props> = (props) => {
       <p className='scoreboard-sub-title'>
         {t('common:COMMON.QUIZ')}:
         <strong className='scoreboard-quiz-label'>
-          {quizId}
+          {quiz.id}
         </strong>
       </p>
       <p className='scoreboard-text'>
-        {t(isOver ? 'PAGES.SCOREBOARD.STATUS_OVER' : 'PAGES.SCOREBOARD.STATUS_NOT_OVER', { questionsCount: questions.length, questionsAnsweredCount: questionIndex })}
+        {t(quiz.isOver ? 'PAGES.SCOREBOARD.STATUS_OVER' : 'PAGES.SCOREBOARD.STATUS_NOT_OVER', { questionsCount: quiz.questions.length, questionsAnsweredCount: quiz.questionIndex })}
       </p>
       <table className='scoreboard-table'>
         <thead>
@@ -53,7 +48,7 @@ const Scoreboard: React.FC<Props> = (props) => {
               <tr key={`scoreboard-table-row-${i}`}>
                   <td>{i + 1}</td>
                   <td>{username}</td>
-                  <td>{score}/{questionIndex}</td>
+                  <td>{score}/{quiz.questionIndex}</td>
               </tr>
             );
           })}

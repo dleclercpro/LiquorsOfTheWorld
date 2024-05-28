@@ -1,15 +1,15 @@
 import { Trans, useTranslation } from 'react-i18next';
-import { useSelector } from '../../hooks/redux';
+import { useSelector } from '../../hooks/useRedux';
 import './LoadingOverlay.scss';
-import { selectPlayers } from '../../selectors/QuizSelectors';
+import useQuiz from '../../hooks/useQuiz';
 
 const LoadingOverlay: React.FC = () => {
   const { t } = useTranslation();
 
+  const quiz = useQuiz();
+
   const { username } = useSelector(({ user }) => user);
   const { open } = useSelector(({ overlays }) => overlays.loading);
-
-  const players = useSelector(selectPlayers);
 
   if (username === null) {
     return null;
@@ -28,7 +28,7 @@ const LoadingOverlay: React.FC = () => {
           
         </p>
         <ul className='loading-overlay-players-box'>
-          {players.map((player, i) => (
+          {quiz.players.map((player, i) => (
             <li key={i}>
               {player}
             </li>

@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { ADMINS, N_SALT_ROUNDS, REDIS_DATABASE, REDIS_ENABLE, REDIS_OPTIONS, USERS } from '../../config';
+import { ADMINS, N_SALT_ROUNDS, REDIS_DATABASE, REDIS_ENABLE, REDIS_OPTIONS, TIMER_DURATION, USERS } from '../../config';
 import { QUIZ_NAMES, QuizName } from '../../constants';
 import logger from '../../logger';
 import { getLast, getRange, unique } from '../../utils/array';
@@ -15,6 +15,7 @@ import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 import QuizManager from '../QuizManager';
 import InvalidQuizNameError from '../../errors/InvalidQuizNameError';
 import MemoryDatabase from './base/MemoryDatabase';
+import TimeDuration from '../units/TimeDuration';
 
 const SEPARATOR = '|';
 
@@ -178,9 +179,12 @@ class AppDatabase {
             players: [],
             status: {
                 questionIndex: 0,
-                isSupervised: false,
                 isStarted: false,
                 isOver: false,
+                isSupervised: false,
+                timer: {
+                    isEnabled: false,
+                },
             },
         };
 
@@ -189,7 +193,7 @@ class AppDatabase {
         return quiz;
     }
 
-    public async startQuiz(quizId: string, isSupervised: boolean) {
+    public async startQuiz(quizId: string, isSupervised: boolean, isTimed: boolean) {
         const quiz = await this.getQuiz(quizId);
 
         if (!quiz) {
@@ -202,6 +206,13 @@ class AppDatabase {
                 ...quiz.status,
                 isStarted: true,
                 isSupervised,
+                timer: {
+                    isEnabled: isTimed,
+                    ...(isTimed ? {
+                        duration: TIMER_DURATION,
+                        startedAt: new Date(),
+                    } : {}),
+                },
             },
         });
     }
@@ -434,6 +445,27 @@ class AppDatabase {
         });
     }
 
+    public async isTimed(quizId: string) {
+        const quiz = await this.getQuiz(quizId) as Quiz;
+
+        return quiz.status.timer.isEnabled;
+    }
+
+    public async restartTimer(quizId: string) {
+        const quiz = await this.getQuiz(quizId) as Quiz;
+
+        await this.setQuiz(quizId, {
+            ...quiz,
+            status: {
+                ...quiz.status,
+                timer: {
+                    ...quiz.status.timer,
+                    startedAt: new Date(),
+                },
+            },
+        });
+    }
+
     public async generateQuizId() {
         let quizId = '';
 
@@ -454,11 +486,37 @@ class AppDatabase {
     }
 
     protected serializeQuiz(quiz: Quiz) {
-        return JSON.stringify(quiz);
+        return JSON.stringify({
+            ...quiz,
+            status: {
+                ...quiz.status,
+                timer: {
+                    ...quiz.status.timer,
+                    ...(quiz.status.timer.isEnabled ? {
+                        duration: quiz.status.timer.duration!.serialize(),
+                        startedAt: quiz.status.timer.startedAt!.toUTCString(),
+                    } : {}),
+                },
+            },
+        });
     }
 
-    protected deserializeQuiz(quiz: string) {
-        return JSON.parse(quiz) as Quiz;
+    protected deserializeQuiz(str: string) {
+        const quiz = JSON.parse(str);
+
+        return {
+            ...quiz,
+            status: {
+                ...quiz.status,
+                timer: {
+                    ...quiz.status.timer,
+                    ...(quiz.status.timer.isEnabled ? {
+                        duration: TimeDuration.deserialize(quiz.status.timer.duration),
+                        startedAt: new Date(quiz.status.timer.startedAt),
+                    } : {}),
+                },
+            },
+        } as Quiz;
     }
 }
 

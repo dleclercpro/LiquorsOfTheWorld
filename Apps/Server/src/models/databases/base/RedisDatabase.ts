@@ -124,7 +124,7 @@ class RedisDatabase implements IKeyValueDatabase<string> {
 
     private getConnectionBackoff(attempts: number) {
         const maxBackoff = REDIS_RETRY_CONN_MAX_BACKOFF;
-        const exponentialBackoff = new TimeDuration(Math.pow(2, attempts), TimeUnit.Seconds);
+        const exponentialBackoff = new TimeDuration(Math.pow(2, attempts), TimeUnit.Second);
 
         // Backoff exponentially
         if (exponentialBackoff.smallerThan(maxBackoff)) {

@@ -1,5 +1,5 @@
 import './AnswerOverlay.scss';
-import { useDispatch, useSelector } from '../../hooks/redux';
+import { useDispatch, useSelector } from '../../hooks/useRedux';
 import { closeAnswerOverlay } from '../../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../../reducers/AppReducer';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,8 @@ import WrongIcon from '@mui/icons-material/Close';
 import WaitIcon from '@mui/icons-material/Schedule';
 import { startQuestion } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
-import { selectPlayers, selectAnswer, selectCorrectAnswer } from '../../selectors/QuizSelectors';
+import { selectAnswer, selectCorrectAnswer } from '../../selectors/QuizSelectors';
+import useQuiz from '../../hooks/useQuiz';
 
 const AnswerOverlay: React.FC = () => {
   const dispatch = useDispatch();
@@ -17,30 +18,26 @@ const AnswerOverlay: React.FC = () => {
   const { t } = useTranslation();
 
   const app = useSelector(({ app }) => app);
-  const quiz = useSelector(({ quiz }) => quiz);
   const user = useSelector(({ user }) => user);
+
+  const quiz = useQuiz();
 
   const playerQuestionIndex = app.questionIndex;
   const nextPlayerQuestionIndex = playerQuestionIndex + 1;
 
-  const questions = quiz.questions.data;
-  const status = quiz.status.data;
-  const votes = quiz.votes.data;
-
   const isOpen = useSelector(({ overlays }) => overlays.answer.open);
-  const players = useSelector(selectPlayers);
 
   const answer = useSelector((state) => selectAnswer(state, playerQuestionIndex));
   const correctAnswer = useSelector((state) => selectCorrectAnswer(state, playerQuestionIndex));
   const isAnswerCorrect = answer === correctAnswer;
 
   // Wait until quiz data has been fetched
-  if (quiz.id === null || questions === null || status === null || votes === null || players === null) {
+  if (quiz.id === null || quiz.questions === null || quiz.status === null || quiz.votes === null || quiz.players.length === 0) {
     return null;
   }
 
   const { isAdmin } = user;
-  const { questionIndex, isOver, isSupervised, votesCount } = status;
+  const { questionIndex, isOver, isSupervised, votesCount } = quiz.status;
   const voteCount = votesCount[playerQuestionIndex];
   const isNextQuestionReady = playerQuestionIndex < questionIndex;
   const mustWait = !isAdmin && !isNextQuestionReady;
@@ -48,7 +45,7 @@ const AnswerOverlay: React.FC = () => {
   const Icon = isAnswerCorrect ? RightIcon : WrongIcon;
   const iconText = t(isAnswerCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_ICON_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_ICON_TEXT');
 
-  const title = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount, playersCount: players.length });
+  const title = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount, playersCount: quiz.players.length });
   const text = t(isAnswerCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_TEXT');
 
 
@@ -103,12 +100,12 @@ const AnswerOverlay: React.FC = () => {
 
                   {!isOver && (isAdmin && isSupervised) && (
                     <button className='answer-overlay-button' onClick={startAndGoToNextQuestion}>
-                      {t('common:OVERLAYS.ANSWER.START_NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${questions.length})`}
+                      {t('common:OVERLAYS.ANSWER.START_NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${quiz.questions.length})`}
                     </button>
                   )}
                   {!isOver && !(isAdmin && isSupervised) && !mustWait && (
                     <button className='answer-overlay-button' onClick={goToNextQuestion}>
-                      {t('common:OVERLAYS.ANSWER.NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${questions.length})`}
+                      {t('common:OVERLAYS.ANSWER.NEXT_QUESTION')} {`(${nextPlayerQuestionIndex + 1}/${quiz.questions.length})`}
                     </button>
                   )}
                   {isOver && (
