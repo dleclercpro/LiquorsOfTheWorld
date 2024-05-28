@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './QuizPage.scss';
 import QuestionForm from '../components/forms/QuestionForm';
-import { useDispatch, useSelector } from '../hooks/useRedux';
+import { useDispatch, useSelector } from '../hooks/ReduxHooks';
 import { REFRESH_STATUS_INTERVAL } from '../config';
 import { fetchQuizData } from '../actions/DataActions';
 import AdminQuizForm from '../components/forms/AdminQuizForm';

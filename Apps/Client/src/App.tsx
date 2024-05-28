@@ -9,7 +9,7 @@ import AuthRoute from './routes/AuthRoute';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
-import { useDispatch } from './hooks/useRedux';
+import { useDispatch } from './hooks/ReduxHooks';
 import { ping } from './actions/AuthActions';
 import Nav from './components/Nav';
 import ErrorPage from './pages/ErrorPage';

@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from './useRedux';
+import { useDispatch, useSelector } from './ReduxHooks';
 import { selectAnswer, selectCorrectAnswer } from '../selectors/QuizSelectors';
 import useOverlay from './useOverlay';
 import { OverlayName } from '../reducers/OverlaysReducer';

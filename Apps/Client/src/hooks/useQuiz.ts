@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useDispatch, useSelector } from './useRedux';
+import { useDispatch, useSelector } from './ReduxHooks';
 import { fetchQuestions, fetchStatus } from '../actions/DataActions';
 import { startQuiz as doStartQuiz } from '../actions/QuizActions';
 import { deleteQuiz as doDeleteQuiz } from '../actions/QuizActions';

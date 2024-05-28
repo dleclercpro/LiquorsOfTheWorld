@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useSelector } from './useRedux';
+import { useSelector } from './ReduxHooks';
 
 const useApp = () => {
   const { version, language, questionIndex, styles } = useSelector(({ app }) => app);

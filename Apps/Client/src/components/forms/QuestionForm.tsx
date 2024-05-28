@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from '../../hooks/useRedux';
+import { useDispatch } from '../../hooks/ReduxHooks';
 import './QuestionForm.scss';
 import { vote } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';

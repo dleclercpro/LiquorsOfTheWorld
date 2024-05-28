@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './HomePage.scss';
 import LoginForm from '../components/forms/LoginForm';
-import { useDispatch } from '../hooks/useRedux';
+import { useDispatch } from '../hooks/ReduxHooks';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Page from './Page';

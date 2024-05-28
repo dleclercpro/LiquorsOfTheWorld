@@ -1,4 +1,4 @@
-import { useSelector } from './useRedux';
+import { useSelector } from './ReduxHooks';
 
 const useData = () => {
   const data = useSelector(({ data }) => data);
