@@ -10,6 +10,8 @@ import { startQuestion } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
 import { selectAnswer, selectCorrectAnswer } from '../../selectors/QuizSelectors';
 import useQuiz from '../../hooks/useQuiz';
+import useUser from '../../hooks/useUser';
+import useApp from '../../hooks/useApp';
 
 const AnswerOverlay: React.FC = () => {
   const dispatch = useDispatch();
@@ -17,12 +19,12 @@ const AnswerOverlay: React.FC = () => {
 
   const { t } = useTranslation();
 
-  const app = useSelector(({ app }) => app);
-  const user = useSelector(({ user }) => user);
+  const app = useApp();
+  const user = useUser();
 
   const quiz = useQuiz();
 
-  const playerQuestionIndex = app.questionIndex;
+  const playerQuestionIndex = app.playerQuestionIndex;
   const nextPlayerQuestionIndex = playerQuestionIndex + 1;
 
   const isOpen = useSelector(({ overlays }) => overlays.answer.open);

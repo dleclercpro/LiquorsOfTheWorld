@@ -1,6 +1,6 @@
 import React from 'react';
 import './AdminPage.scss';
-import { useDispatch, useSelector } from '../hooks/useRedux';
+import { useDispatch } from '../hooks/useRedux';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
 import { deleteDatabase } from '../actions/AppActions';
@@ -12,6 +12,7 @@ import { COOKIE_NAME } from '../config';
 import { useTranslation } from 'react-i18next';
 import { logout } from '../actions/AuthActions';
 import useQuiz from '../hooks/useQuiz';
+import useUser from '../hooks/useUser';
 
 interface SnackbarState extends SnackbarOrigin {
   open: boolean,
@@ -33,14 +34,13 @@ const AdminPage: React.FC = () => {
   const { t } = useTranslation();
 
   const quiz = useQuiz();
-  // const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-  const isAdmin = useSelector(({ user }) => user.isAdmin);
+  const user = useUser();
   const hasCookie = Boolean(getCookie(COOKIE_NAME));
   const hasLocalStorage = Boolean(getFromLocalStorage('persist:root'));
 
   let hasNoOptions = true;
 
-  if (isAdmin) {
+  if (user.isAdmin) {
     hasNoOptions = !hasCookie && !hasLocalStorage;
   } else {
     hasNoOptions = !hasCookie;
@@ -108,8 +108,6 @@ const AdminPage: React.FC = () => {
     );
   }
 
-  console.log(`hasCookie: ${hasCookie}, hasLocalStorage: ${hasLocalStorage}, isAdmin: ${isAdmin}`);
-
   return (
     <Page title={t('common:COMMON.ADMIN')} className='admin-page'>
       <div className='admin-page-box'>
@@ -123,12 +121,12 @@ const AdminPage: React.FC = () => {
             {t('common:PAGES.ADMIN.DELETE_COOKIE')}
           </button>
         )}
-        {hasLocalStorage && isAdmin && (
+        {hasLocalStorage && user.isAdmin && (
           <button className='admin-page-button' onClick={handleDeleteLocalStorage}>
             {t('common:PAGES.ADMIN.DELETE_LOCAL_STORAGE')}
           </button>
         )}
-        {isAdmin && (
+        {user.isAdmin && (
           <button className='admin-page-button' onClick={handleDeleteDatabase}>
           {t('common:PAGES.ADMIN.DELETE_DATABASE')}
           </button>

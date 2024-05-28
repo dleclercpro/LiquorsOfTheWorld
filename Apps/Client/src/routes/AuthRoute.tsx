@@ -1,15 +1,15 @@
 import React, { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useSelector } from '../hooks/useRedux';
+import useUser from '../hooks/useUser';
 
 type Props = {
   children: ReactNode,
 }
 
 const AuthRoute: React.FC<Props> = ({ children }) => {
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const user = useUser();
 
-  if (!isAuthenticated) {
+  if (!user.isAuthenticated) {
     return <Navigate to='/' />;
   }
 

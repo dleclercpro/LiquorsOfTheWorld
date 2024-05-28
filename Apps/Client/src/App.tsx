@@ -9,20 +9,21 @@ import AuthRoute from './routes/AuthRoute';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from './hooks/useRedux';
+import { useDispatch } from './hooks/useRedux';
 import { ping } from './actions/AuthActions';
 import Nav from './components/Nav';
 import ErrorPage from './pages/ErrorPage';
 import { updateBackground, updateVersion } from './actions/AppActions';
 import { fetchQuizNames } from './actions/DataActions';
 import useQuiz from './hooks/useQuiz';
+import useUser from './hooks/useUser';
+import useApp from './hooks/useApp';
 
 function App() {
   const dispatch = useDispatch();
 
-  const app = useSelector((state) => state.app);
-  const isAdmin = useSelector(({ user }) => user.isAdmin);
-
+  const app = useApp();
+  const user = useUser();
   const quiz = useQuiz();
 
   useEffect(() => {
@@ -46,7 +47,7 @@ function App() {
         <Nav />
 
         <Routes>
-          {(DEBUG || isAdmin) && (
+          {(DEBUG || user.isAdmin) && (
             <Route path='/admin' element={(
               <AdminPage />
             )} />
