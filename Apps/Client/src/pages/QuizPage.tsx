@@ -86,9 +86,6 @@ const QuizPage: React.FC = () => {
 
   // Set choice if user already voted
   useEffect(() => {
-    console.log('HERE');
-    console.log(app.questionIndex)
-    console.log(vote);
     if (vote.value === null || vote.index === -1) {
       if (answerOverlay.isOpen) {
         answerOverlay.close();
@@ -129,7 +126,6 @@ const QuizPage: React.FC = () => {
   // Show answer once timer has expired
   useEffect(() => {
     if (quiz.isStarted && timer.isDone) {
-      console.log(`Opening answer overlay because timer is done.`);
       answerOverlay.open();
     }
 
