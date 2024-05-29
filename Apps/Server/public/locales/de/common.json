@@ -69,6 +69,9 @@
     }
   },
   "OVERLAYS": {
+    "LOADING": {
+      "HELLO": "Hallo, <1>{{username}}</1>! Das Quiz beginnt gleich. Hier ist die Liste aller Teilnehmer:"
+    },
     "ANSWER": {
       "SEE_RESULTS": "Ergebnisse ansehen",
       "NEXT_QUESTION": "Nächste Frage",

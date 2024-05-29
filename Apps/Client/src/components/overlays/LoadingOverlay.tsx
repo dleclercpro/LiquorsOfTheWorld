@@ -23,19 +23,21 @@ const LoadingOverlay: React.FC = () => {
         <h2 className='loading-overlay-title'>
           {t('common:COMMON.PLEASE_WAIT')}...
         </h2>
-        <p className='loading-overlay-text'>
-          <Trans i18nKey='OVERLAYS.LOADING.HELLO' values={{ username: user.username }}>
-            ... <strong>...</strong> ...
-          </Trans>
-          
-        </p>
-        <ul className='loading-overlay-players-box'>
-          {quiz.players.map((player, i) => (
-            <li key={i}>
-              {player.username}
-            </li>
-          ))}
-        </ul>
+
+        {quiz.players.length > 0 && (<>
+          <p className='loading-overlay-text'>
+            <Trans i18nKey='OVERLAYS.LOADING.HELLO' values={{ username: user.username }}>
+              ... <strong>...</strong> ...
+            </Trans>
+          </p>
+          <ul className='loading-overlay-players-box'>
+            {quiz.players.map((player, i) => (
+              <li key={i}>
+                {player.username}
+              </li>
+            ))}
+          </ul>
+        </>)}
       </div>
     </div>
   );

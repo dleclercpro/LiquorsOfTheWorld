@@ -40,7 +40,7 @@ const QuizPage: React.FC = () => {
 
 
 
-  // Refresh quiz data when changing language
+  // Refresh questions' JSON when changing language
   useEffect(() => {
     if (quiz.id === null || quiz.name === null) {
       return;
@@ -77,7 +77,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    const interval = setInterval(() => quiz.refreshStatus(), REFRESH_STATUS_INTERVAL);
+    const interval = setInterval(quiz.refreshStatus, REFRESH_STATUS_INTERVAL);
   
     return () => clearInterval(interval);
   }, []);
