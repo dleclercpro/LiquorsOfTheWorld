@@ -8,7 +8,7 @@ import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 import QuizManager from '../../models/QuizManager';
-import Quiz from '../../models/users/Quiz';
+import Quiz from '../../models/Quiz';
 import { CallVoteResponseData } from '../../types/DataTypes';
 
 const validateParams = async (params: ParamsDictionary) => {
@@ -45,14 +45,10 @@ const VoteController: RequestHandler = async (req, res, next) => {
         const { quizId, questionIndex } = await validateParams(req.params);
 
         // Get votes from DB if they exist
-        let votes = await APP_DB.getUserVotes(quizId, username);
+        const votes = await APP_DB.getUserVotes(quizId, username);
 
-        // Add vote to array, otherwise overwrite it
-        if (votes.length === questionIndex) {
-            votes = [...votes, vote];
-        } else {
-            votes[questionIndex] = vote;
-        }
+        // Add vote to array
+        votes[questionIndex] = vote;
 
         // Store votes in DB
         await APP_DB.setUserVotes(quizId, username, votes);
@@ -65,7 +61,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         const questionCount = await QuizManager.count(quiz.getName());
 
         // Find out whether all users have voted up until current question
-        const playersWhoVoted = await APP_DB.getPlayersWhoVotedUpUntil(quizId, questionIndex);;
+        const playersWhoVoted = await APP_DB.getPlayersWhoVoted(quizId, questionIndex);;
         const players = quiz.getPlayers();
         logger.trace(`Players: ${players}`);
         logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);

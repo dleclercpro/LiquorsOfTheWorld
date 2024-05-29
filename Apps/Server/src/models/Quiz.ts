@@ -1,15 +1,15 @@
 import { randomUUID } from 'crypto';
-import { APP_DB } from '../..';
-import { QUIZ_NAMES, QuizName } from '../../constants';
-import InvalidQuizNameError from '../../errors/InvalidQuizNameError';
-import QuizAlreadyExistsError from '../../errors/QuizAlreadyExistsError';
-import logger from '../../logger';
-import { getRange, unique } from '../../utils/array';
-import User from './User';
-import QuizManager from '../QuizManager';
-import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
-import { PlayerData, TimerData } from '../../types/DataTypes';
-import { TIMER_DURATION } from '../../config';
+import { APP_DB } from '..';
+import { NON_VOTE, QUIZ_NAMES, QuizName } from '../constants';
+import InvalidQuizNameError from '../errors/InvalidQuizNameError';
+import QuizAlreadyExistsError from '../errors/QuizAlreadyExistsError';
+import logger from '../logger';
+import { getRange, unique } from '../utils/array';
+import User from './users/User';
+import QuizManager from './QuizManager';
+import InvalidQuestionIndexError from '../errors/InvalidQuestionIndexError';
+import { PlayerData, TimerData } from '../types/DataTypes';
+import { TIMER_DURATION } from '../config';
 
 type QuizArgs = {
     id: string,
@@ -111,17 +111,20 @@ class Quiz {
         return this.players;
     }
 
-    public async updatevoteCounts() {
-        const voteCounts = new Array(await QuizManager.count(this.name)).fill(0);
+    public async updateVoteCounts() {
+        const questionCount = await QuizManager.count(this.name);
+        const voteCounts = new Array(questionCount).fill(0);
 
         const votes = await APP_DB.getAllVotes(this.id);
         const players = Object.keys(votes);
 
+        // For each player, every vote that is not equal to -1 is a
+        // valid vote
         players.forEach((player) => {
-            const playerVoteCount = votes[player].length;
-
-            getRange(playerVoteCount).forEach((i) => {
-                voteCounts[i] += 1;
+            getRange(questionCount).forEach((i) => {
+                if (votes[player][i] !== NON_VOTE) {
+                    voteCounts[i] += 1;
+                }
             });
         });
 
@@ -130,7 +133,7 @@ class Quiz {
         await this.save();
     }
 
-    public getvoteCounts() {
+    public getVoteCounts() {
         return this.status.voteCounts;
     }
 
@@ -193,10 +196,14 @@ class Quiz {
             teamId,
         }]);
 
+        const questionCount = await QuizManager.count(this.name);
+
+        await APP_DB.setUserVotes(this.id, user.getUsername(), new Array(questionCount).fill(NON_VOTE));
+
         await this.save();
     }
 
-    public async isUserPlaying(user: User, teamId: string = '') {
+    public isUserPlaying(user: User, teamId: string = '') {
         return this.players
             .filter((player) => player.teamId === teamId)
             .map((player) => player.username.toLowerCase())
@@ -245,13 +252,11 @@ class Quiz {
             throw new QuizAlreadyExistsError();
         }
 
-        const player: PlayerData = { username, teamId };
-
         const quiz = new Quiz({
             id: quizId,
             name: quizName,
             creator: username.toLowerCase(),
-            players: [player],
+            players: [],
             status: {
                 isStarted: false,
                 isOver: false,
@@ -263,6 +268,12 @@ class Quiz {
                 },
             },
         });
+
+        // Add creator game to players
+        const user = await User.get(username);
+        if (user) {
+            await quiz.addUser(user, teamId);
+        }
 
         // Store quiz in DB
         await quiz.save();

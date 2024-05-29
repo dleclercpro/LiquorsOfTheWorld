@@ -9,7 +9,7 @@ import UserCannotStartQuestionError from '../../errors/UserCannotStartQuestionEr
 import UserCannotStartUnsupervisedQuestionError from '../../errors/UserCannotStartUnsupervisedQuestionError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import QuizManager from '../../models/QuizManager';
-import Quiz from '../../models/users/Quiz';
+import Quiz from '../../models/Quiz';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId, questionIndex: _questionIndex } = params;
@@ -53,7 +53,7 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
         const questionCount = await QuizManager.count(quiz.getName());
 
         // Admins can only start next question index
-        const currentQuestionIndex = await quiz.getQuestionIndex();
+        const currentQuestionIndex = quiz.getQuestionIndex();
         const nextQuestionIndex = currentQuestionIndex + 1;
         if (questionIndex !== nextQuestionIndex) {
             logger.error(`Trying to start question #${questionIndex} while the next one is #${nextQuestionIndex}!`);
@@ -61,7 +61,7 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
         }
 
         // Find out whether all users have voted up until current question
-        const playersWhoVoted = await APP_DB.getPlayersWhoVotedUpUntil(quiz.getId(), currentQuestionIndex);;
+        const playersWhoVoted = await APP_DB.getPlayersWhoVoted(quiz.getId(), currentQuestionIndex);;
         const players = quiz.getPlayers();
         logger.trace(`Players: ${players}`);
         logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);

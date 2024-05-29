@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData, CallVoteResponseData, FetchedData, GroupedScoresData, PlayersData, StatusData, VotesData } from '../types/DataTypes';
+import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData, CallStartQuestionResponseData, CallVoteResponseData, FetchedData, GroupedScoresData, PlayersData, StatusData, VotesData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
 import { startQuiz, startQuestion, vote } from '../actions/QuizActions';
 import { login, logout, ping } from '../actions/AuthActions';
@@ -56,10 +56,6 @@ export const quizSlice = createSlice({
         state.status.status = 'failed';
         state.status.error = action.payload as string;
         state.status.data = null;
-
-        state.players.status = 'failed';
-        state.players.error = action.payload as string;
-        state.players.data = null;
       })
 
       .addCase(fetchQuestions.pending, (state) => {
@@ -80,9 +76,6 @@ export const quizSlice = createSlice({
       .addCase(fetchVotes.pending, (state) => {
         state.votes.status = 'loading';
         state.votes.error = null;
-
-        state.status.status = 'loading';
-        state.status.error = null;
       })
       .addCase(fetchVotes.fulfilled, (state, action: PayloadAction<CallGetVotesResponseData>) => {
         state.votes.status = 'succeeded';
@@ -93,10 +86,6 @@ export const quizSlice = createSlice({
         state.votes.status = 'failed';
         state.votes.error = action.payload as string;
         state.votes.data = null;
-
-        state.status.status = 'failed';
-        state.status.error = action.payload as string;
-        state.status.data = null;
       })
 
       .addCase(fetchPlayers.pending, (state) => {
@@ -141,7 +130,7 @@ export const quizSlice = createSlice({
 
         state.status.data.isStarted = true;
       })
-      .addCase(startQuestion.fulfilled, (state, action: PayloadAction<number>) => {
+      .addCase(startQuestion.fulfilled, (state, action: PayloadAction<CallStartQuestionResponseData>) => {
         if (!state.status.data) return;
 
         state.status.data.questionIndex = action.payload;

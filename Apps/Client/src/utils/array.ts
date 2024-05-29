@@ -12,7 +12,7 @@ export const getRange = (size: number, order: 'ASC' | 'DESC' = 'ASC') => {
   return arr;
 }
 
-export const toSortedArr = (obj: Record<string, number>, order: 'ASC' | 'DESC' = 'ASC') => {
+export const toSortedArray = (obj: Record<string, number>, order: 'ASC' | 'DESC' = 'ASC') => {
   const arr = Object.entries(obj);
   let sortedArr = arr;
 
@@ -24,4 +24,8 @@ export const toSortedArr = (obj: Record<string, number>, order: 'ASC' | 'DESC' =
   }
 
   return sortedArr.map(([ key, value ]) => ({ key, value }));
+}
+
+export const toReversedArray = <T> (arr: T[]): T[] => {
+  return arr.slice().reverse();
 }

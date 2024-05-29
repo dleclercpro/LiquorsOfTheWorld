@@ -3,7 +3,7 @@ import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
-import Quiz from '../../models/users/Quiz';
+import Quiz from '../../models/Quiz';
 import { CallGetStatusResponseData } from '../../types/DataTypes';
 
 const validateParams = async (params: ParamsDictionary) => {

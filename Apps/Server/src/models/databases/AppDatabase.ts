@@ -7,7 +7,8 @@ import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import QuizManager from '../QuizManager';
 import MemoryDatabase from './base/MemoryDatabase';
 import User from '../users/User';
-import Quiz from '../users/Quiz';
+import Quiz from '../Quiz';
+import { NON_VOTE } from '../../constants';
 
 const SEPARATOR = '|';
 
@@ -108,11 +109,15 @@ class AppDatabase {
             throw new InvalidQuizIdError();
         }
 
-        const players = await quiz.getPlayers();
+        const questionCount = await QuizManager.count(quiz.getName());
+        const players = quiz.getPlayers();
         
         // Initialize votes for all players
         const votes: Votes = players.reduce((prev, player) => {
-            return { ...prev, [player.username]: [] };
+            return {
+                ...prev,
+                [player.username]: new Array(questionCount).fill(NON_VOTE),
+            };
         }, {});
 
         const votesAsStrings = await this.getKeysByPattern(`votes:${quizId}:*`);
@@ -141,7 +146,7 @@ class AppDatabase {
             .reduce((prev, [player, votes]) => {
                 const score = sum(
                     answers
-                        .map((answerIndex, i) => i < votes.length && answerIndex === votes[i])
+                        .map((answerIndex, i) => answerIndex === votes[i])
                         .map(Number)
                 );
         
@@ -172,11 +177,11 @@ class AppDatabase {
         return votes.split(SEPARATOR).map(Number);
     }
 
-    public async getPlayersWhoVotedUpUntil(quizId: string, questionIndex: number) {
+    public async getPlayersWhoVoted(quizId: string, questionIndex: number) {
         const votes = await this.getAllVotes(quizId);
         const players = Object.keys(votes);
 
-        return players.filter((player) => votes[player].length >= questionIndex + 1);
+        return players.filter((player) => votes[player][questionIndex] !== NON_VOTE);
     }
 }
 

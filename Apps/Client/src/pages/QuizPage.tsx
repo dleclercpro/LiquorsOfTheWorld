@@ -86,19 +86,22 @@ const QuizPage: React.FC = () => {
 
   // Set choice if user already voted
   useEffect(() => {
-    if (vote.vote === null) {
+    console.log('HERE');
+    console.log(app.questionIndex)
+    console.log(vote);
+    if (vote.value === null || vote.index === -1) {
       if (answerOverlay.isOpen) {
         answerOverlay.close();
       }
       return;
     }
 
-    setChoice(vote.vote);
+    setChoice(vote.value);
     if (!answerOverlay.isOpen) {
       answerOverlay.open();
     }
     
-  }, [vote.vote]);
+  }, [vote.value]);
 
 
 
@@ -125,11 +128,12 @@ const QuizPage: React.FC = () => {
 
   // Show answer once timer has expired
   useEffect(() => {
-    if (timer.isDone) {
+    if (quiz.isStarted && timer.isDone) {
+      console.log(`Opening answer overlay because timer is done.`);
       answerOverlay.open();
     }
 
-  }, [timer.isDone]);
+  }, [quiz.isStarted, timer.isDone]);
 
 
 
@@ -157,7 +161,7 @@ const QuizPage: React.FC = () => {
           video={type === QuestionType.Video ? { url: url!, desc: `Question ${app.questionIndex + 1}` } : undefined}
           ratio={AspectRatio.SixteenByNine}
           options={options}
-          disabled={choice === '' || vote.vote !== null}
+          disabled={choice === ''}
           choice={choice}
           setChoice={setChoice}
         />

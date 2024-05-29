@@ -4,8 +4,9 @@ import { ParamsDictionary } from 'express-serve-static-core';
 import { APP_DB } from '../..';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
-import Quiz from '../../models/users/Quiz';
+import Quiz from '../../models/Quiz';
 import { CallGetVotesResponseData } from '../../types/DataTypes';
+import logger from '../../logger';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -31,6 +32,8 @@ const GetVotesController: RequestHandler = async (req, res, next) => {
         const { quiz } = await validateParams(req.params);
 
         const votes = await APP_DB.getUserVotes(quiz.getId(), username);
+
+        logger.warn(votes);
 
         const response: CallGetVotesResponseData = votes;
 

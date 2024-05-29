@@ -4,8 +4,10 @@ import { fetchQuestions, fetchQuizData, fetchStatus } from '../actions/DataActio
 import { startQuiz as doStartQuiz } from '../actions/QuizActions';
 import { deleteQuiz as doDeleteQuiz } from '../actions/QuizActions';
 import useUser from './useUser';
-import { Language } from '../constants';
+import { Language, NON_VOTE } from '../constants';
 import { useTranslation } from 'react-i18next';
+import { setQuestionIndex } from '../reducers/AppReducer';
+import { toReversedArray } from '../utils/array';
 
 const useQuiz = () => {
   const { i18n } = useTranslation();
@@ -36,7 +38,24 @@ const useQuiz = () => {
   const fetchData = useCallback(async () => {
     if (quiz.id === null || !quiz.name) return;
 
-    dispatch(fetchQuizData({ quizId: quiz.id, quizName: quiz.name, lang }))
+    await dispatch(fetchQuizData({ quizId: quiz.id, quizName: quiz.name, lang }));
+
+    const questionIndex = status?.questionIndex ?? 0;
+    
+
+    let lastUnansweredQuestionIndex = toReversedArray(votes).findIndex((vote: number) => vote === NON_VOTE);
+
+    if (lastUnansweredQuestionIndex === -1) {
+      lastUnansweredQuestionIndex = 0;
+    }
+    
+    let appQuestionIndex = questionIndex;
+    if (!isSupervised && lastUnansweredQuestionIndex < questionIndex) {
+      appQuestionIndex = lastUnansweredQuestionIndex;
+    }
+
+    dispatch(setQuestionIndex(appQuestionIndex));
+
   }, [quiz.id, quiz.name, lang]);
 
 
@@ -44,11 +63,7 @@ const useQuiz = () => {
   const refreshQuestions = useCallback(async () => {
     if (!quiz.name) return;
     
-    const result = await dispatch(fetchQuestions({ quizName: quiz.name, lang }));
-
-    if (result.type.endsWith('/rejected')) {
-      await user.logout();
-    }
+    await dispatch(fetchQuestions({ quizName: quiz.name, lang }));
   }, [quiz.name, lang, user]);
 
 
@@ -56,11 +71,7 @@ const useQuiz = () => {
   const refreshStatus = useCallback(async () => {
     if (!quiz.id) return;
 
-    const result = await dispatch(fetchStatus(quiz.id));
-
-    if (result.type.endsWith('/rejected')) {
-      await user.logout();
-    }
+    await dispatch(fetchStatus(quiz.id));
   }, [quiz.id, user]);
 
 

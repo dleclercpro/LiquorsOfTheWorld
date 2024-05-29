@@ -4,7 +4,7 @@ import { ParamsDictionary } from 'express-serve-static-core';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import { PlayersData } from '../../types/DataTypes';
-import Quiz from '../../models/users/Quiz';
+import Quiz from '../../models/Quiz';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;

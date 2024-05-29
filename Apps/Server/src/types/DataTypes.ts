@@ -89,4 +89,5 @@ export type CallGetVotesResponseData = VotesData;
 export type CallGetPlayersResponseData = PlayersData;
 export type CallGetScoresResponseData = GroupedScoresData;
 
+export type CallStartQuestionResponseData = number;
 export type CallVoteResponseData = { status: StatusData, votes: VotesData };

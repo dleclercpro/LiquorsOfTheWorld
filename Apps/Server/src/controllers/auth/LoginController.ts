@@ -13,7 +13,7 @@ import QuizAlreadyStartedError from '../../errors/QuizAlreadyStartedError';
 import { QuizName } from '../../constants';
 import InvalidTeamIdError from '../../errors/InvalidTeamIdError';
 import User from '../../models/users/User';
-import Quiz from '../../models/users/Quiz';
+import Quiz from '../../models/Quiz';
 
 type RequestBody = Auth & {
     quizName: QuizName,
@@ -106,7 +106,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
         }
 
         // Check if quiz has already started and user is playing
-        const isUserPlaying = await quiz.isUserPlaying(user!, teamId);
+        const isUserPlaying = quiz.isUserPlaying(user!, teamId);
         if (!isUserPlaying) {
             if (quiz.isStarted()) {
                 throw new QuizAlreadyStartedError();

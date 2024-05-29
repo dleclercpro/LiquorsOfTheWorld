@@ -4,6 +4,7 @@ import { startQuestion } from '../actions/QuizActions';
 import { Language } from '../constants';
 import { INIT_LANGUAGE } from '../i18n';
 import { fetchQuizData } from '../actions/DataActions';
+import { CallStartQuestionResponseData } from '../types/DataTypes';
 
 interface AppState {
   language: Language,
@@ -50,11 +51,8 @@ export const appSlice = createSlice({
       .addCase(logout.rejected, (state) => {
         state.questionIndex = 0; // Only reset question index on log out
       })
-      .addCase(fetchQuizData.fulfilled, (state, action) => {
-        state.questionIndex = action.payload as number;
-      })
-      .addCase(startQuestion.fulfilled, (state, action) => {
-        state.questionIndex = action.payload as number;
+      .addCase(startQuestion.fulfilled, (state, action: PayloadAction<CallStartQuestionResponseData>) => {
+        state.questionIndex = action.payload;
       });
   },
 });

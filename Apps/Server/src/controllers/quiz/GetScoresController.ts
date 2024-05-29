@@ -6,7 +6,7 @@ import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import { GroupedScoresData, ScoresData } from '../../types/DataTypes';
 import { ADMINS } from '../../config';
-import Quiz from '../../models/users/Quiz';
+import Quiz from '../../models/Quiz';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;

@@ -67,7 +67,7 @@ export const fetchScores = createServerAction<string, CallGetScoresResponseData>
 
 
 type FetchQuizDataActionArgs = { quizId: string, quizName: QuizName, lang: Language };
-export const fetchQuizData = createServerAction<FetchQuizDataActionArgs, number>(
+export const fetchQuizData = createServerAction<FetchQuizDataActionArgs, void>(
   'data/quiz',
   async ({ quizId, quizName, lang }: FetchQuizDataActionArgs, { dispatch, getState }: ThunkAPI) => {
     const result = await Promise.all([
@@ -84,20 +84,5 @@ export const fetchQuizData = createServerAction<FetchQuizDataActionArgs, number>
     if (someFetchActionFailed) {
       throw new Error('DATA_FETCH');
     }
-    
-    const { quiz } = getState() as RootState;
-    const status = quiz.status.data as StatusData;
-    const votes = quiz.votes.data as number[];
-
-    // The current question index in the app corresponds to the first question
-    // the user hasn't answered yet, unless the player has answered all the
-    // questions already
-    const questionIndex = status.questionIndex;
-    const appQuestionIndex = votes.length;
-    
-    if (appQuestionIndex < questionIndex) {
-      return appQuestionIndex;
-    }
-    return questionIndex;
   },
 );

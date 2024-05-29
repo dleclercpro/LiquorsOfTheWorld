@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { ScoresData } from '../types/DataTypes';
-import { toSortedArr } from '../utils/array';
+import { toSortedArray } from '../utils/array';
 import './Scoreboard.scss';
 import useQuiz from '../hooks/useQuiz';
 
@@ -19,7 +19,7 @@ const Scoreboard: React.FC<Props> = (props) => {
     return null;
   }
 
-  const sortedScores = toSortedArr(scores, 'DESC')
+  const sortedScores = toSortedArray(scores, 'DESC')
     .map(({ key, value }) => ({ username: key, score: value }));
   
   return (

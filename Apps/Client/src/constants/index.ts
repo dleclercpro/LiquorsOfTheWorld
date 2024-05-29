@@ -30,3 +30,4 @@ export enum AspectRatio {
 }
 
 export const NO_TIME = new TimeDuration(0, TimeUnit.Millisecond);
+export const NON_VOTE = -1;

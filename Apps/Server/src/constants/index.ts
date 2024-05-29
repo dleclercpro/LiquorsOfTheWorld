@@ -29,6 +29,8 @@ export const APP_NAME = label;
 
 export const EPOCH_TIME_INIT = new Date(0);
 
+export const NON_VOTE = -1;
+
 export const SEPARATOR = '|';
 export const NEW_LINE_REGEXP = /[\r\n]+/;
 export const NEW_LINE = '\n';

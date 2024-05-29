@@ -21,9 +21,9 @@ const LoginForm: React.FC<Props> = (props) => {
   const quiz = useQuiz();
 
   const [quizId, setQuizId] = useState(props.quizId ?? '');
-  const [teamId, setTeamId] = useState(props.teamId ?? '');
+  const [teamId, /* setTeamId */] = useState(props.teamId ?? '');
   const [disableQuizId] = useState(!!props.quizId);
-  const [disableTeamId] = useState(!!props.quizId);
+  // const [disableTeamId] = useState(!!props.quizId);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
