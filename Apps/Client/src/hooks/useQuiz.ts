@@ -41,7 +41,6 @@ const useQuiz = () => {
     await dispatch(fetchQuizData({ quizId: quiz.id, quizName: quiz.name, lang }));
 
     const questionIndex = status?.questionIndex ?? 0;
-    
 
     let lastUnansweredQuestionIndex = toReversedArray(votes).findIndex((vote: number) => vote === NON_VOTE);
 
