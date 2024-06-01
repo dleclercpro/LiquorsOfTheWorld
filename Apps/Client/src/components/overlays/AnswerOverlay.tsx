@@ -10,6 +10,7 @@ import useApp from '../../hooks/useApp';
 import useOverlay from '../../hooks/useOverlay';
 import { OverlayName } from '../../reducers/OverlaysReducer';
 import useQuestion from '../../hooks/useQuestion';
+import { useEffect } from 'react';
 
 const AnswerOverlay: React.FC = () => {
   const navigate = useNavigate();
@@ -26,6 +27,17 @@ const AnswerOverlay: React.FC = () => {
   const nextAppQuestionIndex = appQuestionIndex + 1;
 
   const question = useQuestion(appQuestionIndex);
+
+
+
+  // FIXME
+  useEffect(() => {
+    if (!quiz.isOver && !(user.isAdmin && quiz.isSupervised) && !question.next.mustWaitFor) {
+      question.next.goTo();
+    }
+  }, [question.next.mustWaitFor]);
+
+
 
   // Wait until quiz data has been fetched
   if (quiz.id === null || !quiz.questions || !quiz.status || !quiz.status.voteCounts) {

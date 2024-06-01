@@ -64,7 +64,9 @@ const QuizPage: React.FC = () => {
 
     quiz.refreshStatus()
       .then(() => {
-        timer.restart();
+        if (timer.isEnabled) {
+          timer.restart();
+        }
       });
 
   }, [app.questionIndex]);
@@ -125,11 +127,11 @@ const QuizPage: React.FC = () => {
 
   // Show answer once timer has expired
   useEffect(() => {
-    if (quiz.isStarted && timer.isDone) {
+    if (quiz.isStarted && timer.isEnabled && timer.isDone) {
       answerOverlay.open();
     }
 
-  }, [quiz.isStarted, timer.isDone]);
+  }, [quiz.isStarted, timer.isEnabled, timer.isDone]);
 
 
 
@@ -149,13 +151,13 @@ const QuizPage: React.FC = () => {
       )}
       {quiz.isStarted && (
         <QuestionForm
-          remainingTime={(timer.isRunning || timer.isDone) ? timer.time : undefined}
+          remainingTime={timer.isEnabled && (timer.isRunning || timer.isDone) ? timer.time : undefined}
           index={app.questionIndex}
           topic={topic}
           question={question}
           image={type === QuestionType.Image ? { url: url!, desc: `Question ${app.questionIndex + 1}` } : undefined}
           video={type === QuestionType.Video ? { url: url!, desc: `Question ${app.questionIndex + 1}` } : undefined}
-          ratio={AspectRatio.SixteenByNine}
+          ratio={AspectRatio.FourByThree}
           options={options}
           disabled={choice === ''}
           choice={choice}

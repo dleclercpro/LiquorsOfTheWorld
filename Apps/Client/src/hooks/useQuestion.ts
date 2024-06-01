@@ -14,7 +14,7 @@ const useQuestion = (index: number) => {
   const user = useUser();
 
   const nextQuestionIndex = index + 1;
-  const isNextQuestionReady = quiz.questionIndex ? nextQuestionIndex < quiz.questionIndex : false;
+  const isNextQuestionReady = quiz.questionIndex ? nextQuestionIndex <= quiz.questionIndex : false;
   const mustWaitForNextQuestion = !user.isAdmin && !isNextQuestionReady;
 
   const answerOverlay = useOverlay(OverlayName.Answer);

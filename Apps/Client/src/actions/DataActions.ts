@@ -5,7 +5,6 @@ import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetStatus } from '../calls/quiz/CallGetStatus';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 import { Language, QuizName } from '../constants';
-import { RootState } from '../stores/store';
 import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizNamesResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData, StatusData } from '../types/DataTypes';
 import { ThunkAPI, createServerAction } from './ServerActions';
 
@@ -41,7 +40,7 @@ export const fetchPlayers = createServerAction<string, CallGetPlayersResponseDat
   'data/players',
   async (quizId: string) => {
     const { data } = await new CallGetPlayers(quizId).execute();
-      
+
     return data!;
   },
 );

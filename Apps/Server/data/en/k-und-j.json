@@ -1,25 +1,182 @@
 [
   {
-    "topic": "Video",
-    "question": "What is going on in this video?",
-    "options": ["A business meeting", "A wine tasting", "A software demo"],
-    "type": "video",
-    "url": "/static/video/Test.mp4",
+    "topic": "Finde den Fehler",
+    "question": "Welche Geschichte über Richie stimmt nicht?",
+    "options": [
+      "Er hat im Gymnasium für seine erste Freundin damals Zigaretten vom Kiosk geklaut.",
+      "Er hat die Wand im Flur auf der Langen Zeile nicht nur einmal, sondern zweimal mit Kerzenwachs bespritzt.",
+      "Ein Notarztwagen war schuld daran, dass er sich den Arm gebrochen hat."
+    ],
+    "type": "text",
     "answer": 0
   },
   {
-    "topic": "Image",
-    "question": "Who is on this picture?",
-    "options": ["A", "B", "C"],
-    "type": "image",
-    "url": "/static/img/Kid.webp",
+    "topic": "Finde den Fehler",
+    "question": "Welche Geschichte über Clemi stimmt nicht?",
+    "options": [
+      "Er ist für Philipp in den Kindergarten gegangen.",
+      "Er hat für eine Freundin auf den bilingualen Zweig am Gymnasium verzichtet.",
+      "Er hat für seine Grundschullehrerin jahrelang Aufkleber gesammelt."
+    ],
+    "type": "text",
     "answer": 2
   },
   {
-    "topic": "Test",
-    "question": "What is the main ingredient in traditional Russian vodka?",
-    "options": ["Potatoes", "Grapes", "Wheat"],
+    "topic": "Finde den Fehler",
+    "question": "Welche Geschichte über Philipp stimmt nicht?",
+    "options": [
+      "Er hat einer Freundin von Karl Lagerfeld die Gemäldegalerie in Dresden gezeigt.",
+      "Olaf Scholz hat ihn in seinem Klavierstudio in Erfurt Klavierspielen hören.",
+      "Clueso hat ihm Pommes verkauft."
+    ],
+    "type": "text",
+    "answer": 1
+  },
+  {
+    "topic": "Finde den Fehler",
+    "question": "Welche Geschichte über David stimmt nicht?",
+    "options": [
+      "Er hat bei seinem ersten Besuch in Deutschland Waschbecken und Toilette verwechselt.",
+      "Er hat bei einer Schulfreundin von Philipp das Klo verstopft.",
+      "Ihm ist im gemeinsamen Urlaub mit den Hermanns ein Pissoir ins Gesicht explodiert."
+    ],
+    "type": "text",
+    "answer": 0
+  },
+  {
+    "topic": "Wer ist das?",
+    "question": "Wer ist auf diesem Bild zu sehen?",
+    "options": ["Michael (Käppler)", "Christoph", "Frithjof"],
+    "type": "image",
+    "url": "/static/img/wer-ist-das/Michael_Kaeppler.jpeg",
+    "answer": 0
+  },
+  {
+    "topic": "Wer ist das?",
+    "question": "Wer ist auf diesem Bild zu sehen?",
+    "options": ["Konny", "Claudia", "Katrin"],
+    "type": "image",
+    "url": "/static/img/wer-ist-das/Katrin.jpeg",
+    "answer": 2
+  },
+  {
+    "topic": "Wer ist das?",
+    "question": "Wer ist auf diesem Bild zu sehen?",
+    "options": ["Michel (Hermann)", "O. Walter", "Jürgen"],
+    "type": "image",
+    "url": "/static/img/wer-ist-das/Michel.jpg",
+    "answer": 0
+  },
+  {
+    "topic": "Wo ist das?",
+    "question": "Wo ist dieses Bild entstanden?",
+    "options": ["Ostsee", "Frankreich", "Irland"],
+    "type": "image",
+    "url": "/static/img/wo-ist-das/Irland.jpg",
+    "answer": 2
+  },
+  {
+    "topic": "Wo ist das?",
+    "question": "Wo ist dieses Bild entstanden?",
+    "options": ["Blaubeuren", "Sainte-Marie-de-Beauce", "Lyon"],
+    "type": "image",
+    "url": "/static/img/wo-ist-das/Blaubeuren.jpeg",
+    "answer": 0
+  },
+  {
+    "topic": "Wo ist das?",
+    "question": "Wo ist dieses Bild entstanden?",
+    "options": ["Philipps Wohnung in Kanada", "Clemis Wohnung in Hattenhofen", "Richis Zimmer in Lyon"],
+    "type": "image",
+    "url": "/static/img/wo-ist-das/Wohnung_Philipp.jpg",
+    "answer": 0
+  },
+  {
+    "topic": "Essen",
+    "question": "In welche Suppe ist die Lampe gefallen, die Richie und Phili im Streit kaputt gemacht haben?",
+    "options": [
+      "Kartoffelsuppe",
+      "Nudelsuppe",
+      "Holundersuppe"
+    ],
     "type": "text",
     "answer": 2
+  },
+  {
+    "topic": "Essen",
+    "question": "Was ist Pflichtverpflegung beim Wandern im Hause Hermann?",
+    "options": [
+      "Türkischer Honig",
+      "Knackwurst",
+      "Pudding"
+    ],
+    "type": "text",
+    "answer": 2
+  },
+  {
+    "topic": "Essen",
+    "question": "Wie viele Bonbons durfte man sich bei der Omi immer aus der Büchse nehmen?",
+    "options": [
+      "1",
+      "2",
+      "3"
+    ],
+    "type": "text",
+    "answer": 1
+  },
+  {
+    "topic": "Wer war es?",
+    "question": "Wer musste in den Bavaria Filmstudios die Spacetaxi-Szene aus Traumschiff Surprise nachspielen?",
+    "options": [
+      "Mareike",
+      "Lisa",
+      "Madeleine"
+    ],
+    "type": "text",
+    "answer": 2
+  },
+  {
+    "topic": "Wer war es?",
+    "question": "Wer hat im Kindergarten die Borsten eines Handfegers abgeschnitten, um damit Spaghetti zu kochen?",
+    "options": [
+      "David",
+      "Clemens",
+      "Philipp"
+    ],
+    "type": "text",
+    "answer": 1
+  },
+  {
+    "topic": "Wer war es?",
+    "question": "Wer hat mit dem illegalen Download eines Films auf der Langen Zeile für eine Abmahnung gesorgt?",
+    "options": [
+      "Philipp",
+      "Richard",
+      "David"
+    ],
+    "type": "text",
+    "answer": 2
+  },
+  {
+    "topic": "Wer war es?",
+    "question": "Wer hat seinen Pin-Brief in der Spüle verbrannt und sie damit kaputt gemacht?",
+    "options": [
+      "Richard",
+      "Clemens",
+      "Philipp"
+    ],
+    "type": "text",
+    "answer": 2
+  },
+  {
+    "topic": "Wer war es?",
+    "question": "Wer musste zum Arzt, nachdem er seinen Bruder geschlagen hat?",
+    "options": [
+      "Clemens",
+      "Richard",
+      "Philipp"
+    ],
+    "type": "text",
+    "answer": 1
   }
 ]

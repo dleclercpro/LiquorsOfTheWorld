@@ -77,10 +77,10 @@
       "NEXT_QUESTION": "Nächste Frage",
       "START_NEXT_QUESTION": "Nächste Frage starten",
       "PLEASE_WAIT_FOR_NEXT_QUESTION": "Bitte warte, bis die nächste Frage freigeschaltet wird...",
-      "CURRENT_STATUS": "Bis jetzt haben {{voteCount}} von {{playersCount}} Spielern abgestimmt.",
+      "CURRENT_STATUS": "{{voteCount}} von {{playersCount}} Spielern haben abgestimmt.",
       "RIGHT_ANSWER_TEXT": "Tatsächlich war die richtige Antwort:",
       "WRONG_ANSWER_TEXT": "Eigentlich war die richtige Antwort:",
-      "RIGHT_ANSWER_ICON_TEXT": "Glückwunsch, Du hast recht!",
+      "RIGHT_ANSWER_ICON_TEXT": "Glückwunsch, Du hast Recht!",
       "WRONG_ANSWER_ICON_TEXT": "Leider liegst Du falsch..."
     }
   },

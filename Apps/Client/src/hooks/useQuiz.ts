@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from './ReduxHooks';
-import { fetchQuestions, fetchQuizData, fetchStatus } from '../actions/DataActions';
+import { fetchPlayers, fetchQuestions, fetchQuizData, fetchStatus } from '../actions/DataActions';
 import { startQuiz as doStartQuiz } from '../actions/QuizActions';
 import { deleteQuiz as doDeleteQuiz } from '../actions/QuizActions';
 import useUser from './useUser';
@@ -67,10 +67,11 @@ const useQuiz = () => {
 
 
 
-  const refreshStatus = useCallback(async () => {
+  const refreshStatusAndPlayers = useCallback(async () => {
     if (!quiz.id) return;
 
     await dispatch(fetchStatus(quiz.id));
+    await dispatch(fetchPlayers(quiz.id));
   }, [quiz.id, user]);
 
 
@@ -106,7 +107,7 @@ const useQuiz = () => {
     scores,
     fetchData,
     refreshQuestions,
-    refreshStatus,
+    refreshStatus: refreshStatusAndPlayers,
     start: startQuiz,
     delete: deleteQuiz,
   };

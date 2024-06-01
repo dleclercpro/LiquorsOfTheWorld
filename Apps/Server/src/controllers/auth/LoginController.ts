@@ -108,11 +108,12 @@ const LoginController: RequestHandler = async (req, res, next) => {
         // Check if quiz has already started and user is playing
         const isUserPlaying = quiz.isUserPlaying(user!, teamId);
         if (!isUserPlaying) {
+            logger.debug(`User '${username}' is not part of the quiz.`);
             if (quiz.isStarted()) {
                 throw new QuizAlreadyStartedError();
             }
             await quiz.addUser(user!, teamId);
-            logger.trace(`User '${username}' joined quiz ${quizId}.`);
+            logger.debug(`User '${username}' joined quiz ${quizId}.`);
         }
 
         const cookieUser = { username, isAdmin };

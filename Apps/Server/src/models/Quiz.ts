@@ -50,6 +50,7 @@ class Quiz {
             id: this.id,
             name: this.name,
             creator: this.creator,
+            players: this.players,
             status: {
                 ...this.status,
                 timer: {

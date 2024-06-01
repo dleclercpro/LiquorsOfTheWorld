@@ -17,4 +17,4 @@ export const COOKIE_NAME = `quiz`;
 
 // Time
 export const REFRESH_STATUS_INTERVAL = 5_000; // (ms)
-export const QUIZ_TIMER_URGENT_TIME = new TimeDuration(15, TimeUnit.Second);
+export const QUIZ_TIMER_URGENT_TIME = new TimeDuration(10, TimeUnit.Second);

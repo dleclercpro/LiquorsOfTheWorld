@@ -77,7 +77,7 @@
       "NEXT_QUESTION": "Next question",
       "START_NEXT_QUESTION": "Start next question",
       "PLEASE_WAIT_FOR_NEXT_QUESTION": "Please wait for the next question to be unlocked...",
-      "CURRENT_STATUS": "So far, {{voteCount}} out of {{playersCount}} players have voted.",
+      "CURRENT_STATUS": "{{voteCount}} out of {{playersCount}} players have voted.",
       "RIGHT_ANSWER_TEXT": "Indeed, the correct answer was:",
       "WRONG_ANSWER_TEXT": "Actually, the correct answer was:",
       "RIGHT_ANSWER_ICON_TEXT": "Congrats, you're right!",
