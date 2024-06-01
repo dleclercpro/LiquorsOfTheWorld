@@ -2,57 +2,32 @@ import React, { useEffect } from 'react';
 import './HomePage.scss';
 import LoginForm from '../components/forms/LoginForm';
 import { useDispatch } from '../hooks/ReduxHooks';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Page from './Page';
 import { QuizName } from '../constants';
 import { setQuizName } from '../reducers/QuizReducer';
-import useQuiz from '../hooks/useQuiz';
 import useUser from '../hooks/useUser';
-import useData from '../hooks/useData';
-
-const QUIZ_NAME_PARAM = 'q';
-const QUIZ_ID_PARAM = 'id';
-const TEAM_ID_PARAM = 't';
-
-
 
 const HomePage: React.FC = () => {
-  const [searchParams] = useSearchParams();
-
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const quiz = useQuiz();
   const user = useUser();
 
-  const data = useData();
-
-  const paramQuizName = searchParams.get(QUIZ_NAME_PARAM);
-  const paramQuizId = searchParams.get(QUIZ_ID_PARAM);
-  const paramTeamId = searchParams.get(TEAM_ID_PARAM);
-
-  const quizId = paramQuizId;
-  const teamId = paramTeamId;
-
-  const quizName = paramQuizName as QuizName ?? quiz.name;
-
-  const isQuizNameValid = data.quizzes.includes(quizName);
+  const quizName = QuizName.KonnyUndJohannes;
+  const quizId = '60';
+  const teamId = '';
 
 
 
   // Store quiz name in app state when valid
   useEffect(() => {
-    if (isQuizNameValid) {
-      dispatch(setQuizName(quizName));
-    }
-  }, [isQuizNameValid]);
+    dispatch(setQuizName(quizName));
 
-  if (!isQuizNameValid) {
-    return (
-      <Navigate to='/error' />
-    );
-  }
+  }, [quizName]);
+
+
 
   if (user.isAuthenticated) {
     return (

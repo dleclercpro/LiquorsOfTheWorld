@@ -20,10 +20,8 @@ const LoginForm: React.FC<Props> = (props) => {
 
   const quiz = useQuiz();
 
-  const [quizId, setQuizId] = useState(props.quizId ?? '');
-  const [teamId, /* setTeamId */] = useState(props.teamId ?? '');
-  const [disableQuizId] = useState(!!props.quizId);
-  // const [disableTeamId] = useState(!!props.quizId);
+  const [quizId] = useState(props.quizId ?? '');
+  const [teamId] = useState(props.teamId ?? '');
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -62,31 +60,6 @@ const LoginForm: React.FC<Props> = (props) => {
 
   return (
     <form className='login-form' onSubmit={(e) => handleSubmit(e)}>
-        <input
-        id='login-quiz-id'
-        className={`${disableQuizId ? 'is-disabled' : ''}`}
-        type='text'
-        value={quizId}
-        disabled={disableQuizId}
-        placeholder={t('common:FORMS.LOGIN.QUIZ_ID')}
-        onChange={(e) => setQuizId(e.target.value)}
-        required
-      />
-
-      {
-      /* FIXME: remove teams for now.
-        <input
-          id='login-team-id'
-          className={`${disableTeamId ? 'is-disabled' : ''}`}
-          type='text'
-          value={teamId}
-          disabled={disableTeamId}
-          placeholder={t('common:FORMS.LOGIN.TEAM_ID')}
-          onChange={(e) => setTeamId(e.target.value)}
-          required
-        />
-      */}
-
       <input
         id='login-username'
         type='text'

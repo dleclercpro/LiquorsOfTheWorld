@@ -65,7 +65,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
         }
 
         // If user exists: check if password is valid
-        const user = await User.get(username);
+        let user = await User.get(username);
         if (user) {
             logger.trace(`Validating password for '${username}'...`);
             const user = await User.get(username);
@@ -98,10 +98,10 @@ const LoginController: RequestHandler = async (req, res, next) => {
                 if (password !== admin!.password) {
                     throw new InvalidPasswordError();
                 }
-                await User.create({ username, password }, true);
+                user = await User.create({ username, password }, true);
             } else {
                 logger.trace(`Creating user '${username}'...`);
-                await User.create({ username, password }, false);
+                user = await User.create({ username, password }, false);
             }
         }
 

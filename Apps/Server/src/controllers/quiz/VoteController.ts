@@ -50,7 +50,6 @@ const VoteController: RequestHandler = async (req, res, next) => {
             throw new InvalidQuizIdError();
         }
         const questionCount = await QuizManager.count(quiz.getName());
-        const isLastQuestion = questionIndex + 1 === questionCount;
 
         // Get votes from DB if they exist
         const votes = await APP_DB.getUserVotes(quizId, username);
@@ -66,6 +65,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         await quiz.updateVoteCounts();
 
         // Admin has closed last question
+        const isLastQuestion = questionIndex + 1 === questionCount;
         if (isAdmin && quiz.isSupervised() && isLastQuestion) {
             await quiz.finish();
         }

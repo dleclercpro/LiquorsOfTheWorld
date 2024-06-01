@@ -31,6 +31,7 @@ const AnswerOverlay: React.FC = () => {
 
 
   // FIXME
+  // Force user to move on to next question if it has already started
   useEffect(() => {
     if (!quiz.isOver && !(user.isAdmin && quiz.isSupervised) && !question.next.mustWaitFor) {
       question.next.goTo();
@@ -49,7 +50,7 @@ const AnswerOverlay: React.FC = () => {
   const Icon = question.answer.isCorrect ? RightIcon : WrongIcon;
   const iconText = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_ICON_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_ICON_TEXT');
 
-  const title = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount, playersCount: quiz.players.length });
+  const currentVoteStatus = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount, playersCount: quiz.players.length });
   const text = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_TEXT');
 
 
@@ -80,12 +81,13 @@ const AnswerOverlay: React.FC = () => {
             <div className='answer-overlay-box-right'>
               {question.next.mustWaitFor ? (
                 <>
-                  <p className='answer-overlay-title'>{title}</p>
+                  <p className='answer-overlay-title'>{currentVoteStatus}</p>
                 </>
               ) : (
                 <>
                   <p className='answer-overlay-text'>{text}</p>
                   <p className='answer-overlay-value'>{question.answer.correct}</p>
+                  <p className='answer-overlay-text'>{currentVoteStatus}</p>
 
                   {!quiz.isOver && (user.isAdmin && quiz.isSupervised) && (
                     <button className='answer-overlay-button' onClick={question.next.startAndGoTo}>

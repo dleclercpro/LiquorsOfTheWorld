@@ -73,7 +73,7 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
         }
 
         // We can finally move on to next question
-        await quiz.incrementQuestionIndex();
+        await quiz.setQuestionIndex(questionIndex);
         logger.info(`Question ${questionIndex + 1}/${questionCount} of quiz '${quiz.getId()}' has been started by admin '${username}'.`);
 
         return res.json(successResponse());

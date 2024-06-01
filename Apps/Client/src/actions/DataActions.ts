@@ -5,7 +5,7 @@ import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetStatus } from '../calls/quiz/CallGetStatus';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 import { Language, QuizName } from '../constants';
-import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizNamesResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData, StatusData } from '../types/DataTypes';
+import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizNamesResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData } from '../types/DataTypes';
 import { ThunkAPI, createServerAction } from './ServerActions';
 
 export const fetchQuizNames = createServerAction<void, CallGetQuizNamesResponseData>(
