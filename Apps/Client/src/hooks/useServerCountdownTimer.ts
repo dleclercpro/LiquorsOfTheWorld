@@ -12,8 +12,6 @@ const useServerCountdownTimer = () => {
   const duration = data?.duration ? new TimeDuration(data.duration.amount, data.duration.unit) : NO_TIME;
   const startedAt = data?.startedAt ? new Date(data.startedAt) : new Date();
 
-  console.log(isEnabled);
-
   const alreadySpentTime = new TimeDuration(new Date().getTime() - startedAt.getTime(), TimeUnit.Millisecond);
   let remainingTime = duration.subtract(alreadySpentTime);
 

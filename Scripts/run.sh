@@ -1,7 +1,7 @@
 # Define constant image details
 user="dleclercpro"
 app="quiz"
-release="latest"
+release="k-und-j"
 composefile="docker-compose.yml"
 
 # Get and move to the directory containing the script
