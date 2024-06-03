@@ -1,28 +1,38 @@
 import { CallLogIn } from '../calls/auth/CallLogIn';
-import { CallLogInResponseData, CallPingResponseData, LoginData, PingData, UserData } from '../types/DataTypes';
+import { CallPingResponseData, LoginData, PingData, AuthData } from '../types/DataTypes';
 import { CallPing } from '../calls/auth/CallPing';
 import { CallLogOut } from '../calls/auth/CallLogOut';
 import { createServerAction } from './ServerActions';
+import { authSlice } from '../reducers/AuthReducer';
 
-export const login = createServerAction<LoginData, CallLogInResponseData>(
+export const login = createServerAction<LoginData, void>(
   'auth/login',
-  async (args: LoginData) => {
-    const { quizId } = args;
+  async (args: LoginData, { dispatch }) => {
+    console.log(`Executing action: 'auth/login'`);
+
     const { data } = await new CallLogIn().execute(args);
 
-    const user = data as UserData;
+    const auth = data as AuthData;
 
-    return {
-      username: user.username,
-      isAdmin: user.isAdmin,
-      quizId,
-    };
+    dispatch(authSlice.actions.setAuth({
+      username: auth.username,
+      isAdmin: auth.isAdmin,
+      isAuthenticated: true,
+    }));
   },
 );
 
 export const logout = createServerAction<void, void>(
   'auth/logout',
-  async () => {
+  async (_, { dispatch }) => {
+    console.log(`Executing action: 'auth/logout'`);
+
+    dispatch(authSlice.actions.setAuth({
+      username: null,
+      isAdmin: false,
+      isAuthenticated: false,
+    }));
+
     await new CallLogOut().execute();
   },
 );
@@ -30,6 +40,8 @@ export const logout = createServerAction<void, void>(
 export const ping = createServerAction<void, CallPingResponseData>(
   'auth/ping',
   async () => {
+    console.log(`Executing action: 'auth/ping'`);
+
     const { data } = await new CallPing().execute();
 
     return data as PingData;

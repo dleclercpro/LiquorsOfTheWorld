@@ -52,31 +52,6 @@ export const selectCorrectAnswer = (state: RootState, questionIndex: number) => 
 
 
 
-export const selectVote = (state: RootState, questionIndex: number) => {
-  const quiz = state.quiz;
-
-  const questions = quiz.questions.data;
-  const votes = quiz.votes.data;
-
-  if (!questions || !votes) {
-    return {
-      index: null,
-      value: null,
-    };
-  }
-
-  const question = questions[questionIndex];
-  const voteIndex = votes[questionIndex];
-  const voteValue = question.options[voteIndex];
-
-  return {
-    index: voteIndex,
-    value: voteValue,
-  };
-}
-
-
-
 export const haveAllPlayersAnswered = (state: RootState, questionIndex: number) => {
   const quiz = state.quiz;
   

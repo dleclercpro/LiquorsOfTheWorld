@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData, CallStartQuestionResponseData, CallVoteResponseData, FetchedData, GroupedScoresData, PlayersData, StatusData, VotesData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
 import { startQuiz, startQuestion, vote } from '../actions/QuizActions';
-import { login, logout, ping } from '../actions/AuthActions';
+import { logout, ping } from '../actions/AuthActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { QuizName } from '../constants';
 import { fetchStatus, fetchQuestions, fetchPlayers, fetchVotes, fetchScores } from '../actions/DataActions';
@@ -138,9 +138,6 @@ export const quizSlice = createSlice({
 
       // Auth actions
       .addCase(ping.fulfilled, (state, action) => {
-        state.id = action.payload.quizId as string | null;
-      })
-      .addCase(login.fulfilled, (state, action) => {
         state.id = action.payload.quizId as string | null;
       })
       // Reset state on logout, no matter if successful or not

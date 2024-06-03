@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from '../../hooks/ReduxHooks';
 import './LoginForm.scss';
 import { login } from '../../actions/AuthActions';
 import { useTranslation } from 'react-i18next';
-import { selectUser } from '../../selectors/UserSelectors';
 import useQuiz from '../../hooks/useQuiz';
 
 type Props = {
@@ -27,13 +26,13 @@ const LoginForm: React.FC<Props> = (props) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   
-  const auth = useSelector(selectUser);
+  const auth = useSelector((state) => state.auth);
 
 
   
   // Redirect to current quiz question on successful login
   useEffect(() => {
-    if (auth.status === 'succeeded') {
+    if (auth.status === 'succeeded' && auth.isAuthenticated) {
       navigate(`/quiz`);
     }
   }, [auth.status]);

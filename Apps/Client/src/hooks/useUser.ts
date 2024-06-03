@@ -2,7 +2,7 @@ import { logout as doLogout } from '../actions/AuthActions';
 import { useDispatch, useSelector } from './ReduxHooks';
 
 const useUser = () => {
-  const user = useSelector(({ user }) => user);
+  const auth = useSelector(({ auth }) => auth);
 
   const dispatch = useDispatch();
 
@@ -11,9 +11,9 @@ const useUser = () => {
   }
 
   return {
-    username: user.username,
-    isAdmin: user.isAdmin,
-    isAuthenticated: user.isAuthenticated,
+    username: auth.username,
+    isAdmin: auth.isAdmin,
+    isAuthenticated: auth.isAuthenticated,
     logout,
   };
 };

@@ -33,10 +33,15 @@ const QuizPage: React.FC = () => {
 
 
 
-  // Fetch initial data
+  // Fetch initial data only once!
   useEffect(() => {
+    if (!user.isAuthenticated) {
+      return;
+    }
+
     quiz.fetchData();
-  }, []);
+
+  }, [user.isAuthenticated]);
 
 
 
@@ -53,6 +58,9 @@ const QuizPage: React.FC = () => {
 
   // Fetch current quiz status from server when moving to next question
   useEffect(() => {
+    if (!user.isAuthenticated) {
+      return;
+    }
     if (quiz.id === null || quiz.name === null) {
       return;
     }
@@ -62,7 +70,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    quiz.refreshStatus()
+    quiz.refreshStatusAndPlayers()
       .then(() => {
         if (timer.isEnabled) {
           timer.restart();
@@ -75,11 +83,14 @@ const QuizPage: React.FC = () => {
 
   // Regularly fetch current quiz status from server
   useEffect(() => {
+    if (!user.isAuthenticated) {
+      return;
+    }
     if (quiz.id === null || quiz.name === null) {
       return;
     }
 
-    const interval = setInterval(quiz.refreshStatus, REFRESH_STATUS_INTERVAL);
+    const interval = setInterval(quiz.refreshStatusAndPlayers, REFRESH_STATUS_INTERVAL);
   
     return () => clearInterval(interval);
   }, []);
@@ -88,6 +99,9 @@ const QuizPage: React.FC = () => {
 
   // Set choice if user already voted
   useEffect(() => {
+    if (!user.isAuthenticated) {
+      return;
+    }
     if (vote.value === null || vote.index === -1) {
       if (answerOverlay.isOpen) {
         answerOverlay.close();
@@ -106,6 +120,9 @@ const QuizPage: React.FC = () => {
 
   // Show loading screen in case quiz has not yet been started
   useEffect(() => {
+    if (!user.isAuthenticated) {
+      return;
+    }
     if (!quiz.isStarted && !user.isAdmin) {
       loadingOverlay.open();
     } else {
@@ -118,6 +135,9 @@ const QuizPage: React.FC = () => {
 
   // Start timer if enabled
   useEffect(() => {
+    if (!user.isAuthenticated) {
+      return;
+    }
     if (timer.isEnabled && !timer.isRunning && quiz.isStarted) {
       timer.start();
     }
@@ -127,12 +147,14 @@ const QuizPage: React.FC = () => {
 
   // Show answer once timer has expired
   useEffect(() => {
+    if (!user.isAuthenticated) {
+      return;
+    }
     if (quiz.isStarted && timer.isEnabled && timer.isDone) {
       answerOverlay.open();
     }
 
   }, [quiz.isStarted, timer.isEnabled, timer.isDone]);
-
 
 
   // Wait until data has been fetched

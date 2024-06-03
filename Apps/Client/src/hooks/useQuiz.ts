@@ -25,7 +25,7 @@ const useQuiz = () => {
   const scores = quiz.scores.data ?? { admins: {}, users: {} };
 
   const questionIndex = status?.questionIndex;
-
+  
   const isStarted = Boolean(status?.isStarted);
   const isOver = Boolean(status?.isOver);
   const isSupervised = Boolean(status?.isSupervised);
@@ -36,7 +36,7 @@ const useQuiz = () => {
 
 
   const fetchData = useCallback(async () => {
-    if (quiz.id === null || !quiz.name) return;
+    if (quiz.id === null || !quiz.name || !lang) return;
 
     await dispatch(fetchQuizData({ quizId: quiz.id, quizName: quiz.name, lang }));
 
@@ -107,7 +107,7 @@ const useQuiz = () => {
     scores,
     fetchData,
     refreshQuestions,
-    refreshStatus: refreshStatusAndPlayers,
+    refreshStatusAndPlayers,
     start: startQuiz,
     delete: deleteQuiz,
   };

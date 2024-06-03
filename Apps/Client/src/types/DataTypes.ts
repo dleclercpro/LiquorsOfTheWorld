@@ -23,7 +23,7 @@ export type LoginData = Auth & {
   teamId: string,
 };
 
-export type UserData = {
+export type AuthData = {
   username: string,
   isAdmin: boolean,
 };
@@ -79,12 +79,12 @@ export type CallVoteRequestData = {
 
 
 export type CallPingResponseData = PingData;
-export type CallLogInResponseData = UserData;
+export type CallLogInResponseData = AuthData;
 
 export type CallGetVersionResponseData = VersionData;
 export type CallGetQuizNamesResponseData = string[];
 export type CallGetQuestionsResponseData = QuizJSON;
-export type CallGetUserResponseData = UserData;
+export type CallGetUserResponseData = AuthData;
 export type CallGetStatusResponseData = StatusData;
 export type CallGetVotesResponseData = VotesData;
 export type CallGetPlayersResponseData = PlayersData;
