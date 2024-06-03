@@ -40,7 +40,6 @@ const LoginController: RequestHandler = async (req, res, next) => {
         let user = await User.get(username);
         if (user) {
             logger.trace(`Validating password for '${username}'...`);
-            const user = await User.get(username);
 
             if (!await isPasswordValid(password, user!.getPassword())) {
                 throw new InvalidPasswordError()
@@ -66,25 +65,23 @@ const LoginController: RequestHandler = async (req, res, next) => {
         // already exist
         if (!user) {
             if (isAdmin) {
-                logger.trace(`Creating admin '${username}'...`);
-                if (password !== admin!.password) {
-                    throw new InvalidPasswordError();
-                }
                 user = await User.create({ username, password }, true);
             } else {
-                logger.trace(`Creating user '${username}'...`);
                 user = await User.create({ username, password }, false);
             }
         }
 
-        // Check if quiz has already started and user is playing
+        // Check if quiz has already started and non-admin user is playing
         const isUserPlaying = quiz.isUserPlaying(user!, teamId);
-        if (!isUserPlaying) {
+        logger.debug(user.serialize());
+        if (!isUserPlaying && !user.isAdmin()) {
             logger.debug(`User '${username}' is not part of the quiz.`);
             if (quiz.isStarted()) {
                 throw new QuizAlreadyStartedError();
             }
-            await quiz.addUser(user!, teamId);
+
+            // Add user to quiz
+            await quiz.addUserToPlayers(user!, teamId);
             logger.debug(`User '${username}' joined quiz ${quizId}.`);
         }
 

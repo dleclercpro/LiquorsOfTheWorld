@@ -70,6 +70,7 @@ const QuestionForm: React.FC<Props> = (props) => {
       vote: options.findIndex(option => option === choice),
     }));
 
+    // FIXME
     if (result.type.endsWith('/rejected')) {
       alert(`Could not vote!`);
       return;

@@ -23,7 +23,7 @@ const QuizPage: React.FC = () => {
   const quiz = useQuiz();
   const user = useUser();
   const vote = useVote(app.questionIndex);
-  
+
   const loadingOverlay = useOverlay(OverlayName.Loading);
   const answerOverlay = useOverlay(OverlayName.Answer);
 

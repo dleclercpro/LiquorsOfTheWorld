@@ -129,7 +129,7 @@ class Quiz {
         const questionCount = await QuizManager.count(this.name);
         const voteCounts = new Array(questionCount).fill(0);
 
-        const votes = await APP_DB.getAllVotes(this.id);
+        const votes = await APP_DB.getAllVotes(this);
         const players = Object.keys(votes);
 
         // For each player, every vote that is not equal to -1 is a
@@ -172,7 +172,7 @@ class Quiz {
 
         // Delete all votes associated with quiz
         await Promise.all(this.players.map(async (player) => {
-            return APP_DB.delete(`votes:${this.id}:${player}`);
+            return APP_DB.delete(`votes:${this.id}:${player.username}`);
         }));
 
         // Delete quiz finally
@@ -209,15 +209,11 @@ class Quiz {
         await this.save();
     }
 
-    public async addUser(user: User, teamId: string = '') {
+    public async addUserToPlayers(user: User, teamId: string = '') {
         this.players = unique([...this.players, {
             username: user.getUsername().toLowerCase(),
             teamId,
         }]);
-
-        const questionCount = await QuizManager.count(this.name);
-
-        await APP_DB.setUserVotes(this.id, user.getUsername(), new Array(questionCount).fill(NON_VOTE));
 
         await this.save();
     }
@@ -289,10 +285,10 @@ class Quiz {
             },
         });
 
-        // Add creator game to players
+        // Add creator user to players if it's NOT an admin
         const user = await User.get(username);
-        if (user) {
-            await quiz.addUser(user, teamId);
+        if (user && !user.isAdmin()) {
+            await quiz.addUserToPlayers(user, teamId);
         }
 
         // Store quiz in DB

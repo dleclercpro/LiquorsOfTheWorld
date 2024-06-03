@@ -34,7 +34,7 @@ const AnswerOverlay: React.FC = () => {
     return null;
   }
 
-  const voteCount = quiz.status.voteCounts[appQuestionIndex];
+  let voteCount = quiz.status.voteCounts[appQuestionIndex];
 
   const Icon = question.answer.isCorrect ? RightIcon : WrongIcon;
   const iconText = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_ICON_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_ICON_TEXT');

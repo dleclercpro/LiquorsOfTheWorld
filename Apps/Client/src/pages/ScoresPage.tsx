@@ -42,6 +42,7 @@ const ScoresPage: React.FC = () => {
     );
   }
   
+  // FIXME: 18/17 ???
   return (
     <Page title={t('common:COMMON:SCOREBOARD')} className='scores-page'>
       <Scoreboard scores={quiz.scores.users} />

@@ -21,10 +21,10 @@ class User {
     }
 
     public serialize() {
-        const { username, password, isAdmin } = this;
+        const { username, password, admin } = this;
 
         return JSON.stringify({
-            username, password, isAdmin,
+            username, password, admin,
         });
     }
 
@@ -77,7 +77,7 @@ class User {
         
         const lowercaseUsername = username.toLowerCase();
       
-        logger.trace(`Creating user '${lowercaseUsername}'...`);
+        logger.trace(`Creating ${admin ? 'admin' : 'user'} '${lowercaseUsername}'...`);
         const user = new User({
             username: lowercaseUsername,
             password: await User.hashPassword(password),

@@ -33,7 +33,11 @@ export const overlaysSlice = createSlice({
     closeOverlay: (state, action: PayloadAction<OverlayName>) => {
       state[action.payload].open = false;
     },
-    closeAllOverlays: () => initialState,
+    closeAllOverlays: (state) => {
+      Object.keys(state).forEach(key => {
+        state[key as OverlayName].open = false;
+      });
+    },
   },
   extraReducers: (builder) => {
     builder

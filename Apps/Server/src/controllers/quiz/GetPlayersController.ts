@@ -5,6 +5,7 @@ import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import { PlayersData } from '../../types/DataTypes';
 import Quiz from '../../models/Quiz';
+import logger from '../../logger';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -27,7 +28,6 @@ const GetPlayersController: RequestHandler = async (req, res, next) => {
     try {
         const { quiz } = await validateParams(req.params);
 
-        // FIXME: remove admins from players!
         const players: PlayersData = quiz.getPlayers();
 
         return res.json(

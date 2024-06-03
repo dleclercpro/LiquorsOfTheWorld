@@ -1,4 +1,5 @@
 import { LANGUAGES, Language, QUIZ_NAMES, QuizName } from '../constants';
+import logger from '../logger';
 import { QuizJSON } from '../types/JSONTypes';
 
 type QuizDirectory = Record<Language, Record<QuizName, QuizJSON | null>>;
@@ -47,7 +48,11 @@ class QuizManager {
             throw new Error('QUIZ_DATA_NOT_LOADED');
         }
 
-        return Object.keys(json).length;
+        const count = Object.keys(json).length;
+
+        logger.debug(`Found ${count} questions in quiz: ${name}`);
+
+        return count;
     }
 }
 

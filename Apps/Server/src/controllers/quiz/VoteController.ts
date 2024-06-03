@@ -56,7 +56,8 @@ const VoteController: RequestHandler = async (req, res, next) => {
         const isLastQuestion = nextQuestionIndex === questionCount;
 
         // Get votes from DB if they exist
-        const votes = await APP_DB.getUserVotes(quizId, username);
+        const votes = await APP_DB.getUserVotes(quiz, username);
+        
         const questions = await QuizManager.get(quiz.getName(), quiz.getLanguage());
         const selectedAnswer = questions[questionIndex].options[vote];
 
@@ -65,13 +66,13 @@ const VoteController: RequestHandler = async (req, res, next) => {
         logger.debug(`New vote for user '${username}': Q${questionIndexAsString} -> ${selectedAnswer}`);
 
         // Store votes in DB
-        await APP_DB.setUserVotes(quizId, username, votes);
+        await APP_DB.setUserVotes(quiz, username, votes);
 
         // Update vote counts
         await quiz.updateVoteCounts();
 
         // Find out how many users have voted on current question
-        const playersWhoVoted = await APP_DB.getPlayersWhoVoted(quizId, questionIndex);
+        const playersWhoVoted = await APP_DB.getPlayersWhoVoted(quiz, questionIndex);
         const players = quiz.getPlayers();
         const haveAllPlayersVoted = playersWhoVoted.length === players.length;
         logger.trace(`Players who voted so far on question #${questionIndexAsString}: ${playersWhoVoted.length}/${players.length}`);

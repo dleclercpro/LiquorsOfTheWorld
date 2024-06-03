@@ -31,7 +31,7 @@ const GetVotesController: RequestHandler = async (req, res, next) => {
 
         const { quiz } = await validateParams(req.params);
 
-        const votes = await APP_DB.getUserVotes(quiz.getId(), username);
+        const votes = await APP_DB.getUserVotes(quiz, username);
 
         const response: CallGetVotesResponseData = votes;
 

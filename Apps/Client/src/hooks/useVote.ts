@@ -1,20 +1,17 @@
-import { useSelector } from './ReduxHooks';
+import useQuiz from './useQuiz';
 
 const useVote = (questionIndex: number) => {
-  const quiz = useSelector((state) => state.quiz);
+  const quiz = useQuiz();
 
-  const questions = quiz.questions.data;
-  const votes = quiz.votes.data;
-
-  if (!questions || !votes) {
+  if (quiz.questions === null || quiz.votes.length === 0) {
     return {
       index: null,
       value: null,
     };
   }
 
-  const question = questions[questionIndex];
-  const voteIndex = votes[questionIndex];
+  const question = quiz.questions[questionIndex];
+  const voteIndex = quiz.votes[questionIndex];
   const voteValue = question.options[voteIndex];
 
   return {
