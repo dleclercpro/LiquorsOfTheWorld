@@ -23,6 +23,7 @@ type QuizStatusArgs = {
     isStarted: boolean,
     isOver: boolean,
     isSupervised: boolean,
+    isNextQuestionForced: boolean,
     questionIndex: number,
     voteCounts: number[],
     timer: TimerData,
@@ -96,6 +97,10 @@ class Quiz {
         return this.status.timer.isEnabled;
     }
 
+    public isNextQuestionForced() {
+        return this.status.isNextQuestionForced;
+    }
+
     public getId() {
         return this.id;
     }
@@ -166,9 +171,10 @@ class Quiz {
         await APP_DB.delete(`quiz:${this.id}`);
     }
 
-    public async start(isSupervised: boolean, isTimed: boolean) {
+    public async start(isSupervised: boolean, isTimed: boolean, isNextQuestionForced: boolean) {
         this.status.isStarted = true;
         this.status.isSupervised = isSupervised;
+        this.status.isNextQuestionForced = isNextQuestionForced;
 
         // Create a timer
         this.status.timer = isTimed ? {
@@ -262,6 +268,7 @@ class Quiz {
                 isStarted: false,
                 isOver: false,
                 isSupervised: false,
+                isNextQuestionForced: false,
                 questionIndex: 0,
                 voteCounts: new Array(await QuizManager.count(quizName)).fill(0),
                 timer: {

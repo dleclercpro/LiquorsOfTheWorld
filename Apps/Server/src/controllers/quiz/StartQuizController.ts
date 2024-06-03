@@ -6,6 +6,7 @@ import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import UserCannotStartQuizError from '../../errors/UserCannotStartQuizError';
 import Quiz from '../../models/Quiz';
+import { CallStartQuizRequestData } from '../../types/DataTypes';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -24,14 +25,9 @@ const validateParams = async (params: ParamsDictionary) => {
 
 
 
-type RequestBody = {
-    isSupervised: boolean,
-    isTimed: boolean,
-};
-
 const StartQuizController: RequestHandler = async (req, res, next) => {
     try {
-        const { isSupervised, isTimed } = req.body as RequestBody;
+        const { isSupervised, isTimed, isNextQuestionForced } = req.body as CallStartQuizRequestData;
         const { username, isAdmin } = req.user!;
 
         const { quiz } = await validateParams(req.params);
@@ -41,7 +37,7 @@ const StartQuizController: RequestHandler = async (req, res, next) => {
             throw new UserCannotStartQuizError();
         }
 
-        await quiz.start(isSupervised, isTimed);
+        await quiz.start(isSupervised, isTimed, isNextQuestionForced);
         logger.info(`A quiz (ID='${quiz.getId()}') has been started by admin '${username}'.`);
 
         return res.json(successResponse());

@@ -53,6 +53,7 @@ export type StatusData = {
   isStarted: boolean,
   isOver: boolean,
   isSupervised: boolean,
+  isNextQuestionForced: boolean,
   questionIndex: number,
   voteCounts: number[],
   timer: TimerData,
@@ -70,6 +71,7 @@ export type GroupedScoresData = {
 export type CallStartQuizRequestData = {
   isSupervised: boolean,
   isTimed: boolean,
+  isNextQuestionForced: boolean,
 };
 export type CallVoteRequestData = {
   vote: number,
@@ -78,6 +80,7 @@ export type CallVoteRequestData = {
 
 
 export type CallPingResponseData = PingData;
+export type CallLogInRequestData = LoginData;
 export type CallLogInResponseData = AuthData;
 
 export type CallGetVersionResponseData = VersionData;

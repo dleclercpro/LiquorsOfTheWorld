@@ -58,6 +58,7 @@
       "TEXT": "Are you ready to start the quiz? New players won't be able to join afterwards!",
       "SUPERVISE": "Supervise quiz",
       "TIMER": "Use timer",
+      "FORCE_NEXT_QUESTION": "Force next question",
       "SINGLE_PLAYER_WAITING": "There is currently <1>1 player</1> waiting to play.",
       "MANY_PLAYERS_WAITING": "There are currently <1>{{count}} players</1> waiting to play.",
       "START_QUIZ": "Yes, let's go!",

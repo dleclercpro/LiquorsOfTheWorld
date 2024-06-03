@@ -3,23 +3,16 @@ import { RequestHandler } from 'express';
 import { HttpStatusCode } from '../../types/HTTPTypes';
 import logger from '../../logger';
 import { errorResponse, successResponse } from '../../utils/calls';
-import { Auth } from '../../types';
 import { ADMINS, COOKIE_NAME, TEAMS, TEAMS_ENABLE } from '../../config';
 import { encodeCookie } from '../../utils/cookies';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidPasswordError from '../../errors/InvalidPasswordError';
 import UserDoesNotExistError from '../../errors/UserDoesNotExistError';
 import QuizAlreadyStartedError from '../../errors/QuizAlreadyStartedError';
-import { QuizName } from '../../constants';
 import InvalidTeamIdError from '../../errors/InvalidTeamIdError';
 import User from '../../models/users/User';
 import Quiz from '../../models/Quiz';
-
-type RequestBody = Auth & {
-    quizName: QuizName,
-    quizId: string,
-    teamId: string,
-};
+import { CallLogInRequestData } from '../../types/DataTypes';
 
 const isPasswordValid = async (password: string, hashedPassword: string) => {
     const isValid = await new Promise<boolean>((resolve, reject) => {
@@ -45,7 +38,7 @@ const isPasswordValid = async (password: string, hashedPassword: string) => {
 
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
-        const { quizName, quizId, teamId, username, password } = req.body as RequestBody;
+        const { quizName, quizId, teamId, username, password } = req.body as CallLogInRequestData;
         const admin = ADMINS.find(admin => admin.username === username);
         const isAdmin = Boolean(admin);
         logger.trace(`Attempt to join quiz '${quizName}' with ID '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);

@@ -29,6 +29,7 @@ const useQuiz = () => {
   const isOver = Boolean(status?.isOver);
   const isSupervised = Boolean(status?.isSupervised);
   const isTimed = Boolean(status?.timer.isEnabled);
+  const isNextQuestionForced = Boolean(status?.isNextQuestionForced);
 
   const dispatch = useDispatch();
 
@@ -53,7 +54,6 @@ const useQuiz = () => {
     }
 
     if (app.questionIndex !== appQuestionIndex) {
-      console.log(`Setting question index in app to: ${appQuestionIndex}`);
       dispatch(setQuestionIndex(appQuestionIndex));
     }
   }, [status, votes]);
@@ -87,10 +87,10 @@ const useQuiz = () => {
 
 
 
-  const startQuiz = useCallback(async (isSupervised: boolean, isTimed: boolean) => {
+  const startQuiz = useCallback(async (isSupervised: boolean, isTimed: boolean, isNextQuestionForced: boolean) => {
     if (quiz.id === null) return;
 
-    return await dispatch(doStartQuiz({ quizId: quiz.id, isSupervised, isTimed }));
+    return await dispatch(doStartQuiz({ quizId: quiz.id, isSupervised, isTimed, isNextQuestionForced }));
   }, [quiz.id]);
 
 
@@ -111,6 +111,7 @@ const useQuiz = () => {
     isOver,
     isSupervised,
     isTimed,
+    isNextQuestionForced,
     questions,
     status,
     players,

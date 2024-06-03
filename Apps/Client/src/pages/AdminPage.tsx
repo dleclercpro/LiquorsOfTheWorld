@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './AdminPage.scss';
 import { useDispatch } from '../hooks/ReduxHooks';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
@@ -47,7 +47,15 @@ const AdminPage: React.FC = () => {
     hasNoOptions = !hasCookie;
   }
 
-  dispatch(closeAllOverlays());
+
+
+  // Close all overlays when opening admin page
+  useEffect(() => {
+    dispatch(closeAllOverlays());
+
+  }, []);
+
+
 
   const handleCloseSnackbar = () => {
     setState({ ...state, open: false });

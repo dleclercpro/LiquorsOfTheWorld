@@ -1,13 +1,13 @@
 import { CallLogIn } from '../calls/auth/CallLogIn';
-import { CallPingResponseData, LoginData, PingData, AuthData } from '../types/DataTypes';
+import { CallPingResponseData, PingData, AuthData, CallLogInRequestData } from '../types/DataTypes';
 import { CallPing } from '../calls/auth/CallPing';
 import { CallLogOut } from '../calls/auth/CallLogOut';
 import { createServerAction } from './ServerActions';
 import { authSlice } from '../reducers/AuthReducer';
 
-export const loginAction = createServerAction<LoginData, string>(
+export const loginAction = createServerAction<CallLogInRequestData, string>(
   'auth/login',
-  async (args: LoginData, { dispatch }) => {
+  async (args, { dispatch }) => {
     const { data } = await new CallLogIn().execute(args);
 
     const auth = data as AuthData;
