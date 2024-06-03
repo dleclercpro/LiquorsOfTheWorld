@@ -4,7 +4,7 @@ import useOverlay from './useOverlay';
 import { OverlayName } from '../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../reducers/AppReducer';
 import useQuiz from './useQuiz';
-import { startQuestion } from '../actions/QuizActions';
+import { startQuestionAction } from '../actions/QuizActions';
 import useUser from './useUser';
 
 const useQuestion = (index: number) => {
@@ -35,7 +35,7 @@ const useQuestion = (index: number) => {
   const startAndGoToNextQuestion = async () => {
     answerOverlay.close();
 
-    await dispatch(startQuestion({
+    await dispatch(startQuestionAction({
       quizId: quiz.id as string,
       questionIndex: nextQuestionIndex,
     }));

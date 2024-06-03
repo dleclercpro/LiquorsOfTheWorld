@@ -5,11 +5,9 @@ import { CallLogOut } from '../calls/auth/CallLogOut';
 import { createServerAction } from './ServerActions';
 import { authSlice } from '../reducers/AuthReducer';
 
-export const login = createServerAction<LoginData, void>(
+export const loginAction = createServerAction<LoginData, string>(
   'auth/login',
   async (args: LoginData, { dispatch }) => {
-    console.log(`Executing action: 'auth/login'`);
-
     const { data } = await new CallLogIn().execute(args);
 
     const auth = data as AuthData;
@@ -19,14 +17,14 @@ export const login = createServerAction<LoginData, void>(
       isAdmin: auth.isAdmin,
       isAuthenticated: true,
     }));
+
+    return args.quizId;
   },
 );
 
-export const logout = createServerAction<void, void>(
+export const logoutAction = createServerAction<void, void>(
   'auth/logout',
   async (_, { dispatch }) => {
-    console.log(`Executing action: 'auth/logout'`);
-
     dispatch(authSlice.actions.setAuth({
       username: null,
       isAdmin: false,
@@ -37,11 +35,9 @@ export const logout = createServerAction<void, void>(
   },
 );
 
-export const ping = createServerAction<void, CallPingResponseData>(
+export const pingAction = createServerAction<void, CallPingResponseData>(
   'auth/ping',
   async () => {
-    console.log(`Executing action: 'auth/ping'`);
-
     const { data } = await new CallPing().execute();
 
     return data as PingData;

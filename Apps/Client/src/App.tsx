@@ -10,11 +10,11 @@ import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
 import { useDispatch } from './hooks/ReduxHooks';
-import { ping } from './actions/AuthActions';
+import { pingAction } from './actions/AuthActions';
 import Nav from './components/Nav';
 import ErrorPage from './pages/ErrorPage';
-import { updateBackground, updateVersion } from './actions/AppActions';
-import { fetchQuizNames } from './actions/DataActions';
+import { updateBackgroundAction, updateVersionAction } from './actions/AppActions';
+import { fetchQuizNamesAction } from './actions/DataActions';
 import useQuiz from './hooks/useQuiz';
 import useUser from './hooks/useUser';
 import useApp from './hooks/useApp';
@@ -27,9 +27,9 @@ function App() {
   const quiz = useQuiz();
 
   useEffect(() => {
-    dispatch(ping());
-    dispatch(updateVersion());
-    dispatch(fetchQuizNames());
+    dispatch(pingAction());
+    dispatch(updateVersionAction());
+    dispatch(fetchQuizNamesAction());
   }, []);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function App() {
       return;
     }
 
-    dispatch(updateBackground());
+    dispatch(updateBackgroundAction());
 
   }, [quiz.name]);
   

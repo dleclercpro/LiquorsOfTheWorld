@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { ping } from '../actions/AuthActions';
+import { pingAction } from '../actions/AuthActions';
 
 interface PartialAuthState {
   username: string | null,
@@ -36,11 +36,11 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Ping
-      .addCase(ping.pending, (state) => {
+      .addCase(pingAction.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(ping.fulfilled, (state, action) => {
+      .addCase(pingAction.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.error = null;
 
@@ -48,7 +48,7 @@ export const authSlice = createSlice({
         state.isAdmin = action.payload.isAdmin;
         state.isAuthenticated = action.payload.isAuthenticated;
       })
-      .addCase(ping.rejected, (state, action) => {
+      .addCase(pingAction.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
 

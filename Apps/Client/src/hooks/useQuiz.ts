@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from './ReduxHooks';
-import { fetchPlayers, fetchQuestions, fetchQuizData, fetchStatus } from '../actions/DataActions';
-import { startQuiz as doStartQuiz } from '../actions/QuizActions';
-import { deleteQuiz as doDeleteQuiz } from '../actions/QuizActions';
+import { fetchPlayersAction, fetchQuestionsAction, fetchQuizDataAction, fetchStatusAction } from '../actions/DataActions';
+import { startQuizAction as doStartQuiz } from '../actions/QuizActions';
+import { deleteQuizAction as doDeleteQuiz } from '../actions/QuizActions';
 import useUser from './useUser';
 import { Language, NON_VOTE } from '../constants';
 import { useTranslation } from 'react-i18next';
@@ -38,7 +38,7 @@ const useQuiz = () => {
   const fetchData = useCallback(async () => {
     if (quiz.id === null || !quiz.name || !lang) return;
 
-    await dispatch(fetchQuizData({ quizId: quiz.id, quizName: quiz.name, lang }));
+    await dispatch(fetchQuizDataAction({ quizId: quiz.id, quizName: quiz.name, lang }));
 
     const questionIndex = status?.questionIndex ?? 0;
 
@@ -62,7 +62,7 @@ const useQuiz = () => {
   const refreshQuestions = useCallback(async () => {
     if (!quiz.name) return;
     
-    await dispatch(fetchQuestions({ quizName: quiz.name, lang }));
+    await dispatch(fetchQuestionsAction({ quizName: quiz.name, lang }));
   }, [quiz.name, lang, user]);
 
 
@@ -70,8 +70,8 @@ const useQuiz = () => {
   const refreshStatusAndPlayers = useCallback(async () => {
     if (!quiz.id) return;
 
-    await dispatch(fetchStatus(quiz.id));
-    await dispatch(fetchPlayers(quiz.id));
+    await dispatch(fetchStatusAction(quiz.id));
+    await dispatch(fetchPlayersAction(quiz.id));
   }, [quiz.id, user]);
 
 

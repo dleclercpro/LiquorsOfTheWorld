@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from '../../hooks/ReduxHooks';
 import './QuestionForm.scss';
-import { vote } from '../../actions/QuizActions';
+import { voteAction } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
 import { QUIZ_TIMER_URGENT_TIME, SERVER_ROOT } from '../../config';
 import { AspectRatio, NO_TIME } from '../../constants';
@@ -64,7 +64,7 @@ const QuestionForm: React.FC<Props> = (props) => {
       return;
     }
     
-    const result = await dispatch(vote({
+    const result = await dispatch(voteAction({
       quizId: quiz.id,
       questionIndex: index, // Vote for question that's currently being displayed in the app
       vote: options.findIndex(option => option === choice),

@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { logout } from '../actions/AuthActions';
+import { logoutAction } from '../actions/AuthActions';
 
 export enum OverlayName {
   Loading = 'loading',
@@ -38,8 +38,8 @@ export const overlaysSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Reset state on logout, no matter if successful or not
-      .addCase(logout.fulfilled, () => initialState)
-      .addCase(logout.rejected, () => initialState);
+      .addCase(logoutAction.fulfilled, () => initialState)
+      .addCase(logoutAction.rejected, () => initialState);
     },
 });
 

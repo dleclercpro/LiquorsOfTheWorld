@@ -35,13 +35,13 @@ const QuizPage: React.FC = () => {
 
   // Fetch initial data only once!
   useEffect(() => {
-    if (!user.isAuthenticated) {
+    if (!user.isAuthenticated || quiz.id === null) {
       return;
     }
 
     quiz.fetchData();
 
-  }, [user.isAuthenticated]);
+  }, [user.isAuthenticated, quiz.id]);
 
 
 

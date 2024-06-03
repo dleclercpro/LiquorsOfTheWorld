@@ -1,4 +1,4 @@
-import { logout as doLogout } from '../actions/AuthActions';
+import { logoutAction as doLogout } from '../actions/AuthActions';
 import { useDispatch, useSelector } from './ReduxHooks';
 
 const useUser = () => {

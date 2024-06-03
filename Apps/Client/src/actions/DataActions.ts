@@ -8,7 +8,7 @@ import { Language, QuizName } from '../constants';
 import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizNamesResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData } from '../types/DataTypes';
 import { ThunkAPI, createServerAction } from './ServerActions';
 
-export const fetchQuizNames = createServerAction<void, CallGetQuizNamesResponseData>(
+export const fetchQuizNamesAction = createServerAction<void, CallGetQuizNamesResponseData>(
   'data/quiz-names',
   async () => {
     const { data } = await new CallGetQuizNames().execute();
@@ -18,7 +18,7 @@ export const fetchQuizNames = createServerAction<void, CallGetQuizNamesResponseD
 );
 
 type FetchQuestionsActionArgs = { lang: Language, quizName: QuizName };
-export const fetchQuestions = createServerAction<FetchQuestionsActionArgs, CallGetQuestionsResponseData>(
+export const fetchQuestionsAction = createServerAction<FetchQuestionsActionArgs, CallGetQuestionsResponseData>(
   'data/questions',
   async ({ lang, quizName }: FetchQuestionsActionArgs) => {
     const { data } = await new CallGetQuestions(lang, quizName).execute();
@@ -27,7 +27,7 @@ export const fetchQuestions = createServerAction<FetchQuestionsActionArgs, CallG
   },
 );
 
-export const fetchStatus = createServerAction<string, CallGetStatusResponseData>(
+export const fetchStatusAction = createServerAction<string, CallGetStatusResponseData>(
   'data/status',
   async (quizId: string) => {
     const { data } = await new CallGetStatus(quizId).execute();
@@ -36,7 +36,7 @@ export const fetchStatus = createServerAction<string, CallGetStatusResponseData>
   },
 );
 
-export const fetchPlayers = createServerAction<string, CallGetPlayersResponseData>(
+export const fetchPlayersAction = createServerAction<string, CallGetPlayersResponseData>(
   'data/players',
   async (quizId: string) => {
     const { data } = await new CallGetPlayers(quizId).execute();
@@ -45,7 +45,7 @@ export const fetchPlayers = createServerAction<string, CallGetPlayersResponseDat
   },
 );
 
-export const fetchVotes = createServerAction<string, CallGetVotesResponseData>(
+export const fetchVotesAction = createServerAction<string, CallGetVotesResponseData>(
   'data/votes',
   async (quizId: string) => {
     const { data } = await new CallGetVotes(quizId).execute();
@@ -54,7 +54,7 @@ export const fetchVotes = createServerAction<string, CallGetVotesResponseData>(
   },
 );
 
-export const fetchScores = createServerAction<string, CallGetScoresResponseData>(
+export const fetchScoresAction = createServerAction<string, CallGetScoresResponseData>(
   'data/scores',
   async (quizId: string) => {
     const { data } = await new CallGetScores(quizId).execute();
@@ -66,16 +66,14 @@ export const fetchScores = createServerAction<string, CallGetScoresResponseData>
 
 
 type FetchQuizDataActionArgs = { quizId: string, quizName: QuizName, lang: Language };
-export const fetchQuizData = createServerAction<FetchQuizDataActionArgs, void>(
+export const fetchQuizDataAction = createServerAction<FetchQuizDataActionArgs, void>(
   'data/quiz',
   async ({ quizId, quizName, lang }: FetchQuizDataActionArgs, { dispatch, getState }: ThunkAPI) => {
-    console.log(`Fetching quiz data...`);
-
     const result = await Promise.all([
-      dispatch(fetchQuestions({ lang, quizName })),
-      dispatch(fetchVotes(quizId)),
-      dispatch(fetchScores(quizId)),
-      dispatch(fetchStatus(quizId)),
+      dispatch(fetchQuestionsAction({ lang, quizName })),
+      dispatch(fetchVotesAction(quizId)),
+      dispatch(fetchScoresAction(quizId)),
+      dispatch(fetchStatusAction(quizId)),
     ]);
 
     const someFetchActionFailed = result
