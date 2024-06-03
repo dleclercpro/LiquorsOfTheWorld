@@ -202,6 +202,8 @@ class Quiz {
     }
 
     public async finish() {
+        logger.info(`The quiz (ID = ${this.id}) was finished.`);
+
         this.status.isOver = true;
 
         await this.save();

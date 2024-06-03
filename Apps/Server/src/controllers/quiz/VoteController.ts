@@ -25,7 +25,8 @@ const validateParams = async (params: ParamsDictionary) => {
 
     const questionIndex = Number(_questionIndex);
     const questionCount = await QuizManager.count(quiz.getName());
-    const isQuestionIndexValid = (0 <= questionIndex) && (questionIndex + 1 <= questionCount);
+
+    const isQuestionIndexValid = (0 <= questionIndex) && (questionIndex <= questionCount - 1);
     if (!isQuestionIndexValid) {
         throw new InvalidQuestionIndexError();
     }
@@ -49,8 +50,10 @@ const VoteController: RequestHandler = async (req, res, next) => {
         if (!quiz) {
             throw new InvalidQuizIdError();
         }
+        const nextQuestionIndex = questionIndex + 1;
+        const questionIndexAsString = questionIndex + 1;
         const questionCount = await QuizManager.count(quiz.getName());
-        const isLastQuestion = questionIndex + 1 === questionCount;
+        const isLastQuestion = nextQuestionIndex === questionCount;
 
         // Get votes from DB if they exist
         const votes = await APP_DB.getUserVotes(quizId, username);
@@ -59,7 +62,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
 
         // Add vote to array
         votes[questionIndex] = vote;
-        logger.debug(`New vote for user '${username}': Q${questionIndex + 1} -> ${selectedAnswer}`);
+        logger.debug(`New vote for user '${username}': Q${questionIndexAsString} -> ${selectedAnswer}`);
 
         // Store votes in DB
         await APP_DB.setUserVotes(quizId, username, votes);
@@ -67,34 +70,34 @@ const VoteController: RequestHandler = async (req, res, next) => {
         // Update vote counts
         await quiz.updateVoteCounts();
 
-        if (!quiz.isSupervised()) {
-            // FIXME
+        // Find out how many users have voted on current question
+        const playersWhoVoted = await APP_DB.getPlayersWhoVoted(quizId, questionIndex);
+        const players = quiz.getPlayers();
+        const haveAllPlayersVoted = playersWhoVoted.length === players.length;
+        logger.trace(`Players who voted so far on question #${questionIndexAsString}: ${playersWhoVoted.length}/${players.length}`);
 
-            // // Find out whether all users have voted up until current question
-            // const playersWhoVoted = await APP_DB.getPlayersWhoVoted(quizId, questionIndex);
-            // const players = quiz.getPlayers();
-            // logger.trace(`Players: ${players}`);
-            // logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);
+        if (!quiz.isSupervised() && haveAllPlayersVoted) {
+            logger.info(`All users have voted on question #${questionIndexAsString}.`);
+            
+            // That was not the last question and the game is not supervised:
+            // the index can be automatically incremented
+            if (nextQuestionIndex < questionCount) {
+                await quiz.incrementQuestionIndex();
+            }
 
-            // // If so: increment quiz's current question index
-            // if (playersWhoVoted.length === players.length) {
-            //     logger.info(`All users have voted on question #${questionIndex + 1}.`);
-                
-            //     // That was not the last question and the game is not supervised:
-            //     // the index can be automatically incremented
-            //     if (questionIndex + 1 < questionCount && !quiz.isSupervised()) {
-            //         await quiz.incrementQuestionIndex();
-            //     }
+            // That was the last question: the game is now over
+            else if (nextQuestionIndex === questionCount) {
+                await quiz.finish();
+            }
 
-            //     // That was the last question: the game is now over
-            //     else if (questionIndex + 1 === questionCount) {
-            //         await quiz.finish();
-            //     }
-            // }
+            // Wrong index
+            else {
+                throw new InvalidQuestionIndexError();
+            }
         }
 
         // Admin has closed last question
-        else if (isAdmin && isLastQuestion) {
+        if (quiz.isSupervised() && isAdmin && isLastQuestion) {
             await quiz.finish();
         }
 
