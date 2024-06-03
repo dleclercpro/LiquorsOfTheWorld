@@ -70,10 +70,12 @@ export const fetchQuizDataAction = createServerAction<FetchQuizDataActionArgs, v
   'data/quiz',
   async ({ quizId, quizName, lang }: FetchQuizDataActionArgs, { dispatch, getState }: ThunkAPI) => {
     const result = await Promise.all([
-      dispatch(fetchQuestionsAction({ lang, quizName })),
-      dispatch(fetchVotesAction(quizId)),
-      dispatch(fetchScoresAction(quizId)),
+      dispatch(fetchQuestionsAction({ lang, quizName })), // Must only be fetched once: questions do not change
+      dispatch(fetchVotesAction(quizId)), // Must only be fetched on login: is then updated every time user votes
+
       dispatch(fetchStatusAction(quizId)),
+      dispatch(fetchPlayersAction(quizId)),
+      dispatch(fetchScoresAction(quizId)),
     ]);
 
     const someFetchActionFailed = result
@@ -81,7 +83,7 @@ export const fetchQuizDataAction = createServerAction<FetchQuizDataActionArgs, v
       .some(type => type.endsWith('/rejected'));
 
     if (someFetchActionFailed) {
-      throw new Error('DATA_FETCH');
+      throw new Error('FETCH_QUIZ_DATA');
     }
   },
 );

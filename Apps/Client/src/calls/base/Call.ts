@@ -1,4 +1,4 @@
-import { API_ROOT } from '../../config';
+import { API_ROOT, LOG_SERVER_CALLS } from '../../config';
 import { ServerResponse } from '../../types/CallTypes';
 
 /**
@@ -73,7 +73,9 @@ class Call<RequestData = void, ResponseData = void> {
     async execute(payload?: RequestData) {
         let err = '';
 
-        console.trace(`Executing API call '${this.name}': ${this.url}`);
+        if (LOG_SERVER_CALLS) {
+            console.log(`Executing API call '${this.name}': ${this.url}`);
+        }
 
         // Store call's payload
         this.payload = payload;

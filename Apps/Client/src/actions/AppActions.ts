@@ -24,7 +24,7 @@ export const updateBackgroundAction = createServerAction<void, void>(
     const { quiz } = getState();
 
     if (!quiz.name) {
-      throw new Error('Cannot update background if quiz name is undefined!');
+      throw new Error('UNDEFINED_QUIZ_NAME');
     }
 
     const { data: path } = await new CallGetBackgroundUrl(quiz.name).execute()

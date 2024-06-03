@@ -70,7 +70,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    quiz.refreshStatusAndPlayers()
+    quiz.refreshStatusPlayersAndScores()
       .then(() => {
         if (timer.isEnabled) {
           timer.restart();
@@ -90,7 +90,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    const interval = setInterval(quiz.refreshStatusAndPlayers, REFRESH_STATUS_INTERVAL);
+    const interval = setInterval(quiz.refreshStatusPlayersAndScores, REFRESH_STATUS_INTERVAL);
   
     return () => clearInterval(interval);
   }, []);

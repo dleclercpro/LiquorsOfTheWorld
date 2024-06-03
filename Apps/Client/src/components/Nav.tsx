@@ -143,8 +143,8 @@ const Nav: React.FC = () => {
             </li>
           )}
 
-          {/* FIXME */}
-          {false && DEBUG && location.pathname !== '/admin' && (
+          {/* This nav item will only appear in debug mode! */}
+          {DEBUG && location.pathname !== '/admin' && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/admin`}>
                 <SettingsIcon className='nav-icon' />

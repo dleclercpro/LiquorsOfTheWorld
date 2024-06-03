@@ -1,9 +1,8 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from './ReduxHooks';
-import { fetchPlayersAction, fetchQuestionsAction, fetchQuizDataAction, fetchStatusAction } from '../actions/DataActions';
+import { fetchPlayersAction, fetchQuestionsAction, fetchQuizDataAction, fetchScoresAction, fetchStatusAction } from '../actions/DataActions';
 import { startQuizAction as doStartQuiz } from '../actions/QuizActions';
 import { deleteQuizAction as doDeleteQuiz } from '../actions/QuizActions';
-import useUser from './useUser';
 import { Language, NON_VOTE } from '../constants';
 import { useTranslation } from 'react-i18next';
 import { setQuestionIndex } from '../reducers/AppReducer';
@@ -13,7 +12,7 @@ const useQuiz = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language as Language;
 
-  const user = useUser();
+  const app = useSelector(({ app }) => app);
   const quiz = useSelector(({ quiz }) => quiz);
 
   const { id, name } = quiz;
@@ -35,14 +34,14 @@ const useQuiz = () => {
 
 
 
-  const fetchData = useCallback(async () => {
-    if (quiz.id === null || !quiz.name || !lang) return;
+  // Refresh app quiz ID
+  useEffect(() => {
+    if (!status || votes.length === 0) return;
 
-    await dispatch(fetchQuizDataAction({ quizId: quiz.id, quizName: quiz.name, lang }));
+    const questionIndex = status.questionIndex ?? 0;
 
-    const questionIndex = status?.questionIndex ?? 0;
-
-    let lastUnansweredQuestionIndex = toReversedArray(votes).findIndex((vote: number) => vote === NON_VOTE);
+    let lastUnansweredQuestionIndex = toReversedArray(votes)
+      .findIndex((vote: number) => vote === NON_VOTE);
 
     if (lastUnansweredQuestionIndex === -1) {
       lastUnansweredQuestionIndex = 0;
@@ -53,7 +52,18 @@ const useQuiz = () => {
       appQuestionIndex = lastUnansweredQuestionIndex;
     }
 
-    dispatch(setQuestionIndex(appQuestionIndex));
+    if (app.questionIndex !== appQuestionIndex) {
+      console.log(`Setting question index in app to: ${appQuestionIndex}`);
+      dispatch(setQuestionIndex(appQuestionIndex));
+    }
+  }, [status, votes]);
+
+
+
+  const fetchData = useCallback(async () => {
+    if (quiz.id === null || !quiz.name || !lang) return;
+
+    await dispatch(fetchQuizDataAction({ quizId: quiz.id, quizName: quiz.name, lang }));
 
   }, [quiz.id, quiz.name, lang]);
 
@@ -63,16 +73,17 @@ const useQuiz = () => {
     if (!quiz.name) return;
     
     await dispatch(fetchQuestionsAction({ quizName: quiz.name, lang }));
-  }, [quiz.name, lang, user]);
+  }, [quiz.name, lang]);
 
 
 
-  const refreshStatusAndPlayers = useCallback(async () => {
+  const refreshStatusPlayersAndScores = useCallback(async () => {
     if (!quiz.id) return;
 
     await dispatch(fetchStatusAction(quiz.id));
     await dispatch(fetchPlayersAction(quiz.id));
-  }, [quiz.id, user]);
+    await dispatch(fetchScoresAction(quiz.id));
+  }, [quiz.id]);
 
 
 
@@ -107,7 +118,7 @@ const useQuiz = () => {
     scores,
     fetchData,
     refreshQuestions,
-    refreshStatusAndPlayers,
+    refreshStatusPlayersAndScores,
     start: startQuiz,
     delete: deleteQuiz,
   };

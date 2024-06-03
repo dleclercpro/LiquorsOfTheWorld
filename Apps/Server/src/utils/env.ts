@@ -26,7 +26,7 @@ export const loadEnvironment = () => {
     }
     
     dotenv.config({ path: filepath });
-    console.debug(`Loaded environment: ${env}\n`);
+    console.log(`Loaded environment: ${env}\n`);
 
     return env;
 }
