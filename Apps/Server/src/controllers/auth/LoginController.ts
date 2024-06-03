@@ -13,32 +13,11 @@ import InvalidTeamIdError from '../../errors/InvalidTeamIdError';
 import User from '../../models/users/User';
 import Quiz from '../../models/Quiz';
 import { CallLogInRequestData } from '../../types/DataTypes';
-
-const isPasswordValid = async (password: string, hashedPassword: string) => {
-    const isValid = await new Promise<boolean>((resolve, reject) => {
-        bcrypt.compare(password, hashedPassword, (err, isEqualAfterHash) => {
-            if (err) {
-                resolve(false);
-                return;
-            }
-  
-            if (!isEqualAfterHash) {
-                resolve(false);
-                return;
-            }
-  
-            resolve(true);
-        });
-    });
-  
-    return isValid;
-}
-
-
+import { isPasswordValid } from '../../utils/crypto';
 
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
-        const { quizName, quizId, teamId, username, password } = req.body as CallLogInRequestData;
+        const { quizId, quizName, teamId, username, password } = req.body as CallLogInRequestData;
         const admin = ADMINS.find(admin => admin.username === username);
         const isAdmin = Boolean(admin);
         logger.trace(`Attempt to join quiz '${quizName}' with ID '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);

@@ -17,7 +17,7 @@ import useVote from '../hooks/useVote';
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();
 
-  const lang = i18n.language as Language;
+  const language = i18n.language as Language;
 
   const app = useApp();
   const quiz = useQuiz();
@@ -52,7 +52,7 @@ const QuizPage: React.FC = () => {
     }
 
     quiz.refreshQuestions();
-  }, [lang]);
+  }, [language]);
 
 
 

@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { APP_DB } from '..';
-import { NON_VOTE, QUIZ_NAMES, QuizName } from '../constants';
+import { Language, NON_VOTE, QUIZ_NAMES, QuizName } from '../constants';
 import InvalidQuizNameError from '../errors/InvalidQuizNameError';
 import QuizAlreadyExistsError from '../errors/QuizAlreadyExistsError';
 import logger from '../logger';
@@ -14,6 +14,7 @@ import { TIMER_DURATION } from '../config';
 type QuizArgs = {
     id: string,
     name: QuizName,
+    language?: Language,
     creator: string,
     status: QuizStatusArgs,
     players: PlayerData[],
@@ -34,6 +35,7 @@ type QuizStatusArgs = {
 class Quiz {
     protected id: string;
     protected name: QuizName;
+    protected language: Language;
     protected creator: string;
     protected players: PlayerData[];
     protected status: QuizStatusArgs;
@@ -41,6 +43,7 @@ class Quiz {
     public constructor(args: QuizArgs) {
         this.id = args.id;
         this.name = args.name;
+        this.language = args.language ?? Language.EN;
         this.creator = args.creator;
         this.players = args.players ?? [];
         this.status = args.status;
@@ -50,6 +53,7 @@ class Quiz {
         return JSON.stringify({
             id: this.id,
             name: this.name,
+            language: this.language,
             creator: this.creator,
             players: this.players,
             status: {
@@ -107,6 +111,10 @@ class Quiz {
 
     public getName() {
         return this.name;
+    }
+
+    public getLanguage() {
+        return this.language;
     }
 
     public getStatus() {
@@ -171,7 +179,9 @@ class Quiz {
         await APP_DB.delete(`quiz:${this.id}`);
     }
 
-    public async start(isSupervised: boolean, isTimed: boolean, isNextQuestionForced: boolean) {
+    public async start(isSupervised: boolean, isTimed: boolean, isNextQuestionForced: boolean, language: Language) {
+        this.language = language;
+
         this.status.isStarted = true;
         this.status.isSupervised = isSupervised;
         this.status.isNextQuestionForced = isNextQuestionForced;
@@ -248,20 +258,20 @@ class Quiz {
         await APP_DB.set(`quiz:${this.id}`, this.serialize());
     }
 
-    public static async create(quizId: string, quizName: QuizName, username: string, teamId: string = '') {
-        logger.trace(`Creating a new quiz...`);
+    public static async create(id: string, name: QuizName, username: string, teamId: string = '') {
+        logger.info(`Creating a new quiz '${name}' (ID = ${id})...`);
 
-        if (!QUIZ_NAMES.includes(quizName)) {
+        if (!QUIZ_NAMES.includes(name)) {
             throw new InvalidQuizNameError();
         }
 
-        if (await Quiz.exists(quizId)) {
+        if (await Quiz.exists(id)) {
             throw new QuizAlreadyExistsError();
         }
 
         const quiz = new Quiz({
-            id: quizId,
-            name: quizName,
+            id,
+            name,
             creator: username.toLowerCase(),
             players: [],
             status: {
@@ -270,7 +280,7 @@ class Quiz {
                 isSupervised: false,
                 isNextQuestionForced: false,
                 questionIndex: 0,
-                voteCounts: new Array(await QuizManager.count(quizName)).fill(0),
+                voteCounts: new Array(await QuizManager.count(name)).fill(0),
                 timer: {
                     isEnabled: false,
                 },

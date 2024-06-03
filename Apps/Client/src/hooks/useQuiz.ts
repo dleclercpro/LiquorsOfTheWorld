@@ -10,7 +10,7 @@ import { toReversedArray } from '../utils/array';
 
 const useQuiz = () => {
   const { i18n } = useTranslation();
-  const lang = i18n.language as Language;
+  const language = i18n.language as Language;
 
   const app = useSelector(({ app }) => app);
   const quiz = useSelector(({ quiz }) => quiz);
@@ -61,19 +61,19 @@ const useQuiz = () => {
 
 
   const fetchData = useCallback(async () => {
-    if (quiz.id === null || !quiz.name || !lang) return;
+    if (quiz.id === null || !quiz.name || !language) return;
 
-    await dispatch(fetchQuizDataAction({ quizId: quiz.id, quizName: quiz.name, lang }));
+    await dispatch(fetchQuizDataAction({ quizId: quiz.id, quizName: quiz.name, language }));
 
-  }, [quiz.id, quiz.name, lang]);
+  }, [quiz.id, quiz.name, language]);
 
 
 
   const refreshQuestions = useCallback(async () => {
     if (!quiz.name) return;
     
-    await dispatch(fetchQuestionsAction({ quizName: quiz.name, lang }));
-  }, [quiz.name, lang]);
+    await dispatch(fetchQuestionsAction({ quizName: quiz.name, language }));
+  }, [quiz.name, language]);
 
 
 
@@ -90,7 +90,7 @@ const useQuiz = () => {
   const startQuiz = useCallback(async (isSupervised: boolean, isTimed: boolean, isNextQuestionForced: boolean) => {
     if (quiz.id === null) return;
 
-    return await dispatch(doStartQuiz({ quizId: quiz.id, isSupervised, isTimed, isNextQuestionForced }));
+    return await dispatch(doStartQuiz({ quizId: quiz.id, language, isSupervised, isTimed, isNextQuestionForced }));
   }, [quiz.id]);
 
 

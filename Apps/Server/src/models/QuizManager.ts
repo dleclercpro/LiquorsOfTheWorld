@@ -29,15 +29,15 @@ class QuizManager {
         return QuizManager.instance;
     }
 
-    private async load(name: QuizName, lang: Language) {
-        this.quizzes[lang][name] = (await import(`../../data/${lang}/${name}.json`)).default;
+    private async load(name: QuizName, language: Language) {
+        this.quizzes[language][name] = (await import(`../../data/${language}/${name}.json`)).default;
     }
 
-    public async get(name: QuizName, lang: Language = Language.EN) {
-        if (this.quizzes[lang][name] === null) {
-            await this.load(name, lang);
+    public async get(name: QuizName, language: Language = Language.EN) {
+        if (this.quizzes[language][name] === null) {
+            await this.load(name, language);
         }
-        return this.quizzes[lang][name] as QuizJSON;
+        return this.quizzes[language][name] as QuizJSON;
     }
 
     public async count(name: QuizName) {

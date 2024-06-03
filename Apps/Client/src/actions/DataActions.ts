@@ -17,11 +17,11 @@ export const fetchQuizNamesAction = createServerAction<void, CallGetQuizNamesRes
   },
 );
 
-type FetchQuestionsActionArgs = { lang: Language, quizName: QuizName };
+type FetchQuestionsActionArgs = { language: Language, quizName: QuizName };
 export const fetchQuestionsAction = createServerAction<FetchQuestionsActionArgs, CallGetQuestionsResponseData>(
   'data/questions',
-  async ({ lang, quizName }: FetchQuestionsActionArgs) => {
-    const { data } = await new CallGetQuestions(lang, quizName).execute();
+  async ({ language, quizName }: FetchQuestionsActionArgs) => {
+    const { data } = await new CallGetQuestions(language, quizName).execute();
       
     return data!;
   },
@@ -65,12 +65,12 @@ export const fetchScoresAction = createServerAction<string, CallGetScoresRespons
 
 
 
-type FetchQuizDataActionArgs = { quizId: string, quizName: QuizName, lang: Language };
+type FetchQuizDataActionArgs = { quizId: string, quizName: QuizName, language: Language };
 export const fetchQuizDataAction = createServerAction<FetchQuizDataActionArgs, void>(
   'data/quiz',
-  async ({ quizId, quizName, lang }: FetchQuizDataActionArgs, { dispatch, getState }: ThunkAPI) => {
+  async ({ quizId, quizName, language }: FetchQuizDataActionArgs, { dispatch, getState }: ThunkAPI) => {
     const result = await Promise.all([
-      dispatch(fetchQuestionsAction({ lang, quizName })), // Must only be fetched once: questions do not change
+      dispatch(fetchQuestionsAction({ language, quizName })), // Must only be fetched once: questions do not change
       dispatch(fetchVotesAction(quizId)), // Must only be fetched on login: is then updated every time user votes
 
       dispatch(fetchStatusAction(quizId)),

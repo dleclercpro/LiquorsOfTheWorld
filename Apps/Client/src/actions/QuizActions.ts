@@ -5,14 +5,15 @@ import { logoutAction } from './AuthActions';
 import { ThunkAPI, createServerAction } from './ServerActions';
 import { CallVote } from '../calls/quiz/CallVote';
 import { CallVoteResponseData } from '../types/DataTypes';
+import { Language } from '../constants';
 
 
 
-type StartQuizActionArgs = { quizId: string, isSupervised: boolean, isTimed: boolean, isNextQuestionForced: boolean };
+type StartQuizActionArgs = { quizId: string, language: Language, isSupervised: boolean, isTimed: boolean, isNextQuestionForced: boolean };
 export const startQuizAction = createServerAction<StartQuizActionArgs, void>(
   'quiz/start',
-  async ({ quizId, isSupervised, isTimed, isNextQuestionForced }: StartQuizActionArgs) => {
-    await new CallStartQuiz(quizId).execute({ isSupervised, isTimed, isNextQuestionForced });
+  async ({ quizId, language, isSupervised, isTimed, isNextQuestionForced }: StartQuizActionArgs) => {
+    await new CallStartQuiz(quizId).execute({ language, isSupervised, isTimed, isNextQuestionForced });
 
     return;
   },

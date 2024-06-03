@@ -56,7 +56,7 @@ router.get('/quiz/:quizId/players', [AuthMiddleware], GetPlayersController);
 router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);
 
 router.get('/quiz', GetQuizNamesController);
-router.get('/questions/:lang/:quizName', GetQuestionsController);
+router.get('/questions/:language/:quizName', GetQuestionsController);
 
 
 

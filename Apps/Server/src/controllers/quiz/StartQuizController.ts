@@ -27,7 +27,7 @@ const validateParams = async (params: ParamsDictionary) => {
 
 const StartQuizController: RequestHandler = async (req, res, next) => {
     try {
-        const { isSupervised, isTimed, isNextQuestionForced } = req.body as CallStartQuizRequestData;
+        const { isSupervised, isTimed, isNextQuestionForced, language } = req.body as CallStartQuizRequestData;
         const { username, isAdmin } = req.user!;
 
         const { quiz } = await validateParams(req.params);
@@ -37,7 +37,7 @@ const StartQuizController: RequestHandler = async (req, res, next) => {
             throw new UserCannotStartQuizError();
         }
 
-        await quiz.start(isSupervised, isTimed, isNextQuestionForced);
+        await quiz.start(isSupervised, isTimed, isNextQuestionForced, language);
         logger.info(`A quiz (ID='${quiz.getId()}') has been started by admin '${username}'.`);
 
         return res.json(successResponse());

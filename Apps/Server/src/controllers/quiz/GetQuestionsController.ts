@@ -7,9 +7,9 @@ import QuizManager from '../../models/QuizManager';
 import InvalidQuizNameError from '../../errors/InvalidQuizNameError';
 
 const validateParams = (params: ParamsDictionary) => {
-    const { lang, quizName } = params;
+    const { language, quizName } = params;
 
-    if (!LANGUAGES.includes(lang as Language)) {
+    if (!LANGUAGES.includes(language as Language)) {
         throw new InvalidLanguageError();
     }
 
@@ -17,16 +17,16 @@ const validateParams = (params: ParamsDictionary) => {
         throw new InvalidQuizNameError();
     }
 
-    return { lang: lang as Language, quizName: quizName as QuizName };
+    return { language: language as Language, quizName: quizName as QuizName };
 }
 
 
 
 const GetQuestionsController: RequestHandler = async (req, res, next) => {
     try {
-        const { lang, quizName } = validateParams(req.params);
+        const { language, quizName } = validateParams(req.params);
 
-        const questions = await QuizManager.get(quizName, lang);
+        const questions = await QuizManager.get(quizName, language);
 
         return res.json(
             successResponse(questions)

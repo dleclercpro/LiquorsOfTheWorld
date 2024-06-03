@@ -1,5 +1,5 @@
 import { Auth, TimeUnit } from '.';
-import { QuizName } from '../constants';
+import { Language, QuizName } from '../constants';
 import { QuizJSON } from './JSONTypes';
 
 export type FetchedData<Data> = {
@@ -8,17 +8,18 @@ export type FetchedData<Data> = {
   error: string | null,
 };
 
-export type PingData = {
-  quizId: string,
+export type QuizData = {
   quizName: QuizName,
+  quizId: string,
+};
+
+export type PingData = QuizData & {
   username: string,
   isAdmin: boolean,
   isAuthenticated: boolean,
 };
 
-export type LoginData = Auth & {
-  quizName: QuizName,
-  quizId: string,
+export type LoginData = Auth & QuizData & {
   teamId: string,
 };
 
@@ -72,6 +73,7 @@ export type CallStartQuizRequestData = {
   isSupervised: boolean,
   isTimed: boolean,
   isNextQuestionForced: boolean,
+  language: Language,
 };
 export type CallVoteRequestData = {
   vote: number,

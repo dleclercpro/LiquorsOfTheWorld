@@ -50,13 +50,16 @@ const VoteController: RequestHandler = async (req, res, next) => {
             throw new InvalidQuizIdError();
         }
         const questionCount = await QuizManager.count(quiz.getName());
+        const isLastQuestion = questionIndex + 1 === questionCount;
 
         // Get votes from DB if they exist
         const votes = await APP_DB.getUserVotes(quizId, username);
+        const questions = await QuizManager.get(quiz.getName(), quiz.getLanguage());
+        const selectedAnswer = questions[questionIndex].options[vote];
 
         // Add vote to array
         votes[questionIndex] = vote;
-        logger.debug(`New vote for user '${username}': ${questionIndex} -> ${vote}`);
+        logger.debug(`New vote for user '${username}': Q${questionIndex + 1} -> ${selectedAnswer}`);
 
         // Store votes in DB
         await APP_DB.setUserVotes(quizId, username, votes);
@@ -64,35 +67,36 @@ const VoteController: RequestHandler = async (req, res, next) => {
         // Update vote counts
         await quiz.updateVoteCounts();
 
-        // Admin has closed last question
-        const isLastQuestion = questionIndex + 1 === questionCount;
-        if (isAdmin && quiz.isSupervised() && isLastQuestion) {
-            await quiz.finish();
+        if (!quiz.isSupervised()) {
+            // FIXME
+
+            // // Find out whether all users have voted up until current question
+            // const playersWhoVoted = await APP_DB.getPlayersWhoVoted(quizId, questionIndex);
+            // const players = quiz.getPlayers();
+            // logger.trace(`Players: ${players}`);
+            // logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);
+
+            // // If so: increment quiz's current question index
+            // if (playersWhoVoted.length === players.length) {
+            //     logger.info(`All users have voted on question #${questionIndex + 1}.`);
+                
+            //     // That was not the last question and the game is not supervised:
+            //     // the index can be automatically incremented
+            //     if (questionIndex + 1 < questionCount && !quiz.isSupervised()) {
+            //         await quiz.incrementQuestionIndex();
+            //     }
+
+            //     // That was the last question: the game is now over
+            //     else if (questionIndex + 1 === questionCount) {
+            //         await quiz.finish();
+            //     }
+            // }
         }
 
-        // FIXME
-        
-        // // Find out whether all users have voted up until current question
-        // const playersWhoVoted = await APP_DB.getPlayersWhoVoted(quizId, questionIndex);;
-        // const players = quiz.getPlayers();
-        // logger.trace(`Players: ${players}`);
-        // logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);
-
-        // // If so: increment quiz's current question index
-        // if (playersWhoVoted.length === players.length) {
-        //     logger.info(`All users have voted on question #${questionIndex + 1}.`);
-            
-        //     // That was not the last question and the game is not supervised:
-        //     // the index can be automatically incremented
-        //     if (questionIndex + 1 < questionCount && !quiz.isSupervised()) {
-        //         await quiz.incrementQuestionIndex();
-        //     }
-
-        //     // That was the last question: the game is now over
-        //     else if (questionIndex + 1 === questionCount) {
-        //         await quiz.finish();
-        //     }
-        // }
+        // Admin has closed last question
+        else if (isAdmin && isLastQuestion) {
+            await quiz.finish();
+        }
 
         const response: CallVoteResponseData = {
             status: quiz.getStatus(),

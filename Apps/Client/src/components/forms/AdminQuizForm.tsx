@@ -5,6 +5,7 @@ import useQuiz from '../../hooks/useQuiz';
 
 const AdminQuizForm: React.FC = () => {
   const { t } = useTranslation();
+  
   const [isSupervised, setIsSupervised] = useState(false);
   const [isTimed, setIsTimed] = useState(false);
   const [isNextQuestionForced, setIsNextQuestionForced] = useState(false);
