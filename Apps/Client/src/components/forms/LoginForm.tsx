@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from '../../hooks/ReduxHooks';
+import { useDispatch } from '../../hooks/ReduxHooks';
 import './LoginForm.scss';
-import { login } from '../../actions/AuthActions';
+import { loginAction } from '../../actions/UserActions';
 import { useTranslation } from 'react-i18next';
-import { selectUser } from '../../selectors/UserSelectors';
 import useQuiz from '../../hooks/useQuiz';
+import useUser from '../../hooks/useUser';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   quizId: string | null,
@@ -19,73 +19,84 @@ const LoginForm: React.FC<Props> = (props) => {
   const { t } = useTranslation();
 
   const quiz = useQuiz();
+  const user = useUser();
 
-  const [quizId, setQuizId] = useState(props.quizId ?? '');
-  const [teamId, /* setTeamId */] = useState(props.teamId ?? '');
-  const [disableQuizId] = useState(!!props.quizId);
-  // const [disableTeamId] = useState(!!props.quizId);
+  const [quizId, setQuizId] = useState('');
+  const [teamId, setTeamId] = useState('');
+
+  const disableQuizId = !!props.quizId;
+  const disableTeamId = !!props.teamId;
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  
-  const auth = useSelector(selectUser);
+
+  const canSubmit = quiz.name !== null && quizId !== '' && teamId !== '' && username !== '' && password !== '';
 
 
-  
-  // Redirect to current quiz question on successful login
+
+  // Use props to fill fields
   useEffect(() => {
-    if (auth.status === 'succeeded') {
+    setQuizId(props.quizId ?? '');
+  }, [props.quizId]);
+
+  useEffect(() => {
+    setTeamId(props.teamId ?? '');
+  }, [props.teamId]);
+
+
+
+  // Redirect to quiz page on successful login
+  useEffect(() => {
+    if (user.isAuthenticated) {
       navigate(`/quiz`);
     }
-  }, [auth.status]);
-
-  // Display authentication error to user
-  useEffect(() => {
-    if (auth.status === 'failed' && auth.error) {
-      setError(auth.error);
-    }
-  }, [auth.status, auth.error]);
+  }, [user.isAuthenticated]);
 
 
-
+  
   // Send login data to server
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (quiz.name === null) {
+    if (!canSubmit) {
       return;
     }
 
-    await dispatch(login({ quizName: quiz.name, quizId, teamId, username, password }));
+    const auth = { username, password };
+
+    await dispatch(loginAction({
+      ...auth,
+      quizName: quiz.name!,
+      quizId,
+      teamId,
+    }));
   };
+
+
 
   return (
     <form className='login-form' onSubmit={(e) => handleSubmit(e)}>
-        <input
+      <input
         id='login-quiz-id'
         className={`${disableQuizId ? 'is-disabled' : ''}`}
         type='text'
-        value={quizId}
+        value={disableQuizId ? '' : quizId}
         disabled={disableQuizId}
-        placeholder={t('common:FORMS.LOGIN.QUIZ_ID')}
+        placeholder={disableQuizId ? `${t(`common:COMMON:QUIZ`)} ID: ${quizId}` : t('common:FORMS.LOGIN.QUIZ_ID')}
         onChange={(e) => setQuizId(e.target.value)}
         required
       />
 
-      {
-      /* FIXME: remove teams for now.
-        <input
-          id='login-team-id'
-          className={`${disableTeamId ? 'is-disabled' : ''}`}
-          type='text'
-          value={teamId}
-          disabled={disableTeamId}
-          placeholder={t('common:FORMS.LOGIN.TEAM_ID')}
-          onChange={(e) => setTeamId(e.target.value)}
-          required
-        />
-      */}
+      <input
+        id='login-team-id'
+        className={`${disableTeamId ? 'is-disabled' : ''}`}
+        type='text'
+        value={disableTeamId ? '' : teamId}
+        disabled={disableTeamId}
+        placeholder={disableTeamId ? `${t(`common:COMMON:TEAM`)} ID: ${teamId}` : t('common:FORMS.LOGIN.TEAM_ID')}
+        onChange={(e) => setTeamId(e.target.value)}
+        required
+      />
 
       <input
         id='login-username'
@@ -105,9 +116,13 @@ const LoginForm: React.FC<Props> = (props) => {
         required
       />
 
-      {error && <p className='login-error'>{t(`ERRORS.${error}`)}</p>}
+      {user.error && (
+        <p className='login-error'>
+          {t(`ERRORS.${user.error}`)}
+        </p>
+      )}
 
-      <button className='login-button' type='submit'>
+      <button className={`login-button ${!canSubmit ? 'is-disabled' : ''}`} type='submit' disabled={!canSubmit}>
         {t('common:FORMS.LOGIN.SUBMIT')}
       </button>
     </form>

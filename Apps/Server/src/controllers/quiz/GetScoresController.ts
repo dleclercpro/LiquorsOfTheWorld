@@ -29,7 +29,7 @@ const GetScoresController: RequestHandler = async (req, res, next) => {
     try {
         const { quiz } = await validateParams(req.params);
 
-        const scores: ScoresData = await APP_DB.getAllScores(quiz.getId());
+        const scores: ScoresData = await APP_DB.getAllScores(quiz);
 
         const admins = ADMINS.map((admin) => admin.username);
 

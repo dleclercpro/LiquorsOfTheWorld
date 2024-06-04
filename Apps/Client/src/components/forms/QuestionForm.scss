@@ -15,7 +15,7 @@
   > .question-form-meta {
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 
     @include desktop {
       flex-direction: row;
@@ -25,22 +25,21 @@
 
     > .question-form-timer {
       order: 2;
-      margin-bottom: 10px;
-      text-align: left;
-      font-weight: bold;
+      margin-bottom: 5px;
+      background-color: $color-black;
+      color: $color-white;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
 
       @include desktop {
         order: 1;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 10px;
-        border-radius: 4px;
-        color: $color-white;
-        background-color: $color-black;
-        font-weight: normal;
         margin-bottom: 0;
         margin-right: auto;
+        text-align: left;
       }
 
       &.urgent {

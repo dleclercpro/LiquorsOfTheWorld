@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from '../../hooks/ReduxHooks';
 import './QuestionForm.scss';
-import { vote } from '../../actions/QuizActions';
+import { voteAction } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
 import { QUIZ_TIMER_URGENT_TIME, SERVER_ROOT } from '../../config';
 import { AspectRatio, NO_TIME } from '../../constants';
@@ -52,6 +52,26 @@ const QuestionForm: React.FC<Props> = (props) => {
   const ratioClass = ratio ? `ratio-${ratio.replace(':', 'x')}` : 'ratio-1x1';
 
 
+
+  const sendVote = useCallback(async () => {
+    if (quiz.id === null) {
+      return;
+    }
+
+    const result = await dispatch(voteAction({
+      quizId: quiz.id,
+      questionIndex: index, // Vote for question that's currently being displayed in the app
+      vote: options.findIndex(option => option === choice),
+    }));
+
+    if (result.type.endsWith('/rejected')) {
+      return false;
+    }
+
+    return true;
+  }, [quiz.id, index, options, choice]);
+
+
   
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setChoice(e.target.value);
@@ -60,22 +80,9 @@ const QuestionForm: React.FC<Props> = (props) => {
   const handleSubmit: React.ChangeEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    if (quiz.id === null) {
-      return;
+    if (await sendVote()) {
+      answerOverlay.open();
     }
-    
-    const result = await dispatch(vote({
-      quizId: quiz.id,
-      questionIndex: index, // Vote for question that's currently being displayed in the app
-      vote: options.findIndex(option => option === choice),
-    }));
-
-    if (result.type.endsWith('/rejected')) {
-      alert(`Could not vote!`);
-      return;
-    }
-
-    answerOverlay.open();
   }
 
   // Reset choice when changing question
@@ -84,9 +91,13 @@ const QuestionForm: React.FC<Props> = (props) => {
 
   }, [index]);
 
+
+
   if (!quiz.questions || !quiz.status) {
     return null;
   }
+
+
 
   return (
     <form className='question-form' onSubmit={handleSubmit}>

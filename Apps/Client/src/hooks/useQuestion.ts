@@ -4,18 +4,20 @@ import useOverlay from './useOverlay';
 import { OverlayName } from '../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../reducers/AppReducer';
 import useQuiz from './useQuiz';
-import { startQuestion } from '../actions/QuizActions';
+import { startQuestionAction } from '../actions/QuizActions';
+import useApp from './useApp';
 import useUser from './useUser';
 
 const useQuestion = (index: number) => {
   const dispatch = useDispatch();
 
-  const quiz = useQuiz();
+  const app = useApp();
   const user = useUser();
+  const quiz = useQuiz();
 
   const nextQuestionIndex = index + 1;
-  const isNextQuestionReady = quiz.questionIndex ? nextQuestionIndex < quiz.questionIndex : false;
-  const mustWaitForNextQuestion = !user.isAdmin && !isNextQuestionReady;
+  const isNextQuestionReady = app.questionIndex < quiz.questionIndex;
+  const mustWaitForNextQuestion = !quiz.isOver && !user.isAdmin && !isNextQuestionReady;
 
   const answerOverlay = useOverlay(OverlayName.Answer);
 
@@ -35,7 +37,7 @@ const useQuestion = (index: number) => {
   const startAndGoToNextQuestion = async () => {
     answerOverlay.close();
 
-    await dispatch(startQuestion({
+    await dispatch(startQuestionAction({
       quizId: quiz.id as string,
       questionIndex: nextQuestionIndex,
     }));
@@ -52,7 +54,6 @@ const useQuestion = (index: number) => {
     },
     next: {
       index: index + 1,
-      isReady: isNextQuestionReady,
       mustWaitFor: mustWaitForNextQuestion,
       goTo: goToNextQuestion,
       startAndGoTo: startAndGoToNextQuestion,

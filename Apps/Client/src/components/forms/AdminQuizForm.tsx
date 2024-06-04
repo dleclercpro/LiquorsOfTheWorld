@@ -5,23 +5,31 @@ import useQuiz from '../../hooks/useQuiz';
 
 const AdminQuizForm: React.FC = () => {
   const { t } = useTranslation();
+  
   const [isSupervised, setIsSupervised] = useState(false);
   const [isTimed, setIsTimed] = useState(false);
+  const [isNextQuestionForced, setIsNextQuestionForced] = useState(false);
 
   const quiz = useQuiz();
 
-  const handleSuperviseCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleIsSupervisedCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setIsSupervised(!isSupervised);
   }
 
-  const handleTimerCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleIsTimedCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setIsTimed(!isTimed);
   }
+
+  const handleIsNextQuestionForcedCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setIsNextQuestionForced(!isNextQuestionForced);
+  }
+
+
 
   const handleStartQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
     
-    await quiz.start(isSupervised, isTimed);
+    await quiz.start(isSupervised, isTimed, isNextQuestionForced);
   }
 
   const handleDeleteQuiz: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
@@ -43,13 +51,13 @@ const AdminQuizForm: React.FC = () => {
         </Trans>
       </p>
       
-      <div className='checkbox'>
+      <div className='checkboxes'>
         <input
           type='checkbox'
           id='option-supervise'
           name='option-supervise'
           checked={isSupervised}
-          onChange={handleSuperviseCheckboxChange}
+          onChange={handleIsSupervisedCheckboxChange}
         />
         <label htmlFor='option-supervise'>{t('common:FORMS.START_QUIZ.SUPERVISE')}</label>
 
@@ -58,9 +66,18 @@ const AdminQuizForm: React.FC = () => {
           id='option-timer'
           name='option-timer'
           checked={isTimed}
-          onChange={handleTimerCheckboxChange}
+          onChange={handleIsTimedCheckboxChange}
         />
         <label htmlFor='option-timer'>{t('common:FORMS.START_QUIZ.TIMER')}</label>
+
+        <input
+          type='checkbox'
+          id='option-next-question-forced'
+          name='option-next-question-forced'
+          checked={isNextQuestionForced}
+          onChange={handleIsNextQuestionForcedCheckboxChange}
+        />
+        <label htmlFor='option-next-question-forced'>{t('common:FORMS.START_QUIZ.FORCE_NEXT_QUESTION')}</label>
       </div>
 
       <p className='admin-quiz-form-text'>{t('common:FORMS.START_QUIZ.TEXT')}</p>

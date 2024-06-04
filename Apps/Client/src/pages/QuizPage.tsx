@@ -4,7 +4,7 @@ import QuestionForm from '../components/forms/QuestionForm';
 import { REFRESH_STATUS_INTERVAL } from '../config';
 import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
-import { AspectRatio, Language, QuestionType } from '../constants';
+import { AspectRatio, Language, NO_QUESTION_INDEX, QuestionType } from '../constants';
 import Page from './Page';
 import useServerCountdownTimer from '../hooks/useServerCountdownTimer';
 import useQuiz from '../hooks/useQuiz';
@@ -17,54 +17,80 @@ import useVote from '../hooks/useVote';
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();
 
-  const lang = i18n.language as Language;
+  const language = i18n.language as Language;
 
   const app = useApp();
   const quiz = useQuiz();
   const user = useUser();
   const vote = useVote(app.questionIndex);
-  
+
   const loadingOverlay = useOverlay(OverlayName.Loading);
   const answerOverlay = useOverlay(OverlayName.Answer);
+  const lobbyOverlay = useOverlay(OverlayName.Lobby);
 
   const timer = useServerCountdownTimer();
 
   const [choice, setChoice] = useState('');
 
+  const isReady = quiz.id !== null && quiz.questions !== null && quiz.status !== null && app.questionIndex !== NO_QUESTION_INDEX;
 
 
-  // Fetch initial data
+
+  // Handle loading overlay based on presence of data
   useEffect(() => {
-    quiz.fetchData();
-  }, []);
+    if (!isReady && !loadingOverlay.isOpen) {
+      loadingOverlay.open();
+    }
+    if (isReady && loadingOverlay.isOpen) {
+      loadingOverlay.close();
+    }
+
+  }, [isReady, loadingOverlay.isOpen]);
 
 
 
-  // Refresh quiz data when changing language
+  // Fetch initial data only once!
+  useEffect(() => {
+    if (isReady) {
+      return;
+    }
+
+    quiz.fetchAllData();
+
+  }, [isReady]);
+
+
+
+  // Refresh questions' JSON when changing language
   useEffect(() => {
     if (quiz.id === null || quiz.name === null) {
       return;
     }
 
     quiz.refreshQuestions();
-  }, [lang]);
+  }, [language]);
 
 
 
   // Fetch current quiz status from server when moving to next question
   useEffect(() => {
+    if (!user.isAuthenticated) {
+      return;
+    }
     if (quiz.id === null || quiz.name === null) {
       return;
     }
 
     // Do not run for first question
-    if (app.questionIndex === 0) {
+    if (app.questionIndex === NO_QUESTION_INDEX) {
       return;
     }
 
-    quiz.refreshStatus()
+    quiz.refreshStatusPlayersAndScores()
       .then(() => {
-        timer.restart();
+        if (timer.isEnabled) {
+          timer.restart();
+        }
       });
 
   }, [app.questionIndex]);
@@ -73,11 +99,14 @@ const QuizPage: React.FC = () => {
 
   // Regularly fetch current quiz status from server
   useEffect(() => {
+    if (!user.isAuthenticated) {
+      return;
+    }
     if (quiz.id === null || quiz.name === null) {
       return;
     }
 
-    const interval = setInterval(() => quiz.refreshStatus(), REFRESH_STATUS_INTERVAL);
+    const interval = setInterval(quiz.refreshStatusPlayersAndScores, REFRESH_STATUS_INTERVAL);
   
     return () => clearInterval(interval);
   }, []);
@@ -86,7 +115,10 @@ const QuizPage: React.FC = () => {
 
   // Set choice if user already voted
   useEffect(() => {
-    if (vote.value === null || vote.index === -1) {
+    if (!user.isAuthenticated) {
+      return;
+    }
+    if (vote.value === null) {
       if (answerOverlay.isOpen) {
         answerOverlay.close();
       }
@@ -102,20 +134,25 @@ const QuizPage: React.FC = () => {
 
 
 
-  // Show loading screen in case quiz has not yet been started
+  // Open answer layer if quiz is over
   useEffect(() => {
-    if (!quiz.isStarted && !user.isAdmin) {
-      loadingOverlay.open();
-    } else {
-      loadingOverlay.close();
+    if (!quiz.isOver) {
+      return;
     }
 
-  }, [quiz.isStarted, user.isAdmin]);
+    if (!answerOverlay.isOpen) {
+      answerOverlay.open();
+    }
+    
+  }, [quiz.isOver, answerOverlay.isOpen]);
 
 
 
   // Start timer if enabled
   useEffect(() => {
+    if (!user.isAuthenticated) {
+      return;
+    }
     if (timer.isEnabled && !timer.isRunning && quiz.isStarted) {
       timer.start();
     }
@@ -125,22 +162,40 @@ const QuizPage: React.FC = () => {
 
   // Show answer once timer has expired
   useEffect(() => {
-    if (quiz.isStarted && timer.isDone) {
+    if (!user.isAuthenticated) {
+      return;
+    }
+    if (timer.isEnabled && quiz.isStarted && timer.isDone) {
       answerOverlay.open();
     }
 
-  }, [quiz.isStarted, timer.isDone]);
+  }, [timer.isEnabled, quiz.isStarted, timer.isDone]);
 
+
+
+  // Show lobby to non-admin users
+  useEffect(() => {
+    if (user.isAdmin) return;
+
+    if (!quiz.isStarted && !lobbyOverlay.isOpen) {
+      lobbyOverlay.open();
+    }
+
+    if (quiz.isStarted && lobbyOverlay.isOpen) {
+      lobbyOverlay.close();
+    }
+
+  }, [quiz.isStarted, user.isAdmin]);
 
 
   // Wait until data has been fetched
-  if (!quiz.questions || !quiz.status) {
+  if (!isReady) {
     return null;
   }
 
 
   
-  const { topic, question, type, url, options } = quiz.questions[app.questionIndex];
+  const { topic, question, type, url, options } = quiz.questions![app.questionIndex];
 
   return (
     <Page title={t('common:COMMON:QUIZ')} className='quiz-page'>
@@ -149,13 +204,13 @@ const QuizPage: React.FC = () => {
       )}
       {quiz.isStarted && (
         <QuestionForm
-          remainingTime={(timer.isRunning || timer.isDone) ? timer.time : undefined}
+          remainingTime={timer.isEnabled && (timer.isRunning || timer.isDone) ? timer.time : undefined}
           index={app.questionIndex}
           topic={topic}
           question={question}
           image={type === QuestionType.Image ? { url: url!, desc: `Question ${app.questionIndex + 1}` } : undefined}
           video={type === QuestionType.Video ? { url: url!, desc: `Question ${app.questionIndex + 1}` } : undefined}
-          ratio={AspectRatio.SixteenByNine}
+          ratio={AspectRatio.FourByThree}
           options={options}
           disabled={choice === ''}
           choice={choice}

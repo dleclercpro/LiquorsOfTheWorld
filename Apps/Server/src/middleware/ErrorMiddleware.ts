@@ -8,7 +8,6 @@ import { COOKIE_NAME } from '../config';
 const ErrorMiddleware = async (err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof Error) {
     logger.fatal(`An unexpected error occurred: ${err.message}`);
-    logger.fatal(``);
   }
 
   // Unknown error

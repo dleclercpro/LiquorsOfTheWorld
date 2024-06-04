@@ -1,0 +1,68 @@
+@import '../../styles/common';
+
+#lobby-overlay {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $color-black;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 10px;
+
+  @include desktop {
+    padding: 20px;
+  }
+
+  > .lobby-overlay-box {
+    max-width: 1024px;
+
+    > .lobby-overlay-title {
+      width: 100%;
+      color: $color-white;
+      @include font-title;
+      margin-bottom: 10px;
+    }
+  
+    > .lobby-overlay-text {
+      width: 100%;
+      color: $color-white;
+      @include font-sub-sub-title;
+      margin-bottom: 20px;
+    }
+  
+    > .lobby-overlay-players-box {
+      list-style-type: none;
+      width: 100%;
+      padding: 15px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      box-shadow: $box-shadow-light;
+      column-count: 4; /* Number of columns */
+      column-gap: 20px; /* Gap between columns */
+  
+      > li {
+        position: relative;
+        break-inside: avoid-column;
+        font-weight: bold;
+        margin-left: 20px;
+        padding: 5px 0;
+  
+        &::before {
+          content: '✔';
+          position: absolute;
+          left: -20px;
+          top: 5px;
+        }
+      }
+    }
+  }
+}

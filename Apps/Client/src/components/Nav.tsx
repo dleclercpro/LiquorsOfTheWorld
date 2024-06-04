@@ -27,7 +27,7 @@ const Nav: React.FC = () => {
 
   const app = useApp();
   
-  const [lang, setLang] = useState(app.language as Language);
+  const [appLanguage, setAppLanguage] = useState(app.language as Language);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -36,10 +36,10 @@ const Nav: React.FC = () => {
 
   // Change language in i18n when it is changed in the component's state
   useEffect(() => {
-    app.changeLanguage(lang);
-    dispatch(setLanguage(lang));
+    app.changeLanguage(appLanguage);
+    dispatch(setLanguage(appLanguage));
   
-  }, [lang]);
+  }, [appLanguage]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -61,10 +61,10 @@ const Nav: React.FC = () => {
   }, [isOpen]);
   
   const toggleLanguage = () => {
-    if (lang === Language.EN) {
-      setLang(Language.DE);
+    if (appLanguage === Language.EN) {
+      setAppLanguage(Language.DE);
     } else {
-      setLang(Language.EN);
+      setAppLanguage(Language.EN);
     }
   }
 
@@ -143,6 +143,7 @@ const Nav: React.FC = () => {
             </li>
           )}
 
+          {/* This nav item will only appear in debug mode! */}
           {DEBUG && location.pathname !== '/admin' && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/admin`}>

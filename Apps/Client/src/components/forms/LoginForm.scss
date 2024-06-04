@@ -17,7 +17,6 @@
 
     &.is-disabled {
       background-color: $color-light-grey;
-      font-weight: bold;
     }
   }
 
@@ -39,6 +38,10 @@
 
     &:not(:last-of-type) {
       margin-bottom: 10px;
+    }
+
+    &.is-disabled {
+      cursor: not-allowed;
     }
   }
 }

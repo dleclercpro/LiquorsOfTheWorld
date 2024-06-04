@@ -15,6 +15,7 @@
     "LOG_OUT": "Ausloggen",
     "USERNAME": "Benutzername",
     "QUIZ": "Quiz",
+    "TEAM": "Team",
     "QUESTION": "Frage",
     "TOPIC": "Thema",
     "TYPE": "Typ",
@@ -58,6 +59,7 @@
       "TEXT": "Bist Du bereit, das Quiz zu beginnen? Neue Spieler können danach nicht mehr beitreten!",
       "SUPERVISE": "Quiz überwachen",
       "TIMER": "Schaltuhr verwenden",
+      "FORCE_NEXT_QUESTION": "Nächste Frage zwingen",
       "SINGLE_PLAYER_WAITING": "Derzeit wartet <1>1 Spieler</1> darauf, zu spielen.",
       "MANY_PLAYERS_WAITING": "Derzeit warten <1>{{count}} Spieler</1> darauf, zu spielen.",
       "START_QUIZ": "Ja, los geht's!",
@@ -69,15 +71,20 @@
     }
   },
   "OVERLAYS": {
+    "LOBBY": {
+      "TITLE": "Hallo, <1>{{username}}</1>!",
+      "TEXT": "Das Quiz beginnt gleich. Hier ist die Liste aller Teilnehmer:"
+    },
     "ANSWER": {
       "SEE_RESULTS": "Ergebnisse ansehen",
       "NEXT_QUESTION": "Nächste Frage",
       "START_NEXT_QUESTION": "Nächste Frage starten",
+      "PLEASE_WAIT_FOR_ALL_PLAYERS": "Bitte warte, bis alle Spieler abgestimmt haben...",
       "PLEASE_WAIT_FOR_NEXT_QUESTION": "Bitte warte, bis die nächste Frage freigeschaltet wird...",
-      "CURRENT_STATUS": "Bis jetzt haben {{voteCount}} von {{playersCount}} Spielern abgestimmt.",
+      "CURRENT_STATUS": "{{voteCount}} von {{playersCount}} Spielern haben abgestimmt.",
       "RIGHT_ANSWER_TEXT": "Tatsächlich war die richtige Antwort:",
       "WRONG_ANSWER_TEXT": "Eigentlich war die richtige Antwort:",
-      "RIGHT_ANSWER_ICON_TEXT": "Glückwunsch, Du hast recht!",
+      "RIGHT_ANSWER_ICON_TEXT": "Glückwunsch, Du hast Recht!",
       "WRONG_ANSWER_ICON_TEXT": "Leider liegst Du falsch..."
     }
   },
@@ -87,6 +94,7 @@
     "INVALID_LANGUAGE": "Diese Quiz-ID Sprachoption ist ungültig.",
     "INVALID_PASSWORD": "Dieses Passwort ist ungültig.",
     "INVALID_QUIZ_ID": "Dieses Quiz existiert nicht (ungültige Quiz-ID).",
+    "INVALID_TEAM_ID": "Dieses Team existiert nicht (ungültige Quiz-ID).",
     "INVALID_QUESTION_INDEX": "Dieser Frageindex ist ungültig.",
     "QUIZ_ALREADY_EXISTS": "Dieses Quiz existiert bereits.",
     "QUIZ_ALREADY_STARTED": "Du kannst nicht mehr Teil des Quiz werden, da es bereits begonnen hat.",

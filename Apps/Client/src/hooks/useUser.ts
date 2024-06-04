@@ -1,8 +1,11 @@
-import { logout as doLogout } from '../actions/AuthActions';
+import { useEffect, useState } from 'react';
+import { logoutAction as doLogout } from '../actions/UserActions';
 import { useDispatch, useSelector } from './ReduxHooks';
 
 const useUser = () => {
   const user = useSelector(({ user }) => user);
+
+  const [error, setError] = useState('');
 
   const dispatch = useDispatch();
 
@@ -10,8 +13,17 @@ const useUser = () => {
     return await dispatch(doLogout());
   }
 
+  // Store authentication error
+  useEffect(() => {
+    if (user.status === 'failed' && user.error) {
+      setError(user.error);
+    }
+  }, [user.status, user.error]);
+
   return {
+    error,
     username: user.username,
+    teamId: user.teamId,
     isAdmin: user.isAdmin,
     isAuthenticated: user.isAuthenticated,
     logout,

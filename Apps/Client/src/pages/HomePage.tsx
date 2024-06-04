@@ -1,58 +1,52 @@
 import React, { useEffect } from 'react';
 import './HomePage.scss';
 import LoginForm from '../components/forms/LoginForm';
-import { useDispatch } from '../hooks/ReduxHooks';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Page from './Page';
 import { QuizName } from '../constants';
-import { setQuizName } from '../reducers/QuizReducer';
-import useQuiz from '../hooks/useQuiz';
 import useUser from '../hooks/useUser';
+import { URL_PARAM_QUIZ_ID, URL_PARAM_QUIZ_NAME, URL_PARAM_TEAM_ID } from '../config';
+import useQuiz from '../hooks/useQuiz';
 import useData from '../hooks/useData';
-
-const QUIZ_NAME_PARAM = 'q';
-const QUIZ_ID_PARAM = 'id';
-const TEAM_ID_PARAM = 't';
-
-
+import { setQuizName } from '../reducers/QuizReducer';
+import { useDispatch } from '../hooks/ReduxHooks';
 
 const HomePage: React.FC = () => {
   const [searchParams] = useSearchParams();
 
-  const { t } = useTranslation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
+  const { t } = useTranslation();
 
-  const quiz = useQuiz();
   const user = useUser();
-
   const data = useData();
+  const quiz = useQuiz();
 
-  const paramQuizName = searchParams.get(QUIZ_NAME_PARAM);
-  const paramQuizId = searchParams.get(QUIZ_ID_PARAM);
-  const paramTeamId = searchParams.get(TEAM_ID_PARAM);
+  const paramQuizName = searchParams.get(URL_PARAM_QUIZ_NAME);
+  const paramQuizId = searchParams.get(URL_PARAM_QUIZ_ID);
+  const paramTeamId = searchParams.get(URL_PARAM_TEAM_ID);
 
-  const quizId = paramQuizId;
-  const teamId = paramTeamId;
+  const quizName = paramQuizName ?? quiz.name;
+  const quizId = paramQuizId ?? quiz.id;
+  const teamId = paramTeamId ?? user.teamId;
 
-  const quizName = paramQuizName as QuizName ?? quiz.name;
-
-  const isQuizNameValid = data.quizzes.includes(quizName);
-
+  const isQuizNameValid = data.quizzes.includes(quizName as QuizName);
 
 
-  // Store quiz name in app state when valid
+
+  // Set quiz name if available
   useEffect(() => {
     if (isQuizNameValid) {
-      dispatch(setQuizName(quizName));
+      dispatch(setQuizName(quizName as QuizName));
+    }
+    else if (quizName !== null && quizName !== '') {
+      navigate(`/error`);
     }
   }, [isQuizNameValid]);
 
-  if (!isQuizNameValid) {
-    return (
-      <Navigate to='/error' />
-    );
-  }
+
 
   if (user.isAuthenticated) {
     return (

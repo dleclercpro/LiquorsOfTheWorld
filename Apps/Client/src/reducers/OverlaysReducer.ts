@@ -1,8 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { logout } from '../actions/AuthActions';
+import { logoutAction } from '../actions/UserActions';
 
 export enum OverlayName {
   Loading = 'loading',
+  Lobby = 'lobby',
   Answer = 'answer',
 }
 
@@ -14,6 +15,9 @@ type OverlaysState = Record<OverlayName, OverlayState>;
 
 const initialState: OverlaysState = {
   [OverlayName.Loading]: {
+    open: false,
+  },
+  [OverlayName.Lobby]: {
     open: false,
   },
   [OverlayName.Answer]: {
@@ -33,13 +37,17 @@ export const overlaysSlice = createSlice({
     closeOverlay: (state, action: PayloadAction<OverlayName>) => {
       state[action.payload].open = false;
     },
-    closeAllOverlays: () => initialState,
+    closeAllOverlays: (state) => {
+      Object.keys(state).forEach(key => {
+        state[key as OverlayName].open = false;
+      });
+    },
   },
   extraReducers: (builder) => {
     builder
       // Reset state on logout, no matter if successful or not
-      .addCase(logout.fulfilled, () => initialState)
-      .addCase(logout.rejected, () => initialState);
+      .addCase(logoutAction.fulfilled, () => initialState)
+      .addCase(logoutAction.rejected, () => initialState);
     },
 });
 

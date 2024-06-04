@@ -3,11 +3,12 @@ import { CallGetVersion } from '../calls/quiz/CallGetVersion';
 import { setVersion, setBackgroundUrl } from '../reducers/AppReducer';
 import { ThunkAPI, createServerAction } from './ServerActions';
 import { CallDeleteDatabase } from '../calls/quiz/CallDeleteDatabase';
-import { logout } from './AuthActions';
+import { logoutAction } from './UserActions';
 import { SERVER_ROOT } from '../config';
 import { CallGetBackgroundUrl } from '../calls/data/CallGetBackgroundUrl';
+import { RootState } from '../stores/store';
 
-export const updateVersion = createServerAction<void, void>(
+export const updateVersionAction = createServerAction<void, void>(
   'app/update-version',
   async (_, { dispatch }: ThunkAPI) => {
     const { data } = await new CallGetVersion().execute();
@@ -18,13 +19,13 @@ export const updateVersion = createServerAction<void, void>(
   },
 );
 
-export const updateBackground = createServerAction<void, void>(
+export const updateBackgroundAction = createServerAction<void, void>(
   'app/update-background',
   async (_, { getState, dispatch }: ThunkAPI) => {
-    const { quiz } = getState();
+    const { quiz } = getState() as RootState;
 
-    if (!quiz.name) {
-      throw new Error('Cannot update background if quiz name is undefined!');
+    if (quiz.name === null) {
+      throw new Error('MISSING_QUIZ_NAME');
     }
 
     const { data: path } = await new CallGetBackgroundUrl(quiz.name).execute()
@@ -35,11 +36,11 @@ export const updateBackground = createServerAction<void, void>(
   },
 );
 
-export const deleteDatabase = createServerAction<void, void>(
+export const deleteDatabaseAction = createServerAction<void, void>(
   'app/delete-database',
   async (_, { dispatch }: ThunkAPI) => {
     await new CallDeleteDatabase().execute();
 
-    dispatch(logout());
+    dispatch(logoutAction());
   },
 );

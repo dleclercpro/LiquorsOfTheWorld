@@ -1,15 +1,17 @@
 import { CallGetQuizNames } from '../calls/data/CallGetQuizNames';
 import { CallGetPlayers } from '../calls/quiz/CallGetPlayers';
 import { CallGetQuestions } from '../calls/quiz/CallGetQuestions';
+import { CallGetTeams } from '../calls/quiz/CallGetTeams';
 import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetStatus } from '../calls/quiz/CallGetStatus';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 import { Language, QuizName } from '../constants';
-import { RootState } from '../stores/store';
-import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizNamesResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData, StatusData } from '../types/DataTypes';
-import { ThunkAPI, createServerAction } from './ServerActions';
+import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizNamesResponseData, CallGetTeamsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData } from '../types/DataTypes';
+import { createServerAction } from './ServerActions';
+import { logoutAction, pingAction } from './UserActions';
+import { updateVersionAction } from './AppActions';
 
-export const fetchQuizNames = createServerAction<void, CallGetQuizNamesResponseData>(
+export const fetchQuizNamesAction = createServerAction<void, CallGetQuizNamesResponseData>(
   'data/quiz-names',
   async () => {
     const { data } = await new CallGetQuizNames().execute();
@@ -18,46 +20,55 @@ export const fetchQuizNames = createServerAction<void, CallGetQuizNamesResponseD
   },
 );
 
-type FetchQuestionsActionArgs = { lang: Language, quizName: QuizName };
-export const fetchQuestions = createServerAction<FetchQuestionsActionArgs, CallGetQuestionsResponseData>(
-  'data/questions',
-  async ({ lang, quizName }: FetchQuestionsActionArgs) => {
-    const { data } = await new CallGetQuestions(lang, quizName).execute();
+export const fetchTeamsAction = createServerAction<string, CallGetTeamsResponseData>(
+  'data/teams',
+  async (quizId: string) => {
+    const { data } = await new CallGetTeams(quizId).execute();
       
     return data!;
   },
 );
 
-export const fetchStatus = createServerAction<string, CallGetStatusResponseData>(
+type FetchQuestionsActionArgs = { language: Language, quizName: QuizName };
+export const fetchQuestionsAction = createServerAction<FetchQuestionsActionArgs, CallGetQuestionsResponseData>(
+  'data/questions',
+  async ({ language, quizName }) => {
+    const { data } = await new CallGetQuestions(language, quizName).execute();
+      
+    return data!;
+  },
+);
+
+export const fetchStatusAction = createServerAction<string, CallGetStatusResponseData>(
   'data/status',
-  async (quizId: string) => {
+  async (quizId) => {
     const { data } = await new CallGetStatus(quizId).execute();
       
     return data!;
   },
 );
 
-export const fetchPlayers = createServerAction<string, CallGetPlayersResponseData>(
+export const fetchPlayersAction = createServerAction<string, CallGetPlayersResponseData>(
   'data/players',
-  async (quizId: string) => {
+  async (quizId) => {
     const { data } = await new CallGetPlayers(quizId).execute();
-      
+
     return data!;
   },
 );
 
-export const fetchVotes = createServerAction<string, CallGetVotesResponseData>(
+export const fetchVotesAction = createServerAction<string, CallGetVotesResponseData>(
   'data/votes',
-  async (quizId: string) => {
+  async (quizId) => {
     const { data } = await new CallGetVotes(quizId).execute();
       
     return data!;
   },
 );
 
-export const fetchScores = createServerAction<string, CallGetScoresResponseData>(
+export const fetchScoresAction = createServerAction<string, CallGetScoresResponseData>(
   'data/scores',
-  async (quizId: string) => {
+  async (quizId) => {
     const { data } = await new CallGetScores(quizId).execute();
       
     return data!;
@@ -66,15 +77,13 @@ export const fetchScores = createServerAction<string, CallGetScoresResponseData>
 
 
 
-type FetchQuizDataActionArgs = { quizId: string, quizName: QuizName, lang: Language };
-export const fetchQuizData = createServerAction<FetchQuizDataActionArgs, void>(
-  'data/quiz',
-  async ({ quizId, quizName, lang }: FetchQuizDataActionArgs, { dispatch, getState }: ThunkAPI) => {
+export const fetchInitialDataAction = createServerAction<void, void>(
+  'data/fetch-initial',
+  async (_, { dispatch }) => {
     const result = await Promise.all([
-      dispatch(fetchQuestions({ lang, quizName })),
-      dispatch(fetchVotes(quizId)),
-      dispatch(fetchScores(quizId)),
-      dispatch(fetchStatus(quizId)),
+      dispatch(pingAction()),
+      dispatch(updateVersionAction()),
+      dispatch(fetchQuizNamesAction()),
     ]);
 
     const someFetchActionFailed = result
@@ -82,7 +91,57 @@ export const fetchQuizData = createServerAction<FetchQuizDataActionArgs, void>(
       .some(type => type.endsWith('/rejected'));
 
     if (someFetchActionFailed) {
-      throw new Error('DATA_FETCH');
+      throw new Error('FETCH_INITIAL_DATA_ACTION');
+    }
+  },
+);
+
+
+
+type FetchAllDataActionArgs = { quizId: string, quizName: QuizName, language: Language };
+export const fetchAllDataAction = createServerAction<FetchAllDataActionArgs, void>(
+  'data/fetch-all',
+  async ({ quizId, quizName, language }, { dispatch }) => {
+    const result = await Promise.all([
+      dispatch(fetchQuestionsAction({ language, quizName })), // Must only be fetched once: questions do not change
+      dispatch(fetchTeamsAction(quizId)), // Must only be fetched once: teams do not change
+      dispatch(fetchVotesAction(quizId)), // Must only be fetched on login: is then updated every time user votes
+
+      dispatch(fetchStatusAction(quizId)),
+      dispatch(fetchPlayersAction(quizId)),
+      dispatch(fetchScoresAction(quizId)),
+    ]);
+
+    const someFetchActionFailed = result
+      .map(({ type }) => type)
+      .some(type => type.endsWith('/rejected'));
+
+    if (someFetchActionFailed) {
+      throw new Error('FETCH_ALL_DATA_ACTION');
+    }
+  },
+);
+
+
+
+type RefreshDataActionArgs = { quizId: string };
+export const refreshDataAction = createServerAction<RefreshDataActionArgs, void>(
+  'data/refresh',
+  async ({ quizId }, { dispatch }) => {
+    const result = await Promise.all([
+      await dispatch(fetchStatusAction(quizId)),
+      await dispatch(fetchPlayersAction(quizId)),
+      await dispatch(fetchScoresAction(quizId)),
+    ]);
+
+    const someFetchActionFailed = result
+      .map(({ type }) => type)
+      .some(type => type.endsWith('/rejected'));
+
+    if (someFetchActionFailed) {
+      await dispatch(logoutAction());
+      
+      throw new Error('REFRESH_DATA_ACTION');
     }
   },
 );

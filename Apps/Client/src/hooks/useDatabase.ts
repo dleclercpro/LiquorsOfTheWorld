@@ -1,4 +1,4 @@
-import { deleteDatabase as doDeleteDatabase } from '../actions/AppActions';
+import { deleteDatabaseAction as doDeleteDatabase } from '../actions/AppActions';
 import { useDispatch } from './ReduxHooks';
 
 const useDatabase = () => {

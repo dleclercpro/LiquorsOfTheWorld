@@ -61,7 +61,7 @@ export const USERS = process.env.USERS!
     .map(([username, password]) => ({ username, password }));
 
 // Quiz
-export const TIMER_DURATION = new TimeDuration(1, TimeUnit.Minute);
+export const TIMER_DURATION = new TimeDuration(30, TimeUnit.Second);
 export const TEAMS_ENABLE = parseBooleanText(process.env.TEAMS_ENABLE);
 export const TEAMS = process.env.TEAMS!
     .split(',')

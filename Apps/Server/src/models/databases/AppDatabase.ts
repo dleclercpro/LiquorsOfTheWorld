@@ -1,20 +1,15 @@
 import { ADMINS, REDIS_DATABASE, REDIS_ENABLE, REDIS_OPTIONS, USERS } from '../../config';
-import logger from '../../logger';
-import { getLast, getRange } from '../../utils/array';
+import { getLast } from '../../utils/array';
 import { sum } from '../../utils/math';
 import RedisDatabase from './base/RedisDatabase';
-import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import QuizManager from '../QuizManager';
 import MemoryDatabase from './base/MemoryDatabase';
 import User from '../users/User';
 import Quiz from '../Quiz';
-import { NON_VOTE } from '../../constants';
+import { NO_VOTE_INDEX } from '../../constants';
+import { VotesData } from '../../types/DataTypes';
 
 const SEPARATOR = '|';
-
-type Votes = Record<string, number[]>;
-
-
 
 class AppDatabase {
     private db: RedisDatabase | MemoryDatabase<string>;
@@ -35,7 +30,6 @@ class AppDatabase {
         
             if (!admin) {
                 await User.create({ username, password }, true);
-                logger.trace(`Default admin user created: ${username}`);
             }
         });
 
@@ -45,7 +39,6 @@ class AppDatabase {
         
             if (!user) {
                 await User.create({ username, password }, false);
-                logger.trace(`Default user created: ${username}`);
             }
         });
     }
@@ -102,48 +95,34 @@ class AppDatabase {
 
 
     
-    public async getAllVotes(quizId: string) {
-        const quiz = await Quiz.get(quizId);
-
-        if (!quiz) {
-            throw new InvalidQuizIdError();
-        }
-
-        const questionCount = await QuizManager.count(quiz.getName());
-        const players = quiz.getPlayers();
+    public async getAllVotes(quiz: Quiz): Promise<Record<string, VotesData>> {
+        const votesAsStrings = await this.getKeysByPattern(`votes:${quiz.getId()}:*`);
         
-        // Initialize votes for all players
-        const votes: Votes = players.reduce((prev, player) => {
-            return {
-                ...prev,
-                [player.username]: new Array(questionCount).fill(NON_VOTE),
-            };
-        }, {});
+        const votes: Record<string, VotesData> = {};
 
-        const votesAsStrings = await this.getKeysByPattern(`votes:${quizId}:*`);
+        const adminUsernames = ADMINS.map((admin) => admin.username);
     
-        await Promise.all(votesAsStrings.map(async (voteAsString: string) => {
+        for (const voteAsString of votesAsStrings) {
             const username = getLast(voteAsString.split(':')) as string;
-    
-            votes[username] = await this.getUserVotes(quizId, username);
-        }));
-    
+
+            // Admins aren't players!
+            if (adminUsernames.includes(username)) {
+                continue;
+            }
+
+            votes[username] = await this.getUserVotes(quiz, username);
+        }
+        
         return votes;
     }
 
-    public async getAllScores(quizId: string) {
-        const quiz = await Quiz.get(quizId);
-
-        if (!quiz) {
-            throw new InvalidQuizIdError();
-        }
-
+    public async getAllScores(quiz: Quiz) {
         const questions = await QuizManager.get(quiz.getName());
         const answers = questions.map((question) => question.answer);
 
         const scores = Object
-            .entries(await this.getAllVotes(quizId))
-            .reduce((prev, [player, votes]) => {
+            .entries(await this.getAllVotes(quiz))
+            .reduce((prev, [voter, votes]) => {
                 const score = sum(
                     answers
                         .map((answerIndex, i) => answerIndex === votes[i])
@@ -152,36 +131,48 @@ class AppDatabase {
         
                 return {
                     ...prev,
-                    [player]: score,
+                    [voter]: score,
                 };
             }, {});
     
         return scores;
     }
 
-    public async getUserVotes(quizId: string, username: string) {
-        const votes = await this.get(`votes:${quizId}:${username.toLowerCase()}`);
+    public async getUserVotes(quiz: Quiz, username: string) {
+        const votesAsString = await this.get(`votes:${quiz.getId()}:${username}`);
 
-        if (votes !== null) {
-            return this.deserializeUserVotes(votes);
+        if (votesAsString !== null) {
+            return this.deserializeUserVotes(votesAsString);
+        } else {
+            return await this.createInitialVotes(quiz);
         }
-
-        return [];
     }
 
-    public async setUserVotes(quizId: string, username: string, votes: number[]) {
-        await this.set(`votes:${quizId}:${username.toLowerCase()}`, votes.join(SEPARATOR));
+    public async setUserVotes(quiz: Quiz, username: string, votes: number[]) {
+        await this.set(`votes:${quiz.getId()}:${username}`, this.serializeUserVotes(votes));
+    }
+
+    protected async createInitialVotes(quiz: Quiz) {
+        const questionCount = await QuizManager.count(quiz.getName());
+            
+        const votes: number[] = new Array(questionCount).fill(NO_VOTE_INDEX);
+        
+        return votes;
+    }
+
+    protected serializeUserVotes(votes: number[]) {
+        return votes.join(SEPARATOR);
     }
 
     protected deserializeUserVotes(votes: string) {
         return votes.split(SEPARATOR).map(Number);
     }
 
-    public async getPlayersWhoVoted(quizId: string, questionIndex: number) {
-        const votes = await this.getAllVotes(quizId);
-        const players = Object.keys(votes);
+    public async getPlayersWhoVoted(quiz: Quiz, questionIndex: number) {
+        const votes = await this.getAllVotes(quiz);
+        const voters = Object.keys(votes);
 
-        return players.filter((player) => votes[player][questionIndex] !== NON_VOTE);
+        return voters.filter((voterIndex) => votes[voterIndex][questionIndex] !== NO_VOTE_INDEX);
     }
 }
 

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from './ReduxHooks';
 
 const useOverlay = (name: OverlayName) => {
   const overlays = useSelector(({ overlays }) => overlays);
-
+  
   const dispatch = useDispatch();
 
   const isOpen = overlays[name].open;

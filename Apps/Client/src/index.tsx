@@ -9,8 +9,13 @@ import App from './App';
 import './index.scss';
 import './i18n';
 import { PersistGate } from 'redux-persist/integration/react';
+import { DEBUG } from './config';
 
 setLogLevel(ENV);
+
+if (DEBUG) {
+  console.log(`Debug mode: active.`);
+}
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

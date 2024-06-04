@@ -18,7 +18,7 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
 
 
   if (duration.smallerThan(NO_TIME)) {
-    throw new Error('Cannot start a timer with a negative duration!');
+    throw new Error('NEGATIVE_TIMER_DURATION');
   }
 
 

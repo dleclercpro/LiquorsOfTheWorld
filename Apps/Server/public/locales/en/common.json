@@ -15,6 +15,7 @@
     "LOG_OUT": "Log out",
     "USERNAME": "Username",
     "QUIZ": "Quiz",
+    "TEAM": "Team",
     "QUESTION": "Question",
     "TOPIC": "Topic",
     "TYPE": "Type",
@@ -58,6 +59,7 @@
       "TEXT": "Are you ready to start the quiz? New players won't be able to join afterwards!",
       "SUPERVISE": "Supervise quiz",
       "TIMER": "Use timer",
+      "FORCE_NEXT_QUESTION": "Force next question",
       "SINGLE_PLAYER_WAITING": "There is currently <1>1 player</1> waiting to play.",
       "MANY_PLAYERS_WAITING": "There are currently <1>{{count}} players</1> waiting to play.",
       "START_QUIZ": "Yes, let's go!",
@@ -69,15 +71,17 @@
     }
   },
   "OVERLAYS": {
-    "LOADING": {
-      "HELLO": "Hello, <1>{{username}}</1>! The quiz will begin shortly. Here is the list of participants:"
+    "LOBBY": {
+      "TITLE": "Hello, <1>{{username}}</1>!",
+      "TEXT": "The quiz will begin shortly. Here is the list of participants:"
     },
     "ANSWER": {
       "SEE_RESULTS": "See results",
       "NEXT_QUESTION": "Next question",
       "START_NEXT_QUESTION": "Start next question",
+      "PLEASE_WAIT_FOR_ALL_PLAYERS": "Please wait for all players to have voted...",
       "PLEASE_WAIT_FOR_NEXT_QUESTION": "Please wait for the next question to be unlocked...",
-      "CURRENT_STATUS": "So far, {{voteCount}} out of {{playersCount}} players have voted.",
+      "CURRENT_STATUS": "{{voteCount}} out of {{playersCount}} players have voted.",
       "RIGHT_ANSWER_TEXT": "Indeed, the correct answer was:",
       "WRONG_ANSWER_TEXT": "Actually, the correct answer was:",
       "RIGHT_ANSWER_ICON_TEXT": "Congrats, you're right!",
@@ -90,6 +94,7 @@
     "INVALID_LANGUAGE": "This quiz ID language option is invalid.",
     "INVALID_PASSWORD": "This password is invalid.",
     "INVALID_QUIZ_ID": "This quiz does not exist (invalid ID).",
+    "INVALID_TEAM_ID": "This team does not exist (invalid ID).",
     "INVALID_QUESTION_INDEX": "This question index is invalid.",
     "QUIZ_ALREADY_EXISTS": "This quiz already exists.",
     "QUIZ_ALREADY_STARTED": "You cannot join the quiz, as it has already started.",

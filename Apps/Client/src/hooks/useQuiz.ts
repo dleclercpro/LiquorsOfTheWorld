@@ -1,84 +1,111 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from './ReduxHooks';
-import { fetchQuestions, fetchQuizData, fetchStatus } from '../actions/DataActions';
-import { startQuiz as doStartQuiz } from '../actions/QuizActions';
-import { deleteQuiz as doDeleteQuiz } from '../actions/QuizActions';
-import useUser from './useUser';
-import { Language, NON_VOTE } from '../constants';
+import { fetchQuestionsAction, fetchAllDataAction, refreshDataAction } from '../actions/DataActions';
+import { startQuizAction as doStartQuiz } from '../actions/QuizActions';
+import { deleteQuizAction as doDeleteQuiz } from '../actions/QuizActions';
+import { Language, NO_QUESTION_INDEX, NO_VOTE_INDEX } from '../constants';
 import { useTranslation } from 'react-i18next';
+import useApp from './useApp';
 import { setQuestionIndex } from '../reducers/AppReducer';
-import { toReversedArray } from '../utils/array';
+import { DEBUG } from '../config';
+import { sleep } from '../utils/time';
+import TimeDuration from '../models/TimeDuration';
+import { TimeUnit } from '../types/TimeTypes';
 
 const useQuiz = () => {
   const { i18n } = useTranslation();
-  const lang = i18n.language as Language;
+  const language = i18n.language as Language;
 
-  const user = useUser();
+  const app = useApp();
+
   const quiz = useSelector(({ quiz }) => quiz);
 
   const { id, name } = quiz;
 
   const questions = quiz.questions.data;
   const status = quiz.status.data;
+  const teams = quiz.teams.data ?? [];
   const players = quiz.players.data ?? [];
   const votes = quiz.votes.data ?? [];
   const scores = quiz.scores.data ?? { admins: {}, users: {} };
 
-  const questionIndex = status?.questionIndex;
-
+  const questionIndex = status?.questionIndex ?? 0;
+  
   const isStarted = Boolean(status?.isStarted);
   const isOver = Boolean(status?.isOver);
   const isSupervised = Boolean(status?.isSupervised);
-  const isTimed = Boolean(status?.timer.isEnabled);
+  const isTimed = Boolean(status?.timer);
+  const isNextQuestionForced = Boolean(status?.isNextQuestionForced);
 
   const dispatch = useDispatch();
 
 
 
-  const fetchData = useCallback(async () => {
-    if (quiz.id === null || !quiz.name) return;
+  const initializeQuestionIndex = useCallback(() => {
+    if (votes.length === 0) return;
+    const lastQuestionIndex = votes.length - 1;
 
-    await dispatch(fetchQuizData({ quizId: quiz.id, quizName: quiz.name, lang }));
-
-    const questionIndex = status?.questionIndex ?? 0;
-
-    let lastUnansweredQuestionIndex = toReversedArray(votes).findIndex((vote: number) => vote === NON_VOTE);
-
-    if (lastUnansweredQuestionIndex === -1) {
-      lastUnansweredQuestionIndex = 0;
-    }
+    // Identify next question to be answered by user
+    let lastUnansweredQuestionIndex = votes.findIndex((vote: number) => vote === NO_VOTE_INDEX);
     
-    let appQuestionIndex = questionIndex;
-    if (!isSupervised && lastUnansweredQuestionIndex < questionIndex) {
-      appQuestionIndex = lastUnansweredQuestionIndex;
+    if (lastUnansweredQuestionIndex === -1) {
+      lastUnansweredQuestionIndex = lastQuestionIndex;
     }
 
-    dispatch(setQuestionIndex(appQuestionIndex));
+    if (app.questionIndex !== lastUnansweredQuestionIndex) {
+      dispatch(setQuestionIndex(lastUnansweredQuestionIndex));
+    }
+  }, [votes]);
 
-  }, [quiz.id, quiz.name, lang]);
+
+
+  const updateQuestionIndex = useCallback(() => {
+    if (!status) return;
+
+    // Force user to go to next question according to setting
+    if (status.isNextQuestionForced && app.questionIndex !== questionIndex) {
+      if (DEBUG) {
+        console.log(`Forcing user to next question: #${questionIndex + 1}`);
+      }
+      dispatch(setQuestionIndex(questionIndex));
+    }
+  }, [status]);
+
+
+
+  const fetchAllData = useCallback(async () => {
+    if (quiz.id === null || quiz.name === null || !language) return;
+
+    // Fake processing time
+    await sleep(new TimeDuration(1, TimeUnit.Second));
+
+    await dispatch(fetchAllDataAction({ quizId: quiz.id, quizName: quiz.name, language }));
+
+  }, [quiz.id, quiz.name, language]);
 
 
 
   const refreshQuestions = useCallback(async () => {
-    if (!quiz.name) return;
+    if (quiz.name === null || !language) return;
     
-    await dispatch(fetchQuestions({ quizName: quiz.name, lang }));
-  }, [quiz.name, lang, user]);
+    await dispatch(fetchQuestionsAction({ quizName: quiz.name, language }));
+  }, [quiz.name, language]);
 
 
 
-  const refreshStatus = useCallback(async () => {
-    if (!quiz.id) return;
-
-    await dispatch(fetchStatus(quiz.id));
-  }, [quiz.id, user]);
-
-
-
-  const startQuiz = useCallback(async (isSupervised: boolean, isTimed: boolean) => {
+  const refreshStatusPlayersAndScores = useCallback(async () => {
     if (quiz.id === null) return;
 
-    return await dispatch(doStartQuiz({ quizId: quiz.id, isSupervised, isTimed }));
+    await dispatch(refreshDataAction({ quizId: quiz.id }));
+
+  }, [quiz.id]);
+
+
+
+  const startQuiz = useCallback(async (isSupervised: boolean, isTimed: boolean, isNextQuestionForced: boolean) => {
+    if (quiz.id === null) return;
+
+    return await dispatch(doStartQuiz({ quizId: quiz.id, language, isSupervised, isTimed, isNextQuestionForced }));
   }, [quiz.id]);
 
 
@@ -91,6 +118,20 @@ const useQuiz = () => {
 
 
 
+  // Handle question index
+  useEffect(() => {
+    // When loading app for the first time, reset question index
+    if (app.questionIndex === NO_QUESTION_INDEX) {
+      initializeQuestionIndex();
+    }
+    // On further changes
+    else {
+      updateQuestionIndex();
+    }
+  }, [initializeQuestionIndex, updateQuestionIndex]);
+
+
+
   return {
     id,
     name,
@@ -99,14 +140,16 @@ const useQuiz = () => {
     isOver,
     isSupervised,
     isTimed,
+    isNextQuestionForced,
     questions,
     status,
+    teams,
     players,
     votes,
     scores,
-    fetchData,
+    fetchAllData,
     refreshQuestions,
-    refreshStatus,
+    refreshStatusPlayersAndScores,
     start: startQuiz,
     delete: deleteQuiz,
   };

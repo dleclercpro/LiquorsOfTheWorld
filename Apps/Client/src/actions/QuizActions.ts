@@ -1,47 +1,57 @@
 import { CallStartQuiz } from '../calls/quiz/CallStartQuiz';
 import { CallStartQuestion } from '../calls/quiz/CallStartQuestion';
 import { CallDeleteQuiz } from '../calls/quiz/CallDeleteQuiz';
-import { logout } from './AuthActions';
+import { logoutAction } from './UserActions';
 import { ThunkAPI, createServerAction } from './ServerActions';
 import { CallVote } from '../calls/quiz/CallVote';
 import { CallVoteResponseData } from '../types/DataTypes';
+import { Language } from '../constants';
 
 
 
-type StartQuizActionArgs = { quizId: string, isSupervised: boolean, isTimed: boolean };
-export const startQuiz = createServerAction<StartQuizActionArgs, void>(
+type StartQuizActionArgs = { quizId: string, language: Language, isSupervised: boolean, isTimed: boolean, isNextQuestionForced: boolean };
+export const startQuizAction = createServerAction<StartQuizActionArgs, void>(
   'quiz/start',
-  async ({ quizId, isSupervised, isTimed }: StartQuizActionArgs) => {
-    await new CallStartQuiz(quizId).execute({ isSupervised, isTimed });
+  async ({ quizId, language, isSupervised, isTimed, isNextQuestionForced }: StartQuizActionArgs) => {
+    await new CallStartQuiz(quizId).execute({ language, isSupervised, isTimed, isNextQuestionForced });
 
     return;
   },
 );
 
-export const deleteQuiz = createServerAction<string, void>(
+export const deleteQuizAction = createServerAction<string, void>(
   'quiz/delete',
   async (quizId: string, { dispatch }: ThunkAPI) => {
     await new CallDeleteQuiz(quizId).execute();
 
-    dispatch(logout());
+    dispatch(logoutAction());
 
     return;
   },
 );
 
 type VoteActionArgs = { quizId: string, questionIndex: number, vote: number };
-export const vote = createServerAction<VoteActionArgs, CallVoteResponseData>(
+export const voteAction = createServerAction<VoteActionArgs, CallVoteResponseData>(
   'quiz/vote',
   async ({ quizId, questionIndex, vote }: VoteActionArgs) => {
-    const { data } = await new CallVote(quizId, questionIndex).execute({ vote });
+    try {
+      const { data } = await new CallVote(quizId, questionIndex).execute({
+        vote,
+      });
 
-    return data!;
+      return data!;
+
+    } catch (err: any) {
+      alert(`Could not vote!`);
+
+      throw err;
+    }
   },
 );
 
 type StartQuestionActionArgs = { quizId: string, questionIndex: number };
-export const startQuestion = createServerAction<StartQuestionActionArgs, number>(
-  'question/start',
+export const startQuestionAction = createServerAction<StartQuestionActionArgs, number>(
+  'quiz/question/start',
   async ({ quizId, questionIndex }: StartQuestionActionArgs) => {
     await new CallStartQuestion(quizId, questionIndex).execute();
 

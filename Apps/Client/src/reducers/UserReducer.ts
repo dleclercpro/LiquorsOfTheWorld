@@ -1,16 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { login, logout, ping } from '../actions/AuthActions';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { loginAction, logoutAction, pingAction } from '../actions/UserActions';
+import { UserData } from '../types/DataTypes';
 
-interface UserState {
-  username: string | null,
-  isAdmin: boolean,
-  isAuthenticated: boolean,
+type UserState = UserData & {
   status: 'idle' | 'loading' | 'succeeded' | 'failed',
   error: string | null,
 }
 
 const initialState: UserState = {
   username: null,
+  teamId: null,
   isAdmin: false,
   isAuthenticated: false,
   status: 'idle',
@@ -22,48 +21,70 @@ const initialState: UserState = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setUser: (state, action: PayloadAction<UserData>) => {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(ping.pending, (state) => {
+      // Login
+      .addCase(loginAction.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(ping.fulfilled, (state, action) => {
-        state.username = action.payload.username;
-        state.isAdmin = action.payload.isAdmin;
-        state.isAuthenticated = action.payload.isAuthenticated;
+      .addCase(loginAction.fulfilled, (state) => {
+        state.status = 'succeeded';
+        state.error = null;
       })
-      .addCase(ping.rejected, () => initialState)
-      .addCase(login.pending, (state) => {
+      .addCase(loginAction.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+      })
+
+
+      // Logout
+      .addCase(logoutAction.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action) => {
+      .addCase(logoutAction.fulfilled, (state) => {
+        state.status = 'succeeded';
+        state.error = null;
+      })
+      .addCase(logoutAction.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+      })
+
+
+      // Ping
+      .addCase(pingAction.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(pingAction.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.error = null;
 
         state.username = action.payload.username;
         state.isAdmin = action.payload.isAdmin;
-        state.isAuthenticated = true;
+        state.isAuthenticated = action.payload.isAuthenticated;
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(pingAction.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
 
-        // Login failed: delete all user-related data
         state.username = null;
         state.isAdmin = false;
         state.isAuthenticated = false;
       })
-      .addCase(logout.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      // Reset state on logout, no matter if successful or not
-      .addCase(logout.fulfilled, () => initialState)
-      .addCase(logout.rejected, () => initialState);
   },
 });
+
+export const { setUser } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -8,7 +8,8 @@ const useServerCountdownTimer = () => {
   const quiz = useQuiz();
   const data = quiz.status?.timer;
 
-  const isEnabled = data?.isEnabled;
+  const isEnabled = Boolean(data);
+  
   const duration = data?.duration ? new TimeDuration(data.duration.amount, data.duration.unit) : NO_TIME;
   const startedAt = data?.startedAt ? new Date(data.startedAt) : new Date();
 

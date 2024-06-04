@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './ScoresPage.scss';
 import Scoreboard from '../components/Scoreboard';
 import { useDispatch } from '../hooks/ReduxHooks';
-import { fetchScores } from '../actions/DataActions';
+import { fetchScoresAction } from '../actions/DataActions';
 import { Navigate } from 'react-router-dom';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
 import Page from './Page';
@@ -26,7 +26,7 @@ const ScoresPage: React.FC = () => {
       return;
     }
 
-    dispatch(fetchScores(quiz.id));
+    dispatch(fetchScoresAction(quiz.id));
     dispatch(closeAllOverlays());
   }, [questionIndex, isOver]);
 

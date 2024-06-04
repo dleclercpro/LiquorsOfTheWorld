@@ -6,7 +6,6 @@ import InvalidParamsError from '../../errors/InvalidParamsError';
 import { QUIZ_NAMES, QuizName } from '../../constants';
 import InvalidQuizNameError from '../../errors/InvalidQuizNameError';
 import { listFiles } from '../../utils/file';
-import { PUBLIC_DIR } from '../../config';
 import { getRandom } from '../../utils/array';
 
 const validateParams = async (params: ParamsDictionary) => {

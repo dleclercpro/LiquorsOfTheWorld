@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { APP_DB } from '..';
-import { NON_VOTE, QUIZ_NAMES, QuizName } from '../constants';
+import { Language, NO_VOTE_INDEX, QUIZ_NAMES, QuizName } from '../constants';
 import InvalidQuizNameError from '../errors/InvalidQuizNameError';
 import QuizAlreadyExistsError from '../errors/QuizAlreadyExistsError';
 import logger from '../logger';
@@ -14,6 +14,7 @@ import { TIMER_DURATION } from '../config';
 type QuizArgs = {
     id: string,
     name: QuizName,
+    language?: Language,
     creator: string,
     status: QuizStatusArgs,
     players: PlayerData[],
@@ -23,9 +24,10 @@ type QuizStatusArgs = {
     isStarted: boolean,
     isOver: boolean,
     isSupervised: boolean,
+    isNextQuestionForced: boolean,
     questionIndex: number,
     voteCounts: number[],
-    timer: TimerData,
+    timer?: TimerData,
   }
 
 
@@ -33,6 +35,7 @@ type QuizStatusArgs = {
 class Quiz {
     protected id: string;
     protected name: QuizName;
+    protected language: Language;
     protected creator: string;
     protected players: PlayerData[];
     protected status: QuizStatusArgs;
@@ -40,6 +43,7 @@ class Quiz {
     public constructor(args: QuizArgs) {
         this.id = args.id;
         this.name = args.name;
+        this.language = args.language ?? Language.EN;
         this.creator = args.creator;
         this.players = args.players ?? [];
         this.status = args.status;
@@ -49,15 +53,17 @@ class Quiz {
         return JSON.stringify({
             id: this.id,
             name: this.name,
+            language: this.language,
             creator: this.creator,
+            players: this.players,
             status: {
                 ...this.status,
-                timer: {
-                    ...this.status.timer,
-                    ...(this.status.timer.isEnabled ? {
+                ...(this.status.timer ? {
+                    timer: {
                         startedAt: this.status.timer.startedAt!.toUTCString(),
-                    } : {}),
-                },
+                        duration: this.status.timer.duration,
+                    },
+                } : { }),
             },
         });
     }
@@ -69,12 +75,12 @@ class Quiz {
             ...quiz,
             status: {
                 ...quiz.status,
-                timer: {
-                    ...quiz.status.timer,
-                    ...(quiz.status.timer.isEnabled ? {
+                ...(quiz.status.timer ? {
+                    timer: {
                         startedAt: new Date(quiz.status.timer.startedAt),
-                    } : {}),
-                },
+                        duration: quiz.status.timer.duration,
+                    },
+                } : { }),
             },
         });
     }
@@ -92,7 +98,11 @@ class Quiz {
     }
 
     public isTimed() {
-        return this.status.timer.isEnabled;
+        return Boolean(this.status.timer);
+    }
+
+    public isNextQuestionForced() {
+        return this.status.isNextQuestionForced;
     }
 
     public getId() {
@@ -101,6 +111,10 @@ class Quiz {
 
     public getName() {
         return this.name;
+    }
+
+    public getLanguage() {
+        return this.language;
     }
 
     public getStatus() {
@@ -115,14 +129,13 @@ class Quiz {
         const questionCount = await QuizManager.count(this.name);
         const voteCounts = new Array(questionCount).fill(0);
 
-        const votes = await APP_DB.getAllVotes(this.id);
-        const players = Object.keys(votes);
+        const votes = await APP_DB.getAllVotes(this);
+        const voters = Object.keys(votes);
 
-        // For each player, every vote that is not equal to -1 is a
-        // valid vote
-        players.forEach((player) => {
+        voters.forEach((voter) => {
             getRange(questionCount).forEach((i) => {
-                if (votes[player][i] !== NON_VOTE) {
+                // Every vote that is not equal to -1 is a valid vote
+                if (votes[voter][i] !== NO_VOTE_INDEX) {
                     voteCounts[i] += 1;
                 }
             });
@@ -158,47 +171,47 @@ class Quiz {
 
         // Delete all votes associated with quiz
         await Promise.all(this.players.map(async (player) => {
-            return APP_DB.delete(`votes:${this.id}:${player}`);
+            return APP_DB.delete(`votes:${this.id}:${player.username}`);
         }));
 
         // Delete quiz finally
         await APP_DB.delete(`quiz:${this.id}`);
     }
 
-    public async start(isSupervised: boolean, isTimed: boolean) {
+    public async start(isSupervised: boolean, isTimed: boolean, isNextQuestionForced: boolean, language: Language) {
+        this.language = language;
+
         this.status.isStarted = true;
         this.status.isSupervised = isSupervised;
+        this.status.isNextQuestionForced = isNextQuestionForced;
 
         // Create a timer
-        this.status.timer = isTimed ? {
-            isEnabled: true,
-            startedAt: new Date(),
-            duration:  {
-                amount: TIMER_DURATION.getAmount(),
-                unit: TIMER_DURATION.getUnit(),
-            },
-        } : {
-            isEnabled: false,
-        };
+        if (isTimed) {
+            this.status.timer = {
+                startedAt: new Date(),
+                duration:  {
+                    amount: TIMER_DURATION.getAmount(),
+                    unit: TIMER_DURATION.getUnit(),
+                },
+            };
+        }
 
         await this.save();
     }
 
     public async finish() {
+        logger.info(`The quiz (ID = ${this.id}) was finished.`);
+
         this.status.isOver = true;
 
         await this.save();
     }
 
-    public async addUser(user: User, teamId: string = '') {
+    public async addUserToPlayers(user: User, teamId: string = '') {
         this.players = unique([...this.players, {
             username: user.getUsername().toLowerCase(),
             teamId,
         }]);
-
-        const questionCount = await QuizManager.count(this.name);
-
-        await APP_DB.setUserVotes(this.id, user.getUsername(), new Array(questionCount).fill(NON_VOTE));
 
         await this.save();
     }
@@ -221,18 +234,26 @@ class Quiz {
     }
 
     public async incrementQuestionIndex() {
-        const questionIndex = this.getQuestionIndex();
         const questionCount = await QuizManager.count(this.name);
 
-        if (questionIndex + 1 > questionCount) {
+        const questionIndex = this.getQuestionIndex();
+        const nextQuestionIndex = questionIndex + 1;
+
+        if (nextQuestionIndex > questionCount) {
             throw new InvalidQuestionIndexError();
         }
 
-        await this.setQuestionIndex(questionIndex + 1);
+        await this.setQuestionIndex(nextQuestionIndex);
+
+        logger.debug(`Incremented quiz (ID = ${this.id}) question index to: ${nextQuestionIndex}`);
     }
 
     public async restartTimer() {
-        this.status.timer.startedAt = new Date();
+        if (!this.isTimed()) {
+            throw new Error('MISSING_TIMER');
+        }
+
+        this.status.timer!.startedAt = new Date();
 
         await this.save();
     }
@@ -241,38 +262,36 @@ class Quiz {
         await APP_DB.set(`quiz:${this.id}`, this.serialize());
     }
 
-    public static async create(quizId: string, quizName: QuizName, username: string, teamId: string = '') {
-        logger.trace(`Creating a new quiz...`);
+    public static async create(id: string, name: QuizName, username: string, teamId: string = '') {
+        logger.info(`Creating a new quiz '${name}' (ID = ${id})...`);
 
-        if (!QUIZ_NAMES.includes(quizName)) {
+        if (!QUIZ_NAMES.includes(name)) {
             throw new InvalidQuizNameError();
         }
 
-        if (await Quiz.exists(quizId)) {
+        if (await Quiz.exists(id)) {
             throw new QuizAlreadyExistsError();
         }
 
         const quiz = new Quiz({
-            id: quizId,
-            name: quizName,
+            id,
+            name,
             creator: username.toLowerCase(),
             players: [],
             status: {
                 isStarted: false,
                 isOver: false,
                 isSupervised: false,
+                isNextQuestionForced: false,
                 questionIndex: 0,
-                voteCounts: new Array(await QuizManager.count(quizName)).fill(0),
-                timer: {
-                    isEnabled: false,
-                },
+                voteCounts: new Array(await QuizManager.count(name)).fill(0),
             },
         });
 
-        // Add creator game to players
+        // Add creator user to players if it's NOT an admin
         const user = await User.get(username);
-        if (user) {
-            await quiz.addUser(user, teamId);
+        if (user && !user.isAdmin()) {
+            await quiz.addUserToPlayers(user, teamId);
         }
 
         // Store quiz in DB

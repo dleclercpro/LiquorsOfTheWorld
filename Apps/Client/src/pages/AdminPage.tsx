@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './AdminPage.scss';
 import { useDispatch } from '../hooks/ReduxHooks';
 import { closeAllOverlays } from '../reducers/OverlaysReducer';
@@ -7,7 +7,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { deleteCookie, deleteFromLocalStorage, getCookie, getFromLocalStorage } from '../utils/storage';
 import { Snackbar, SnackbarContent, SnackbarOrigin } from '@mui/material';
 import Fade from '@mui/material/Fade';
-import { COOKIE_NAME } from '../config';
+import { COOKIE_NAME, URL_PARAM_QUIZ_NAME } from '../config';
 import { useTranslation } from 'react-i18next';
 import useQuiz from '../hooks/useQuiz';
 import useUser from '../hooks/useUser';
@@ -47,7 +47,15 @@ const AdminPage: React.FC = () => {
     hasNoOptions = !hasCookie;
   }
 
-  dispatch(closeAllOverlays());
+
+
+  // Close all overlays when opening admin page
+  useEffect(() => {
+    dispatch(closeAllOverlays());
+
+  }, []);
+
+
 
   const handleCloseSnackbar = () => {
     setState({ ...state, open: false });
@@ -56,7 +64,7 @@ const AdminPage: React.FC = () => {
   const handleDeleteCookie: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
-    if (quiz.name) {
+    if (quiz.name !== null) {
       deleteCookie(COOKIE_NAME);
 
       await user.logout();
@@ -74,7 +82,7 @@ const AdminPage: React.FC = () => {
   const handleDeleteLocalStorage: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
-    if (quiz.name) {
+    if (quiz.name !== null) {
       alert(`This might break the app's UI!`);
 
       deleteFromLocalStorage('persist:root'); // Delete Redux Persist storage
@@ -85,7 +93,7 @@ const AdminPage: React.FC = () => {
         message: 'Deleted local storage.',
       });
 
-      navigate(`/?q=${quiz.name}`);
+      navigate(`/?${URL_PARAM_QUIZ_NAME}=${quiz.name}`);
     }
   }
 
@@ -103,7 +111,7 @@ const AdminPage: React.FC = () => {
     navigate('/');
   }
 
-  if (!quiz.name) {
+  if (quiz.name === null) {
     return (
       <Navigate to='/error' />
     );

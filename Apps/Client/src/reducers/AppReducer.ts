@@ -1,9 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { logout } from '../actions/AuthActions';
-import { startQuestion } from '../actions/QuizActions';
-import { Language } from '../constants';
+import { logoutAction } from '../actions/UserActions';
+import { startQuestionAction } from '../actions/QuizActions';
+import { Language, NO_QUESTION_INDEX } from '../constants';
 import { INIT_LANGUAGE } from '../i18n';
-import { fetchQuizData } from '../actions/DataActions';
 import { CallStartQuestionResponseData } from '../types/DataTypes';
 
 interface AppState {
@@ -18,7 +17,7 @@ interface AppState {
 const initialState: AppState = {
   language: INIT_LANGUAGE,
   version: null,
-  questionIndex: 0,
+  questionIndex: NO_QUESTION_INDEX,
   styles: {
     bg: null,
   },
@@ -45,13 +44,13 @@ export const appSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(logout.fulfilled, (state) => {
-        state.questionIndex = 0; // Only reset question index on log out
+      .addCase(logoutAction.fulfilled, (state) => {
+        state.questionIndex = NO_QUESTION_INDEX;
       })
-      .addCase(logout.rejected, (state) => {
-        state.questionIndex = 0; // Only reset question index on log out
+      .addCase(logoutAction.rejected, (state) => {
+        state.questionIndex = NO_QUESTION_INDEX;
       })
-      .addCase(startQuestion.fulfilled, (state, action: PayloadAction<CallStartQuestionResponseData>) => {
+      .addCase(startQuestionAction.fulfilled, (state, action: PayloadAction<CallStartQuestionResponseData>) => {
         state.questionIndex = action.payload;
       });
   },

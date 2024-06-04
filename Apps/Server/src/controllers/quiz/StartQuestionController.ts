@@ -1,6 +1,5 @@
 import { RequestHandler } from 'express';
 import logger from '../../logger';
-import { APP_DB } from '../..';
 import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
@@ -60,20 +59,14 @@ const StartQuestionController: RequestHandler = async (req, res, next) => {
             throw new InvalidQuestionIndexError();
         }
 
-        // Find out whether all users have voted up until current question
-        const playersWhoVoted = await APP_DB.getPlayersWhoVoted(quiz.getId(), currentQuestionIndex);;
-        const players = quiz.getPlayers();
-        logger.trace(`Players: ${players}`);
-        logger.trace(`Players who voted so far (${playersWhoVoted.length}/${players.length}): ${playersWhoVoted}`);
-
         // Restart timer for new question
         if (quiz.isTimed()) {
             await quiz.restartTimer();
-            logger.debug(`Restarted timer.`);
+            logger.debug(`Restarted timer of quiz (ID = ${quiz.getId()}).`);
         }
 
         // We can finally move on to next question
-        await quiz.incrementQuestionIndex();
+        await quiz.setQuestionIndex(questionIndex);
         logger.info(`Question ${questionIndex + 1}/${questionCount} of quiz '${quiz.getId()}' has been started by admin '${username}'.`);
 
         return res.json(successResponse());

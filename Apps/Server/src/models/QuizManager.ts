@@ -1,4 +1,5 @@
 import { LANGUAGES, Language, QUIZ_NAMES, QuizName } from '../constants';
+import logger from '../logger';
 import { QuizJSON } from '../types/JSONTypes';
 
 type QuizDirectory = Record<Language, Record<QuizName, QuizJSON | null>>;
@@ -29,15 +30,15 @@ class QuizManager {
         return QuizManager.instance;
     }
 
-    private async load(name: QuizName, lang: Language) {
-        this.quizzes[lang][name] = (await import(`../../data/${lang}/${name}.json`)).default;
+    private async load(name: QuizName, language: Language) {
+        this.quizzes[language][name] = (await import(`../../data/${language}/${name}.json`)).default;
     }
 
-    public async get(name: QuizName, lang: Language = Language.EN) {
-        if (this.quizzes[lang][name] === null) {
-            await this.load(name, lang);
+    public async get(name: QuizName, language: Language = Language.EN) {
+        if (this.quizzes[language][name] === null) {
+            await this.load(name, language);
         }
-        return this.quizzes[lang][name] as QuizJSON;
+        return this.quizzes[language][name] as QuizJSON;
     }
 
     public async count(name: QuizName) {
@@ -47,7 +48,9 @@ class QuizManager {
             throw new Error('QUIZ_DATA_NOT_LOADED');
         }
 
-        return Object.keys(json).length;
+        const count = Object.keys(json).length;
+
+        return count;
     }
 }
 

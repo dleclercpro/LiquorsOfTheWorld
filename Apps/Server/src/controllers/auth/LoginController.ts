@@ -1,54 +1,34 @@
-import bcrypt from 'bcrypt';
 import { RequestHandler } from 'express';
 import { HttpStatusCode } from '../../types/HTTPTypes';
 import logger from '../../logger';
 import { errorResponse, successResponse } from '../../utils/calls';
-import { Auth } from '../../types';
 import { ADMINS, COOKIE_NAME, TEAMS, TEAMS_ENABLE } from '../../config';
 import { encodeCookie } from '../../utils/cookies';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidPasswordError from '../../errors/InvalidPasswordError';
 import UserDoesNotExistError from '../../errors/UserDoesNotExistError';
 import QuizAlreadyStartedError from '../../errors/QuizAlreadyStartedError';
-import { QuizName } from '../../constants';
 import InvalidTeamIdError from '../../errors/InvalidTeamIdError';
 import User from '../../models/users/User';
 import Quiz from '../../models/Quiz';
-
-type RequestBody = Auth & {
-    quizName: QuizName,
-    quizId: string,
-    teamId: string,
-};
-
-const isPasswordValid = async (password: string, hashedPassword: string) => {
-    const isValid = await new Promise<boolean>((resolve, reject) => {
-        bcrypt.compare(password, hashedPassword, (err, isEqualAfterHash) => {
-            if (err) {
-                resolve(false);
-                return;
-            }
-  
-            if (!isEqualAfterHash) {
-                resolve(false);
-                return;
-            }
-  
-            resolve(true);
-        });
-    });
-  
-    return isValid;
-}
-
-
+import { CallLogInRequestData, CallLogInResponseData } from '../../types/DataTypes';
+import { isPasswordValid } from '../../utils/crypto';
 
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
-        const { quizName, quizId, teamId, username, password } = req.body as RequestBody;
+        const { quizName, quizId, teamId, username, password } = req.body as CallLogInRequestData;
         const admin = ADMINS.find(admin => admin.username === username);
         const isAdmin = Boolean(admin);
         logger.trace(`Attempt to join quiz '${quizName}' with ID '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
+
+        // In case a team is specified, but it doesn't exist
+        if (TEAMS_ENABLE && TEAMS) {
+            const teamExists = TEAMS.map(({ id }) => id).includes(teamId);
+            if (!teamExists) {
+                logger.trace(`Team ID '${teamId}' doesn't exist.`);
+                throw new InvalidTeamIdError();
+            }
+        }
 
         // Check if quiz exists
         let quiz = await Quiz.get(quizId);
@@ -65,10 +45,9 @@ const LoginController: RequestHandler = async (req, res, next) => {
         }
 
         // If user exists: check if password is valid
-        const user = await User.get(username);
+        let user = await User.get(username);
         if (user) {
             logger.trace(`Validating password for '${username}'...`);
-            const user = await User.get(username);
 
             if (!await isPasswordValid(password, user!.getPassword())) {
                 throw new InvalidPasswordError()
@@ -81,58 +60,49 @@ const LoginController: RequestHandler = async (req, res, next) => {
             throw new UserDoesNotExistError();
         }
 
-        // In case a team is specified, but it doesn't exist
-        if (TEAMS_ENABLE && TEAMS) {
-            const teamExists = TEAMS.map(({ id }) => id).includes(teamId);
-            if (!teamExists) {
-                logger.trace(`Team ID '${teamId}' doesn't exist.`);
-                throw new InvalidTeamIdError();
-            }
-        }
-
         // Now that everything worked out well, create user if it does not
         // already exist
         if (!user) {
             if (isAdmin) {
-                logger.trace(`Creating admin '${username}'...`);
-                if (password !== admin!.password) {
-                    throw new InvalidPasswordError();
-                }
-                await User.create({ username, password }, true);
+                user = await User.create({ username, password }, true);
             } else {
-                logger.trace(`Creating user '${username}'...`);
-                await User.create({ username, password }, false);
+                user = await User.create({ username, password }, false);
             }
         }
 
-        // Check if quiz has already started and user is playing
+        // Check if quiz has already started and non-admin user is playing
         const isUserPlaying = quiz.isUserPlaying(user!, teamId);
-        if (!isUserPlaying) {
+        if (!isUserPlaying && !user.isAdmin()) {
+            logger.debug(`User '${username}' is not part of the quiz.`);
             if (quiz.isStarted()) {
                 throw new QuizAlreadyStartedError();
             }
-            await quiz.addUser(user!, teamId);
-            logger.trace(`User '${username}' joined quiz ${quizId}.`);
+
+            // Add user to quiz
+            await quiz.addUserToPlayers(user!, teamId);
+            logger.debug(`User '${username}' joined quiz ${quizId}.`);
         }
 
-        const cookieUser = { username, isAdmin };
         const cookie = await encodeCookie({
-            user: cookieUser,
+            user: { username, isAdmin },
             quizName,
             quizId,
             teamId,
         });
+
+        const response: CallLogInResponseData = {
+            username,
+            teamId,
+            isAdmin,
+            isAuthenticated: true,
+        };
         
         return res
             .cookie(COOKIE_NAME, cookie)
-            .json(successResponse(cookieUser));
+            .json(successResponse(response));
 
     } catch (err: any) {
-        if (err instanceof Error) {
-            logger.warn(err.message);
-        }
-
-        if (['USER_ALREADY_EXISTS', 'USER_DOES_NOT_EXIST', 'QUIZ_ALREADY_STARTED', 'INVALID_QUIZ_ID', 'INVALID_PASSWORD'].includes(err.message)) {
+        if (['USER_ALREADY_EXISTS', 'USER_DOES_NOT_EXIST', 'QUIZ_ALREADY_STARTED', 'INVALID_QUIZ_ID', 'INVALID_TEAM_ID', 'INVALID_PASSWORD'].includes(err.message)) {
             return res
                 .status(HttpStatusCode.UNAUTHORIZED)
                 .json(errorResponse(err.message));
