@@ -4,6 +4,7 @@ import { parseBooleanText, parseNumberText } from '../utils/string';
 import TimeDuration from '../models/units/TimeDuration';
 import { Environment, TimeUnit } from '../types';
 import path from 'path';
+import { CookieOptions } from 'express';
 
 // Environment
 export const ENV = loadEnvironment();
@@ -46,9 +47,13 @@ export const REDIS_OPTIONS = {
 };
 
 // Authentication
-export const COOKIE_NAME = `quiz`;
 export const TOKEN_SECRET = process.env.TOKEN_SECRET!;
 export const N_SALT_ROUNDS = 10;
+export const COOKIE_NAME = `quiz`;
+export const COOKIE_OPTIONS: CookieOptions = {
+    sameSite: PROD ? 'strict' : 'lax',
+    secure: PROD,
+};
 
 export const ADMINS = process.env.ADMINS!
     .split(',')

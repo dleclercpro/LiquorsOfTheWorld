@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { HttpStatusCode } from '../../types/HTTPTypes';
 import logger from '../../logger';
 import { errorResponse, successResponse } from '../../utils/calls';
-import { ADMINS, COOKIE_NAME, TEAMS, TEAMS_ENABLE } from '../../config';
+import { ADMINS, COOKIE_NAME, COOKIE_OPTIONS, TEAMS, TEAMS_ENABLE } from '../../config';
 import { encodeCookie } from '../../utils/cookies';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidPasswordError from '../../errors/InvalidPasswordError';
@@ -98,7 +98,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
         };
         
         return res
-            .cookie(COOKIE_NAME, cookie)
+            .cookie(COOKIE_NAME, cookie, COOKIE_OPTIONS)
             .json(successResponse(response));
 
     } catch (err: any) {
