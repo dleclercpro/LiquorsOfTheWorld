@@ -20,8 +20,10 @@ const Scoreboard: React.FC<Props> = (props) => {
     return null;
   }
 
+  // FIXME: scores of all players in real-time
   const questionsCount = quiz.questions.length;
-  const questionsAnsweredCount = quiz.votes.filter((vote) => vote !== NO_VOTE_INDEX).length;
+  // const questionsAnsweredCount = quiz.votes.filter((vote) => vote !== NO_VOTE_INDEX).length;
+  const questionsAnsweredCount = quiz.questionIndex;
 
   const sortedScores = toSortedArray(scores, 'DESC')
     .map(({ key, value }) => ({ username: key, score: value }));
@@ -54,7 +56,7 @@ const Scoreboard: React.FC<Props> = (props) => {
                   <td>
                     <strong>{username}</strong>
                   </td>
-                  <td>{score}/{quiz.questionIndex + 1}</td>
+                  <td>{score}/{questionsAnsweredCount}</td>
               </tr>
             );
           })}
