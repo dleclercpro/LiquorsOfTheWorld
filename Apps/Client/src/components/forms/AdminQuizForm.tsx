@@ -45,7 +45,7 @@ const AdminQuizForm: React.FC = () => {
       <p className='admin-quiz-form-text'>
         <Trans
           i18nKey={quiz.players.length === 1 ? 'FORMS.START_QUIZ.SINGLE_PLAYER_WAITING' : 'FORMS.START_QUIZ.MANY_PLAYERS_WAITING'}
-          values={{ count: quiz.players.length }}
+          values={{ id: quiz.id, count: quiz.players.length }}
         >
           ... <strong>...</strong> ...
         </Trans>

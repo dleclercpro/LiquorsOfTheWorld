@@ -60,8 +60,8 @@
       "SUPERVISE": "Supervise quiz",
       "TIMER": "Use timer",
       "FORCE_NEXT_QUESTION": "Force next question",
-      "SINGLE_PLAYER_WAITING": "There is currently <1>1 player</1> waiting to play.",
-      "MANY_PLAYERS_WAITING": "There are currently <1>{{count}} players</1> waiting to play.",
+      "SINGLE_PLAYER_WAITING": "There is currently <1>1 player</1> waiting to play this quiz (ID = {{ id }}).",
+      "MANY_PLAYERS_WAITING": "There are currently <1>{{count}} players</1> waiting to play this quiz (ID = {{ id }}).",
       "START_QUIZ": "Yes, let's go!",
       "DELETE_QUIZ": "No, delete the quiz."
     },
@@ -73,7 +73,7 @@
   "OVERLAYS": {
     "LOBBY": {
       "TITLE": "Hello, <1>{{username}}</1>!",
-      "TEXT": "The quiz will begin shortly. Here is the list of participants:"
+      "TEXT": "The quiz (ID = {{ id }}) will begin shortly. Here is the list of participants:"
     },
     "ANSWER": {
       "SEE_RESULTS": "See results",

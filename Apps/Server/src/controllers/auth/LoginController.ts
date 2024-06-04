@@ -17,13 +17,14 @@ import { isPasswordValid } from '../../utils/crypto';
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
         const { quizName, quizId, teamId, username, password } = req.body as CallLogInRequestData;
-        const admin = ADMINS.find(admin => admin.username === username);
-        const isAdmin = Boolean(admin);
+
+        // Check if user is admin based on env variable
+        const isAdmin = ADMINS.findIndex(admin => admin.username === username) !== -1;
         logger.trace(`Attempt to join quiz '${quizName}' with ID '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
 
         // In case a team is specified, but it doesn't exist
-        if (TEAMS_ENABLE && TEAMS) {
-            const teamExists = TEAMS.map(({ id }) => id).includes(teamId);
+        if (TEAMS_ENABLE) {
+            const teamExists = TEAMS && TEAMS.map(({ id }) => id).includes(teamId);
             if (!teamExists) {
                 logger.trace(`Team ID '${teamId}' doesn't exist.`);
                 throw new InvalidTeamIdError();

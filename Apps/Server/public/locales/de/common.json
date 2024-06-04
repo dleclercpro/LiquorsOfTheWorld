@@ -60,8 +60,8 @@
       "SUPERVISE": "Quiz überwachen",
       "TIMER": "Schaltuhr verwenden",
       "FORCE_NEXT_QUESTION": "Nächste Frage zwingen",
-      "SINGLE_PLAYER_WAITING": "Derzeit wartet <1>1 Spieler</1> darauf, zu spielen.",
-      "MANY_PLAYERS_WAITING": "Derzeit warten <1>{{count}} Spieler</1> darauf, zu spielen.",
+      "SINGLE_PLAYER_WAITING": "Derzeit wartet <1>1 Spieler</1> darauf, dieses Quiz (ID = {{ id }}) zu spielen.",
+      "MANY_PLAYERS_WAITING": "Derzeit warten <1>{{count}} Spieler</1> darauf, dieses Quiz (ID = {{ id }}) zu spielen.",
       "START_QUIZ": "Ja, los geht's!",
       "DELETE_QUIZ": "Nein, lösche das Quiz."
     },
@@ -73,7 +73,7 @@
   "OVERLAYS": {
     "LOBBY": {
       "TITLE": "Hallo, <1>{{username}}</1>!",
-      "TEXT": "Das Quiz beginnt gleich. Hier ist die Liste aller Teilnehmer:"
+      "TEXT": "Das Quiz (ID = {{ id }}) beginnt gleich. Hier ist die Liste aller Teilnehmer:"
     },
     "ANSWER": {
       "SEE_RESULTS": "Ergebnisse ansehen",

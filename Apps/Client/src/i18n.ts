@@ -5,7 +5,7 @@ import { DEBUG_I18N, SERVER_ROOT } from './config';
 import { Language, QuizName } from './constants';
 
 export const INIT_LANGUAGE = Language.DE;
-export const FALLBACK_LANGUAGE = Language.DE;
+export const FALLBACK_LANGUAGE = Language.EN;
 
 i18n
   .use(HttpBackend)

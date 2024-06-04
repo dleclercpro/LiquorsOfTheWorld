@@ -29,7 +29,7 @@ const LobbyOverlay: React.FC = () => {
         </p>
 
         <p className='lobby-overlay-text'>
-          {t('OVERLAYS.LOBBY.TEXT')}
+          {t('OVERLAYS.LOBBY.TEXT', { id: quiz.id })}
         </p>
 
         {quiz.players.length > 0 && (

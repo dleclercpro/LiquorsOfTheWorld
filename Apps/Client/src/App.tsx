@@ -25,19 +25,20 @@ function App() {
   const app = useApp();
   const user = useUser();
   const quiz = useQuiz();
-
+  
+  // Load initial app data from server and hide
+  // loading screen once done
   useEffect(() => {
     dispatch(fetchInitialDataAction());
-
   }, []);
 
+  // Set app background once quiz name is known
   useEffect(() => {
     if (quiz.name === null) {
       return;
     }
 
     dispatch(updateBackgroundAction());
-
   }, [quiz.name]);
   
   return (
