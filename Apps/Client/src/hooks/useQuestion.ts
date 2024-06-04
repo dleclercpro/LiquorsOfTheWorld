@@ -5,17 +5,19 @@ import { OverlayName } from '../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../reducers/AppReducer';
 import useQuiz from './useQuiz';
 import { startQuestionAction } from '../actions/QuizActions';
-import useUser from './useUser';
 import { useEffect } from 'react';
+import useApp from './useApp';
+import useUser from './useUser';
 
 const useQuestion = (index: number) => {
   const dispatch = useDispatch();
 
-  const quiz = useQuiz();
+  const app = useApp();
   const user = useUser();
+  const quiz = useQuiz();
 
   const nextQuestionIndex = index + 1;
-  const isNextQuestionReady = quiz.questionIndex ? nextQuestionIndex <= quiz.questionIndex : false;
+  const isNextQuestionReady = app.questionIndex < quiz.questionIndex;
   const mustWaitForNextQuestion = !quiz.isOver && !user.isAdmin && !isNextQuestionReady;
 
   const answerOverlay = useOverlay(OverlayName.Answer);
@@ -41,15 +43,6 @@ const useQuestion = (index: number) => {
       questionIndex: nextQuestionIndex,
     }));
   }
-
-
-
-  // Force user to move on to next question if it has already started
-  useEffect(() => {
-    if (quiz.isNextQuestionForced && !mustWaitForNextQuestion) {
-      goToNextQuestion();
-    }
-  }, [mustWaitForNextQuestion]);
 
 
 

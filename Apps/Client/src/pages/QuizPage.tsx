@@ -13,6 +13,7 @@ import useApp from '../hooks/useApp';
 import useOverlay from '../hooks/useOverlay';
 import { OverlayName } from '../reducers/OverlaysReducer';
 import useVote from '../hooks/useVote';
+import { NO_QUESTION_INDEX } from '../reducers/AppReducer';
 
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();
@@ -66,7 +67,7 @@ const QuizPage: React.FC = () => {
     }
 
     // Do not run for first question
-    if (app.questionIndex === 0) {
+    if (app.questionIndex === NO_QUESTION_INDEX) {
       return;
     }
 
@@ -102,7 +103,7 @@ const QuizPage: React.FC = () => {
     if (!user.isAuthenticated) {
       return;
     }
-    if (vote.value === null || vote.index === -1) {
+    if (vote.value === null) {
       if (answerOverlay.isOpen) {
         answerOverlay.close();
       }
@@ -115,6 +116,21 @@ const QuizPage: React.FC = () => {
     }
     
   }, [vote.value]);
+
+
+
+  // Open answer layer if quiz is over
+  useEffect(() => {
+    if (!user.isAuthenticated) {
+      return;
+    }
+    if (!quiz.isOver) {
+      return;
+    }
+
+    answerOverlay.open();
+    
+  }, [quiz.isOver]);
 
 
 
@@ -158,7 +174,7 @@ const QuizPage: React.FC = () => {
 
 
   // Wait until data has been fetched
-  if (!quiz.questions || !quiz.status) {
+  if (!quiz.questions || !quiz.status || app.questionIndex === NO_QUESTION_INDEX) {
     return null;
   }
 

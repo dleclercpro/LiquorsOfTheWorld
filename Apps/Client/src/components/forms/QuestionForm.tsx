@@ -85,10 +85,14 @@ const QuestionForm: React.FC<Props> = (props) => {
 
   }, [index]);
 
+
+
   if (!quiz.questions || !quiz.status) {
     return null;
   }
 
+
+  
   return (
     <form className='question-form' onSubmit={handleSubmit}>
       <div className='question-form-meta'>

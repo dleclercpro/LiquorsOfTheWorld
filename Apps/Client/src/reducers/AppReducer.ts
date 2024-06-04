@@ -5,6 +5,8 @@ import { Language } from '../constants';
 import { INIT_LANGUAGE } from '../i18n';
 import { CallStartQuestionResponseData } from '../types/DataTypes';
 
+export const NO_QUESTION_INDEX = -1;
+
 interface AppState {
   language: Language,
   version: string | null,
@@ -17,7 +19,7 @@ interface AppState {
 const initialState: AppState = {
   language: INIT_LANGUAGE,
   version: null,
-  questionIndex: 0,
+  questionIndex: NO_QUESTION_INDEX,
   styles: {
     bg: null,
   },
@@ -45,10 +47,10 @@ export const appSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(logoutAction.fulfilled, (state) => {
-        state.questionIndex = 0; // Only reset question index on log out
+        state.questionIndex = NO_QUESTION_INDEX;
       })
       .addCase(logoutAction.rejected, (state) => {
-        state.questionIndex = 0; // Only reset question index on log out
+        state.questionIndex = NO_QUESTION_INDEX;
       })
       .addCase(startQuestionAction.fulfilled, (state, action: PayloadAction<CallStartQuestionResponseData>) => {
         state.questionIndex = action.payload;

@@ -20,12 +20,11 @@ const AnswerOverlay: React.FC = () => {
   const quiz = useQuiz();
   const user = useUser();
 
-  const overlay = useOverlay(OverlayName.Answer);
-
   const appQuestionIndex = app.questionIndex;
   const nextAppQuestionIndex = appQuestionIndex + 1;
 
   const question = useQuestion(appQuestionIndex);
+  const overlay = useOverlay(OverlayName.Answer);
 
 
 
@@ -34,12 +33,15 @@ const AnswerOverlay: React.FC = () => {
     return null;
   }
 
-  let voteCount = quiz.status.voteCounts[appQuestionIndex];
+  const voteCount = quiz.status.voteCounts[appQuestionIndex];
+  const playersCount = quiz.players.length;
+  const haveAllPlayersVoted = voteCount === playersCount;
+  const hideAnswer = !quiz.isOver && !user.isAdmin && !haveAllPlayersVoted;
 
   const Icon = question.answer.isCorrect ? RightIcon : WrongIcon;
   const iconText = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_ICON_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_ICON_TEXT');
 
-  const currentVoteStatus = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount, playersCount: quiz.players.length });
+  const currentVoteStatus = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount, playersCount });
   const text = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_TEXT');
 
 
@@ -55,10 +57,10 @@ const AnswerOverlay: React.FC = () => {
       <div className='answer-overlay-box'>
           <div>
             <div className='answer-overlay-box-left'>
-              {question.next.mustWaitFor ? (
+              {hideAnswer ? (
                 <>
                   <WaitIcon className='answer-overlay-icon wait' />
-                  <p className='answer-overlay-title'>{t('common:OVERLAYS.ANSWER.PLEASE_WAIT_FOR_NEXT_QUESTION')}</p>
+                  <p className='answer-overlay-title'>{t('common:OVERLAYS.ANSWER.PLEASE_WAIT_FOR_ALL_PLAYERS')}</p>
                 </>
               ) : (
                 <>
@@ -68,7 +70,7 @@ const AnswerOverlay: React.FC = () => {
               )}
             </div>
             <div className='answer-overlay-box-right'>
-              {question.next.mustWaitFor ? (
+              {hideAnswer ? (
                 <>
                   <p className='answer-overlay-title'>{currentVoteStatus}</p>
                 </>
@@ -83,9 +85,13 @@ const AnswerOverlay: React.FC = () => {
                       {t('common:OVERLAYS.ANSWER.START_NEXT_QUESTION')} {`(${nextAppQuestionIndex + 1}/${quiz.questions.length})`}
                     </button>
                   )}
-                  {!quiz.isOver && !(user.isAdmin && quiz.isSupervised) && !question.next.mustWaitFor && (
-                    <button className='answer-overlay-button' onClick={question.next.goTo}>
-                      {t('common:OVERLAYS.ANSWER.NEXT_QUESTION')} {`(${nextAppQuestionIndex + 1}/${quiz.questions.length})`}
+                  {!quiz.isOver && !(user.isAdmin && quiz.isSupervised) && (
+                    <button className='answer-overlay-button' disabled={question.next.mustWaitFor} onClick={question.next.goTo}>
+                      {question.next.mustWaitFor ? (
+                        t('common:OVERLAYS.ANSWER.PLEASE_WAIT_FOR_NEXT_QUESTION')
+                      ) : (
+                        `${t('common:OVERLAYS.ANSWER.NEXT_QUESTION')} (${nextAppQuestionIndex + 1}/${quiz.questions.length})`
+                      )}
                     </button>
                   )}
                   {quiz.isOver && (

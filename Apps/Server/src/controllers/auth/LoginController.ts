@@ -73,7 +73,6 @@ const LoginController: RequestHandler = async (req, res, next) => {
 
         // Check if quiz has already started and non-admin user is playing
         const isUserPlaying = quiz.isUserPlaying(user!, teamId);
-        logger.debug(user.serialize());
         if (!isUserPlaying && !user.isAdmin()) {
             logger.debug(`User '${username}' is not part of the quiz.`);
             if (quiz.isStarted()) {

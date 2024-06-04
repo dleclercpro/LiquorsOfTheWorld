@@ -5,14 +5,16 @@ import { startQuizAction as doStartQuiz } from '../actions/QuizActions';
 import { deleteQuizAction as doDeleteQuiz } from '../actions/QuizActions';
 import { Language, NON_VOTE } from '../constants';
 import { useTranslation } from 'react-i18next';
-import { setQuestionIndex } from '../reducers/AppReducer';
-import { toReversedArray } from '../utils/array';
+import useApp from './useApp';
+import { NO_QUESTION_INDEX, setQuestionIndex } from '../reducers/AppReducer';
+import { DEBUG } from '../config';
 
 const useQuiz = () => {
   const { i18n } = useTranslation();
   const language = i18n.language as Language;
 
-  const app = useSelector(({ app }) => app);
+  const app = useApp();
+
   const quiz = useSelector(({ quiz }) => quiz);
 
   const { id, name } = quiz;
@@ -23,7 +25,7 @@ const useQuiz = () => {
   const votes = quiz.votes.data ?? [];
   const scores = quiz.scores.data ?? { admins: {}, users: {} };
 
-  const questionIndex = status?.questionIndex;
+  const questionIndex = status?.questionIndex ?? 0;
   
   const isStarted = Boolean(status?.isStarted);
   const isOver = Boolean(status?.isOver);
@@ -35,28 +37,35 @@ const useQuiz = () => {
 
 
 
-  // Refresh app quiz ID
-  useEffect(() => {
-    if (!status || votes.length === 0) return;
+  const initializeQuestionIndex = useCallback(() => {
+    if (votes.length === 0) return;
+    const lastQuestionIndex = votes.length - 1;
 
-    const questionIndex = status.questionIndex ?? 0;
-
-    let lastUnansweredQuestionIndex = toReversedArray(votes)
-      .findIndex((vote: number) => vote === NON_VOTE);
-
-    if (lastUnansweredQuestionIndex === -1) {
-      lastUnansweredQuestionIndex = 0;
-    }
+    // Identify next question to be answered by user
+    let lastUnansweredQuestionIndex = votes.findIndex((vote: number) => vote === NON_VOTE);
     
-    let appQuestionIndex = questionIndex;
-    if (!isSupervised && lastUnansweredQuestionIndex < questionIndex) {
-      appQuestionIndex = lastUnansweredQuestionIndex;
+    if (lastUnansweredQuestionIndex === -1) {
+      lastUnansweredQuestionIndex = lastQuestionIndex;
     }
 
-    if (app.questionIndex !== appQuestionIndex) {
-      dispatch(setQuestionIndex(appQuestionIndex));
+    if (app.questionIndex !== lastUnansweredQuestionIndex) {
+      dispatch(setQuestionIndex(lastUnansweredQuestionIndex));
     }
-  }, [status, votes]);
+  }, [votes]);
+
+
+
+  const updateQuestionIndex = useCallback(() => {
+    if (!status) return;
+
+    // Force user to go to next question according to setting
+    if (status.isNextQuestionForced && app.questionIndex !== questionIndex) {
+      if (DEBUG) {
+        console.log(`Forcing user to next question: #${questionIndex + 1}`);
+      }
+      dispatch(setQuestionIndex(questionIndex));
+    }
+  }, [status]);
 
 
 
@@ -99,6 +108,20 @@ const useQuiz = () => {
 
     return await dispatch(doDeleteQuiz(quiz.id));
   }, [quiz.id]);
+
+
+
+  // Handle question index
+  useEffect(() => {
+    // When loading app for the first time, reset question index
+    if (app.questionIndex === NO_QUESTION_INDEX) {
+      initializeQuestionIndex();
+    }
+    // On further changes
+    else {
+      updateQuestionIndex();
+    }
+  }, [initializeQuestionIndex, updateQuestionIndex]);
 
 
 

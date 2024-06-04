@@ -1,9 +1,7 @@
 import { ADMINS, REDIS_DATABASE, REDIS_ENABLE, REDIS_OPTIONS, USERS } from '../../config';
-import logger from '../../logger';
-import { getLast, getRange } from '../../utils/array';
+import { getLast } from '../../utils/array';
 import { sum } from '../../utils/math';
 import RedisDatabase from './base/RedisDatabase';
-import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import QuizManager from '../QuizManager';
 import MemoryDatabase from './base/MemoryDatabase';
 import User from '../users/User';
@@ -12,10 +10,6 @@ import { NON_VOTE } from '../../constants';
 import { VotesData } from '../../types/DataTypes';
 
 const SEPARATOR = '|';
-
-type Votes = Record<string, number[]>;
-
-
 
 class AppDatabase {
     private db: RedisDatabase | MemoryDatabase<string>;
@@ -105,9 +99,17 @@ class AppDatabase {
         const votesAsStrings = await this.getKeysByPattern(`votes:${quiz.getId()}:*`);
         
         const votes: Record<string, VotesData> = {};
+
+        const adminUsernames = ADMINS.map((admin) => admin.username);
     
         for (const voteAsString of votesAsStrings) {
             const username = getLast(voteAsString.split(':')) as string;
+
+            // Admins aren't players!
+            if (adminUsernames.includes(username)) {
+                continue;
+            }
+
             votes[username] = await this.getUserVotes(quiz, username);
         }
         
@@ -120,7 +122,7 @@ class AppDatabase {
 
         const scores = Object
             .entries(await this.getAllVotes(quiz))
-            .reduce((prev, [player, votes]) => {
+            .reduce((prev, [voter, votes]) => {
                 const score = sum(
                     answers
                         .map((answerIndex, i) => answerIndex === votes[i])
@@ -129,7 +131,7 @@ class AppDatabase {
         
                 return {
                     ...prev,
-                    [player]: score,
+                    [voter]: score,
                 };
             }, {});
     
@@ -168,9 +170,9 @@ class AppDatabase {
 
     public async getPlayersWhoVoted(quiz: Quiz, questionIndex: number) {
         const votes = await this.getAllVotes(quiz);
-        const playerIndexes = Object.keys(votes);
+        const voters = Object.keys(votes);
 
-        return playerIndexes.filter((playerIndex) => votes[playerIndex][questionIndex] !== NON_VOTE);
+        return voters.filter((voterIndex) => votes[voterIndex][questionIndex] !== NON_VOTE);
     }
 }
 

@@ -1,9 +1,10 @@
+import { NO_QUESTION_INDEX } from '../reducers/AppReducer';
 import useQuiz from './useQuiz';
 
 const useVote = (questionIndex: number) => {
   const quiz = useQuiz();
 
-  if (quiz.questions === null || quiz.votes.length === 0) {
+  if (!quiz.questions || quiz.votes.length === 0 || questionIndex === NO_QUESTION_INDEX) {
     return {
       index: null,
       value: null,

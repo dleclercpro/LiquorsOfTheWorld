@@ -50,8 +50,6 @@ class QuizManager {
 
         const count = Object.keys(json).length;
 
-        logger.debug(`Found ${count} questions in quiz: ${name}`);
-
         return count;
     }
 }

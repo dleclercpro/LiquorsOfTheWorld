@@ -130,13 +130,12 @@ class Quiz {
         const voteCounts = new Array(questionCount).fill(0);
 
         const votes = await APP_DB.getAllVotes(this);
-        const players = Object.keys(votes);
+        const voters = Object.keys(votes);
 
-        // For each player, every vote that is not equal to -1 is a
-        // valid vote
-        players.forEach((player) => {
+        voters.forEach((voter) => {
             getRange(questionCount).forEach((i) => {
-                if (votes[player][i] !== NON_VOTE) {
+                // Every vote that is not equal to -1 is a valid vote
+                if (votes[voter][i] !== NON_VOTE) {
                     voteCounts[i] += 1;
                 }
             });
@@ -236,14 +235,18 @@ class Quiz {
     }
 
     public async incrementQuestionIndex() {
-        const questionIndex = this.getQuestionIndex();
         const questionCount = await QuizManager.count(this.name);
 
-        if (questionIndex + 1 > questionCount) {
+        const questionIndex = this.getQuestionIndex();
+        const nextQuestionIndex = questionIndex + 1;
+
+        if (nextQuestionIndex > questionCount) {
             throw new InvalidQuestionIndexError();
         }
 
-        await this.setQuestionIndex(questionIndex + 1);
+        await this.setQuestionIndex(nextQuestionIndex);
+
+        logger.debug(`Incremented quiz (ID = ${this.id}) question index to: ${nextQuestionIndex}`);
     }
 
     public async restartTimer() {

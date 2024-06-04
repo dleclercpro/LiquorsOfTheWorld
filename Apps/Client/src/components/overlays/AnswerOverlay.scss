@@ -81,7 +81,20 @@
           }
 
           &.wait {
-            margin-bottom: 10px;
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+            color: $color-white;
+  
+            @include tablet {
+              width: 80px;
+              height: 80px;
+            }
+  
+            @include desktop {
+              width: 100px;
+              height: 100px;
+            }
           }
     
           &.is-right {
