@@ -19,11 +19,11 @@ const LoginForm: React.FC<Props> = (props) => {
 
   const quiz = useQuiz();
 
-  const [quizId, setQuizId] = useState(props.quizId ?? '');
-  const [teamId, setTeamId] = useState(props.teamId ?? '');
+  const [quizId, setQuizId] = useState('');
+  const [teamId, setTeamId] = useState('');
 
-  const [disableQuizId] = useState(!!props.quizId);
-  const [disableTeamId] = useState(!!props.teamId);
+  const disableQuizId = !!props.quizId;
+  const disableTeamId = !!props.teamId;
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -32,6 +32,17 @@ const LoginForm: React.FC<Props> = (props) => {
   const user = useSelector((state) => state.user);
 
   const canSubmit = quiz.name !== null && quizId !== null && teamId !== null && username !== '' && password !== '';
+
+
+
+  // Use props to fill fields
+  useEffect(() => {
+    setQuizId(props.quizId ?? '');
+  }, [props.quizId]);
+
+  useEffect(() => {
+    setTeamId(props.teamId ?? '');
+  }, [props.teamId]);
 
 
   

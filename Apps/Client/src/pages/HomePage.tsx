@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
 
   const user = useUser();
   const quiz = useQuiz();
-  const data = useData();
+  // const data = useData();
   
   const paramQuizName = searchParams.get(URL_PARAM_QUIZ_NAME);
   const paramQuizId = searchParams.get(URL_PARAM_QUIZ_ID);
@@ -27,12 +27,11 @@ const HomePage: React.FC = () => {
   const quizId = paramQuizId ?? quiz.id;
   const teamId = paramTeamId ?? user.teamId;
 
-  const isQuizNameValid = data.quizzes.includes(quizName);
-  const isQuizIdValid = quizId !== null ? typeof quizId === 'string' : false;
-  const isTeamIdValid = teamId !== null ? quiz.teams.includes(teamId) : false;
-  console.log(`isQuizNameValid: ${isQuizNameValid}`);
-  console.log(`isQuizIdValid: ${isQuizIdValid}`);
-  console.log(`isTeamIdValid: ${isTeamIdValid}`);
+  // const isQuizNameValid = data.quizzes.includes(quizName);
+  // const isQuizIdValid = quizId !== null ? typeof quizId === 'string' : false;
+  // const isTeamIdValid = teamId !== null ? quiz.teams.includes(teamId) : false;
+  console.log(`quizId: ${quizId}`);
+  console.log(`teamId: ${teamId}`);
 
 
 
