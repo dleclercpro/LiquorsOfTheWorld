@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './HomePage.scss';
 import LoginForm from '../components/forms/LoginForm';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Page from './Page';
 import { QuizName } from '../constants';
@@ -16,29 +16,33 @@ const HomePage: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   
   const { t } = useTranslation();
 
   const user = useUser();
   const data = useData();
   const quiz = useQuiz();
-  
+
   const paramQuizName = searchParams.get(URL_PARAM_QUIZ_NAME);
   const paramQuizId = searchParams.get(URL_PARAM_QUIZ_ID);
   const paramTeamId = searchParams.get(URL_PARAM_TEAM_ID);
 
-  const quizName = paramQuizName as QuizName ?? quiz.name;
+  const quizName = paramQuizName ?? quiz.name;
   const quizId = paramQuizId ?? quiz.id;
   const teamId = paramTeamId ?? user.teamId;
 
-  const isQuizNameValid = data.quizzes.includes(quizName);
+  const isQuizNameValid = data.quizzes.includes(quizName as QuizName);
 
 
 
   // Set quiz name if available
   useEffect(() => {
     if (isQuizNameValid) {
-      dispatch(setQuizName(quizName));
+      dispatch(setQuizName(quizName as QuizName));
+    }
+    else if (quizName !== null && quizName !== '') {
+      navigate(`/error`);
     }
   }, [isQuizNameValid]);
 

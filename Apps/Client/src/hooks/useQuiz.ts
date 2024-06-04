@@ -8,6 +8,9 @@ import { useTranslation } from 'react-i18next';
 import useApp from './useApp';
 import { setQuestionIndex } from '../reducers/AppReducer';
 import { DEBUG } from '../config';
+import { sleep } from '../utils/time';
+import TimeDuration from '../models/TimeDuration';
+import { TimeUnit } from '../types/TimeTypes';
 
 const useQuiz = () => {
   const { i18n } = useTranslation();
@@ -70,8 +73,11 @@ const useQuiz = () => {
 
 
 
-  const fetchAll = useCallback(async () => {
+  const fetchAllData = useCallback(async () => {
     if (quiz.id === null || quiz.name === null || !language) return;
+
+    // Fake processing time
+    await sleep(new TimeDuration(1, TimeUnit.Second));
 
     await dispatch(fetchAllDataAction({ quizId: quiz.id, quizName: quiz.name, language }));
 
@@ -141,7 +147,7 @@ const useQuiz = () => {
     players,
     votes,
     scores,
-    fetchData: fetchAll,
+    fetchData: fetchAllData,
     refreshQuestions,
     refreshStatusPlayersAndScores,
     start: startQuiz,

@@ -13,9 +13,7 @@ const LoadingOverlay: React.FC = () => {
 
   const overlay = useOverlay(OverlayName.Loading);
 
-  if (user.username === null) {
-    return null;
-  }
+  const username = user.username ?? '';
 
   return (
     <div id='loading-overlay' className={`${!overlay.isOpen ? 'hidden' : ''} opaque`}>
@@ -26,7 +24,7 @@ const LoadingOverlay: React.FC = () => {
 
         {quiz.players.length > 0 && (<>
           <p className='loading-overlay-text'>
-            <Trans i18nKey='OVERLAYS.LOADING.HELLO' values={{ username: user.username }}>
+            <Trans i18nKey='OVERLAYS.LOADING.HELLO' values={{ username }}>
               ... <strong>...</strong> ...
             </Trans>
           </p>

@@ -31,17 +31,32 @@ const QuizPage: React.FC = () => {
 
   const [choice, setChoice] = useState('');
 
+  const isReady = quiz.id !== null && quiz.questions && quiz.status && app.questionIndex !== NO_QUESTION_INDEX;
+
+
+
+  // Handle loading overlay based on presence of data
+  useEffect(() => {
+    if (!isReady && !loadingOverlay.isOpen) {
+      loadingOverlay.open();
+    }
+    if (isReady && loadingOverlay.isOpen) {
+      loadingOverlay.close();
+    }
+
+  }, [isReady]);
+
 
 
   // Fetch initial data only once!
   useEffect(() => {
-    if (!user.isAuthenticated || quiz.id === null) {
+    if (isReady) {
       return;
     }
 
     quiz.fetchData();
 
-  }, [user.isAuthenticated, quiz.id]);
+  }, [isReady]);
 
 
 
@@ -133,21 +148,6 @@ const QuizPage: React.FC = () => {
 
 
 
-  // Show loading screen in case quiz has not yet been started
-  useEffect(() => {
-    if (!user.isAuthenticated) {
-      return;
-    }
-    if (!quiz.isStarted && !user.isAdmin) {
-      loadingOverlay.open();
-    } else {
-      loadingOverlay.close();
-    }
-
-  }, [quiz.isStarted, user.isAdmin]);
-
-
-
   // Start timer if enabled
   useEffect(() => {
     if (!user.isAuthenticated) {
@@ -173,13 +173,13 @@ const QuizPage: React.FC = () => {
 
 
   // Wait until data has been fetched
-  if (!quiz.questions || !quiz.status || app.questionIndex === NO_QUESTION_INDEX) {
+  if (!isReady) {
     return null;
   }
 
 
   
-  const { topic, question, type, url, options } = quiz.questions[app.questionIndex];
+  const { topic, question, type, url, options } = quiz.questions![app.questionIndex];
 
   return (
     <Page title={t('common:COMMON:QUIZ')} className='quiz-page'>

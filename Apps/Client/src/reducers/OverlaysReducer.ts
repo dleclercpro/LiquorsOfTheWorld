@@ -28,8 +28,6 @@ export const overlaysSlice = createSlice({
   initialState,
   reducers: {
     openOverlay: (state, action: PayloadAction<OverlayName>) => {
-      console.log(`Opening overlay: ${action.payload}...`);
-
       state[action.payload].open = true;
     },
     closeOverlay: (state, action: PayloadAction<OverlayName>) => {
