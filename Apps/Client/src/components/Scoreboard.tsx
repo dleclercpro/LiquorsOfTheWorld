@@ -22,7 +22,7 @@ const Scoreboard: React.FC<Props> = (props) => {
   // FIXME: scores of all players in real-time
   const questionsCount = quiz.questions.length;
   // const questionsAnsweredCount = quiz.votes.filter((vote) => vote !== NO_VOTE_INDEX).length;
-  const questionsAnsweredCount = quiz.questionIndex;
+  const questionsAnsweredCount = quiz.isOver ? questionsCount : quiz.questionIndex;
 
   const sortedScores = toSortedArray(scores, 'DESC')
     .map(({ key, value }) => ({ username: key, score: value }));

@@ -209,7 +209,7 @@ class Quiz {
 
     public async addUserToPlayers(user: User, teamId: string = '') {
         this.players = unique([...this.players, {
-            username: user.getUsername().toLowerCase(),
+            username: user.getUsername(),
             teamId,
         }]);
 
@@ -219,8 +219,8 @@ class Quiz {
     public isUserPlaying(user: User, teamId: string = '') {
         return this.players
             .filter((player) => player.teamId === teamId)
-            .map((player) => player.username.toLowerCase())
-            .includes(user.getUsername().toLowerCase());
+            .map((player) => player.username)
+            .includes(user.getUsername());
     }
 
     public getQuestionIndex() {
