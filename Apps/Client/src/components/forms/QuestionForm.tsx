@@ -93,7 +93,7 @@ const QuestionForm: React.FC<Props> = (props) => {
 
 
 
-  if (!quiz.questions || !quiz.status) {
+  if (quiz.questions === null || quiz.status === null) {
     return null;
   }
 

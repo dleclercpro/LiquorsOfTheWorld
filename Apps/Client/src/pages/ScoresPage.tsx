@@ -22,7 +22,7 @@ const ScoresPage: React.FC = () => {
   // Fetch scores when loading page or when moving on to next question
   // or when quiz is over
   useEffect(() => {
-    if (quiz.id === null || !quiz.status) {
+    if (quiz.id === null || quiz.status === null) {
       return;
     }
 
@@ -30,13 +30,13 @@ const ScoresPage: React.FC = () => {
     dispatch(closeAllOverlays());
   }, [questionIndex, isOver]);
 
-  if (quiz.id === null || !quiz.status || !quiz.scores) {
+
+
+  if (quiz.id === null || quiz.status === null || !quiz.scores) {
     return null;
   }
 
-  const isStarted = quiz.isStarted;
-
-  if (!isStarted) {
+  if (!quiz.isStarted) {
     return (
       <Navigate to='/quiz' />
     );
@@ -44,7 +44,7 @@ const ScoresPage: React.FC = () => {
   
   return (
     <Page title={t('common:COMMON:SCOREBOARD')} className='scores-page'>
-      <Scoreboard scores={quiz.scores.users} />
+      <Scoreboard scores={quiz.scores} />
     </Page>
   );
 };

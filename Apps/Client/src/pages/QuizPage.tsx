@@ -71,10 +71,7 @@ const QuizPage: React.FC = () => {
   // Fetch current quiz status from server when moving to
   // next question
   useEffect(() => {
-    if (quiz.id === null || quiz.name === null) {
-      return;
-    }
-
+    
     // Do not run for first question
     if (app.questionIndex < 1) {
       return;

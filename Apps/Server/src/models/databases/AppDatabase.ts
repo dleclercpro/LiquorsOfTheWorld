@@ -119,15 +119,15 @@ class AppDatabase {
         const scores = Object
             .entries(votes.users) // FIXME: only return user votes, not admin ones
             .reduce((prev, [voter, voterVotes]) => {
-                const score = sum(
-                    answers
-                        .map((answerIndex, i) => answerIndex === voterVotes[i])
-                        .map(Number)
-                );
-        
                 return {
                     ...prev,
-                    [voter]: score,
+                    [voter]: {
+                        total: voterVotes.filter((vote) => vote !== NO_VOTE_INDEX).length,
+                        value: sum(answers
+                            .map((answerIndex, i) => answerIndex === voterVotes[i])
+                            .map((x) => Number(x))
+                        ),
+                    },
                 };
             }, {} as ScoresData);
     

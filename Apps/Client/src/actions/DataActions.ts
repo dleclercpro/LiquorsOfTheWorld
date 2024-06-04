@@ -129,9 +129,9 @@ export const refreshDataAction = createServerAction<RefreshDataActionArgs, void>
   'data/refresh',
   async ({ quizId }, { dispatch }) => {
     const result = await Promise.all([
-      await dispatch(fetchStatusAction(quizId)),
-      await dispatch(fetchPlayersAction(quizId)),
-      await dispatch(fetchScoresAction(quizId)),
+      dispatch(fetchStatusAction(quizId)),
+      dispatch(fetchPlayersAction(quizId)),
+      dispatch(fetchScoresAction(quizId)),
     ]);
 
     const someFetchActionFailed = result

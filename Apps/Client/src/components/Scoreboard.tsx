@@ -1,11 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { ScoresData } from '../types/DataTypes';
-import { toSortedArray } from '../utils/array';
+import { GroupedScoresData } from '../types/DataTypes';
 import './Scoreboard.scss';
 import useQuiz from '../hooks/useQuiz';
 
 interface Props {
-  scores: ScoresData,
+  scores: GroupedScoresData,
 }
 
 const Scoreboard: React.FC<Props> = (props) => {
@@ -15,17 +14,23 @@ const Scoreboard: React.FC<Props> = (props) => {
 
   const quiz = useQuiz();
 
-  if (!quiz.questions || !quiz.status) {
+  if (quiz.questions === null || quiz.status === null) {
     return null;
   }
 
-  // FIXME: scores of all players in real-time
   const questionsCount = quiz.questions.length;
-  // const questionsAnsweredCount = quiz.votes.filter((vote) => vote !== NO_VOTE_INDEX).length;
   const questionsAnsweredCount = quiz.isOver ? questionsCount : quiz.questionIndex;
 
-  const sortedScores = toSortedArray(scores, 'DESC')
-    .map(({ key, value }) => ({ username: key, score: value }));
+  // FIXME: only consider regular users
+  // Sort users in descending order according to score value
+  const sortedScores = Object.entries(scores.users)
+    .map(([username, score]) => ({ username, score }));
+
+  sortedScores.sort((a, b) => {
+    if (a.score.value < b.score.value) return 1;
+    if (a.score.value > b.score.value) return -1;
+    return 0;
+  });
 
   return (
     <div className='scoreboard'>
@@ -55,7 +60,7 @@ const Scoreboard: React.FC<Props> = (props) => {
                   <td>
                     <strong>{username}</strong>
                   </td>
-                  <td>{score}/{questionsAnsweredCount}</td>
+                  <td>{score.value}/{score.total}</td>
               </tr>
             );
           })}

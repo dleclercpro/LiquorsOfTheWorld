@@ -63,7 +63,10 @@ export type StatusData = {
   timer?: TimerData,
 };
 
-export type ScoresData = Record<string, number>;
+export type ScoresData = Record<string, {
+  value: number,
+  total: number,
+}>;
 
 export type GroupedScoresData = {
   admins: ScoresData,

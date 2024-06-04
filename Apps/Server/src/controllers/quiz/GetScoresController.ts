@@ -35,13 +35,13 @@ const GetScoresController: RequestHandler = async (req, res, next) => {
 
         return res.json(
             successResponse(
-                Object.entries(scores).reduce((prev, [player, score]) => {
-                    if (admins.includes(player)) {
+                Object.entries(scores).reduce((prev, [scorer, score]) => {
+                    if (admins.includes(scorer)) {
                         return {
                             ...prev,
                             admins: {
                                 ...prev.admins,
-                                [player]: score,
+                                [scorer]: score,
                             },
                         };
                     }
@@ -50,7 +50,7 @@ const GetScoresController: RequestHandler = async (req, res, next) => {
                         ...prev,
                         users: {
                             ...prev.users,
-                            [player]: score,
+                            [scorer]: score,
                         },
                     };
                 }, { admins: {}, users: {} } as GroupedScoresData),

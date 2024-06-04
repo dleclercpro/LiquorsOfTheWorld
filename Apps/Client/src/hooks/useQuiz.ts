@@ -11,12 +11,14 @@ import { DEBUG } from '../config';
 import { sleep } from '../utils/time';
 import TimeDuration from '../models/TimeDuration';
 import { TimeUnit } from '../types/TimeTypes';
+import useUser from './useUser';
 
 const useQuiz = () => {
   const { i18n } = useTranslation();
   const language = i18n.language as Language;
 
   const app = useApp();
+  const user = useUser();
 
   const quiz = useSelector(({ quiz }) => quiz);
 
@@ -26,7 +28,7 @@ const useQuiz = () => {
   const status = quiz.status.data;
   const teams = quiz.teams.data ?? [];
   const players = quiz.players.data ?? [];
-  const votes = quiz.votes.data ?? [];
+  const votes = quiz.votes.data ?? { admins: {}, users: {} };
   const scores = quiz.scores.data ?? { admins: {}, users: {} };
 
   const questionIndex = status?.questionIndex ?? 0;
@@ -42,11 +44,15 @@ const useQuiz = () => {
 
 
   const initializeQuestionIndex = useCallback(() => {
-    if (votes.length === 0) return;
-    const lastQuestionIndex = votes.length - 1;
+    if (user.username === null) return;
+
+    const currentVotes = user.isAdmin ? votes.admins[user.username] : votes.users[user.username];
+
+    if (!currentVotes || currentVotes.length === 0) return;
+    const lastQuestionIndex = currentVotes.length - 1;
 
     // Identify next question to be answered by user
-    let lastUnansweredQuestionIndex = votes.findIndex((vote: number) => vote === NO_VOTE_INDEX);
+    let lastUnansweredQuestionIndex = currentVotes.findIndex((vote: number) => vote === NO_VOTE_INDEX);
     
     if (lastUnansweredQuestionIndex === -1) {
       lastUnansweredQuestionIndex = lastQuestionIndex;

@@ -29,11 +29,12 @@ const AnswerOverlay: React.FC = () => {
 
 
   // Wait until quiz data has been fetched
-  if (quiz.id === null || !quiz.questions || !quiz.status || !quiz.status.voteCounts) {
+  const isReady = !(quiz.id === null || quiz.questions === null || quiz.status === null || quiz.players.length === 0 || quiz.status.voteCounts.length === 0);
+  if (!isReady) {
     return null;
   }
 
-  const voteCount = quiz.status.voteCounts[appQuestionIndex];
+  const voteCount = quiz.status!.voteCounts[appQuestionIndex];
   const playersCount = quiz.players.length;
   const haveAllPlayersVoted = voteCount === playersCount;
   const hideAnswer = !quiz.isOver && !user.isAdmin && !haveAllPlayersVoted;
@@ -86,7 +87,7 @@ const AnswerOverlay: React.FC = () => {
 
                   {!quiz.isOver && (user.isAdmin && quiz.isSupervised) && (
                     <button className='answer-overlay-button' onClick={question.next.startAndGoTo}>
-                      {t('common:OVERLAYS.ANSWER.START_NEXT_QUESTION')} {`(${nextAppQuestionIndex + 1}/${quiz.questions.length})`}
+                      {t('common:OVERLAYS.ANSWER.START_NEXT_QUESTION')} {`(${nextAppQuestionIndex + 1}/${quiz.questions!.length})`}
                     </button>
                   )}
                   {!quiz.isOver && !(user.isAdmin && quiz.isSupervised) && (
@@ -94,7 +95,7 @@ const AnswerOverlay: React.FC = () => {
                       {question.next.mustWaitFor ? (
                         t('common:OVERLAYS.ANSWER.PLEASE_WAIT_FOR_NEXT_QUESTION')
                       ) : (
-                        `${t('common:OVERLAYS.ANSWER.NEXT_QUESTION')} (${nextAppQuestionIndex + 1}/${quiz.questions.length})`
+                        `${t('common:OVERLAYS.ANSWER.NEXT_QUESTION')} (${nextAppQuestionIndex + 1}/${quiz.questions!.length})`
                       )}
                     </button>
                   )}

@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData, CallPingResponseData, CallStartQuestionResponseData, CallVoteResponseData, FetchedData, GroupedScoresData, PlayersData, StatusData, VotesData } from '../types/DataTypes';
+import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData, CallPingResponseData, CallStartQuestionResponseData, CallVoteResponseData, FetchedData, GroupedScoresData, GroupedVotesData, PlayersData, StatusData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
 import { startQuizAction, startQuestionAction, voteAction } from '../actions/QuizActions';
 import { logoutAction, pingAction } from '../actions/UserActions';
@@ -13,7 +13,7 @@ interface QuizState {
   teams: FetchedData<string[]>,
   questions: FetchedData<QuizJSON>,
   status: FetchedData<StatusData>,
-  votes: FetchedData<VotesData>,
+  votes: FetchedData<GroupedVotesData>,
   players: FetchedData<PlayersData>,
   scores: FetchedData<GroupedScoresData>,
 }
