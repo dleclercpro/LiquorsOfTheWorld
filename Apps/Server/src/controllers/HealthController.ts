@@ -10,10 +10,6 @@ const HealthController: RequestHandler = async (req, res, next) => {
         return res.sendStatus(status);
 
     } catch (err: any) {
-        if (err instanceof Error) {
-            logger.warn(err.message);
-        }
-
         next(err);
     }
 }

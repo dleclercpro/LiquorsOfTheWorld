@@ -102,10 +102,6 @@ const LoginController: RequestHandler = async (req, res, next) => {
             .json(successResponse(response));
 
     } catch (err: any) {
-        if (err instanceof Error) {
-            logger.warn(err.message);
-        }
-
         if (['USER_ALREADY_EXISTS', 'USER_DOES_NOT_EXIST', 'QUIZ_ALREADY_STARTED', 'INVALID_QUIZ_ID', 'INVALID_TEAM_ID', 'INVALID_PASSWORD'].includes(err.message)) {
             return res
                 .status(HttpStatusCode.UNAUTHORIZED)

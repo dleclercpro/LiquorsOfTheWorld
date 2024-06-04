@@ -21,10 +21,6 @@ const PingController: RequestHandler = async (req, res, next) => {
             }));
 
     } catch (err: any) {
-        if (err instanceof Error) {
-            logger.warn(err.message);
-        }
-
         next(err);
     }
 }

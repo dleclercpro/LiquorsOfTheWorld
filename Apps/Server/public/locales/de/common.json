@@ -71,8 +71,9 @@
     }
   },
   "OVERLAYS": {
-    "LOADING": {
-      "HELLO": "Hallo, <1>{{username}}</1>! Das Quiz beginnt gleich. Hier ist die Liste aller Teilnehmer:"
+    "LOBBY": {
+      "TITLE": "Hallo, <1>{{username}}</1>!",
+      "TEXT": "Das Quiz beginnt gleich. Hier ist die Liste aller Teilnehmer:"
     },
     "ANSWER": {
       "SEE_RESULTS": "Ergebnisse ansehen",

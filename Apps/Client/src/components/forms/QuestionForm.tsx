@@ -3,7 +3,7 @@ import { useDispatch } from '../../hooks/ReduxHooks';
 import './QuestionForm.scss';
 import { voteAction } from '../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
-import { DEBUG, QUIZ_TIMER_URGENT_TIME, SERVER_ROOT } from '../../config';
+import { QUIZ_TIMER_URGENT_TIME, SERVER_ROOT } from '../../config';
 import { AspectRatio, NO_TIME } from '../../constants';
 import PlaceholderImage from '../PlaceholderImage';
 import PlaceholderVideo from '../PlaceholderVideo';
@@ -56,10 +56,6 @@ const QuestionForm: React.FC<Props> = (props) => {
   const sendVote = useCallback(async () => {
     if (quiz.id === null) {
       return;
-    }
-
-    if (DEBUG) {
-      console.log(`Sending vote for question: #${index + 1}`);
     }
 
     const result = await dispatch(voteAction({

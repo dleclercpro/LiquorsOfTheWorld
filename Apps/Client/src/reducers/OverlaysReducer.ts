@@ -3,6 +3,7 @@ import { logoutAction } from '../actions/UserActions';
 
 export enum OverlayName {
   Loading = 'loading',
+  Lobby = 'lobby',
   Answer = 'answer',
 }
 
@@ -14,6 +15,9 @@ type OverlaysState = Record<OverlayName, OverlayState>;
 
 const initialState: OverlaysState = {
   [OverlayName.Loading]: {
+    open: false,
+  },
+  [OverlayName.Lobby]: {
     open: false,
   },
   [OverlayName.Answer]: {

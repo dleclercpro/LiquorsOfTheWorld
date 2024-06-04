@@ -1,10 +1,11 @@
 import { RequestHandler } from 'express';
-import { successResponse } from '../../utils/calls';
+import { errorResponse, successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import Quiz from '../../models/Quiz';
 import { CallGetStatusResponseData } from '../../types/DataTypes';
+import { HttpStatusCode } from '../../types/HTTPTypes';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -34,6 +35,12 @@ const GetStatusController: RequestHandler = async (req, res, next) => {
         );
 
     } catch (err: any) {
+        if (['INVALID_QUIZ_ID'].includes(err.message)) {
+            return res
+                .status(HttpStatusCode.BAD_REQUEST)
+                .json(errorResponse(err.message));
+        }
+
         next(err);
     }
 }

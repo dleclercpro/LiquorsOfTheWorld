@@ -1,80 +1,32 @@
 @import '../../styles/common';
 
 #loading-overlay {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: $color-black;
-  z-index: 100;
+  background: $color-black;
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0.8;
-  visibility: visible;
-  padding: 20px calc(2 * 10px);
+  z-index: 1000;
+}
 
-  @include desktop {
-      padding: 20px;
+.loading-icon {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid $color-white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  &.opaque {
-    opacity: 1;
-  }
-
-  &.hidden {
-    visibility: hidden;
-  }
-
-  > .loading-overlay-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 0 20px;
-    
-    > .loading-overlay-title {
-      color: $color-white;
-      @include font-title;
-      margin-bottom: 20px;
-    }
-
-    > .loading-overlay-text {
-      color: $color-white;
-      @include font-sub-sub-title;
-      margin-bottom: 20px;
-    }
-
-    > .loading-overlay-players-box {
-      list-style-type: none;
-      width: 100%;
-      max-width: 1024px;
-      padding: 15px;
-      background-color: rgba(255, 255, 255, 0.8);
-      border-radius: 8px;
-      box-shadow: $box-shadow-light;
-      column-count: 4; /* Number of columns */
-      column-gap: 20px; /* Gap between columns */
-
-      > li {
-        position: relative;
-        break-inside: avoid-column;
-        font-weight: bold;
-        margin-left: 20px;
-        padding: 5px 0;
-
-        &::before {
-          content: '✔';
-          position: absolute;
-          left: -20px;
-          top: 5px;
-        }
-      }
-    }
+  100% {
+    transform: rotate(360deg);
   }
 }

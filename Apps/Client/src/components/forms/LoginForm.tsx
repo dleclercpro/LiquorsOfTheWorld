@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from '../../hooks/ReduxHooks';
+import { useDispatch } from '../../hooks/ReduxHooks';
 import './LoginForm.scss';
 import { loginAction } from '../../actions/UserActions';
 import { useTranslation } from 'react-i18next';
 import useQuiz from '../../hooks/useQuiz';
+import useUser from '../../hooks/useUser';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   quizId: string | null,
@@ -18,7 +19,7 @@ const LoginForm: React.FC<Props> = (props) => {
   const { t } = useTranslation();
 
   const quiz = useQuiz();
-  const user = useSelector((state) => state.user);
+  const user = useUser();
 
   const [quizId, setQuizId] = useState('');
   const [teamId, setTeamId] = useState('');
@@ -28,7 +29,6 @@ const LoginForm: React.FC<Props> = (props) => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   const canSubmit = quiz.name !== null && quizId !== '' && teamId !== '' && username !== '' && password !== '';
 
@@ -44,24 +44,16 @@ const LoginForm: React.FC<Props> = (props) => {
   }, [props.teamId]);
 
 
-  
-  // FIXME
-  // Redirect to current quiz question on successful login
+
+  // Redirect to quiz page on successful login
   useEffect(() => {
-    if (user.status === 'succeeded' && user.isAuthenticated) {
+    if (user.isAuthenticated) {
       navigate(`/quiz`);
     }
-  }, [user.status]);
-
-  // Display authentication error to user
-  useEffect(() => {
-    if (user.status === 'failed' && user.error) {
-      setError(user.error);
-    }
-  }, [user.status, user.error]);
+  }, [user.isAuthenticated]);
 
 
-
+  
   // Send login data to server
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -124,9 +116,9 @@ const LoginForm: React.FC<Props> = (props) => {
         required
       />
 
-      {error && (
+      {user.error && (
         <p className='login-error'>
-          {t(`ERRORS.${error}`)}
+          {t(`ERRORS.${user.error}`)}
         </p>
       )}
 

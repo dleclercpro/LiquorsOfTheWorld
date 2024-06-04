@@ -71,8 +71,9 @@
     }
   },
   "OVERLAYS": {
-    "LOADING": {
-      "HELLO": "Hello, <1>{{username}}</1>! The quiz will begin shortly. Here is the list of participants:"
+    "LOBBY": {
+      "TITLE": "Hello, <1>{{username}}</1>!",
+      "TEXT": "The quiz will begin shortly. Here is the list of participants:"
     },
     "ANSWER": {
       "SEE_RESULTS": "See results",

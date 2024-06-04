@@ -52,8 +52,12 @@ const AnswerOverlay: React.FC = () => {
     navigate('/scores');
   }
 
+  if (!overlay.isOpen) {
+    return null;
+  }
+
   return (
-    <div id='answer-overlay' className={overlay.isOpen ? '' : 'hidden'}>
+    <div id='answer-overlay'>
       <div className='answer-overlay-box'>
           <div>
             <div className='answer-overlay-box-left'>

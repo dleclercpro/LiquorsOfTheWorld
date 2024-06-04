@@ -8,6 +8,8 @@ import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 import { Language, QuizName } from '../constants';
 import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizNamesResponseData, CallGetTeamsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData } from '../types/DataTypes';
 import { createServerAction } from './ServerActions';
+import { logoutAction, pingAction } from './UserActions';
+import { updateVersionAction } from './AppActions';
 
 export const fetchQuizNamesAction = createServerAction<void, CallGetQuizNamesResponseData>(
   'data/quiz-names',
@@ -75,6 +77,27 @@ export const fetchScoresAction = createServerAction<string, CallGetScoresRespons
 
 
 
+export const fetchInitialDataAction = createServerAction<void, void>(
+  'data/fetch-initial',
+  async (_, { dispatch }) => {
+    const result = await Promise.all([
+      dispatch(pingAction()),
+      dispatch(updateVersionAction()),
+      dispatch(fetchQuizNamesAction()),
+    ]);
+
+    const someFetchActionFailed = result
+      .map(({ type }) => type)
+      .some(type => type.endsWith('/rejected'));
+
+    if (someFetchActionFailed) {
+      throw new Error('FETCH_INITIAL_DATA_ACTION');
+    }
+  },
+);
+
+
+
 type FetchAllDataActionArgs = { quizId: string, quizName: QuizName, language: Language };
 export const fetchAllDataAction = createServerAction<FetchAllDataActionArgs, void>(
   'data/fetch-all',
@@ -116,6 +139,8 @@ export const refreshDataAction = createServerAction<RefreshDataActionArgs, void>
       .some(type => type.endsWith('/rejected'));
 
     if (someFetchActionFailed) {
+      await dispatch(logoutAction());
+      
       throw new Error('REFRESH_DATA_ACTION');
     }
   },

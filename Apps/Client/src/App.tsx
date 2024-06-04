@@ -10,14 +10,14 @@ import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
 import { useDispatch } from './hooks/ReduxHooks';
-import { pingAction } from './actions/UserActions';
 import Nav from './components/Nav';
 import ErrorPage from './pages/ErrorPage';
-import { updateBackgroundAction, updateVersionAction } from './actions/AppActions';
-import { fetchQuizNamesAction } from './actions/DataActions';
+import { updateBackgroundAction } from './actions/AppActions';
+import { fetchInitialDataAction } from './actions/DataActions';
 import useQuiz from './hooks/useQuiz';
 import useUser from './hooks/useUser';
 import useApp from './hooks/useApp';
+import LobbyOverlay from './components/overlays/LobbyOverlay';
 
 function App() {
   const dispatch = useDispatch();
@@ -27,9 +27,8 @@ function App() {
   const quiz = useQuiz();
 
   useEffect(() => {
-    dispatch(pingAction());
-    dispatch(updateVersionAction());
-    dispatch(fetchQuizNamesAction());
+    dispatch(fetchInitialDataAction());
+
   }, []);
 
   useEffect(() => {
@@ -77,6 +76,7 @@ function App() {
         </Routes>
         
         <LoadingOverlay />
+        <LobbyOverlay />
         <AnswerOverlay />
       </div>
     </div>

@@ -94,7 +94,7 @@ const useQuiz = () => {
 
 
   const refreshStatusPlayersAndScores = useCallback(async () => {
-    if (!quiz.id) return;
+    if (quiz.id === null) return;
 
     await dispatch(refreshDataAction({ quizId: quiz.id }));
 
@@ -147,7 +147,7 @@ const useQuiz = () => {
     players,
     votes,
     scores,
-    fetchData: fetchAllData,
+    fetchAllData,
     refreshQuestions,
     refreshStatusPlayersAndScores,
     start: startQuiz,

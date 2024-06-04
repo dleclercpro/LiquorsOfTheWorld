@@ -26,12 +26,13 @@ const QuizPage: React.FC = () => {
 
   const loadingOverlay = useOverlay(OverlayName.Loading);
   const answerOverlay = useOverlay(OverlayName.Answer);
+  const lobbyOverlay = useOverlay(OverlayName.Lobby);
 
   const timer = useServerCountdownTimer();
 
   const [choice, setChoice] = useState('');
 
-  const isReady = quiz.id !== null && quiz.questions && quiz.status && app.questionIndex !== NO_QUESTION_INDEX;
+  const isReady = quiz.id !== null && quiz.questions !== null && quiz.status !== null && app.questionIndex !== NO_QUESTION_INDEX;
 
 
 
@@ -44,7 +45,7 @@ const QuizPage: React.FC = () => {
       loadingOverlay.close();
     }
 
-  }, [isReady]);
+  }, [isReady, loadingOverlay.isOpen]);
 
 
 
@@ -54,7 +55,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    quiz.fetchData();
+    quiz.fetchAllData();
 
   }, [isReady]);
 
@@ -135,16 +136,15 @@ const QuizPage: React.FC = () => {
 
   // Open answer layer if quiz is over
   useEffect(() => {
-    if (!user.isAuthenticated) {
-      return;
-    }
     if (!quiz.isOver) {
       return;
     }
 
-    answerOverlay.open();
+    if (!answerOverlay.isOpen) {
+      answerOverlay.open();
+    }
     
-  }, [quiz.isOver]);
+  }, [quiz.isOver, answerOverlay.isOpen]);
 
 
 
@@ -170,6 +170,22 @@ const QuizPage: React.FC = () => {
     }
 
   }, [quiz.isStarted, timer.isEnabled, timer.isDone]);
+
+
+
+  // Show lobby to non-admin users
+  useEffect(() => {
+    if (user.isAdmin) return;
+
+    if (!quiz.isStarted && !lobbyOverlay.isOpen) {
+      lobbyOverlay.open();
+    }
+
+    if (quiz.isStarted && lobbyOverlay.isOpen) {
+      lobbyOverlay.close();
+    }
+
+  }, [quiz.isStarted, user.isAdmin]);
 
 
   // Wait until data has been fetched
