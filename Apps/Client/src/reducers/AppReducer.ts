@@ -1,11 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { logoutAction } from '../actions/AuthActions';
 import { startQuestionAction } from '../actions/QuizActions';
-import { Language } from '../constants';
+import { Language, NO_QUESTION_INDEX } from '../constants';
 import { INIT_LANGUAGE } from '../i18n';
 import { CallStartQuestionResponseData } from '../types/DataTypes';
-
-export const NO_QUESTION_INDEX = -1;
 
 interface AppState {
   language: Language,

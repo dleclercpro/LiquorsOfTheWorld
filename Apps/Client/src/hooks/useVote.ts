@@ -1,4 +1,4 @@
-import { NO_QUESTION_INDEX } from '../reducers/AppReducer';
+import { NO_QUESTION_INDEX } from '../constants';
 import useQuiz from './useQuiz';
 
 const useVote = (questionIndex: number) => {

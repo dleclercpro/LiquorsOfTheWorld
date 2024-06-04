@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { APP_DB } from '..';
-import { Language, NON_VOTE, QUIZ_NAMES, QuizName } from '../constants';
+import { Language, NO_VOTE, QUIZ_NAMES, QuizName } from '../constants';
 import InvalidQuizNameError from '../errors/InvalidQuizNameError';
 import QuizAlreadyExistsError from '../errors/QuizAlreadyExistsError';
 import logger from '../logger';
@@ -135,7 +135,7 @@ class Quiz {
         voters.forEach((voter) => {
             getRange(questionCount).forEach((i) => {
                 // Every vote that is not equal to -1 is a valid vote
-                if (votes[voter][i] !== NON_VOTE) {
+                if (votes[voter][i] !== NO_VOTE) {
                     voteCounts[i] += 1;
                 }
             });

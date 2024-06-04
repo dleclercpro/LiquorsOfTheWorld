@@ -4,7 +4,7 @@ import QuestionForm from '../components/forms/QuestionForm';
 import { REFRESH_STATUS_INTERVAL } from '../config';
 import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
-import { AspectRatio, Language, QuestionType } from '../constants';
+import { AspectRatio, Language, NO_QUESTION_INDEX, QuestionType } from '../constants';
 import Page from './Page';
 import useServerCountdownTimer from '../hooks/useServerCountdownTimer';
 import useQuiz from '../hooks/useQuiz';
@@ -13,7 +13,6 @@ import useApp from '../hooks/useApp';
 import useOverlay from '../hooks/useOverlay';
 import { OverlayName } from '../reducers/OverlaysReducer';
 import useVote from '../hooks/useVote';
-import { NO_QUESTION_INDEX } from '../reducers/AppReducer';
 
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();

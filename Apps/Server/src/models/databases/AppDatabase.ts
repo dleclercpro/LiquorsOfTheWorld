@@ -6,7 +6,7 @@ import QuizManager from '../QuizManager';
 import MemoryDatabase from './base/MemoryDatabase';
 import User from '../users/User';
 import Quiz from '../Quiz';
-import { NON_VOTE } from '../../constants';
+import { NO_VOTE } from '../../constants';
 import { VotesData } from '../../types/DataTypes';
 
 const SEPARATOR = '|';
@@ -155,7 +155,7 @@ class AppDatabase {
     protected async createInitialVotes(quiz: Quiz) {
         const questionCount = await QuizManager.count(quiz.getName());
             
-        const votes: number[] = new Array(questionCount).fill(NON_VOTE);
+        const votes: number[] = new Array(questionCount).fill(NO_VOTE);
         
         return votes;
     }
@@ -172,7 +172,7 @@ class AppDatabase {
         const votes = await this.getAllVotes(quiz);
         const voters = Object.keys(votes);
 
-        return voters.filter((voterIndex) => votes[voterIndex][questionIndex] !== NON_VOTE);
+        return voters.filter((voterIndex) => votes[voterIndex][questionIndex] !== NO_VOTE);
     }
 }
 

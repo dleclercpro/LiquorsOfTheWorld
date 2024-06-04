@@ -1,5 +1,4 @@
-import { NON_VOTE } from '../constants';
-import { NO_QUESTION_INDEX } from '../reducers/AppReducer';
+import { NO_QUESTION_INDEX, NO_VOTE } from '../constants';
 import { RootState } from '../stores/store';
 
 export const selectQuestion = (state: RootState, questionIndex: number) => {
@@ -29,7 +28,7 @@ export const selectAnswer = (state: RootState, questionIndex: number) => {
   const question = questions[questionIndex];
   const vote = votes[questionIndex];
 
-  const answer = vote !== NON_VOTE ? question.options[vote] : null;
+  const answer = vote !== NO_VOTE ? question.options[vote] : null;
 
   return answer;
 }
