@@ -34,9 +34,18 @@ type VoteActionArgs = { quizId: string, questionIndex: number, vote: number };
 export const voteAction = createServerAction<VoteActionArgs, CallVoteResponseData>(
   'quiz/vote',
   async ({ quizId, questionIndex, vote }: VoteActionArgs) => {
-    const { data } = await new CallVote(quizId, questionIndex).execute({ vote });
+    try {
+      const { data } = await new CallVote(quizId, questionIndex).execute({
+        vote,
+      });
 
-    return data!;
+      return data!;
+
+    } catch (err: any) {
+      alert(`Could not vote!`);
+      
+      throw new err;
+    }
   },
 );
 

@@ -3,7 +3,7 @@ import { ScoresData } from '../types/DataTypes';
 import { toSortedArray } from '../utils/array';
 import './Scoreboard.scss';
 import useQuiz from '../hooks/useQuiz';
-import { NO_VOTE } from '../constants';
+import { NO_VOTE_INDEX } from '../constants';
 
 interface Props {
   scores: ScoresData,
@@ -21,7 +21,7 @@ const Scoreboard: React.FC<Props> = (props) => {
   }
 
   const questionsCount = quiz.questions.length;
-  const questionsAnsweredCount = quiz.votes.filter((vote) => vote !== NO_VOTE).length;
+  const questionsAnsweredCount = quiz.votes.filter((vote) => vote !== NO_VOTE_INDEX).length;
 
   const sortedScores = toSortedArray(scores, 'DESC')
     .map(({ key, value }) => ({ username: key, score: value }));

@@ -1,4 +1,4 @@
-import { NO_QUESTION_INDEX, NO_VOTE } from '../constants';
+import { NO_QUESTION_INDEX, NO_VOTE_INDEX } from '../constants';
 import { RootState } from '../stores/store';
 
 export const selectQuestion = (state: RootState, questionIndex: number) => {
@@ -28,7 +28,7 @@ export const selectAnswer = (state: RootState, questionIndex: number) => {
   const question = questions[questionIndex];
   const vote = votes[questionIndex];
 
-  const answer = vote !== NO_VOTE ? question.options[vote] : null;
+  const answer = vote !== NO_VOTE_INDEX ? question.options[vote] : null;
 
   return answer;
 }

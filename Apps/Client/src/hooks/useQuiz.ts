@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from './ReduxHooks';
 import { fetchQuestionsAction, fetchAllDataAction, refreshDataAction } from '../actions/DataActions';
 import { startQuizAction as doStartQuiz } from '../actions/QuizActions';
 import { deleteQuizAction as doDeleteQuiz } from '../actions/QuizActions';
-import { Language, NO_QUESTION_INDEX, NO_VOTE } from '../constants';
+import { Language, NO_QUESTION_INDEX, NO_VOTE_INDEX } from '../constants';
 import { useTranslation } from 'react-i18next';
 import useApp from './useApp';
 import { setQuestionIndex } from '../reducers/AppReducer';
@@ -42,7 +42,7 @@ const useQuiz = () => {
     const lastQuestionIndex = votes.length - 1;
 
     // Identify next question to be answered by user
-    let lastUnansweredQuestionIndex = votes.findIndex((vote: number) => vote === NO_VOTE);
+    let lastUnansweredQuestionIndex = votes.findIndex((vote: number) => vote === NO_VOTE_INDEX);
     
     if (lastUnansweredQuestionIndex === -1) {
       lastUnansweredQuestionIndex = lastQuestionIndex;

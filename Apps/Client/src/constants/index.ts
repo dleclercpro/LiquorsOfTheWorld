@@ -30,5 +30,5 @@ export enum AspectRatio {
 }
 
 export const NO_TIME = new TimeDuration(0, TimeUnit.Millisecond);
-export const NO_VOTE = -1;
+export const NO_VOTE_INDEX = -1;
 export const NO_QUESTION_INDEX = -1;
