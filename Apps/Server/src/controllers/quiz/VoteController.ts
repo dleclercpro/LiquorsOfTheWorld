@@ -60,17 +60,17 @@ const VoteController: RequestHandler = async (req, res, next) => {
         const isLastQuestion = nextQuestionIndex === questionCount;
 
         // Get votes from DB if they exist
-        const votes = await APP_DB.getUserVotes(quiz, username);
+        const userVotes = await APP_DB.getUserVotes(quiz, username);
         
         const questionIndexAsString = `Q${questionIndex}`;
         const voteIndexAsString = `A${vote}`;
 
         // Add vote to array
-        votes[questionIndex] = vote;
+        userVotes[questionIndex] = vote;
         logger.debug(`New vote for user '${username}': ${questionIndexAsString}|${voteIndexAsString}`);
 
         // Store votes in DB
-        await APP_DB.setUserVotes(quiz, username, votes);
+        await APP_DB.setUserVotes(quiz, username, userVotes);
 
         // Update vote counts
         await quiz.updateVoteCounts();
@@ -106,9 +106,10 @@ const VoteController: RequestHandler = async (req, res, next) => {
             await quiz.finish();
         }
 
+        // Prepare response for user with updated votes
         const response: CallVoteResponseData = {
             status: quiz.getStatus(),
-            votes,
+            votes: await APP_DB.getAllVotes(quiz),
         };
 
         return res.json(

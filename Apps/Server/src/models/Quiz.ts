@@ -130,12 +130,16 @@ class Quiz {
         const voteCounts = new Array(questionCount).fill(0);
 
         const votes = await APP_DB.getAllVotes(this);
-        const voters = Object.keys(votes);
+
+        // FIXME: only consider regular users
+        const voters = Object.keys(votes.users);
 
         voters.forEach((voter) => {
             getRange(questionCount).forEach((i) => {
+                const userVotes = votes.users[voter];
+
                 // Every vote that is not equal to -1 is a valid vote
-                if (votes[voter][i] !== NO_VOTE_INDEX) {
+                if (userVotes[i] !== NO_VOTE_INDEX) {
                     voteCounts[i] += 1;
                 }
             });

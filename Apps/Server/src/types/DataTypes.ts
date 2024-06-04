@@ -32,9 +32,14 @@ export type VersionData = {
 
 export type VotesData = number[];
 
+export type GroupedVotesData = {
+  admins: Record<string, VotesData>,
+  users: Record<string, VotesData>,
+};
+
 export type PlayerData = {
   username: string,
-  teamId: string,
+  teamId?: string,
 };
 
 export type PlayersData = PlayerData[];
@@ -85,7 +90,7 @@ export type CallLogInResponseData = UserData;
 export type CallGetVersionResponseData = VersionData;
 export type CallGetQuizNamesResponseData = string[];
 export type CallGetTeamsResponseData = string[];
-export type CallGetVotesResponseData = VotesData;
+export type CallGetVotesResponseData = GroupedVotesData;
 export type CallGetQuestionsResponseData = QuizJSON;
 export type CallGetUserResponseData = UserData;
 export type CallGetStatusResponseData = StatusData;
@@ -93,4 +98,4 @@ export type CallGetPlayersResponseData = PlayersData;
 export type CallGetScoresResponseData = GroupedScoresData;
 
 export type CallStartQuestionResponseData = number;
-export type CallVoteResponseData = { status: StatusData, votes: VotesData };
+export type CallVoteResponseData = { status: StatusData, votes: GroupedVotesData };

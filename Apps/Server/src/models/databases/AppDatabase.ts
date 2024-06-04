@@ -1,5 +1,4 @@
 import { ADMINS, REDIS_DATABASE, REDIS_ENABLE, REDIS_OPTIONS, USERS } from '../../config';
-import { getLast } from '../../utils/array';
 import { sum } from '../../utils/math';
 import RedisDatabase from './base/RedisDatabase';
 import QuizManager from '../QuizManager';
@@ -7,7 +6,7 @@ import MemoryDatabase from './base/MemoryDatabase';
 import User from '../users/User';
 import Quiz from '../Quiz';
 import { NO_VOTE_INDEX } from '../../constants';
-import { VotesData } from '../../types/DataTypes';
+import { GroupedVotesData, ScoresData } from '../../types/DataTypes';
 
 const SEPARATOR = '|';
 
@@ -95,22 +94,18 @@ class AppDatabase {
 
 
     
-    public async getAllVotes(quiz: Quiz): Promise<Record<string, VotesData>> {
-        const votesAsStrings = await this.getKeysByPattern(`votes:${quiz.getId()}:*`);
-        
-        const votes: Record<string, VotesData> = {};
-
-        const adminUsernames = ADMINS.map((admin) => admin.username);
+    public async getAllVotes(quiz: Quiz): Promise<GroupedVotesData> {
+        const votes: GroupedVotesData = { users: {}, admins: {} };
     
-        for (const voteAsString of votesAsStrings) {
-            const username = getLast(voteAsString.split(':')) as string;
+        const playerUsernames = quiz.getPlayers().map((player) => player.username);
+        for (const playerUsername of playerUsernames) {
+            votes.users[playerUsername] = await this.getUserVotes(quiz, playerUsername);
+        }
 
-            // Admins aren't players!
-            if (adminUsernames.includes(username)) {
-                continue;
-            }
-
-            votes[username] = await this.getUserVotes(quiz, username);
+        // FIXME: those should be stored somewhere?
+        const adminUsernames = ADMINS.map((admin) => admin.username);
+        for (const adminUsername of adminUsernames) {
+            votes.admins[adminUsername] = await this.getUserVotes(quiz, adminUsername);
         }
         
         return votes;
@@ -119,13 +114,14 @@ class AppDatabase {
     public async getAllScores(quiz: Quiz) {
         const questions = await QuizManager.get(quiz.getName());
         const answers = questions.map((question) => question.answer);
+        const votes = await this.getAllVotes(quiz);
 
         const scores = Object
-            .entries(await this.getAllVotes(quiz))
-            .reduce((prev, [voter, votes]) => {
+            .entries(votes.users) // FIXME: only return user votes, not admin ones
+            .reduce((prev, [voter, voterVotes]) => {
                 const score = sum(
                     answers
-                        .map((answerIndex, i) => answerIndex === votes[i])
+                        .map((answerIndex, i) => answerIndex === voterVotes[i])
                         .map(Number)
                 );
         
@@ -133,7 +129,7 @@ class AppDatabase {
                     ...prev,
                     [voter]: score,
                 };
-            }, {});
+            }, {} as ScoresData);
     
         return scores;
     }
@@ -144,6 +140,7 @@ class AppDatabase {
         if (votesAsString !== null) {
             return this.deserializeUserVotes(votesAsString);
         } else {
+            // FIXME: ensure user exists and data is not created for no reason!
             return await this.createInitialVotes(quiz);
         }
     }
@@ -152,7 +149,7 @@ class AppDatabase {
         await this.set(`votes:${quiz.getId()}:${username}`, this.serializeUserVotes(votes));
     }
 
-    protected async createInitialVotes(quiz: Quiz) {
+    public async createInitialVotes(quiz: Quiz) {
         const questionCount = await QuizManager.count(quiz.getName());
             
         const votes: number[] = new Array(questionCount).fill(NO_VOTE_INDEX);
@@ -170,9 +167,11 @@ class AppDatabase {
 
     public async getPlayersWhoVoted(quiz: Quiz, questionIndex: number) {
         const votes = await this.getAllVotes(quiz);
-        const voters = Object.keys(votes);
 
-        return voters.filter((voterIndex) => votes[voterIndex][questionIndex] !== NO_VOTE_INDEX);
+        // FIXME: only consider regular users
+        const voters = Object.keys(votes.users);
+
+        return voters.filter((voter) => votes.users[voter][questionIndex] !== NO_VOTE_INDEX);
     }
 }
 

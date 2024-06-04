@@ -26,13 +26,9 @@ const validateParams = async (params: ParamsDictionary) => {
 
 const GetVotesController: RequestHandler = async (req, res, next) => {
     try {
-        const { username } = req.user!;
-
         const { quiz } = await validateParams(req.params);
 
-        const votes = await APP_DB.getUserVotes(quiz, username);
-
-        const response: CallGetVotesResponseData = votes;
+        const response: CallGetVotesResponseData = await APP_DB.getAllVotes(quiz);
 
         return res.json(
             successResponse(response)
