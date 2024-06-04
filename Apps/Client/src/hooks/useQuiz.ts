@@ -31,7 +31,7 @@ const useQuiz = () => {
   const isStarted = Boolean(status?.isStarted);
   const isOver = Boolean(status?.isOver);
   const isSupervised = Boolean(status?.isSupervised);
-  const isTimed = Boolean(status?.timer.isEnabled);
+  const isTimed = Boolean(status?.timer);
   const isNextQuestionForced = Boolean(status?.isNextQuestionForced);
 
   const dispatch = useDispatch();

@@ -40,9 +40,8 @@ export type PlayerData = {
 export type PlayersData = PlayerData[];
 
 export type TimerData = {
-  isEnabled: boolean,
-  startedAt?: Date,
-  duration?: {
+  startedAt: Date,
+  duration: {
     amount: number,
     unit: TimeUnit,
   },
@@ -55,7 +54,7 @@ export type StatusData = {
   isNextQuestionForced: boolean,
   questionIndex: number,
   voteCounts: number[],
-  timer: TimerData,
+  timer?: TimerData,
 };
 
 export type ScoresData = Record<string, number>;

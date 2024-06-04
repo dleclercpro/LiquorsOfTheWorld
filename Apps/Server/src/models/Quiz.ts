@@ -27,7 +27,7 @@ type QuizStatusArgs = {
     isNextQuestionForced: boolean,
     questionIndex: number,
     voteCounts: number[],
-    timer: TimerData,
+    timer?: TimerData,
   }
 
 
@@ -58,12 +58,12 @@ class Quiz {
             players: this.players,
             status: {
                 ...this.status,
-                timer: {
-                    ...this.status.timer,
-                    ...(this.status.timer.isEnabled ? {
+                ...(this.status.timer ? {
+                    timer: {
                         startedAt: this.status.timer.startedAt!.toUTCString(),
-                    } : {}),
-                },
+                        duration: this.status.timer.duration,
+                    },
+                } : { }),
             },
         });
     }
@@ -75,12 +75,12 @@ class Quiz {
             ...quiz,
             status: {
                 ...quiz.status,
-                timer: {
-                    ...quiz.status.timer,
-                    ...(quiz.status.timer.isEnabled ? {
+                ...(quiz.status.timer ? {
+                    timer: {
                         startedAt: new Date(quiz.status.timer.startedAt),
-                    } : {}),
-                },
+                        duration: quiz.status.timer.duration,
+                    },
+                } : { }),
             },
         });
     }
@@ -98,7 +98,7 @@ class Quiz {
     }
 
     public isTimed() {
-        return this.status.timer.isEnabled;
+        return Boolean(this.status.timer);
     }
 
     public isNextQuestionForced() {
@@ -186,16 +186,15 @@ class Quiz {
         this.status.isNextQuestionForced = isNextQuestionForced;
 
         // Create a timer
-        this.status.timer = isTimed ? {
-            isEnabled: true,
-            startedAt: new Date(),
-            duration:  {
-                amount: TIMER_DURATION.getAmount(),
-                unit: TIMER_DURATION.getUnit(),
-            },
-        } : {
-            isEnabled: false,
-        };
+        if (isTimed) {
+            this.status.timer = {
+                startedAt: new Date(),
+                duration:  {
+                    amount: TIMER_DURATION.getAmount(),
+                    unit: TIMER_DURATION.getUnit(),
+                },
+            };
+        }
 
         await this.save();
     }
@@ -250,7 +249,11 @@ class Quiz {
     }
 
     public async restartTimer() {
-        this.status.timer.startedAt = new Date();
+        if (!this.isTimed()) {
+            throw new Error('MISSING_TIMER');
+        }
+
+        this.status.timer!.startedAt = new Date();
 
         await this.save();
     }
@@ -282,9 +285,6 @@ class Quiz {
                 isNextQuestionForced: false,
                 questionIndex: 0,
                 voteCounts: new Array(await QuizManager.count(name)).fill(0),
-                timer: {
-                    isEnabled: false,
-                },
             },
         });
 
