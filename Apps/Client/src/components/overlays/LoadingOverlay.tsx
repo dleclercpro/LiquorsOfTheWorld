@@ -2,6 +2,7 @@ import React from 'react';
 import './LoadingOverlay.scss';
 import useOverlay from '../../hooks/useOverlay';
 import { OverlayName } from '../../reducers/OverlaysReducer';
+import Spinner from '../Spinner';
 
 const LoadingOverlay: React.FC = () => {
   const overlay = useOverlay(OverlayName.Loading);
@@ -11,8 +12,8 @@ const LoadingOverlay: React.FC = () => {
   }
 
   return (
-    <div id='loading-overlay' className='loading-overlay-container'>
-      <div className='loading-icon'></div>
+    <div id='loading-overlay'>
+      <Spinner />
     </div>
   );
 };
