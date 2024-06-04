@@ -49,7 +49,7 @@ class User {
     }
 
     public static isAdmin(username: string) {
-        return ADMINS.map((admin) => admin.username).includes(username);
+        return ADMINS.map((admin) => admin.username.toLowerCase()).includes(username.toLowerCase());
     }
 
     public static async get(username: string) {
@@ -73,13 +73,12 @@ class User {
     }
 
     public static async create(auth: Auth, admin: boolean = false) {
-        const { username, password } = auth;
-        
-        const lowercaseUsername = username.toLowerCase();
-      
-        logger.trace(`Creating ${admin ? 'admin' : 'user'} '${lowercaseUsername}'...`);
+        const username = auth.username.toLowerCase();
+        const password = auth.password;
+
+        logger.trace(`Creating ${admin ? 'admin' : 'user'} '${username}'...`);
         const user = new User({
-            username: lowercaseUsername,
+            username,
             password: await User.hashPassword(password),
             admin,
         });
