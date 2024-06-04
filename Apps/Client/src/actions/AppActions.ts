@@ -6,6 +6,7 @@ import { CallDeleteDatabase } from '../calls/quiz/CallDeleteDatabase';
 import { logoutAction } from './UserActions';
 import { SERVER_ROOT } from '../config';
 import { CallGetBackgroundUrl } from '../calls/data/CallGetBackgroundUrl';
+import { RootState } from '../stores/store';
 
 export const updateVersionAction = createServerAction<void, void>(
   'app/update-version',
@@ -21,10 +22,10 @@ export const updateVersionAction = createServerAction<void, void>(
 export const updateBackgroundAction = createServerAction<void, void>(
   'app/update-background',
   async (_, { getState, dispatch }: ThunkAPI) => {
-    const { quiz } = getState();
+    const { quiz } = getState() as RootState;
 
-    if (!quiz.name) {
-      throw new Error('UNDEFINED_QUIZ_NAME');
+    if (quiz.name === null) {
+      throw new Error('MISSING_QUIZ_NAME');
     }
 
     const { data: path } = await new CallGetBackgroundUrl(quiz.name).execute()

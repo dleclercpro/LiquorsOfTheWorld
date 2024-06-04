@@ -71,7 +71,7 @@ const useQuiz = () => {
 
 
   const fetchAll = useCallback(async () => {
-    if (quiz.id === null || !quiz.name || !language) return;
+    if (quiz.id === null || quiz.name === null || !language) return;
 
     await dispatch(fetchAllDataAction({ quizId: quiz.id, quizName: quiz.name, language }));
 
@@ -80,7 +80,7 @@ const useQuiz = () => {
 
 
   const refreshQuestions = useCallback(async () => {
-    if (!quiz.name || !language) return;
+    if (quiz.name === null || !language) return;
     
     await dispatch(fetchQuestionsAction({ quizName: quiz.name, language }));
   }, [quiz.name, language]);
