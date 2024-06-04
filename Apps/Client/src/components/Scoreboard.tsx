@@ -3,7 +3,6 @@ import { ScoresData } from '../types/DataTypes';
 import { toSortedArray } from '../utils/array';
 import './Scoreboard.scss';
 import useQuiz from '../hooks/useQuiz';
-import { NO_VOTE_INDEX } from '../constants';
 
 interface Props {
   scores: ScoresData,

@@ -74,9 +74,6 @@ const QuizPage: React.FC = () => {
 
   // Fetch current quiz status from server when moving to next question
   useEffect(() => {
-    if (!user.isAuthenticated) {
-      return;
-    }
     if (quiz.id === null || quiz.name === null) {
       return;
     }
@@ -99,9 +96,6 @@ const QuizPage: React.FC = () => {
 
   // Regularly fetch current quiz status from server
   useEffect(() => {
-    if (!user.isAuthenticated) {
-      return;
-    }
     if (quiz.id === null || quiz.name === null) {
       return;
     }
@@ -115,9 +109,6 @@ const QuizPage: React.FC = () => {
 
   // Set choice if user already voted
   useEffect(() => {
-    if (!user.isAuthenticated) {
-      return;
-    }
     if (vote.value === null) {
       if (answerOverlay.isOpen) {
         answerOverlay.close();
@@ -150,9 +141,6 @@ const QuizPage: React.FC = () => {
 
   // Start timer if enabled
   useEffect(() => {
-    if (!user.isAuthenticated) {
-      return;
-    }
     if (timer.isEnabled && !timer.isRunning && quiz.isStarted) {
       timer.start();
     }
@@ -162,9 +150,6 @@ const QuizPage: React.FC = () => {
 
   // Show answer once timer has expired
   useEffect(() => {
-    if (!user.isAuthenticated) {
-      return;
-    }
     if (timer.isEnabled && quiz.isStarted && timer.isDone) {
       answerOverlay.open();
     }
