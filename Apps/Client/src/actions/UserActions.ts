@@ -4,20 +4,26 @@ import { CallPing } from '../calls/auth/CallPing';
 import { CallLogOut } from '../calls/auth/CallLogOut';
 import { createServerAction } from './ServerActions';
 import { userSlice } from '../reducers/UserReducer';
-import { setQuizId } from '../reducers/QuizReducer';
+import { setQuizId, setQuizName } from '../reducers/QuizReducer';
+
+const { setUser } = userSlice.actions;
+
+
 
 export const loginAction = createServerAction<CallLogInRequestData, void>(
   'auth/login',
   async (args, { dispatch }) => {
+    
     const { data } = await new CallLogIn().execute(args);
 
-    const { username, team, isAdmin, isAuthenticated } = data as UserData;
+    const { username, teamId, isAdmin, isAuthenticated } = data as UserData;
 
     dispatch(setQuizId(args.quizId));
+    dispatch(setQuizName(args.quizName));
     
-    dispatch(userSlice.actions.setAuth({
+    dispatch(setUser({
       username,
-      team,
+      teamId,
       isAdmin,
       isAuthenticated,
     }));
@@ -27,9 +33,9 @@ export const loginAction = createServerAction<CallLogInRequestData, void>(
 export const logoutAction = createServerAction<void, void>(
   'auth/logout',
   async (_, { dispatch }) => {
-    dispatch(userSlice.actions.setAuth({
+    dispatch(setUser({
       username: null,
-      team: null,
+      teamId: null,
       isAdmin: false,
       isAuthenticated: false,
     }));

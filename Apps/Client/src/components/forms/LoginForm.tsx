@@ -63,7 +63,7 @@ const LoginForm: React.FC<Props> = (props) => {
     await dispatch(loginAction({
       quizName: quiz.name!,
       quizId,
-      team: teamId,
+      teamId,
       username,
       password,
     }));

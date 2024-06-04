@@ -9,7 +9,7 @@ type UserState = UserData & {
 
 const initialState: UserState = {
   username: null,
-  team: null,
+  teamId: null,
   isAdmin: false,
   isAuthenticated: false,
   status: 'idle',
@@ -22,7 +22,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setAuth: (state, action: PayloadAction<UserData>) => {
+    setUser: (state, action: PayloadAction<UserData>) => {
       return {
         ...state,
         ...action.payload,
@@ -85,6 +85,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setAuth } = userSlice.actions;
+export const { setUser } = userSlice.actions;
 
 export default userSlice.reducer;

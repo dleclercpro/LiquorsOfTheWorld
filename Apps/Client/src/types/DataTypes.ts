@@ -11,7 +11,7 @@ export type FetchedData<Data> = {
 
 export type UserData = {
   username: string | null,
-  team: string | null,
+  teamId: string | null,
   isAdmin: boolean,
   isAuthenticated: boolean,
 };
@@ -24,7 +24,7 @@ export type QuizData = {
 export type PingData = UserData & QuizData;
 
 export type LoginData = Auth & QuizData & {
-  team: string,
+  teamId: string,
 };
 
 export type VersionData = {
@@ -35,7 +35,7 @@ export type VotesData = number[];
 
 export type PlayerData = {
   username: string,
-  team?: string,
+  teamId?: string,
 };
 
 export type PlayersData = PlayerData[];

@@ -2,7 +2,7 @@ import { logoutAction as doLogout } from '../actions/UserActions';
 import { useDispatch, useSelector } from './ReduxHooks';
 
 const useUser = () => {
-  const { username, team, isAdmin, isAuthenticated } = useSelector(({ user }) => user);
+  const { username, teamId, isAdmin, isAuthenticated } = useSelector(({ user }) => user);
 
   const dispatch = useDispatch();
 
@@ -12,7 +12,7 @@ const useUser = () => {
 
   return {
     username,
-    team,
+    teamId,
     isAdmin,
     isAuthenticated,
     logout,

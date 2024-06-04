@@ -207,18 +207,18 @@ class Quiz {
         await this.save();
     }
 
-    public async addUserToPlayers(user: User, team: string = '') {
+    public async addUserToPlayers(user: User, teamId: string = '') {
         this.players = unique([...this.players, {
             username: user.getUsername().toLowerCase(),
-            team,
+            teamId,
         }]);
 
         await this.save();
     }
 
-    public isUserPlaying(user: User, team: string = '') {
+    public isUserPlaying(user: User, teamId: string = '') {
         return this.players
-            .filter((player) => player.team === team)
+            .filter((player) => player.teamId === teamId)
             .map((player) => player.username.toLowerCase())
             .includes(user.getUsername().toLowerCase());
     }
@@ -262,7 +262,7 @@ class Quiz {
         await APP_DB.set(`quiz:${this.id}`, this.serialize());
     }
 
-    public static async create(id: string, name: QuizName, username: string, team: string = '') {
+    public static async create(id: string, name: QuizName, username: string, teamId: string = '') {
         logger.info(`Creating a new quiz '${name}' (ID = ${id})...`);
 
         if (!QUIZ_NAMES.includes(name)) {
@@ -291,7 +291,7 @@ class Quiz {
         // Add creator user to players if it's NOT an admin
         const user = await User.get(username);
         if (user && !user.isAdmin()) {
-            await quiz.addUserToPlayers(user, team);
+            await quiz.addUserToPlayers(user, teamId);
         }
 
         // Store quiz in DB
