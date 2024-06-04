@@ -1,17 +1,27 @@
 import { CallGetQuizNames } from '../calls/data/CallGetQuizNames';
 import { CallGetPlayers } from '../calls/quiz/CallGetPlayers';
 import { CallGetQuestions } from '../calls/quiz/CallGetQuestions';
+import { CallGetTeams } from '../calls/quiz/CallGetTeams';
 import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetStatus } from '../calls/quiz/CallGetStatus';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 import { Language, QuizName } from '../constants';
-import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizNamesResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData } from '../types/DataTypes';
+import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizNamesResponseData, CallGetTeamsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData } from '../types/DataTypes';
 import { createServerAction } from './ServerActions';
 
 export const fetchQuizNamesAction = createServerAction<void, CallGetQuizNamesResponseData>(
   'data/quiz-names',
   async () => {
     const { data } = await new CallGetQuizNames().execute();
+      
+    return data!;
+  },
+);
+
+export const fetchTeamsAction = createServerAction<string, CallGetTeamsResponseData>(
+  'data/teams',
+  async (quizId: string) => {
+    const { data } = await new CallGetTeams(quizId).execute();
       
     return data!;
   },
@@ -71,6 +81,7 @@ export const fetchAllDataAction = createServerAction<FetchAllDataActionArgs, voi
   async ({ quizId, quizName, language }, { dispatch }) => {
     const result = await Promise.all([
       dispatch(fetchQuestionsAction({ language, quizName })), // Must only be fetched once: questions do not change
+      dispatch(fetchTeamsAction(quizId)), // Must only be fetched once: teams do not change
       dispatch(fetchVotesAction(quizId)), // Must only be fetched on login: is then updated every time user votes
 
       dispatch(fetchStatusAction(quizId)),

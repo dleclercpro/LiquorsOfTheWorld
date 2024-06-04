@@ -40,5 +40,11 @@
     &:not(:last-of-type) {
       margin-bottom: 10px;
     }
+
+    &.is-disabled {
+      background-color: $color-light-grey;
+      color: $color-black;
+      cursor: not-allowed;
+    }
   }
 }

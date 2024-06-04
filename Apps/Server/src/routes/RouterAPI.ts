@@ -19,6 +19,7 @@ import GetVersionController from '../controllers/app/GetVersionController';
 import GetQuizNamesController from '../controllers/quiz/GetQuizNamesController';
 import GetBackgroundUrlController from '../controllers/app/GetBackgroundUrlController';
 import GetPlayersController from '../controllers/quiz/GetPlayersController';
+import GetTeamsController from '../controllers/quiz/GetTeamsController';
 
 
 
@@ -51,6 +52,7 @@ router.delete('/quiz/:quizId', [AuthMiddleware], DeleteQuizController);
 router.put('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], StartQuestionController);
 router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);
 
+router.get('/quiz/:quizId/teams', [AuthMiddleware], GetTeamsController);
 router.get('/quiz/:quizId/votes', [AuthMiddleware], GetVotesController);
 router.get('/quiz/:quizId/players', [AuthMiddleware], GetPlayersController);
 router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);

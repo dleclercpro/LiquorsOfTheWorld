@@ -1,7 +1,7 @@
 import { CallStartQuiz } from '../calls/quiz/CallStartQuiz';
 import { CallStartQuestion } from '../calls/quiz/CallStartQuestion';
 import { CallDeleteQuiz } from '../calls/quiz/CallDeleteQuiz';
-import { logoutAction } from './AuthActions';
+import { logoutAction } from './UserActions';
 import { ThunkAPI, createServerAction } from './ServerActions';
 import { CallVote } from '../calls/quiz/CallVote';
 import { CallVoteResponseData } from '../types/DataTypes';
@@ -43,8 +43,8 @@ export const voteAction = createServerAction<VoteActionArgs, CallVoteResponseDat
 
     } catch (err: any) {
       alert(`Could not vote!`);
-      
-      throw new err;
+
+      throw err;
     }
   },
 );

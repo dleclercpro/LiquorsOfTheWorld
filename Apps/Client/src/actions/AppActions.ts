@@ -3,7 +3,7 @@ import { CallGetVersion } from '../calls/quiz/CallGetVersion';
 import { setVersion, setBackgroundUrl } from '../reducers/AppReducer';
 import { ThunkAPI, createServerAction } from './ServerActions';
 import { CallDeleteDatabase } from '../calls/quiz/CallDeleteDatabase';
-import { logoutAction } from './AuthActions';
+import { logoutAction } from './UserActions';
 import { SERVER_ROOT } from '../config';
 import { CallGetBackgroundUrl } from '../calls/data/CallGetBackgroundUrl';
 

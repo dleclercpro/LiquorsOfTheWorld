@@ -10,7 +10,7 @@ import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
 import { useDispatch } from './hooks/ReduxHooks';
-import { pingAction } from './actions/AuthActions';
+import { pingAction } from './actions/UserActions';
 import Nav from './components/Nav';
 import ErrorPage from './pages/ErrorPage';
 import { updateBackgroundAction, updateVersionAction } from './actions/AppActions';

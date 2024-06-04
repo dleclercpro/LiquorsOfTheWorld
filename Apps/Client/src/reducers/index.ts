@@ -1,6 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import AppReducer from './AppReducer';
-import AuthReducer from './AuthReducer';
+import UserReducer from './UserReducer';
 import QuizReducer from './QuizReducer';
 import OverlaysReducer from './OverlaysReducer';
 import DataReducer from './DataReducer';
@@ -8,7 +8,7 @@ import DataReducer from './DataReducer';
 const rootReducer = combineReducers({
   app: AppReducer,
   data: DataReducer,
-  auth: AuthReducer,
+  user: UserReducer,
   quiz: QuizReducer,
   overlays: OverlaysReducer,
 });

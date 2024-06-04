@@ -12,12 +12,12 @@ import QuizAlreadyStartedError from '../../errors/QuizAlreadyStartedError';
 import InvalidTeamIdError from '../../errors/InvalidTeamIdError';
 import User from '../../models/users/User';
 import Quiz from '../../models/Quiz';
-import { CallLogInRequestData } from '../../types/DataTypes';
+import { CallLogInRequestData, CallLogInResponseData } from '../../types/DataTypes';
 import { isPasswordValid } from '../../utils/crypto';
 
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
-        const { quizId, quizName, teamId, username, password } = req.body as CallLogInRequestData;
+        const { quizId, quizName, team, username, password } = req.body as CallLogInRequestData;
         const admin = ADMINS.find(admin => admin.username === username);
         const isAdmin = Boolean(admin);
         logger.trace(`Attempt to join quiz '${quizName}' with ID '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
@@ -54,9 +54,9 @@ const LoginController: RequestHandler = async (req, res, next) => {
 
         // In case a team is specified, but it doesn't exist
         if (TEAMS_ENABLE && TEAMS) {
-            const teamExists = TEAMS.map(({ id }) => id).includes(teamId);
+            const teamExists = TEAMS.map(({ id }) => id).includes(team);
             if (!teamExists) {
-                logger.trace(`Team ID '${teamId}' doesn't exist.`);
+                logger.trace(`Team ID '${team}' doesn't exist.`);
                 throw new InvalidTeamIdError();
             }
         }
@@ -72,7 +72,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
         }
 
         // Check if quiz has already started and non-admin user is playing
-        const isUserPlaying = quiz.isUserPlaying(user!, teamId);
+        const isUserPlaying = quiz.isUserPlaying(user!, team);
         if (!isUserPlaying && !user.isAdmin()) {
             logger.debug(`User '${username}' is not part of the quiz.`);
             if (quiz.isStarted()) {
@@ -80,21 +80,27 @@ const LoginController: RequestHandler = async (req, res, next) => {
             }
 
             // Add user to quiz
-            await quiz.addUserToPlayers(user!, teamId);
+            await quiz.addUserToPlayers(user!, team);
             logger.debug(`User '${username}' joined quiz ${quizId}.`);
         }
 
-        const cookieUser = { username, isAdmin };
         const cookie = await encodeCookie({
-            user: cookieUser,
+            user: { username, isAdmin },
             quizName,
             quizId,
-            teamId,
+            team,
         });
+
+        const response: CallLogInResponseData = {
+            username,
+            team,
+            isAdmin,
+            isAuthenticated: true,
+        };
         
         return res
             .cookie(COOKIE_NAME, cookie)
-            .json(successResponse(cookieUser));
+            .json(successResponse(response));
 
     } catch (err: any) {
         if (err instanceof Error) {

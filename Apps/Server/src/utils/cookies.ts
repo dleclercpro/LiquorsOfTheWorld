@@ -5,7 +5,7 @@ import { QuizData } from '../types/DataTypes';
 
 type Cookie = QuizData & {
   user: SessionUser,
-  teamId: string,
+  team: string,
 }
 
 type JWTCookie = Cookie & {

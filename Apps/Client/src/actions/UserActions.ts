@@ -1,32 +1,35 @@
 import { CallLogIn } from '../calls/auth/CallLogIn';
-import { CallPingResponseData, PingData, AuthData, CallLogInRequestData } from '../types/DataTypes';
+import { CallPingResponseData, PingData, UserData, CallLogInRequestData } from '../types/DataTypes';
 import { CallPing } from '../calls/auth/CallPing';
 import { CallLogOut } from '../calls/auth/CallLogOut';
 import { createServerAction } from './ServerActions';
-import { authSlice } from '../reducers/AuthReducer';
+import { userSlice } from '../reducers/UserReducer';
+import { setQuizId } from '../reducers/QuizReducer';
 
-export const loginAction = createServerAction<CallLogInRequestData, string>(
+export const loginAction = createServerAction<CallLogInRequestData, void>(
   'auth/login',
   async (args, { dispatch }) => {
     const { data } = await new CallLogIn().execute(args);
 
-    const auth = data as AuthData;
+    const { username, team, isAdmin, isAuthenticated } = data as UserData;
 
-    dispatch(authSlice.actions.setAuth({
-      username: auth.username,
-      isAdmin: auth.isAdmin,
-      isAuthenticated: true,
+    dispatch(setQuizId(args.quizId));
+    
+    dispatch(userSlice.actions.setAuth({
+      username,
+      team,
+      isAdmin,
+      isAuthenticated,
     }));
-
-    return args.quizId;
   },
 );
 
 export const logoutAction = createServerAction<void, void>(
   'auth/logout',
   async (_, { dispatch }) => {
-    dispatch(authSlice.actions.setAuth({
+    dispatch(userSlice.actions.setAuth({
       username: null,
+      team: null,
       isAdmin: false,
       isAuthenticated: false,
     }));

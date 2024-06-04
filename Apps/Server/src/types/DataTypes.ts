@@ -8,24 +8,22 @@ export type FetchedData<Data> = {
   error: string | null,
 };
 
+export type UserData = {
+  username: string | null,
+  team: string | null,
+  isAdmin: boolean,
+  isAuthenticated: boolean,
+};
+
 export type QuizData = {
   quizName: QuizName,
   quizId: string,
 };
 
-export type PingData = QuizData & {
-  username: string,
-  isAdmin: boolean,
-  isAuthenticated: boolean,
-};
+export type PingData = UserData & QuizData;
 
 export type LoginData = Auth & QuizData & {
-  teamId: string,
-};
-
-export type AuthData = {
-  username: string,
-  isAdmin: boolean,
+  team: string,
 };
 
 export type VersionData = {
@@ -36,7 +34,7 @@ export type VotesData = number[];
 
 export type PlayerData = {
   username: string,
-  teamId?: string,
+  team: string,
 };
 
 export type PlayersData = PlayerData[];
@@ -83,14 +81,15 @@ export type CallVoteRequestData = {
 
 export type CallPingResponseData = PingData;
 export type CallLogInRequestData = LoginData;
-export type CallLogInResponseData = AuthData;
+export type CallLogInResponseData = UserData;
 
 export type CallGetVersionResponseData = VersionData;
 export type CallGetQuizNamesResponseData = string[];
-export type CallGetQuestionsResponseData = QuizJSON;
-export type CallGetUserResponseData = AuthData;
-export type CallGetStatusResponseData = StatusData;
+export type CallGetTeamsResponseData = string[];
 export type CallGetVotesResponseData = VotesData;
+export type CallGetQuestionsResponseData = QuizJSON;
+export type CallGetUserResponseData = UserData;
+export type CallGetStatusResponseData = StatusData;
 export type CallGetPlayersResponseData = PlayersData;
 export type CallGetScoresResponseData = GroupedScoresData;
 

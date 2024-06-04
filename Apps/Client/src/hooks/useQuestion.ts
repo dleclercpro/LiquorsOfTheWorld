@@ -5,7 +5,6 @@ import { OverlayName } from '../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../reducers/AppReducer';
 import useQuiz from './useQuiz';
 import { startQuestionAction } from '../actions/QuizActions';
-import { useEffect } from 'react';
 import useApp from './useApp';
 import useUser from './useUser';
 

@@ -21,6 +21,7 @@ const useQuiz = () => {
 
   const questions = quiz.questions.data;
   const status = quiz.status.data;
+  const teams = quiz.teams.data ?? [];
   const players = quiz.players.data ?? [];
   const votes = quiz.votes.data ?? [];
   const scores = quiz.scores.data ?? { admins: {}, users: {} };
@@ -136,6 +137,7 @@ const useQuiz = () => {
     isNextQuestionForced,
     questions,
     status,
+    teams,
     players,
     votes,
     scores,

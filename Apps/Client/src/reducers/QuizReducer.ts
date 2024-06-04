@@ -2,14 +2,15 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData, CallPingResponseData, CallStartQuestionResponseData, CallVoteResponseData, FetchedData, GroupedScoresData, PlayersData, StatusData, VotesData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
 import { startQuizAction, startQuestionAction, voteAction } from '../actions/QuizActions';
-import { loginAction, logoutAction, pingAction } from '../actions/AuthActions';
+import { logoutAction, pingAction } from '../actions/UserActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { QuizName } from '../constants';
-import { fetchStatusAction, fetchQuestionsAction, fetchPlayersAction, fetchVotesAction, fetchScoresAction } from '../actions/DataActions';
+import { fetchStatusAction, fetchQuestionsAction, fetchPlayersAction, fetchVotesAction, fetchScoresAction, fetchTeamsAction } from '../actions/DataActions';
 
 interface QuizState {
   id: string | null,
   name: QuizName | null,
+  teams: FetchedData<string[]>,
   questions: FetchedData<QuizJSON>,
   status: FetchedData<StatusData>,
   votes: FetchedData<VotesData>,
@@ -20,6 +21,7 @@ interface QuizState {
 const initialState: QuizState = {
   id: null,
   name: null,
+  teams: getInitialFetchedData(),
   questions: getInitialFetchedData(),
   status: getInitialFetchedData(),
   votes: getInitialFetchedData(),
@@ -33,10 +35,16 @@ export const quizSlice = createSlice({
   name: 'quiz',
   initialState,
   reducers: {
+    setQuizId: (state, action: PayloadAction<string>) => {
+      state.id = action.payload;
+    },
     setQuizName: (state, action: PayloadAction<QuizName>) => {
       state.name = action.payload;
     },
   },
+  // FIXME:
+  // Decide on whether to handle server actions in the reducer, or dispatch
+  // simpler actions within said server actions
   extraReducers: (builder) => {
     builder
       // Fetching actions
@@ -71,6 +79,21 @@ export const quizSlice = createSlice({
         state.questions.status = 'failed';
         state.questions.error = action.payload as string;
         state.questions.data = null;
+      })
+
+      .addCase(fetchTeamsAction.pending, (state) => {
+        state.teams.status = 'loading';
+        state.teams.error = null;
+      })
+      .addCase(fetchTeamsAction.fulfilled, (state, action: PayloadAction<string[]>) => {
+        state.teams.status = 'succeeded';
+        state.teams.error = null;
+        state.teams.data = action.payload;
+      })
+      .addCase(fetchTeamsAction.rejected, (state, action) => {
+        state.teams.status = 'failed';
+        state.teams.error = action.payload as string;
+        state.teams.data = null;
       })
 
       .addCase(fetchVotesAction.pending, (state) => {
@@ -140,9 +163,7 @@ export const quizSlice = createSlice({
       .addCase(pingAction.fulfilled, (state, action: PayloadAction<CallPingResponseData>) => {
         state.id = action.payload.quizId;
       })
-      .addCase(loginAction.fulfilled, (state, action: PayloadAction<string>) => {
-        state.id = action.payload;
-      })
+
       // Reset state on logout, no matter if successful or not
       .addCase(logoutAction.fulfilled, (state) => {
         return {
@@ -160,6 +181,6 @@ export const quizSlice = createSlice({
   },
 });
 
-export const { setQuizName } = quizSlice.actions;
+export const { setQuizId, setQuizName } = quizSlice.actions;
 
 export default quizSlice.reducer;

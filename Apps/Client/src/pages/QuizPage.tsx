@@ -111,7 +111,6 @@ const QuizPage: React.FC = () => {
 
     setChoice(vote.value);
     if (!answerOverlay.isOpen) {
-      console.log('Here');
       answerOverlay.open();
     }
     
