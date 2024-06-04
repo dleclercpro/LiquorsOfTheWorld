@@ -18,6 +18,7 @@ const LoginForm: React.FC<Props> = (props) => {
   const { t } = useTranslation();
 
   const quiz = useQuiz();
+  const user = useSelector((state) => state.user);
 
   const [quizId, setQuizId] = useState('');
   const [teamId, setTeamId] = useState('');
@@ -28,10 +29,8 @@ const LoginForm: React.FC<Props> = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  
-  const user = useSelector((state) => state.user);
 
-  const canSubmit = quiz.name !== null && quizId !== null && teamId !== null && username !== '' && password !== '';
+  const canSubmit = quiz.name !== null && quizId !== '' && teamId !== '' && username !== '' && password !== '';
 
 
 
@@ -71,42 +70,41 @@ const LoginForm: React.FC<Props> = (props) => {
       return;
     }
 
+    const auth = { username, password };
+
     await dispatch(loginAction({
+      ...auth,
       quizName: quiz.name!,
       quizId,
       teamId,
-      username,
-      password,
     }));
   };
 
+
+
   return (
     <form className='login-form' onSubmit={(e) => handleSubmit(e)}>
-      {!props.quizId && (
-        <input
-          id='login-quiz-id'
-          className={`${disableQuizId ? 'is-disabled' : ''}`}
-          type='text'
-          value={quizId}
-          disabled={disableQuizId}
-          placeholder={t('common:FORMS.LOGIN.QUIZ_ID')}
-          onChange={(e) => setQuizId(e.target.value)}
-          required
-        />
-      )}
+      <input
+        id='login-quiz-id'
+        className={`${disableQuizId ? 'is-disabled' : ''}`}
+        type='text'
+        value={disableQuizId ? '' : quizId}
+        disabled={disableQuizId}
+        placeholder={disableQuizId ? `${t(`common:COMMON:QUIZ`)} ID: ${quizId}` : t('common:FORMS.LOGIN.QUIZ_ID')}
+        onChange={(e) => setQuizId(e.target.value)}
+        required
+      />
 
-      {!props.teamId && (
-        <input
-          id='login-team-id'
-          className={`${disableTeamId ? 'is-disabled' : ''}`}
-          type='text'
-          value={teamId}
-          disabled={disableTeamId}
-          placeholder={t('common:FORMS.LOGIN.TEAM_ID')}
-          onChange={(e) => setTeamId(e.target.value)}
-          required
-        />
-      )}
+      <input
+        id='login-team-id'
+        className={`${disableTeamId ? 'is-disabled' : ''}`}
+        type='text'
+        value={disableTeamId ? '' : teamId}
+        disabled={disableTeamId}
+        placeholder={disableTeamId ? `${t(`common:COMMON:TEAM`)} ID: ${teamId}` : t('common:FORMS.LOGIN.TEAM_ID')}
+        onChange={(e) => setTeamId(e.target.value)}
+        required
+      />
 
       <input
         id='login-username'

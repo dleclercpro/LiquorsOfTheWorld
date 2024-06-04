@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import { RequestHandler } from 'express';
 import { HttpStatusCode } from '../../types/HTTPTypes';
 import logger from '../../logger';
@@ -21,6 +20,15 @@ const LoginController: RequestHandler = async (req, res, next) => {
         const admin = ADMINS.find(admin => admin.username === username);
         const isAdmin = Boolean(admin);
         logger.trace(`Attempt to join quiz '${quizName}' with ID '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
+
+        // In case a team is specified, but it doesn't exist
+        if (TEAMS_ENABLE && TEAMS) {
+            const teamExists = TEAMS.map(({ id }) => id).includes(teamId);
+            if (!teamExists) {
+                logger.trace(`Team ID '${teamId}' doesn't exist.`);
+                throw new InvalidTeamIdError();
+            }
+        }
 
         // Check if quiz exists
         let quiz = await Quiz.get(quizId);
@@ -50,15 +58,6 @@ const LoginController: RequestHandler = async (req, res, next) => {
         // no new user can be created later on
         if (!quiz && !user && !User.isAdmin(username)) {
             throw new UserDoesNotExistError();
-        }
-
-        // In case a team is specified, but it doesn't exist
-        if (TEAMS_ENABLE && TEAMS) {
-            const teamExists = TEAMS.map(({ id }) => id).includes(teamId);
-            if (!teamExists) {
-                logger.trace(`Team ID '${teamId}' doesn't exist.`);
-                throw new InvalidTeamIdError();
-            }
         }
 
         // Now that everything worked out well, create user if it does not
@@ -107,7 +106,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
             logger.warn(err.message);
         }
 
-        if (['USER_ALREADY_EXISTS', 'USER_DOES_NOT_EXIST', 'QUIZ_ALREADY_STARTED', 'INVALID_QUIZ_ID', 'INVALID_PASSWORD'].includes(err.message)) {
+        if (['USER_ALREADY_EXISTS', 'USER_DOES_NOT_EXIST', 'QUIZ_ALREADY_STARTED', 'INVALID_QUIZ_ID', 'INVALID_TEAM_ID', 'INVALID_PASSWORD'].includes(err.message)) {
             return res
                 .status(HttpStatusCode.UNAUTHORIZED)
                 .json(errorResponse(err.message));

@@ -7,7 +7,6 @@ import Page from './Page';
 import { QuizName } from '../constants';
 import useUser from '../hooks/useUser';
 import { URL_PARAM_QUIZ_ID, URL_PARAM_QUIZ_NAME, URL_PARAM_TEAM_ID } from '../config';
-import useData from '../hooks/useData';
 import useQuiz from '../hooks/useQuiz';
 
 const HomePage: React.FC = () => {
@@ -17,7 +16,6 @@ const HomePage: React.FC = () => {
 
   const user = useUser();
   const quiz = useQuiz();
-  // const data = useData();
   
   const paramQuizName = searchParams.get(URL_PARAM_QUIZ_NAME);
   const paramQuizId = searchParams.get(URL_PARAM_QUIZ_ID);
@@ -26,12 +24,6 @@ const HomePage: React.FC = () => {
   const quizName = paramQuizName as QuizName ?? quiz.name;
   const quizId = paramQuizId ?? quiz.id;
   const teamId = paramTeamId ?? user.teamId;
-
-  // const isQuizNameValid = data.quizzes.includes(quizName);
-  // const isQuizIdValid = quizId !== null ? typeof quizId === 'string' : false;
-  // const isTeamIdValid = teamId !== null ? quiz.teams.includes(teamId) : false;
-  console.log(`quizId: ${quizId}`);
-  console.log(`teamId: ${teamId}`);
 
 
 
