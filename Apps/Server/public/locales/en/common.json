@@ -39,7 +39,7 @@
     },
     "SCOREBOARD": {
       "STATUS_OVER": "The quiz is over. All {{questionsCount}} questions have been answered. Here are the final results:",
-      "STATUS_NOT_OVER": "So far, {{questionsAnsweredCount}} out of {{questionsCount}} questions have been answered. Here are the current results:"
+      "STATUS_NOT_OVER": "So far, {{publishedAnswersCount}} out of {{questionsCount}} questions have been published. Here are the current results:"
     },
     "ERROR": {
       "TITLE": "Oops!",

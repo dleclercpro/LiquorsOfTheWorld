@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { GroupedScoresData } from '../types/DataTypes';
 import './Scoreboard.scss';
 import useQuiz from '../hooks/useQuiz';
+import useUser from '../hooks/useUser';
 
 interface Props {
   scores: GroupedScoresData,
@@ -13,13 +14,14 @@ const Scoreboard: React.FC<Props> = (props) => {
   const { t } = useTranslation();
 
   const quiz = useQuiz();
+  const user = useUser();
 
   if (quiz.questions === null || quiz.status === null) {
     return null;
   }
 
   const questionsCount = quiz.questions.length;
-  const questionsAnsweredCount = quiz.isOver ? questionsCount : quiz.questionIndex;
+  const publishedAnswersCount = quiz.isOver ? questionsCount : quiz.questionIndex + 1;
 
   // FIXME: only consider regular users
   // Sort users in descending order according to score value
@@ -42,7 +44,7 @@ const Scoreboard: React.FC<Props> = (props) => {
         </strong>
       </p>
       <p className='scoreboard-text'>
-        {t(quiz.isOver ? 'PAGES.SCOREBOARD.STATUS_OVER' : 'PAGES.SCOREBOARD.STATUS_NOT_OVER', { questionsCount, questionsAnsweredCount })}
+        {t(quiz.isOver ? 'PAGES.SCOREBOARD.STATUS_OVER' : 'PAGES.SCOREBOARD.STATUS_NOT_OVER', { questionsCount, publishedAnswersCount })}
       </p>
       <table className='scoreboard-table'>
         <thead>
@@ -60,7 +62,11 @@ const Scoreboard: React.FC<Props> = (props) => {
                   <td>
                     <strong>{username}</strong>
                   </td>
-                  <td>{score.value}/{score.total}</td>
+                  {user.isAdmin ? (
+                    <td>{score.value}/{score.total}</td>
+                  ) : (
+                    <td>{score.value}</td>
+                  )}
               </tr>
             );
           })}
