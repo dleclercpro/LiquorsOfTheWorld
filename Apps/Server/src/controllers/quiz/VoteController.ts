@@ -72,9 +72,6 @@ const VoteController: RequestHandler = async (req, res, next) => {
         // Store votes in DB
         await APP_DB.setUserVotes(quiz, username, userVotes);
 
-        // Update vote counts
-        await quiz.updateVoteCounts();
-
         // Find out how many users have voted on current question
         const playersWhoVoted = await APP_DB.getPlayersWhoVoted(quiz, questionIndex);
         const players = quiz.getPlayers();

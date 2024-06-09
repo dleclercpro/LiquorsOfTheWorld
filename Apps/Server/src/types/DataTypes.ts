@@ -63,7 +63,6 @@ export type StatusData = {
   isSupervised: boolean,
   isNextQuestionForced: boolean,
   questionIndex: number,
-  voteCounts: number[],
   timer?: TimerData,
 };
 

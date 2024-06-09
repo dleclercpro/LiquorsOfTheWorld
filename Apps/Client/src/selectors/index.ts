@@ -95,12 +95,12 @@ export const selectHaveAllPlayersAnswered = (state: RootState, questionIndex: nu
   const status = quiz.status.data;
   const votes = quiz.votes.data;
   const players = quiz.players.data;
+
+  const voteCount = selectVoteCount(state, questionIndex);
   
-  if (status === null || votes === null || players === null || players.length === 0 || questionIndex === NO_QUESTION_INDEX) {
+  if (status === null || votes === null || players === null || players.length === 0 || voteCount === null || questionIndex === NO_QUESTION_INDEX) {
     return false;
   }
 
-  const { voteCounts } = status;
-
-  return voteCounts[questionIndex] === players.length;
+  return voteCount === players.length;
 }

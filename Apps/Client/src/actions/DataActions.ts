@@ -105,10 +105,10 @@ export const fetchAllDataAction = createServerAction<FetchAllDataActionArgs, voi
     const result = await Promise.all([
       dispatch(fetchQuestionsAction({ language, quizName })), // Must only be fetched once: questions do not change
       dispatch(fetchTeamsAction(quizId)), // Must only be fetched once: teams do not change
-      dispatch(fetchVotesAction(quizId)), // Must only be fetched on login: is then updated every time user votes
 
       dispatch(fetchStatusAction(quizId)),
       dispatch(fetchPlayersAction(quizId)),
+      dispatch(fetchVotesAction(quizId)),
       dispatch(fetchScoresAction(quizId)),
     ]);
 
@@ -131,6 +131,7 @@ export const refreshDataAction = createServerAction<RefreshDataActionArgs, void>
     const result = await Promise.all([
       dispatch(fetchStatusAction(quizId)),
       dispatch(fetchPlayersAction(quizId)),
+      dispatch(fetchVotesAction(quizId)),
       dispatch(fetchScoresAction(quizId)),
     ]);
 

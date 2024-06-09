@@ -6,7 +6,7 @@ import useQuiz from './useQuiz';
 import { startQuestionAction } from '../actions/QuizActions';
 import useApp from './useApp';
 import useUser from './useUser';
-import { selectChosenAnswer, selectCorrectAnswer, selectHaveAllPlayersAnswered } from '../selectors';
+import { selectChosenAnswer, selectCorrectAnswer, selectHaveAllPlayersAnswered, selectVoteCount } from '../selectors';
 
 
 
@@ -16,6 +16,8 @@ const useQuestion = (index: number) => {
   const app = useApp();
   const user = useUser();
   const quiz = useQuiz();
+
+  const voteCount = useSelector((state) => selectVoteCount(state, index));
 
   const haveAllPlayersAnswered = useSelector((state) => selectHaveAllPlayersAnswered(state, index));
 
@@ -51,6 +53,7 @@ const useQuestion = (index: number) => {
 
   return {
     index,
+    voteCount,
     haveAllPlayersAnswered,
     answer: {
       chosen: chosenAnswer,

@@ -26,7 +26,6 @@ type QuizStatusArgs = {
     isSupervised: boolean,
     isNextQuestionForced: boolean,
     questionIndex: number,
-    voteCounts: number[],
     timer?: TimerData,
   }
 
@@ -123,35 +122,6 @@ class Quiz {
 
     public getPlayers() {
         return this.players;
-    }
-
-    public async updateVoteCounts() {
-        const questionCount = await QuizManager.count(this.name);
-        const voteCounts = new Array(questionCount).fill(0);
-
-        const votes = await APP_DB.getAllVotes(this);
-
-        // FIXME: only consider regular users
-        const voters = Object.keys(votes.users);
-
-        voters.forEach((voter) => {
-            getRange(questionCount).forEach((i) => {
-                const userVotes = votes.users[voter];
-
-                // Every vote that is not equal to -1 is a valid vote
-                if (userVotes[i] !== NO_VOTE_INDEX) {
-                    voteCounts[i] += 1;
-                }
-            });
-        });
-
-        this.status.voteCounts = voteCounts;
-
-        await this.save();
-    }
-
-    public getVoteCounts() {
-        return this.status.voteCounts;
     }
 
     public static async get(name: string) {
@@ -288,7 +258,6 @@ class Quiz {
                 isSupervised: false,
                 isNextQuestionForced: false,
                 questionIndex: 0,
-                voteCounts: new Array(await QuizManager.count(name)).fill(0),
             },
         });
 

@@ -29,7 +29,7 @@ const AnswerOverlay: React.FC = () => {
 
 
   // Wait until quiz data has been fetched
-  const isReady = !(quiz.id === null || quiz.questions === null || quiz.status === null || quiz.players.length === 0 || quiz.status.voteCounts.length === 0);
+  const isReady = !(quiz.id === null || quiz.questions === null || quiz.status === null || quiz.players.length === 0 || question.voteCount === null);
   if (!isReady) {
     return null;
   }
@@ -37,13 +37,12 @@ const AnswerOverlay: React.FC = () => {
   const correctAnswer = question.answer.correct;
   const chosenAnswer = question.answer.chosen;
 
-  const voteCount = quiz.status!.voteCounts[appQuestionIndex];
   const playersCount = quiz.players.length;
 
   const Icon = question.answer.isCorrect ? RightIcon : WrongIcon;
   const iconText = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_ICON_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_ICON_TEXT');
 
-  const currentVoteStatus = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount, playersCount });
+  const currentVoteStatus = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount: question.voteCount, playersCount });
   const text = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_TEXT');
 
   const hideAnswer = correctAnswer === null || chosenAnswer === null || (!quiz.isOver && !user.isAdmin && !question.haveAllPlayersAnswered);
