@@ -15,6 +15,11 @@ const ScoresPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const quiz = useQuiz();
+  
+
+
+  // Ensure there are user scores
+  const isReady = Object.keys(quiz.scores.users).length > 0;
 
 
 
@@ -29,7 +34,7 @@ const ScoresPage: React.FC = () => {
 
 
 
-  if (quiz.id === null || quiz.status === null || !quiz.scores) {
+  if (!isReady) {
     return null;
   }
 

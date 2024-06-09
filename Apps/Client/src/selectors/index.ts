@@ -10,6 +10,11 @@ export const selectQuestion = (state: RootState, questionIndex: number) => {
   if (questions === null || questionIndex === NO_QUESTION_INDEX) {
     return null;
   }
+
+  const isQuestionIndexValid = 0 <= questionIndex && questionIndex + 1 <= questions.length;
+  if (!isQuestionIndexValid) {
+    throw new Error('INVALID_QUESTION_INDEX');
+  }
   
   return questions[questionIndex];
 }
@@ -20,14 +25,17 @@ export const selectChosenAnswer = (state: RootState, questionIndex: number): Ans
   const user = state.user;
   const quiz = state.quiz;
 
-  const questions = quiz.questions.data;
   const votes = quiz.votes.data;
 
-  if (user.username === null || questions === null || votes === null || questionIndex === NO_QUESTION_INDEX) {
+  if (user.username === null || votes === null) {
     return null;
   }
 
-  const question = questions[questionIndex];
+  const question = selectQuestion(state, questionIndex);
+  if (question === null) {
+    return null;
+  }
+
   const currentVotes = user.isAdmin ? votes.admins[user.username] : votes.users[user.username];
 
   if (!currentVotes) {
@@ -51,14 +59,15 @@ export const selectChosenAnswer = (state: RootState, questionIndex: number): Ans
 export const selectCorrectAnswer = (state: RootState, questionIndex: number): AnswerData | null => {
   const quiz = state.quiz;
 
-  const questions = quiz.questions.data;
   const status = quiz.status.data;
-
-  if (questions === null || status === null || questionIndex === NO_QUESTION_INDEX) {
+  if (status === null) {
     return null;
   }
   
-  const question = questions[questionIndex];
+  const question = selectQuestion(state, questionIndex);
+  if (question === null) {
+    return null;
+  }
 
   return {
     index: question.answer,

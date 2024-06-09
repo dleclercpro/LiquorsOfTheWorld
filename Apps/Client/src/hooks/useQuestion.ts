@@ -30,6 +30,9 @@ const useQuestion = (index: number) => {
   const chosenAnswer = useSelector((state) => selectChosenAnswer(state, index));
   const correctAnswer = useSelector((state) => selectCorrectAnswer(state, index));
 
+  const hasChosenAnswer = chosenAnswer !== null;
+  const hasCorrectAnswer = correctAnswer !== null;
+
 
 
   const goToNextQuestion = () => {
@@ -55,10 +58,11 @@ const useQuestion = (index: number) => {
     index,
     voteCount,
     haveAllPlayersAnswered,
+    data: quiz.questions ? quiz.questions[index] : null,
     answer: {
       chosen: chosenAnswer,
       correct: correctAnswer,
-      isCorrect: chosenAnswer !== null && correctAnswer !== null && chosenAnswer.index === correctAnswer.index,
+      isCorrect: hasChosenAnswer && hasCorrectAnswer && (chosenAnswer.index === correctAnswer.index),
     },
     next: {
       index: index + 1,
