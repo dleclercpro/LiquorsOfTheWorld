@@ -1,5 +1,7 @@
 import { NO_QUESTION_INDEX, NO_VOTE_INDEX } from '../constants';
 import { RootState } from '../stores/store';
+import { AnswerData } from '../types/DataTypes';
+import { sum } from '../utils/math';
 
 export const selectQuestion = (state: RootState, questionIndex: number) => {
   const quiz = state.quiz;
@@ -15,7 +17,7 @@ export const selectQuestion = (state: RootState, questionIndex: number) => {
 
 
 
-export const selectAnswer = (state: RootState, questionIndex: number) => {
+export const selectChosenAnswer = (state: RootState, questionIndex: number): AnswerData | null => {
   const user = state.user;
   const quiz = state.quiz;
 
@@ -34,14 +36,20 @@ export const selectAnswer = (state: RootState, questionIndex: number) => {
   }
 
   const vote = currentVotes[questionIndex];
-  const answer = vote !== NO_VOTE_INDEX ? question.options[vote] : null;
 
-  return answer;
+  if (vote === NO_VOTE_INDEX) {
+    return null;
+  }
+
+  return {
+    index: questionIndex,
+    value: question.options[vote],
+  };
 }
 
 
 
-export const selectCorrectAnswer = (state: RootState, questionIndex: number) => {
+export const selectCorrectAnswer = (state: RootState, questionIndex: number): AnswerData | null => {
   const quiz = state.quiz;
 
   const questions = quiz.questions.data;
@@ -52,14 +60,36 @@ export const selectCorrectAnswer = (state: RootState, questionIndex: number) => 
   }
   
   const question = questions[questionIndex];
-  const correctAnswer = question.options[question.answer];
 
-  return correctAnswer;
+  return {
+    index: question.answer,
+    value: question.options[question.answer],
+  };
 }
 
 
 
-export const haveAllPlayersAnswered = (state: RootState, questionIndex: number) => {
+export const selectVoteCount = (state: RootState, questionIndex: number) => {
+  const quiz = state.quiz;
+  
+  const votes = quiz.votes.data;
+  const players = quiz.players.data;
+  
+  if (votes === null || players === null || players.length === 0 || questionIndex === NO_QUESTION_INDEX) {
+    return null;
+  }
+
+  // FIXME: only regular users are considered
+  const allUserVotes = Object.values(votes.users);
+  return allUserVotes
+    .map((userVotes: number[]) => userVotes[questionIndex])
+    .filter((vote) => vote !== NO_VOTE_INDEX)
+    .length;
+}
+
+
+
+export const selectHaveAllPlayersAnswered = (state: RootState, questionIndex: number) => {
   const quiz = state.quiz;
   
   const status = quiz.status.data;

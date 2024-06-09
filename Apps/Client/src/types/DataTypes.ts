@@ -38,6 +38,11 @@ export type GroupedVotesData = {
   users: Record<string, VotesData>,
 };
 
+export type AnswerData = {
+  index: number,
+  value: string,
+};
+
 export type PlayerData = {
   username: string,
   teamId?: string,

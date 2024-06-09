@@ -34,16 +34,19 @@ const AnswerOverlay: React.FC = () => {
     return null;
   }
 
+  const correctAnswer = question.answer.correct;
+  const chosenAnswer = question.answer.chosen;
+
   const voteCount = quiz.status!.voteCounts[appQuestionIndex];
   const playersCount = quiz.players.length;
-  const haveAllPlayersVoted = voteCount === playersCount;
-  const hideAnswer = !quiz.isOver && !user.isAdmin && !haveAllPlayersVoted;
 
   const Icon = question.answer.isCorrect ? RightIcon : WrongIcon;
   const iconText = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_ICON_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_ICON_TEXT');
 
   const currentVoteStatus = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount, playersCount });
   const text = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_TEXT');
+
+  const hideAnswer = correctAnswer === null || chosenAnswer === null || (!quiz.isOver && !user.isAdmin && !question.haveAllPlayersAnswered);
 
 
 
@@ -52,6 +55,8 @@ const AnswerOverlay: React.FC = () => {
 
     navigate('/scores');
   }
+
+
 
   if (!overlay.isOpen) {
     return null;
@@ -82,7 +87,7 @@ const AnswerOverlay: React.FC = () => {
               ) : (
                 <>
                   <p className='answer-overlay-text'>{text}</p>
-                  <p className='answer-overlay-value'>{question.answer.correct}</p>
+                  <p className='answer-overlay-value'>{correctAnswer.value}</p>
                   <p className='answer-overlay-text'>{currentVoteStatus}</p>
 
                   {!quiz.isOver && (user.isAdmin && quiz.isSupervised) && (

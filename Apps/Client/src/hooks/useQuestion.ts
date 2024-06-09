@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from './ReduxHooks';
-import { selectAnswer, selectCorrectAnswer } from '../selectors/QuizSelectors';
 import useOverlay from './useOverlay';
 import { OverlayName } from '../reducers/OverlaysReducer';
 import { setQuestionIndex } from '../reducers/AppReducer';
@@ -7,6 +6,9 @@ import useQuiz from './useQuiz';
 import { startQuestionAction } from '../actions/QuizActions';
 import useApp from './useApp';
 import useUser from './useUser';
+import { selectChosenAnswer, selectCorrectAnswer, selectHaveAllPlayersAnswered } from '../selectors';
+
+
 
 const useQuestion = (index: number) => {
   const dispatch = useDispatch();
@@ -15,13 +17,15 @@ const useQuestion = (index: number) => {
   const user = useUser();
   const quiz = useQuiz();
 
+  const haveAllPlayersAnswered = useSelector((state) => selectHaveAllPlayersAnswered(state, index));
+
   const nextQuestionIndex = index + 1;
   const isNextQuestionReady = app.questionIndex < quiz.questionIndex;
   const mustWaitForNextQuestion = !quiz.isOver && !user.isAdmin && !isNextQuestionReady;
 
   const answerOverlay = useOverlay(OverlayName.Answer);
 
-  const answer = useSelector((state) => selectAnswer(state, index));
+  const chosenAnswer = useSelector((state) => selectChosenAnswer(state, index));
   const correctAnswer = useSelector((state) => selectCorrectAnswer(state, index));
 
 
@@ -47,10 +51,11 @@ const useQuestion = (index: number) => {
 
   return {
     index,
+    haveAllPlayersAnswered,
     answer: {
-      chosen: answer,
+      chosen: chosenAnswer,
       correct: correctAnswer,
-      isCorrect: answer === correctAnswer,
+      isCorrect: chosenAnswer !== null && correctAnswer !== null && chosenAnswer.index === correctAnswer.index,
     },
     next: {
       index: index + 1,
