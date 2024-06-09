@@ -19,6 +19,9 @@ export const COOKIE_NAME = `quiz`;
 export const REFRESH_STATUS_INTERVAL = 5_000; // (ms)
 export const QUIZ_TIMER_URGENT_TIME = new TimeDuration(10, TimeUnit.Second);
 
+// Defaults
+export const DEFAULT_QUIZ_NAME = process.env.REACT_APP_DEFAULT_QUIZ_NAME!;
+
 // URL
 export const URL_PARAM_QUIZ_NAME = 'q';
 export const URL_PARAM_QUIZ_ID = 'qid';

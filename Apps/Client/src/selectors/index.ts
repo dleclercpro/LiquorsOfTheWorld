@@ -1,7 +1,6 @@
 import { NO_QUESTION_INDEX, NO_VOTE_INDEX } from '../constants';
 import { RootState } from '../stores/store';
 import { AnswerData } from '../types/DataTypes';
-import { sum } from '../utils/math';
 
 export const selectQuestion = (state: RootState, questionIndex: number) => {
   const quiz = state.quiz;

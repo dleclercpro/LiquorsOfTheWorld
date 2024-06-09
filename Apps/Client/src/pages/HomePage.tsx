@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Page from './Page';
 import { QuizName } from '../constants';
 import useUser from '../hooks/useUser';
-import { URL_PARAM_QUIZ_ID, URL_PARAM_QUIZ_NAME, URL_PARAM_TEAM_ID } from '../config';
+import { DEFAULT_QUIZ_NAME, URL_PARAM_QUIZ_ID, URL_PARAM_QUIZ_NAME, URL_PARAM_TEAM_ID } from '../config';
 import useQuiz from '../hooks/useQuiz';
 import useData from '../hooks/useData';
 import { setQuizName } from '../reducers/QuizReducer';
@@ -28,7 +28,7 @@ const HomePage: React.FC = () => {
   const paramQuizId = searchParams.get(URL_PARAM_QUIZ_ID);
   const paramTeamId = searchParams.get(URL_PARAM_TEAM_ID);
 
-  const quizName = paramQuizName ?? quiz.name;
+  const quizName = (paramQuizName ?? quiz.name) ?? DEFAULT_QUIZ_NAME;
   const quizId = paramQuizId ?? quiz.id;
   const teamId = paramTeamId ?? user.teamId;
 
