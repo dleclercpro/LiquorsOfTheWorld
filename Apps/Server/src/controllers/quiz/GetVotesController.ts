@@ -1,12 +1,12 @@
 import { RequestHandler } from 'express';
 import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { APP_DB } from '../..';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import Quiz from '../../models/Quiz';
 import { CallGetVotesResponseData } from '../../types/DataTypes';
 import logger from '../../logger';
+import VoteManager from '../../models/VoteManager';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -31,7 +31,7 @@ const GetVotesController: RequestHandler = async (req, res, next) => {
 
         logger.trace(`Reading all votes of quiz: ID = ${quiz.getId()}`);
 
-        const response: CallGetVotesResponseData = await APP_DB.getAllVotes(quiz);
+        const response: CallGetVotesResponseData = await VoteManager.getAllVotes(quiz);
 
         return res.json(
             successResponse(response)

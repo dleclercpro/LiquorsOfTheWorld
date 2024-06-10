@@ -10,6 +10,8 @@ import InvalidQuestionIndexError from '../../errors/InvalidQuestionIndexError';
 import QuizManager from '../../models/QuizManager';
 import Quiz from '../../models/Quiz';
 import { CallVoteResponseData } from '../../types/DataTypes';
+import VoteManager from '../../models/VoteManager';
+import User from '../../models/users/User';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId, questionIndex: _questionIndex } = params;
@@ -50,7 +52,6 @@ const VoteController: RequestHandler = async (req, res, next) => {
 
         const { quizId, questionIndex } = await validateParams(req.params);
 
-        // If quiz is not supervised: increment question index
         const quiz = await Quiz.get(quizId);
         if (!quiz) {
             throw new InvalidQuizIdError();
@@ -60,34 +61,35 @@ const VoteController: RequestHandler = async (req, res, next) => {
         const isLastQuestion = nextQuestionIndex === questionCount;
 
         // Get votes from DB if they exist
-        const userVotes = await APP_DB.getUserVotes(quiz, username);
+        const user = await User.get(username) as User;
+        const userVotes = await VoteManager.getVotes(quiz, user);
         
         const questionIndexAsString = `Q${questionIndex}`;
         const voteIndexAsString = `A${vote}`;
 
         // Add vote to array
         userVotes[questionIndex] = vote;
-        logger.debug(`New vote for user '${username}': ${questionIndexAsString}|${voteIndexAsString}`);
+        logger.debug(`New vote for user '${user.getUsername()}': ${questionIndexAsString}|${voteIndexAsString}`);
 
         // Store votes in DB
-        await APP_DB.setUserVotes(quiz, username, userVotes);
+        await VoteManager.setVotes(quiz, user, userVotes);
 
         // Find out how many users have voted on current question
-        const playersWhoVoted = await APP_DB.getUsernamesOfPlayersWhoVoted(quiz, questionIndex);
+        const playersWhoVoted = await VoteManager.getPlayersWhoVoted(quiz, questionIndex);
         const players = quiz.getPlayers();
         const haveAllPlayersVoted = playersWhoVoted.length === players.length;
         logger.trace(`Players who voted so far on question ${questionIndexAsString}: ${playersWhoVoted.length}/${players.length}`);
 
+        // If quiz is not supervised and all players have submitted their answer: increment question index
         if (!quiz.isSupervised() && haveAllPlayersVoted) {
             logger.info(`All users have voted on question ${questionIndexAsString}.`);
             
-            // That was not the last question and the game is not supervised:
-            // the index can be automatically incremented
+            // That was NOT the last question: the index can be automatically incremented
             if (nextQuestionIndex < questionCount) {
                 await quiz.incrementQuestionIndex();
             }
 
-            // That was the last question: the game is now over
+            // That was the last question: the game is over
             else if (nextQuestionIndex === questionCount) {
                 await quiz.finish();
             }
@@ -106,7 +108,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         // Prepare response for user with updated votes
         const response: CallVoteResponseData = {
             status: quiz.getStatus(),
-            votes: await APP_DB.getAllVotes(quiz),
+            votes: await VoteManager.getAllVotes(quiz),
         };
 
         return res.json(

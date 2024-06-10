@@ -1,15 +1,12 @@
 import { RequestHandler } from 'express';
 import { successResponse } from '../../utils/calls';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { APP_DB } from '../..';
 import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
-import { GroupedScoresData, ScoresData } from '../../types/DataTypes';
-import { ADMINS } from '../../config';
+import { GroupedScoresData } from '../../types/DataTypes';
 import Quiz from '../../models/Quiz';
-import { UserType } from '../../constants';
-import User from '../../models/users/User';
 import logger from '../../logger';
+import ScoreManager from '../../models/ScoreManager';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -34,7 +31,7 @@ const GetScoresController: RequestHandler = async (req, res, next) => {
 
         logger.trace(`Reading all scores of quiz: ID = ${quiz.getId()}`);
 
-        const response: GroupedScoresData = await APP_DB.getAllScores(quiz);
+        const response: GroupedScoresData = await ScoreManager.getAllScores(quiz);
 
         return res.json(successResponse(response));
 
