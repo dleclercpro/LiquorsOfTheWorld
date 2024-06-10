@@ -1,8 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { fetchQuizNamesAction } from '../actions/DataActions';
+import { QuizData } from '../types/DataTypes';
 
 interface DataState {
-  quizzes: string[],
+  quizzes: QuizData[],
 }
 
 const initialState: DataState = {
@@ -17,7 +18,7 @@ export const dataSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchQuizNamesAction.fulfilled, (state, action: PayloadAction<string[]>) => {
+      .addCase(fetchQuizNamesAction.fulfilled, (state, action: PayloadAction<QuizData[]>) => {
         state.quizzes = action.payload;
       });
   },

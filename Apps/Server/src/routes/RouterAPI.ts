@@ -16,7 +16,7 @@ import StartQuestionController from '../controllers/quiz/StartQuestionController
 import DeleteQuizController from '../controllers/quiz/DeleteQuizController';
 import DeleteDatabaseController from '../controllers/DeleteDatabaseController';
 import GetVersionController from '../controllers/app/GetVersionController';
-import GetQuizNamesController from '../controllers/quiz/GetQuizNamesController';
+import GetQuizzesController from '../controllers/quiz/GetQuizzesController';
 import GetBackgroundUrlController from '../controllers/app/GetBackgroundUrlController';
 import GetPlayersController from '../controllers/quiz/GetPlayersController';
 import GetTeamsController from '../controllers/quiz/GetTeamsController';
@@ -57,7 +57,7 @@ router.get('/quiz/:quizId/votes', [AuthMiddleware], GetVotesController);
 router.get('/quiz/:quizId/players', [AuthMiddleware], GetPlayersController);
 router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);
 
-router.get('/quiz', GetQuizNamesController);
+router.get('/quizzes', GetQuizzesController);
 router.get('/questions/:language/:quizName', GetQuestionsController);
 
 

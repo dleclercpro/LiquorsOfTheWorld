@@ -143,21 +143,30 @@ const Nav: React.FC = () => {
             </li>
           )}
 
+          {DEBUG && location.pathname === '/admin' && !user.isAuthenticated && (
+            <li className='nav-item'>
+              <Link className='nav-link' to={`/`}>
+                <HomeIcon className='nav-icon' />
+                {t('common:COMMON.HOMEPAGE')}
+              </Link>
+            </li>
+          )}
+
+          {!user.isAuthenticated && (
+            <li className='nav-item'>
+              <Link className='nav-link' to={`/quizzes`}>
+                <QuizIcon className='nav-icon' />
+                {t('common:COMMON.QUIZZES')}
+              </Link>
+            </li>
+          )}
+
           {/* This nav item will only appear in debug mode! */}
           {DEBUG && location.pathname !== '/admin' && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/admin`}>
                 <SettingsIcon className='nav-icon' />
                 {t('common:COMMON.ADMIN')}
-              </Link>
-            </li>
-          )}
-
-          {DEBUG && location.pathname === '/admin' && !user.isAuthenticated && (
-            <li className='nav-item'>
-              <Link className='nav-link' to={`/`}>
-                <HomeIcon className='nav-icon' />
-                {t('common:COMMON.HOMEPAGE')}
               </Link>
             </li>
           )}

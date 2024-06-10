@@ -15,6 +15,7 @@
     "LOG_OUT": "Ausloggen",
     "USERNAME": "Benutzername",
     "QUIZ": "Quiz",
+    "QUIZZES": "Quizzes",
     "TEAM": "Team",
     "REGULAR_USER": "Normaler Nutzer",
     "ADMIN_USER": "Admin Nutzer",
@@ -32,6 +33,10 @@
       "WELCOME_HEAD": "Willkommen zum Quiz heute Abend!",
       "WELCOME_TEXT": "Bereite dich darauf vor, dein Meisterwissen über die Spirituosen der Welt in einem epischen Quiz zu zeigen, wo nur die schlauesten Schnapskenner den Sieg erringen werden...",
       "WELCOME_CTA": "Bist Du bereit?"
+    },
+    "QUIZZES": {
+      "TITLE": "Quiz-Auswahl",
+      "TEXT": "Hier ist die Liste von Quizzes, die du auswählen darfst:"
     },
     "ADMIN": {
       "DELETE_COOKIE": "Cookie löschen",

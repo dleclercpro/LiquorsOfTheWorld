@@ -85,11 +85,12 @@ const LoginController: RequestHandler = async (req, res, next) => {
             logger.debug(`User '${username}' joined quiz ${quizId}.`);
         }
 
+        const cookieUser = { username, teamId, isAdmin };
+        const cookieQuiz = { name: quizName, id: quizId };
+        
         const cookie = await encodeCookie({
-            user: { username, isAdmin },
-            quizName,
-            quizId,
-            teamId,
+            user: cookieUser,
+            quiz: cookieQuiz,
         });
 
         const response: CallLogInResponseData = {

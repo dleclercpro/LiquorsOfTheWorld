@@ -32,7 +32,8 @@ const HomePage: React.FC = () => {
   const quizId = (paramQuizId ?? quiz.id) ?? DEFAULT_QUIZ_ID;
   const teamId = (paramTeamId ?? user.teamId) ?? DEFAULT_TEAM_ID;
 
-  const isQuizNameValid = data.quizzes.includes(quizName as QuizName);
+  const isQuizNameValid = data.quizzes.map((q) => q.name)
+    .includes(quizName as QuizName);
 
 
 

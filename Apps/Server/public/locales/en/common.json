@@ -15,6 +15,7 @@
     "LOG_OUT": "Log out",
     "USERNAME": "Username",
     "QUIZ": "Quiz",
+    "QUIZZES": "Quizzes",
     "TEAM": "Team",
     "REGULAR_USER": "Regular user",
     "ADMIN_USER": "Admin user",
@@ -32,6 +33,10 @@
       "WELCOME_HEAD": "Welcome to tonight's quiz!",
       "WELCOME_TEXT": "Get ready to showcase your mastery of the world's spirits in an epic quiz, where only the savviest liquor aficionados will manage to claim victory...",
       "WELCOME_CTA": "Are you ready?"
+    },
+    "QUIZZES": {
+      "TITLE": "Quiz selection",
+      "TEXT": "Here is the list of quiz you can choose from:"
     },
     "ADMIN": {
       "DELETE_COOKIE": "Delete cookie",

@@ -18,6 +18,7 @@ import useQuiz from './hooks/useQuiz';
 import useUser from './hooks/useUser';
 import useApp from './hooks/useApp';
 import LobbyOverlay from './components/overlays/LobbyOverlay';
+import QuizzesPage from './pages/QuizzesPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -52,6 +53,10 @@ function App() {
               <AdminPage />
             )} />
           )}
+
+          <Route path='/quizzes' element={(
+            <QuizzesPage />
+          )} />
 
           <Route path='/quiz' element={(
             <AuthRoute>

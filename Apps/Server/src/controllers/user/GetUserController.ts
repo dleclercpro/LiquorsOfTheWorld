@@ -4,11 +4,12 @@ import { SessionUser } from '../../types/UserTypes';
 
 const GetUserController: RequestHandler = async (req, res, next) => {
     try {
-        const { username, isAdmin } = req.user!;
+        const { username, isAdmin, teamId } = req.user!;
 
         return res.json(successResponse<SessionUser>({
             username,
             isAdmin,
+            teamId,
         }));
 
     } catch (err: any) {

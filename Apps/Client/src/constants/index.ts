@@ -34,6 +34,11 @@ export enum AspectRatio {
   SixteenByNine = '16:9',
 };
 
+export const QUIZ_LABELS = {
+  [QuizName.Liquors]: 'Liquors',
+  [QuizName.KonnyUndJohannes]: 'Konny & Johannes',
+};
+
 export const USER_TYPES = Object.values(UserType);
 
 export const NO_TIME = new TimeDuration(0, TimeUnit.Millisecond);

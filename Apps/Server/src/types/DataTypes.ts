@@ -20,8 +20,9 @@ export type UserData = {
 };
 
 export type QuizData = {
-  quizName: QuizName,
-  quizId: string,
+  name: QuizName,
+  label: string,
+  id: string | null,
 };
 
 export type AnswerData = {
@@ -46,9 +47,14 @@ export type StatusData = {
   timer?: TimerData,
 };
 
-export type PingData = UserData & QuizData;
+export type PingData = {
+  quiz: QuizData,
+  user: UserData,
+};
 
-export type LoginData = Auth & QuizData & {
+export type LoginData = Auth & {
+  quizName: QuizName,
+  quizId: string,
   teamId: string,
 };
 
@@ -105,7 +111,7 @@ export type CallLogInRequestData = LoginData;
 export type CallLogInResponseData = UserData;
 
 export type CallGetVersionResponseData = VersionData;
-export type CallGetQuizNamesResponseData = string[];
+export type CallGetQuizzesResponseData = QuizData[];
 export type CallGetTeamsResponseData = string[];
 export type CallGetVotesResponseData = GroupedVotesData;
 export type CallGetQuestionsResponseData = QuizJSON;

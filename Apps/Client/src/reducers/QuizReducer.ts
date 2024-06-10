@@ -161,7 +161,7 @@ export const quizSlice = createSlice({
 
       // Auth actions
       .addCase(pingAction.fulfilled, (state, action: PayloadAction<CallPingResponseData>) => {
-        state.id = action.payload.quizId;
+        state.id = action.payload.quiz.id;
       })
 
       // Reset state on logout, no matter if successful or not
