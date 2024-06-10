@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './AdminQuizForm.scss';
 import { Trans, useTranslation } from 'react-i18next';
 import useQuiz from '../../hooks/useQuiz';
+import useUser from '../../hooks/useUser';
 
 const AdminQuizForm: React.FC = () => {
   const { t } = useTranslation();
@@ -11,6 +12,7 @@ const AdminQuizForm: React.FC = () => {
   const [isNextQuestionForced, setIsNextQuestionForced] = useState(false);
 
   const quiz = useQuiz();
+  const user = useUser();
 
   const regularPlayers = quiz.players.filter((player) => !player.isAdmin);
 
@@ -49,9 +51,9 @@ const AdminQuizForm: React.FC = () => {
       <p className='admin-quiz-form-text'>
         <Trans
           i18nKey={regularPlayers.length === 1 ? 'FORMS.START_QUIZ.SINGLE_PLAYER_WAITING' : 'FORMS.START_QUIZ.MANY_PLAYERS_WAITING'}
-          values={{ id: quiz.id, count: regularPlayers.length }}
+          values={{ id: quiz.id, username: user.username, count: regularPlayers.length }}
         >
-          ... <strong>...</strong> ...
+          ... <strong>...</strong> ... <strong>...</strong> ...
         </Trans>
       </p>
       
