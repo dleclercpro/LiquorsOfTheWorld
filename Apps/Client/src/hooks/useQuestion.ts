@@ -7,6 +7,7 @@ import { startQuestionAction } from '../actions/QuizActions';
 import useApp from './useApp';
 import useUser from './useUser';
 import { selectChosenAnswer, selectCorrectAnswer, selectHaveAllPlayersAnswered, selectVoteCounts } from '../selectors';
+import { NO_QUESTION_INDEX } from '../constants';
 
 
 
@@ -33,7 +34,7 @@ const useQuestion = (index: number, ignoreAdmins: boolean = true) => {
   const hasChosenAnswer = chosenAnswer !== null;
   const hasCorrectAnswer = correctAnswer !== null;
 
-  const data = quiz.questions !== null ? quiz.questions[index] : null
+  const data = (quiz.questions !== null && index !== NO_QUESTION_INDEX) ? quiz.questions[index] : null;
 
 
 

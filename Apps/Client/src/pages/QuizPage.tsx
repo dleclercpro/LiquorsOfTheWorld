@@ -170,6 +170,9 @@ const QuizPage: React.FC = () => {
     return null;
   }
 
+  console.log(question.data === undefined);
+  console.log(`isReady: ${isReady}`);
+
 
   
   return (
