@@ -12,6 +12,15 @@ export enum Language {
   DE = 'de',
 };
 
+export enum PageUrl {
+  Home = '/',
+  Error = '/error',
+  Admin = '/admin',
+  Quizzes = '/quizzes',
+  Quiz = '/quiz',
+  Scores = '/scores',
+};
+
 export enum UserType {
   Regular = 'regular',
   Admin = 'admin',

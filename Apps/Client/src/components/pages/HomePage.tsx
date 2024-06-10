@@ -4,7 +4,7 @@ import LoginForm from '../forms/LoginForm';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Page from './Page';
-import { QuizName } from '../../constants';
+import { PageUrl, QuizName } from '../../constants';
 import useUser from '../../hooks/useUser';
 import { DEFAULT_QUIZ_ID, DEFAULT_QUIZ_NAME, DEFAULT_TEAM_ID, URL_PARAM_QUIZ_ID, URL_PARAM_QUIZ_NAME, URL_PARAM_TEAM_ID } from '../../config';
 import useQuiz from '../../hooks/useQuiz';
@@ -43,7 +43,7 @@ const HomePage: React.FC = () => {
       dispatch(setQuizName(quizName as QuizName));
     }
     else if (quizName === null) {
-      navigate(`/error`);
+      navigate(PageUrl.Error);
     }
   }, [isQuizNameValid]);
 
@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
 
   if (user.isAuthenticated) {
     return (
-      <Navigate to='/quiz' />
+      <Navigate to={PageUrl.Quiz} />
     );
   }
 

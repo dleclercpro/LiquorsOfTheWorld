@@ -19,6 +19,7 @@ import useUser from './hooks/useUser';
 import useApp from './hooks/useApp';
 import LobbyOverlay from './components/overlays/LobbyOverlay';
 import QuizzesPage from './components/pages/QuizzesPage';
+import { PageUrl } from './constants';
 
 function App() {
   const dispatch = useDispatch();
@@ -49,35 +50,35 @@ function App() {
 
         <Routes>
           {(DEBUG || user.isAdmin) && (
-            <Route path='/admin' element={(
+            <Route path={PageUrl.Admin} element={(
               <AdminPage />
             )} />
           )}
 
-          <Route path='/quizzes' element={(
+          <Route path={PageUrl.Quizzes} element={(
             <QuizzesPage />
           )} />
 
-          <Route path='/quiz' element={(
+          <Route path={PageUrl.Quiz} element={(
             <AuthRoute>
               <QuizPage />
             </AuthRoute>
           )} />
-          <Route path='/scores' element={(
+          <Route path={PageUrl.Scores} element={(
             <AuthRoute>
               <ScoresPage />
             </AuthRoute>
           )} />
-          <Route path='/error' element={(
+          <Route path={PageUrl.Error} element={(
             <ErrorPage />
           )} />
-          <Route path='/' element={(
+          <Route path={PageUrl.Home} element={(
             <HomePage />
           )} />
 
           {/* Error route */}
           <Route path='*' element={(
-            <Navigate to='/error' />
+            <Navigate to={PageUrl.Error} />
           )} />
         </Routes>
         

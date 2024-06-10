@@ -8,7 +8,7 @@ import Page from './Page';
 import { useTranslation } from 'react-i18next';
 import useQuiz from '../../hooks/useQuiz';
 import { REFRESH_STATUS_INTERVAL } from '../../config';
-import { UserType } from '../../constants';
+import { PageUrl, UserType } from '../../constants';
 import useUser from '../../hooks/useUser';
 
 const ScoresPage: React.FC = () => {
@@ -46,7 +46,7 @@ const ScoresPage: React.FC = () => {
 
   if (!quiz.isStarted) {
     return (
-      <Navigate to='/quiz' />
+      <Navigate to={PageUrl.Quiz} />
     );
   }
   

@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import useQuiz from '../../hooks/useQuiz';
 import useUser from '../../hooks/useUser';
 import useDatabase from '../../hooks/useDatabase';
+import { PageUrl } from '../../constants';
 
 interface SnackbarState extends SnackbarOrigin {
   open: boolean,
@@ -75,7 +76,7 @@ const AdminPage: React.FC = () => {
         message: 'Deleted cookie.',
       });
 
-      navigate('/');
+      navigate(PageUrl.Home);
     }
   }
 
@@ -93,7 +94,7 @@ const AdminPage: React.FC = () => {
         message: 'Deleted local storage.',
       });
 
-      navigate(`/?${URL_PARAM_QUIZ_NAME}=${quiz.name}`);
+      navigate(`${PageUrl.Home}?${URL_PARAM_QUIZ_NAME}=${quiz.name}`);
     }
   }
 
@@ -108,12 +109,12 @@ const AdminPage: React.FC = () => {
         message: 'Deleted database.',
     });
 
-    navigate('/');
+    navigate(PageUrl.Home);
   }
 
   if (quiz.name === null) {
     return (
-      <Navigate to='/error' />
+      <Navigate to={PageUrl.Error} />
     );
   }
 

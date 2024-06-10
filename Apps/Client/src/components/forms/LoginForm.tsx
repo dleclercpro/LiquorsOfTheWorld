@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useQuiz from '../../hooks/useQuiz';
 import useUser from '../../hooks/useUser';
 import { useNavigate } from 'react-router-dom';
+import { PageUrl } from '../../constants';
 
 type Props = {
   quizId: string | null,
@@ -48,7 +49,7 @@ const LoginForm: React.FC<Props> = (props) => {
   // Redirect to quiz page on successful login
   useEffect(() => {
     if (user.isAuthenticated) {
-      navigate(`/quiz`);
+      navigate(PageUrl.Quiz);
     }
   }, [user.isAuthenticated]);
 

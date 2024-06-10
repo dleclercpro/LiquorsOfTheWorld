@@ -10,7 +10,7 @@ import useApp from '../../hooks/useApp';
 import useOverlay from '../../hooks/useOverlay';
 import { OverlayName } from '../../reducers/OverlaysReducer';
 import useQuestion from '../../hooks/useQuestion';
-import { UserType } from '../../constants';
+import { PageUrl, UserType } from '../../constants';
 
 const AnswerOverlay: React.FC = () => {
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ const AnswerOverlay: React.FC = () => {
   const goToScoreboard = () => {
     overlay.close();
 
-    navigate('/scores');
+    navigate(PageUrl.Scores);
   }
 
 

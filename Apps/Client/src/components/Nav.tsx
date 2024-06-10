@@ -13,7 +13,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ScoreboardIcon from '@mui/icons-material/Scoreboard';
 import { useTranslation } from 'react-i18next';
 import { DEBUG } from '../config';
-import { Language } from '../constants';
+import { Language, PageUrl } from '../constants';
 import { setLanguage } from '../reducers/AppReducer';
 import useUser from '../hooks/useUser';
 import useQuiz from '../hooks/useQuiz';
@@ -125,7 +125,7 @@ const Nav: React.FC = () => {
             </button>
           </li>
 
-          {location.pathname !== '/quiz' && user.isAuthenticated && (
+          {location.pathname !== PageUrl.Quiz && user.isAuthenticated && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/quiz`}>
                 <QuizIcon className='nav-icon' />
@@ -134,7 +134,7 @@ const Nav: React.FC = () => {
             </li>
           )}
 
-          {location.pathname !== '/scores' && user.isAuthenticated && quiz.isStarted && (
+          {location.pathname !== PageUrl.Scores && user.isAuthenticated && quiz.isStarted && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/scores`}>
                 <ScoreboardIcon className='nav-icon' />
@@ -143,7 +143,7 @@ const Nav: React.FC = () => {
             </li>
           )}
 
-          {DEBUG && location.pathname === '/admin' && !user.isAuthenticated && (
+          {DEBUG && [PageUrl.Admin, PageUrl.Quizzes].map(url => url as string).includes(location.pathname) && !user.isAuthenticated && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/`}>
                 <HomeIcon className='nav-icon' />
@@ -152,7 +152,7 @@ const Nav: React.FC = () => {
             </li>
           )}
 
-          {!user.isAuthenticated && (
+          {location.pathname !== PageUrl.Quizzes && !user.isAuthenticated && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/quizzes`}>
                 <QuizIcon className='nav-icon' />
@@ -162,7 +162,7 @@ const Nav: React.FC = () => {
           )}
 
           {/* This nav item will only appear in debug mode! */}
-          {DEBUG && location.pathname !== '/admin' && (
+          {DEBUG && location.pathname !== PageUrl.Admin && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/admin`}>
                 <SettingsIcon className='nav-icon' />
@@ -173,7 +173,7 @@ const Nav: React.FC = () => {
 
           {user.isAuthenticated && (
             <li className='nav-item'>
-              <Link className='nav-link' to='/' onClick={handleLogout}>
+              <Link className='nav-link' to={PageUrl.Home} onClick={handleLogout}>
                 <LogoutIcon className='nav-icon' />
                 {t('common:COMMON.LOG_OUT')}
               </Link>
