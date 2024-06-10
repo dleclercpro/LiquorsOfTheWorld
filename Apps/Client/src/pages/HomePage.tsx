@@ -42,7 +42,7 @@ const HomePage: React.FC = () => {
     if (isQuizNameValid) {
       dispatch(setQuizName(quizName as QuizName));
     }
-    else if (quizName === null || quizName === '') {
+    else if (quizName === null) {
       navigate(`/error`);
     }
   }, [isQuizNameValid]);

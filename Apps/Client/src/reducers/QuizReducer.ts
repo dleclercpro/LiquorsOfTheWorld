@@ -10,6 +10,7 @@ import { fetchStatusAction, fetchQuestionsAction, fetchPlayersAction, fetchVotes
 interface QuizState {
   id: string | null,
   name: QuizName | null,
+  label: string | null,
   teams: FetchedData<string[]>,
   questions: FetchedData<QuizJSON>,
   status: FetchedData<StatusData>,
@@ -21,6 +22,7 @@ interface QuizState {
 const initialState: QuizState = {
   id: null,
   name: null,
+  label: null,
   teams: getInitialFetchedData(),
   questions: getInitialFetchedData(),
   status: getInitialFetchedData(),
@@ -161,7 +163,19 @@ export const quizSlice = createSlice({
 
       // Auth actions
       .addCase(pingAction.fulfilled, (state, action: PayloadAction<CallPingResponseData>) => {
+
+        // Data might be missing (e.g. user is not authenticated)
+        if (!action.payload.quiz) {
+          return {
+            ...initialState,
+            name: state.name,
+            label: state.label,
+          };
+        }
+
         state.id = action.payload.quiz.id;
+        state.name = action.payload.quiz.name;
+        state.label = action.payload.quiz.label;
       })
 
       // Reset state on logout, no matter if successful or not
@@ -169,12 +183,14 @@ export const quizSlice = createSlice({
         return {
           ...initialState,
           name: state.name,
+          label: state.label,
         };
       })
       .addCase(logoutAction.rejected, (state) => {
         return {
           ...initialState,
           name: state.name,
+          label: state.label,
         };
       });
 ;

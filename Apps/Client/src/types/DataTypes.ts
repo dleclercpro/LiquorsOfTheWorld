@@ -14,8 +14,8 @@ export type VersionData = {
 };
 
 export type UserData = {
-  username: string | null,
-  teamId: string | null,
+  username: string,
+  teamId: string,
   isAdmin: boolean,
   isAuthenticated: boolean,
 };
@@ -23,7 +23,7 @@ export type UserData = {
 export type QuizData = {
   name: QuizName,
   label: string,
-  id: string | null,
+  id: string,
 };
 
 export type AnswerData = {
@@ -49,8 +49,8 @@ export type StatusData = {
 };
 
 export type PingData = {
-  quiz: QuizData,
-  user: UserData,
+  quiz?: QuizData,
+  user?: UserData,
 };
 
 export type LoginData = Auth & {
@@ -112,7 +112,7 @@ export type CallLogInRequestData = LoginData;
 export type CallLogInResponseData = UserData;
 
 export type CallGetVersionResponseData = VersionData;
-export type CallGetQuizzesResponseData = QuizData[];
+export type CallGetQuizzesResponseData = { name: QuizName, label: string }[];
 export type CallGetTeamsResponseData = string[];
 export type CallGetVotesResponseData = GroupedVotesData;
 export type CallGetQuestionsResponseData = QuizJSON;

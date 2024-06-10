@@ -24,7 +24,7 @@ const useQuiz = () => {
 
   const quiz = useSelector(({ quiz }) => quiz);
 
-  const { id, name } = quiz;
+  const { id, name, label } = quiz;
 
   const questions: QuizJSON | null = quiz.questions.data ?? null;
   const status: StatusData | null = quiz.status.data ?? null;
@@ -143,6 +143,7 @@ const useQuiz = () => {
   return {
     id,
     name,
+    label,
     questionIndex,
     isStarted,
     isOver,

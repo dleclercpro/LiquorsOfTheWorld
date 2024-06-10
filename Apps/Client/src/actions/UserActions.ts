@@ -1,12 +1,12 @@
 import { CallLogIn } from '../calls/auth/CallLogIn';
-import { CallPingResponseData, PingData, UserData, CallLogInRequestData } from '../types/DataTypes';
+import { CallPingResponseData, PingData, CallLogInRequestData, CallLogInResponseData } from '../types/DataTypes';
 import { CallPing } from '../calls/auth/CallPing';
 import { CallLogOut } from '../calls/auth/CallLogOut';
 import { createServerAction } from './ServerActions';
 import { userSlice } from '../reducers/UserReducer';
 import { setQuizId, setQuizName } from '../reducers/QuizReducer';
 
-const { setUser } = userSlice.actions;
+const { resetUser, setUser } = userSlice.actions;
 
 
 
@@ -16,7 +16,7 @@ export const loginAction = createServerAction<CallLogInRequestData, void>(
     
     const { data } = await new CallLogIn().execute(args);
 
-    const { username, teamId, isAdmin, isAuthenticated } = data as UserData;
+    const { username, teamId, isAdmin, isAuthenticated } = data as CallLogInResponseData;
 
     dispatch(setQuizId(args.quizId));
     dispatch(setQuizName(args.quizName));
@@ -33,12 +33,7 @@ export const loginAction = createServerAction<CallLogInRequestData, void>(
 export const logoutAction = createServerAction<void, void>(
   'auth/logout',
   async (_, { dispatch }) => {
-    dispatch(setUser({
-      username: null,
-      teamId: null,
-      isAdmin: false,
-      isAuthenticated: false,
-    }));
+    dispatch(resetUser());
 
     await new CallLogOut().execute();
   },

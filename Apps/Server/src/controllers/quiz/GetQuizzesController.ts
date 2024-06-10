@@ -8,9 +8,8 @@ const GetQuizzesController: RequestHandler = async (req, res, next) => {
         const response: CallGetQuizzesResponseData = QUIZ_NAMES.map((name) => ({
             name,
             label: QUIZ_LABELS[name],
-            id: null,
         }));
-        
+
         return res.json(
             successResponse(response)
         );

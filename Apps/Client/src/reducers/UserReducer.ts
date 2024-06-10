@@ -1,19 +1,25 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { loginAction, logoutAction, pingAction } from '../actions/UserActions';
-import { UserData } from '../types/DataTypes';
+import { CallPingResponseData, UserData } from '../types/DataTypes';
 
-type UserState = UserData & {
+type UserState = {
   status: 'idle' | 'loading' | 'succeeded' | 'failed',
   error: string | null,
-}
+
+  username: string | null,
+  teamId: string | null,
+  isAdmin: boolean,
+  isAuthenticated: boolean,
+};
 
 const initialState: UserState = {
+  status: 'idle',
+  error: null,
+
   username: null,
   teamId: null,
   isAdmin: false,
   isAuthenticated: false,
-  status: 'idle',
-  error: null,
 };
 
 
@@ -22,6 +28,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    resetUser: () => initialState,
     setUser: (state, action: PayloadAction<UserData>) => {
       return {
         ...state,
@@ -66,19 +73,31 @@ export const userSlice = createSlice({
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(pingAction.fulfilled, (state, action) => {
+      .addCase(pingAction.fulfilled, (state, action: PayloadAction<CallPingResponseData>) => {
         state.status = 'succeeded';
         state.error = null;
 
-        state.username = action.payload.username;
-        state.isAdmin = action.payload.isAdmin;
-        state.isAuthenticated = action.payload.isAuthenticated;
+        // Data might not be present (e.g. user is not authenticated)
+        if (!action.payload.user) {
+          return {
+            ...state,
+            username: null,
+            teamId: null,
+            isAdmin: false,
+            isAuthenticated: false,
+          };
+        }
+
+        state.username = action.payload.user.username;
+        state.isAdmin = action.payload.user.isAdmin;
+        state.isAuthenticated = action.payload.user.isAuthenticated;
       })
       .addCase(pingAction.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
 
         state.username = null;
+        state.teamId = null;
         state.isAdmin = false;
         state.isAuthenticated = false;
       })

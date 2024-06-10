@@ -30,7 +30,7 @@ const LoginForm: React.FC<Props> = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const canSubmit = quiz.name !== null && quizId !== '' && teamId !== '' && username !== '' && password !== '';
+  const canSubmit = quiz.name !== null && quizId !== null && teamId !== null && username !== null && password !== null;
 
 
 
