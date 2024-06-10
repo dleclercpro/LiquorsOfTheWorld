@@ -32,13 +32,13 @@ type Props = {
   ratio?: AspectRatio,
   options: string[],
   remainingTime?: TimeDuration,
-  disabled: boolean,
+  disableSubmit: boolean,
   choice: string,
   setChoice: (choice: string) => void,
 }
 
 const QuestionForm: React.FC<Props> = (props) => {
-  const { index, topic, question, image, video, ratio, options, remainingTime, disabled, choice, setChoice } = props;
+  const { index, topic, question, image, video, ratio, options, remainingTime, disableSubmit, choice, setChoice } = props;
 
   const { t } = useTranslation();
 
@@ -149,21 +149,26 @@ const QuestionForm: React.FC<Props> = (props) => {
         </div>
       )}
 
-      {options.map((option, i) => (
-        <div className='checkbox' key={i}>
-          <input
-            type='radio'
-            id={`option-${i}`}
-            name='option'
-            value={option}
-            checked={choice === option}
-            onChange={handleChange}
-          />
-          <label htmlFor={`option-${i}`}>{option}</label>
-        </div>
-      ))}
+      {options.map((option, i) => {
+        const disabled = remainingTime ? remainingTime.isZero() : false;
+        
+        return (
+          <div className='checkbox' key={i}>
+            <input
+              type='radio'
+              id={`option-${i}`}
+              name='option'
+              value={option}
+              checked={choice === option}
+              onChange={handleChange}
+              disabled={disabled}
+            />
+            <label className={`label ${disabled ? 'disabled' : ''}`} htmlFor={`option-${i}`}>{option}</label>
+          </div>
+        );
+      })}
 
-      <button type='submit' disabled={disabled}>
+      <button type='submit' disabled={disableSubmit}>
         {t(choice === '' ? 'FORMS.QUESTION.PICK_ANSWER' : 'FORMS.QUESTION.SUBMIT_ANSWER')}{remainingTime ? ` (${remainingTime.format()})` : ''}
       </button>
     </form>

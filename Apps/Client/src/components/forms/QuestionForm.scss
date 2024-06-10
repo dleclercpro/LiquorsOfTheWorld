@@ -164,10 +164,15 @@
         text-align: left;
       }
 
-      &:hover {
+      &:hover:not(.disabled) {
         background-color: $color-grey;
         color: #333;
-      }      
+      }
+
+        
+      &.disabled {
+        cursor: not-allowed;
+      }
     }
 
     > input[type='radio'] {

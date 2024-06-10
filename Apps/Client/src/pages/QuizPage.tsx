@@ -187,7 +187,7 @@ const QuizPage: React.FC = () => {
           video={question.data!.type === QuestionType.Video ? { url: question.data!.url!, desc: `Question ${app.questionIndex + 1}` } : undefined}
           ratio={AspectRatio.FourByThree}
           options={question.data!.options}
-          disabled={choice === ''}
+          disableSubmit={choice === ''}
           choice={choice}
           setChoice={setChoice}
         />
