@@ -23,7 +23,7 @@
     "TOPIC": "Thema",
     "TYPE": "Typ",
     "SCOREBOARD": "Punktestand",
-    "SCORE": "Punktzahl",
+    "POINTS": "Punktzahl",
     "RANK": "Rang",
     "HOMEPAGE": "Startseite"
   },
@@ -45,6 +45,8 @@
       "NOTHING_TO_DO": "Hier gibt es nichts zu tun!"
     },
     "SCOREBOARD": {
+      "NO_ANSWER": "Unbeantwortet",
+      "MISSED_POINTS": "Verpasste Punkte",
       "STATUS_OVER": "Das Quiz ist vorbei. Alle {{questionsCount}} Fragen wurden beantwortet. Hier sind die Endergebnisse:",
       "STATUS_NOT_OVER": "Bisher wurden {{publishedAnswersCount}} von {{questionsCount}} Fragen freigestellt. Hier sind die aktuellen Ergebnisse:"
     },

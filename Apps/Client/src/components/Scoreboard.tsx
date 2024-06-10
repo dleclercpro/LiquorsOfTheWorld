@@ -59,11 +59,16 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
             <tr>
                 <th>{t('common:COMMON.RANK')}</th>
                 <th>{t('common:COMMON.USERNAME')}</th>
-                <th>{t('common:COMMON.SCORE')}</th>
+                <th>{t('common:COMMON.POINTS')}</th>
+                {quiz.isTimed && (
+                  <th>{t('PAGES.SCOREBOARD.MISSED_POINTS')}</th>
+                )}
             </tr>
           </thead>
           <tbody>
             {sortedScores[UserType.Regular].map(({ username, score }, i) => {
+              const unansweredQuestionsCount = quiz.isOver ? publishedAnswersCount - score.total : publishedAnswersCount - 1 - score.total;
+
               return (
                 <tr key={`scoreboard-table-row-${i}`}>
                     <td>{i + 1}</td>
@@ -74,6 +79,9 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
                       <td>{score.value}/{score.total}</td>
                     ) : (
                       <td>{score.value}</td>
+                    )}
+                    {quiz.isTimed && (
+                      <td>{unansweredQuestionsCount}</td>
                     )}
                 </tr>
               );
@@ -92,11 +100,16 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
               <tr>
                   <th>{t('common:COMMON.RANK')}</th>
                   <th>{t('common:COMMON.USERNAME')}</th>
-                  <th>{t('common:COMMON.SCORE')}</th>
+                  <th>{t('common:COMMON.POINTS')}</th>
+                  {quiz.isTimed && (
+                    <th>{t('PAGES.SCOREBOARD.MISSED_POINTS')}</th>
+                  )}
               </tr>
             </thead>
             <tbody>
               {sortedScores[UserType.Admin].map(({ username, score }, i) => {
+                const unansweredQuestionsCount = quiz.isOver ? publishedAnswersCount - score.total : publishedAnswersCount - 1 - score.total;
+
                 return (
                   <tr key={`scoreboard-table-row-${i}`}>
                       <td>{i + 1}</td>
@@ -107,6 +120,9 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
                         <td>{score.value}/{score.total}</td>
                       ) : (
                         <td>{score.value}</td>
+                      )}
+                      {quiz.isTimed && (
+                        <td>{unansweredQuestionsCount}</td>
                       )}
                   </tr>
                 );

@@ -23,7 +23,7 @@
     "TOPIC": "Topic",
     "TYPE": "Type",
     "SCOREBOARD": "Scoreboard",
-    "SCORE": "Score",
+    "POINTS": "Points",
     "RANK": "Rank",
     "HOMEPAGE": "Home"
   },
@@ -45,6 +45,8 @@
       "NOTHING_TO_DO": "There is nothing to do here!"
     },
     "SCOREBOARD": {
+      "NO_ANSWER": "Unanswered",
+      "MISSED_POINTS": "Missed",
       "STATUS_OVER": "The quiz is over. All {{questionsCount}} questions have been answered. Here are the final results:",
       "STATUS_NOT_OVER": "So far, {{publishedAnswersCount}} out of {{questionsCount}} questions have been published. Here are the current results:"
     },
