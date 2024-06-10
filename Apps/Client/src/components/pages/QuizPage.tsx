@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import './QuizPage.scss';
-import QuestionForm from '../components/forms/QuestionForm';
-import { REFRESH_STATUS_INTERVAL } from '../config';
-import AdminQuizForm from '../components/forms/AdminQuizForm';
+import QuestionForm from '../forms/QuestionForm';
+import { REFRESH_STATUS_INTERVAL } from '../../config';
+import AdminQuizForm from '../forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
-import { AspectRatio, Language, NO_QUESTION_INDEX, QuestionType } from '../constants';
+import { AspectRatio, Language, NO_QUESTION_INDEX, QuestionType } from '../../constants';
 import Page from './Page';
-import useQuiz from '../hooks/useQuiz';
-import useUser from '../hooks/useUser';
-import useApp from '../hooks/useApp';
-import useOverlay from '../hooks/useOverlay';
-import { OverlayName } from '../reducers/OverlaysReducer';
-import useQuestion from '../hooks/useQuestion';
-import useServerTimer from '../hooks/useServerTimer';
+import useQuiz from '../../hooks/useQuiz';
+import useUser from '../../hooks/useUser';
+import useApp from '../../hooks/useApp';
+import useOverlay from '../../hooks/useOverlay';
+import { OverlayName } from '../../reducers/OverlaysReducer';
+import useQuestion from '../../hooks/useQuestion';
+import useServerTimer from '../../hooks/useServerTimer';
 
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();

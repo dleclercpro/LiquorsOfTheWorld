@@ -2,9 +2,9 @@ import React from 'react';
 import './QuizzesPage.scss';
 import { useTranslation } from 'react-i18next';
 import Page from './Page';
-import { useSelector } from '../hooks/ReduxHooks';
+import { useSelector } from '../../hooks/ReduxHooks';
 import { Link } from 'react-router-dom';
-import { URL_PARAM_QUIZ_NAME } from '../config';
+import { URL_PARAM_QUIZ_NAME } from '../../config';
 
 const QuizzesPage: React.FC = () => {
   const { t } = useTranslation();

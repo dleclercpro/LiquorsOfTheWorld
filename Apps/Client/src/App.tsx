@@ -1,24 +1,24 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.scss';
-import HomePage from './pages/HomePage';
-import QuizPage from './pages/QuizPage';
-import ScoresPage from './pages/ScoresPage';
+import HomePage from './components/pages/HomePage';
+import QuizPage from './components/pages/QuizPage';
+import ScoresPage from './components/pages/ScoresPage';
 import { DEBUG } from './config';
-import AdminPage from './pages/AdminPage';
+import AdminPage from './components/pages/AdminPage';
 import AuthRoute from './routes/AuthRoute';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
 import { useDispatch } from './hooks/ReduxHooks';
 import Nav from './components/Nav';
-import ErrorPage from './pages/ErrorPage';
+import ErrorPage from './components/pages/ErrorPage';
 import { updateBackgroundAction } from './actions/AppActions';
 import { fetchInitialDataAction } from './actions/DataActions';
 import useQuiz from './hooks/useQuiz';
 import useUser from './hooks/useUser';
 import useApp from './hooks/useApp';
 import LobbyOverlay from './components/overlays/LobbyOverlay';
-import QuizzesPage from './pages/QuizzesPage';
+import QuizzesPage from './components/pages/QuizzesPage';
 
 function App() {
   const dispatch = useDispatch();

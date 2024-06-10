@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './Page.scss';
-import useApp from '../hooks/useApp';
+import useApp from '../../hooks/useApp';
 
 type Props = {
   children: React.ReactNode,
