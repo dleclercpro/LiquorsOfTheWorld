@@ -46,7 +46,12 @@ const AnswerOverlay: React.FC = () => {
   const currentVoteStatus = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount: regularPlayersVoteCount, playersCount: regularPlayersCount });
   const text = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_TEXT');
 
-  const hideAnswer = correctAnswer === null || chosenAnswer === null || (!quiz.isOver && !user.isAdmin && !question.haveAllPlayersAnswered);
+  let hideAnswer = true;
+  if (user.isAdmin) {
+    hideAnswer = correctAnswer === null;
+  } else {
+    hideAnswer = correctAnswer === null || chosenAnswer === null || (!quiz.isOver && !question.haveAllPlayersAnswered);
+  }
 
 
 
@@ -87,7 +92,7 @@ const AnswerOverlay: React.FC = () => {
               ) : (
                 <>
                   <p className='answer-overlay-text'>{text}</p>
-                  <p className='answer-overlay-value'>{correctAnswer.value}</p>
+                  <p className='answer-overlay-value'>{correctAnswer!.value}</p>
                   <p className='answer-overlay-text'>{currentVoteStatus}</p>
 
                   {!quiz.isOver && (user.isAdmin && quiz.isSupervised) && (
