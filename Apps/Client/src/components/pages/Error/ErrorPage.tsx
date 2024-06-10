@@ -1,7 +1,7 @@
 import React from 'react';
 import './ErrorPage.scss';
 import { useTranslation } from 'react-i18next';
-import Page from './Page';
+import Page from '../Page';
 
 const ErrorPage: React.FC = () => {
   const { t } = useTranslation();

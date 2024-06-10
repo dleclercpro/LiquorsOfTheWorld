@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { loginAction, logoutAction, pingAction } from '../actions/UserActions';
 import { CallPingResponseData, UserData } from '../types/DataTypes';
 
-type UserState = {
+export type UserState = {
   status: 'idle' | 'loading' | 'succeeded' | 'failed',
   error: string | null,
 

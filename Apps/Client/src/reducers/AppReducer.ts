@@ -5,7 +5,7 @@ import { Language, NO_QUESTION_INDEX } from '../constants';
 import { INIT_LANGUAGE } from '../i18n';
 import { CallStartQuestionResponseData } from '../types/DataTypes';
 
-interface AppState {
+export type AppState = {
   language: Language,
   version: string | null,
   questionIndex: number, // Current question index in the app

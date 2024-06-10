@@ -1,25 +1,25 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.scss';
-import HomePage from './components/pages/HomePage';
-import QuizPage from './components/pages/QuizPage';
-import ScoresPage from './components/pages/ScoresPage';
+import HomePage from './components/pages/Home/HomePage';
+import QuizPage from './components/pages/Quiz/QuizPage';
+import ScoresPage from './components/pages/Scores/ScoresPage';
 import { DEBUG } from './config';
-import AdminPage from './components/pages/AdminPage';
+import AdminPage from './components/pages/Admin/AdminPage';
 import AuthRoute from './routes/AuthRoute';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
 import { useEffect } from 'react';
 import { useDispatch } from './hooks/ReduxHooks';
 import Nav from './components/Nav';
-import ErrorPage from './components/pages/ErrorPage';
 import { updateBackgroundAction } from './actions/AppActions';
 import { fetchInitialDataAction } from './actions/DataActions';
 import useQuiz from './hooks/useQuiz';
 import useUser from './hooks/useUser';
 import useApp from './hooks/useApp';
 import LobbyOverlay from './components/overlays/LobbyOverlay';
-import QuizzesPage from './components/pages/QuizzesPage';
 import { PageUrl } from './constants';
+import ErrorPage from './components/pages/Error/ErrorPage';
+import QuizzesPage from './components/pages/Quizzes/QuizzesPage';
 
 function App() {
   const dispatch = useDispatch();

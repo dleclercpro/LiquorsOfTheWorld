@@ -7,7 +7,7 @@ import { QuizJSON } from '../types/JSONTypes';
 import { QuizName } from '../constants';
 import { fetchStatusAction, fetchQuestionsAction, fetchPlayersAction, fetchVotesAction, fetchScoresAction, fetchTeamsAction } from '../actions/DataActions';
 
-interface QuizState {
+export type QuizState = {
   id: string | null,
   name: QuizName | null,
   label: string | null,

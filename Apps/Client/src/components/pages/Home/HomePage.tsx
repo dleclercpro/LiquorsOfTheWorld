@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import './HomePage.scss';
-import LoginForm from '../forms/LoginForm';
+import LoginForm from '../../forms/LoginForm';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import Page from './Page';
-import { PageUrl, QuizName } from '../../constants';
-import useUser from '../../hooks/useUser';
-import { DEFAULT_QUIZ_ID, DEFAULT_QUIZ_NAME, DEFAULT_TEAM_ID, URL_PARAM_QUIZ_ID, URL_PARAM_QUIZ_NAME, URL_PARAM_TEAM_ID } from '../../config';
-import useQuiz from '../../hooks/useQuiz';
-import useData from '../../hooks/useData';
-import { setQuizName } from '../../reducers/QuizReducer';
-import { useDispatch } from '../../hooks/ReduxHooks';
+import Page from '../Page';
+import { PageUrl, QuizName } from '../../../constants';
+import useUser from '../../../hooks/useUser';
+import { DEFAULT_QUIZ_ID, DEFAULT_QUIZ_NAME, DEFAULT_TEAM_ID, URL_PARAM_QUIZ_ID, URL_PARAM_QUIZ_NAME, URL_PARAM_TEAM_ID } from '../../../config';
+import useQuiz from '../../../hooks/useQuiz';
+import useData from '../../../hooks/useData';
+import { setQuizName } from '../../../reducers/QuizReducer';
+import { useDispatch } from '../../../hooks/ReduxHooks';
 
 const HomePage: React.FC = () => {
   const [searchParams] = useSearchParams();

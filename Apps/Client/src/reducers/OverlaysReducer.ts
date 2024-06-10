@@ -7,11 +7,11 @@ export enum OverlayName {
   Answer = 'answer',
 }
 
-type OverlayState = {
+export type OverlayState = {
   open: boolean,
 };
 
-type OverlaysState = Record<OverlayName, OverlayState>;
+export type OverlaysState = Record<OverlayName, OverlayState>;
 
 const initialState: OverlaysState = {
   [OverlayName.Loading]: {

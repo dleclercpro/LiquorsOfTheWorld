@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
 import './AdminPage.scss';
-import { useDispatch } from '../../hooks/ReduxHooks';
-import { closeAllOverlays } from '../../reducers/OverlaysReducer';
-import Page from './Page';
+import { useDispatch } from '../../../hooks/ReduxHooks';
+import { closeAllOverlays } from '../../../reducers/OverlaysReducer';
+import Page from '../Page';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { deleteCookie, deleteFromLocalStorage, getCookie, getFromLocalStorage } from '../../utils/storage';
+import { deleteCookie, deleteFromLocalStorage, getCookie, getFromLocalStorage } from '../../../utils/storage';
 import { Snackbar, SnackbarContent, SnackbarOrigin } from '@mui/material';
 import Fade from '@mui/material/Fade';
-import { COOKIE_NAME, URL_PARAM_QUIZ_NAME } from '../../config';
+import { COOKIE_NAME, URL_PARAM_QUIZ_NAME } from '../../../config';
 import { useTranslation } from 'react-i18next';
-import useQuiz from '../../hooks/useQuiz';
-import useUser from '../../hooks/useUser';
-import useDatabase from '../../hooks/useDatabase';
-import { PageUrl } from '../../constants';
+import useQuiz from '../../../hooks/useQuiz';
+import useUser from '../../../hooks/useUser';
+import useDatabase from '../../../hooks/useDatabase';
+import { PageUrl } from '../../../constants';
 
 interface SnackbarState extends SnackbarOrigin {
   open: boolean,

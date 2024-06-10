@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import './ScoresPage.scss';
-import Scoreboard from '../Scoreboard';
-import { useDispatch } from '../../hooks/ReduxHooks';
+import Scoreboard from '../../Scoreboard';
+import { useDispatch } from '../../../hooks/ReduxHooks';
 import { Navigate } from 'react-router-dom';
-import { closeAllOverlays } from '../../reducers/OverlaysReducer';
-import Page from './Page';
+import { closeAllOverlays } from '../../../reducers/OverlaysReducer';
+import Page from '../Page';
 import { useTranslation } from 'react-i18next';
-import useQuiz from '../../hooks/useQuiz';
-import { REFRESH_STATUS_INTERVAL } from '../../config';
-import { PageUrl, UserType } from '../../constants';
-import useUser from '../../hooks/useUser';
+import useQuiz from '../../../hooks/useQuiz';
+import { REFRESH_STATUS_INTERVAL } from '../../../config';
+import { PageUrl, UserType } from '../../../constants';
+import useUser from '../../../hooks/useUser';
 
 const ScoresPage: React.FC = () => {
   const { t } = useTranslation();

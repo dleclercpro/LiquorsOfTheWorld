@@ -71,13 +71,13 @@ const AnswerOverlay: React.FC = () => {
   }
 
   return (
-    <div id='answer-overlay'>
+    <div id='answer-overlay' data-testid='answer-overlay'>
       <div className='answer-overlay-box'>
           <div>
             <div className='answer-overlay-box-left'>
               {hideAnswer ? (
                 <>
-                  <WaitIcon className='answer-overlay-icon wait' />
+                  <WaitIcon className='answer-overlay-icon wait' data-testid='wait-icon' />
                   <p className='answer-overlay-title'>{t('common:OVERLAYS.ANSWER.PLEASE_WAIT_FOR_ALL_PLAYERS')}</p>
                 </>
               ) : (

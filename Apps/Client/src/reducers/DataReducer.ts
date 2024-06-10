@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { fetchQuizNamesAction } from '../actions/DataActions';
 import { QuizData } from '../types/DataTypes';
 
-interface DataState {
+export type DataState = {
   quizzes: QuizData[],
 }
 
