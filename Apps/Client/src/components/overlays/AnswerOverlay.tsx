@@ -22,7 +22,7 @@ const AnswerOverlay: React.FC = () => {
   const user = useUser();
 
   const appQuestionIndex = app.questionIndex;
-  const nextAppQuestionIndex = appQuestionIndex + 1;
+  const nextAppQuestionIndex = appQuestionIndex + 1; // FIXME: 19/18?
 
   const question = useQuestion(appQuestionIndex);
   const overlay = useOverlay(OverlayName.Answer);

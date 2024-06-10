@@ -31,6 +31,7 @@ export type AnswerData = {
 };
 
 export type TimerData = {
+  questionIndex: number,
   startedAt: Date,
   duration: {
     amount: number,

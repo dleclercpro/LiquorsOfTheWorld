@@ -4,15 +4,15 @@ import QuestionForm from '../components/forms/QuestionForm';
 import { REFRESH_STATUS_INTERVAL } from '../config';
 import AdminQuizForm from '../components/forms/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
-import { AspectRatio, Language, QuestionType } from '../constants';
+import { AspectRatio, Language, NO_QUESTION_INDEX, QuestionType } from '../constants';
 import Page from './Page';
-import useServerCountdownTimer from '../hooks/useServerCountdownTimer';
 import useQuiz from '../hooks/useQuiz';
 import useUser from '../hooks/useUser';
 import useApp from '../hooks/useApp';
 import useOverlay from '../hooks/useOverlay';
 import { OverlayName } from '../reducers/OverlaysReducer';
 import useQuestion from '../hooks/useQuestion';
+import useServerTimer from '../hooks/useServerTimer';
 
 const QuizPage: React.FC = () => {  
   const { t, i18n } = useTranslation();
@@ -28,9 +28,12 @@ const QuizPage: React.FC = () => {
   const answerOverlay = useOverlay(OverlayName.Answer);
   const lobbyOverlay = useOverlay(OverlayName.Lobby);
 
-  const timer = useServerCountdownTimer();
+  const timer = useServerTimer();
 
   const [choice, setChoice] = useState('');
+
+  const hasTimerQuestionIndex = quiz.status?.timer?.questionIndex !== undefined;
+  const timerQuestionIndex =  hasTimerQuestionIndex ? quiz.status!.timer!.questionIndex : NO_QUESTION_INDEX;
 
   const isReady = quiz.id !== null && quiz.questions !== null && quiz.status !== null && question !== null && question.data !== null;
 
@@ -77,12 +80,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    quiz.refreshStatusPlayersAndScores()
-      .then(() => {
-        if (timer.isEnabled) {
-          timer.restart();
-        }
-      });
+    quiz.refreshStatusPlayersAndScores();
 
   }, [app.questionIndex]);
 
@@ -108,10 +106,10 @@ const QuizPage: React.FC = () => {
 
     if (choice !== question.answer.chosen.value) {
       setChoice(question.answer.chosen.value);
-    }
 
-    if (!answerOverlay.isOpen) {
-      answerOverlay.open();
+      if (!answerOverlay.isOpen) {
+        answerOverlay.open();
+      }
     }
     
   }, [question.answer.chosen]);
@@ -128,21 +126,38 @@ const QuizPage: React.FC = () => {
 
 
 
+  // FIXME: what if every user is answering at their own pace? Then server timer does not make sense!
   // Start timer if enabled
-  const shouldStartTimer = timer.isEnabled && !timer.isRunning && quiz.isStarted;
+  const shouldStartTimer = quiz.isStarted && timer.isEnabled && !timer.isRunning && !timer.isDone;
+
   useEffect(() => {
     if (shouldStartTimer) {
-      timer.start();
+        timer.start();
     }
   }, [shouldStartTimer]);
 
 
 
+    // Restart timer when moving to next question
+    const shouldRestartTimer = quiz.isStarted && timer.isEnabled && timerQuestionIndex !== NO_QUESTION_INDEX;
+  
+    useEffect(() => {
+      if (shouldRestartTimer) {
+        timer.restart();
+      }
+    }, [timerQuestionIndex]);
+
+
+
+  // FIXME: close answer overlay when timer is up for current question!
   // Show answer once timer has expired
-  const shouldShowAnswer = timer.isEnabled && quiz.isStarted && timer.isDone;
+  const shouldShowAnswer = timer.isEnabled && timer.isDone && quiz.isStarted;
   useEffect(() => {
-    if (shouldShowAnswer) {
+    if (shouldShowAnswer && !answerOverlay.isOpen) {
       answerOverlay.open();
+    }
+    if (!shouldShowAnswer && answerOverlay.isOpen) {
+      answerOverlay.close();
     }
 
   }, [shouldShowAnswer]);
@@ -179,7 +194,7 @@ const QuizPage: React.FC = () => {
       )}
       {quiz.isStarted && (
         <QuestionForm
-          remainingTime={timer.isEnabled && (timer.isRunning || timer.isDone) ? timer.time : undefined}
+          remainingTime={timer.isEnabled ? timer.time : undefined}
           index={question.index}
           topic={question.data!.topic}
           question={question.data!.question}

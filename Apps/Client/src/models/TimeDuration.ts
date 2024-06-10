@@ -25,8 +25,8 @@ class TimeDuration implements Comparable {
         return this.toMs().getAmount();
     }
 
-    public static deserialize(str: string) {
-        return new TimeDuration(parseInt(str, 10), TimeUnit.Millisecond);
+    public static deserialize(amount: number) {
+        return new TimeDuration(amount, TimeUnit.Millisecond);
     }
 
     public isZero() {

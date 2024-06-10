@@ -7,7 +7,6 @@ import { Language, NO_QUESTION_INDEX, NO_VOTE_INDEX, UserType } from '../constan
 import { useTranslation } from 'react-i18next';
 import useApp from './useApp';
 import { setQuestionIndex } from '../reducers/AppReducer';
-import { DEBUG } from '../config';
 import { sleep } from '../utils/time';
 import TimeDuration from '../models/TimeDuration';
 import { TimeUnit } from '../types/TimeTypes';
@@ -72,9 +71,6 @@ const useQuiz = () => {
 
     // Force user to go to next question according to setting
     if (status.isNextQuestionForced && app.questionIndex !== questionIndex) {
-      if (DEBUG) {
-        console.log(`Forcing user to next question: #${questionIndex + 1}`);
-      }
       dispatch(setQuestionIndex(questionIndex));
     }
   }, [status]);

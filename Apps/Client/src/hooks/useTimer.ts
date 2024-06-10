@@ -9,8 +9,9 @@ interface TimerOptions {
   autoStart?: boolean; // Whether to start the timer immediately
 }
 
-const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.Second), autoStart = false }: TimerOptions) => {
-  const [time, setTime] = useState(NO_TIME);
+const useTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.Second), autoStart = false }: TimerOptions) => {
+  const [time, setTime] = useState(duration);
+
   const [isRunning, setIsRunning] = useState(autoStart);
   const [isDone, setIsDone] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -30,7 +31,7 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
       setIsRunning(true);
       setIsDone(false);
     }
-  }, [isRunning, isDone, duration]);
+  }, [isRunning, duration]);
 
 
 
@@ -49,11 +50,10 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
 
   
   const restart = useCallback(() => {
-    if (isRunning) {
-      stop();
-    }
+    stop();
     start();
-  }, [isRunning, stop, start]);
+
+  }, [stop, start]);
 
 
 
@@ -85,13 +85,15 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
         timerRef.current = null;
       }
     };
-  }, [isRunning, interval]);
+  }, [isRunning, time, interval]);
 
 
 
   // Handle timer stop (clean up interval)
   useEffect(() => {
     if (!isRunning && timerRef.current) {
+      console.warn(`Inconsistent state in timer. Resetting it...`);
+
       setIsRunning(false);
       setIsDone(false);
 
@@ -114,4 +116,4 @@ const useCountdownTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.S
   return { time, isRunning, isDone, start, stop, restart };
 };
 
-export default useCountdownTimer;
+export default useTimer;

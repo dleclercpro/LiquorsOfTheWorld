@@ -59,6 +59,7 @@ class Quiz {
                 ...this.status,
                 ...(this.status.timer ? {
                     timer: {
+                        questionIndex: this.status.timer.questionIndex,
                         startedAt: this.status.timer.startedAt!.toUTCString(),
                         duration: this.status.timer.duration,
                     },
@@ -76,6 +77,7 @@ class Quiz {
                 ...quiz.status,
                 ...(quiz.status.timer ? {
                     timer: {
+                        questionIndex: quiz.status.timer.questionIndex,
                         startedAt: new Date(quiz.status.timer.startedAt),
                         duration: quiz.status.timer.duration,
                     },
@@ -162,6 +164,7 @@ class Quiz {
         // Create a timer
         if (isTimed) {
             this.status.timer = {
+                questionIndex: this.getQuestionIndex(),
                 startedAt: new Date(),
                 duration:  {
                     amount: TIMER_DURATION.getAmount(),
@@ -228,6 +231,8 @@ class Quiz {
             throw new Error('MISSING_TIMER');
         }
 
+        // Assign question index to timer so client app knows when a new timer has been created
+        this.status.timer!.questionIndex = this.getQuestionIndex();
         this.status.timer!.startedAt = new Date();
 
         await this.save();

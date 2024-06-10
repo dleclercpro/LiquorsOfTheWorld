@@ -1,10 +1,10 @@
 import TimeDuration from '../models/TimeDuration';
 import { TimeUnit } from '../types/TimeTypes';
-import useCountdownTimer from './useCountdownTimer';
+import useTimer from './useTimer';
 import { NO_TIME } from '../constants';
 import useQuiz from './useQuiz';
 
-const useServerCountdownTimer = () => {
+const useServerTimer = (interval: TimeDuration = new TimeDuration(1, TimeUnit.Second)) => {
   const quiz = useQuiz();
   const data = quiz.status?.timer;
 
@@ -20,8 +20,8 @@ const useServerCountdownTimer = () => {
     remainingTime = NO_TIME;
   }
 
-  const timer = useCountdownTimer({
-    interval: new TimeDuration(1, TimeUnit.Second),
+  const localTimer = useTimer({
+    interval,
     duration: remainingTime,
     autoStart: false,
   });
@@ -30,13 +30,13 @@ const useServerCountdownTimer = () => {
     isEnabled,
     duration,
     startedAt,
-    isRunning: timer.isRunning,
-    isDone: timer.isDone,
-    time: timer.time,
-    start: timer.start,
-    stop: timer.stop,
-    restart: timer.restart,
+    isRunning: localTimer.isRunning,
+    isDone: localTimer.isDone,
+    time: localTimer.time,
+    start: localTimer.start,
+    stop: localTimer.stop,
+    restart: localTimer.restart,
   };
 };
 
-export default useServerCountdownTimer;
+export default useServerTimer;
