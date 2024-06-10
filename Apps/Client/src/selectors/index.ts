@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { NO_QUESTION_INDEX, NO_VOTE_INDEX, USER_TYPES, UserType } from '../constants';
 import { RootState } from '../stores/store';
-import { AnswerData, GroupedVoteCountData } from '../types/DataTypes';
+import { AnswerData, GroupedVoteCountData, PlayerData } from '../types/DataTypes';
 
 const getQuiz = (state: RootState) => state.quiz;
 const getUser = (state: RootState) => state.user;
@@ -113,6 +113,8 @@ export const selectHaveAllPlayersAnswered = createSelector(
       return false;
     }
 
+    const playersToConsider = players.filter((player) => !ignoreAdmins || !player.isAdmin);
+
     let playersWhoHaveVotedCount = 0;
     for (const userType of USER_TYPES) {
       if (userType === UserType.Admin && ignoreAdmins) {
@@ -121,13 +123,11 @@ export const selectHaveAllPlayersAnswered = createSelector(
 
       const voters = Object.keys(votes[userType]);
       for (const voter of voters) {
-        const hasVoted = votes[userType][voter][questionIndex] !== NO_VOTE_INDEX;
-        if (!hasVoted) {
+        if (playersToConsider.findIndex((player) => player.username === voter) === -1) {
           continue;
         }
-
-        const isPlaying = players.map((player) => player.username).includes(voter);
-        if (!isPlaying) {
+        const hasVoted = votes[userType][voter][questionIndex] !== NO_VOTE_INDEX;
+        if (!hasVoted) {
           continue;
         }
 
@@ -135,6 +135,6 @@ export const selectHaveAllPlayersAnswered = createSelector(
       }
     }
 
-    return playersWhoHaveVotedCount === players.length;
+    return playersWhoHaveVotedCount === players.filter.length;
   }
 );

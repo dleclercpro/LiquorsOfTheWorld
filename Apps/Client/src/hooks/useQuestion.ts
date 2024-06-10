@@ -10,7 +10,7 @@ import { selectChosenAnswer, selectCorrectAnswer, selectHaveAllPlayersAnswered, 
 
 
 
-const useQuestion = (index: number) => {
+const useQuestion = (index: number, ignoreAdmins: boolean = true) => {
   const dispatch = useDispatch();
 
   const app = useApp();
@@ -19,7 +19,7 @@ const useQuestion = (index: number) => {
 
   const voteCount = useSelector((state) => selectVoteCounts(state, index));
 
-  const haveAllPlayersAnswered = useSelector((state) => selectHaveAllPlayersAnswered(state, index, true));
+  const haveAllPlayersAnswered = useSelector((state) => selectHaveAllPlayersAnswered(state, index, ignoreAdmins));
 
   const nextQuestionIndex = index + 1;
   const isNextQuestionReady = app.questionIndex < quiz.questionIndex;
