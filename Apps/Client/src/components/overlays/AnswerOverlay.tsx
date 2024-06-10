@@ -46,6 +46,9 @@ const AnswerOverlay: React.FC = () => {
   const currentVoteStatus = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount: regularPlayersVoteCount, playersCount: regularPlayersCount });
   const text = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_TEXT');
 
+
+  
+  // FIXME: show answer when timer is up
   let hideAnswer = true;
   if (user.isAdmin) {
     hideAnswer = correctAnswer === null;
