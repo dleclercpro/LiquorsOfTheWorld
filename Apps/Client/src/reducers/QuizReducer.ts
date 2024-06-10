@@ -5,7 +5,7 @@ import { startQuizAction, startQuestionAction, voteAction } from '../actions/Qui
 import { logoutAction, pingAction } from '../actions/UserActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { QuizName } from '../constants';
-import { fetchStatusAction, fetchQuestionsAction, fetchPlayersAction, fetchVotesAction, fetchScoresAction, fetchTeamsAction } from '../actions/DataActions';
+import { fetchStatusAction, fetchQuestionDataAction, fetchPlayersAction, fetchVotesAction, fetchScoresAction, fetchTeamsAction } from '../actions/DataActions';
 
 export type QuizState = {
   id: string | null,
@@ -68,16 +68,16 @@ export const quizSlice = createSlice({
         state.status.data = null;
       })
 
-      .addCase(fetchQuestionsAction.pending, (state) => {
+      .addCase(fetchQuestionDataAction.pending, (state) => {
         state.questions.status = 'loading';
         state.questions.error = null;
       })
-      .addCase(fetchQuestionsAction.fulfilled, (state, action: PayloadAction<CallGetQuestionsResponseData>) => {
+      .addCase(fetchQuestionDataAction.fulfilled, (state, action: PayloadAction<CallGetQuestionsResponseData>) => {
         state.questions.status = 'succeeded';
         state.questions.error = null;
         state.questions.data = action.payload;
       })
-      .addCase(fetchQuestionsAction.rejected, (state, action) => {
+      .addCase(fetchQuestionDataAction.rejected, (state, action) => {
         state.questions.status = 'failed';
         state.questions.error = action.payload as string;
         state.questions.data = null;

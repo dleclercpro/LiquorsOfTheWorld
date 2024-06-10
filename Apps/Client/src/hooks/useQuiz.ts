@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from './ReduxHooks';
-import { fetchQuestionsAction, fetchAllDataAction, refreshDataAction } from '../actions/DataActions';
+import { fetchQuestionDataAction, fetchAllDataAction, refreshDataAction } from '../actions/DataActions';
 import { startQuizAction as doStartQuiz } from '../actions/QuizActions';
 import { deleteQuizAction as doDeleteQuiz } from '../actions/QuizActions';
 import { Language, NO_QUESTION_INDEX, NO_VOTE_INDEX, UserType } from '../constants';
@@ -15,13 +15,14 @@ import { GroupedScoresData, GroupedVotesData, PlayersData, StatusData } from '..
 import { QuizJSON } from '../types/JSONTypes';
 
 const useQuiz = () => {
-  const { i18n } = useTranslation();
-  const language = i18n.language as Language;
-
+  // Note: no new instances will be created, since the props are directly derived
+  // from the root state
+  const quiz = useSelector(({ quiz }) => quiz);
   const app = useApp();
   const user = useUser();
 
-  const quiz = useSelector(({ quiz }) => quiz);
+  const { i18n } = useTranslation();
+  const language = i18n.language as Language;
 
   const { id, name, label } = quiz;
 
@@ -89,10 +90,10 @@ const useQuiz = () => {
 
 
 
-  const refreshQuestions = useCallback(async () => {
+  const refreshQuestionData = useCallback(async () => {
     if (quiz.name === null || !language) return;
     
-    await dispatch(fetchQuestionsAction({ quizName: quiz.name, language }));
+    await dispatch(fetchQuestionDataAction({ quizName: quiz.name, language }));
   }, [quiz.name, language]);
 
 
@@ -153,7 +154,7 @@ const useQuiz = () => {
     votes,
     scores,
     fetchAllData,
-    refreshQuestions,
+    refreshQuestionData,
     refreshStatusPlayersAndScores,
     start: startQuiz,
     delete: deleteQuiz,

@@ -3,6 +3,8 @@ import { logoutAction as doLogout } from '../actions/UserActions';
 import { useDispatch, useSelector } from './ReduxHooks';
 
 const useUser = () => {
+  // Note: no new instances will be created, since the props are directly derived
+  // from the root state
   const user = useSelector(({ user }) => user);
 
   const [error, setError] = useState('');

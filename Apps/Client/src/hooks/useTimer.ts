@@ -9,6 +9,7 @@ interface TimerOptions {
   autoStart?: boolean; // Whether to start the timer immediately
 }
 
+// Warning: this will create a new timer instance every time it is invoked!
 const useTimer = ({ duration, interval = new TimeDuration(1, TimeUnit.Second), autoStart = false }: TimerOptions) => {
   const [time, setTime] = useState(duration);
 

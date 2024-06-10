@@ -2,6 +2,8 @@ import { OverlayName, closeOverlay, openOverlay } from '../reducers/OverlaysRedu
 import { useDispatch, useSelector } from './ReduxHooks';
 
 const useOverlay = (name: OverlayName) => {
+  // Note: no new instances will be created, since the props are directly derived
+  // from the root state
   const overlays = useSelector(({ overlays }) => overlays);
   
   const dispatch = useDispatch();

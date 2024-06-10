@@ -3,6 +3,8 @@ import useQuiz from './useQuiz';
 import useUser from './useUser';
 
 const useVote = (questionIndex: number) => {
+  // Note: no new instances will be created, since the props are directly derived
+  // from the root state
   const quiz = useQuiz();
   const user = useUser();
 

@@ -24,6 +24,9 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
   const questionsCount = quiz.questions.length;
   const publishedAnswersCount = quiz.isOver ? questionsCount : quiz.questionIndex + 1;
 
+  const regularPlayerUsernames = Object.keys(scores[UserType.Regular]);
+  const adminPlayerUsernames = Object.keys(scores[UserType.Admin]);
+
   const regularUserScores = Object.entries(scores[UserType.Regular]);
   const adminUserScores = Object.entries(scores[UserType.Admin]);
   
@@ -48,49 +51,51 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
         {t(quiz.isOver ? 'PAGES.SCOREBOARD.STATUS_OVER' : 'PAGES.SCOREBOARD.STATUS_NOT_OVER', { questionsCount, publishedAnswersCount })}
       </p>
 
-      <div className='scoreboard-table-container'>
-        {!ignoreAdmins && (
-          <p className='scoreboard-table-title'>
-            <strong>{t('common:COMMON:REGULAR_USER')}</strong>
-          </p>
-        )}
-        <table className='scoreboard-table'>
-          <thead>
-            <tr>
-                <th>{t('common:COMMON.RANK')}</th>
-                <th>{t('common:COMMON.USERNAME')}</th>
-                <th>{t('common:COMMON.POINTS')}</th>
-                {quiz.isTimed && (
-                  <th>{t('PAGES.SCOREBOARD.MISSED_POINTS')}</th>
-                )}
-            </tr>
-          </thead>
-          <tbody>
-            {sortedScores[UserType.Regular].map(({ username, score }, i) => {
-              const unansweredQuestionsCount = quiz.isOver ? publishedAnswersCount - score.total : publishedAnswersCount - 1 - score.total;
+      {regularPlayerUsernames.length > 0 && (
+        <div className='scoreboard-table-container'>
+          {!ignoreAdmins && (
+            <p className='scoreboard-table-title'>
+              <strong>{t('common:COMMON:REGULAR_USER')}</strong>
+            </p>
+          )}
+          <table className='scoreboard-table'>
+            <thead>
+              <tr>
+                  <th>{t('common:COMMON.RANK')}</th>
+                  <th>{t('common:COMMON.USERNAME')}</th>
+                  <th>{t('common:COMMON.POINTS')}</th>
+                  {quiz.isTimed && (
+                    <th>{t('PAGES.SCOREBOARD.MISSED_POINTS')}</th>
+                  )}
+              </tr>
+            </thead>
+            <tbody>
+              {sortedScores[UserType.Regular].map(({ username, score }, i) => {
+                const unansweredQuestionsCount = quiz.isOver ? publishedAnswersCount - score.total : publishedAnswersCount - 1 - score.total;
 
-              return (
-                <tr key={`scoreboard-table-row-${i}`}>
-                    <td>{i + 1}</td>
-                    <td>
-                      <strong>{username}</strong>
-                    </td>
-                    {user.isAdmin ? (
-                      <td>{score.value}/{score.total}</td>
-                    ) : (
-                      <td>{score.value}</td>
-                    )}
-                    {quiz.isTimed && (
-                      <td>{unansweredQuestionsCount}</td>
-                    )}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+                return (
+                  <tr key={`scoreboard-table-row-${i}`}>
+                      <td>{i + 1}</td>
+                      <td>
+                        <strong>{username}</strong>
+                      </td>
+                      {user.isAdmin ? (
+                        <td>{score.value}/{score.total}</td>
+                      ) : (
+                        <td>{score.value}</td>
+                      )}
+                      {quiz.isTimed && (
+                        <td>{unansweredQuestionsCount}</td>
+                      )}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      {!ignoreAdmins && (
+      {!ignoreAdmins && adminPlayerUsernames.length > 0 && (
         <div className='scoreboard-table-container'>
           <p className='scoreboard-table-title'>
             <strong>{t('common:COMMON:ADMIN_USER')}</strong>

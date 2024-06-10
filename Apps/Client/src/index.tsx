@@ -10,6 +10,7 @@ import './index.scss';
 import './i18n';
 import { PersistGate } from 'redux-persist/integration/react';
 import { DEBUG } from './config';
+import { TimerContextProvider } from './components/contexts/TimerContext';
 
 setLogLevel(ENV);
 
@@ -27,7 +28,9 @@ root.render(
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
           <Suspense>
-            <App />
+            <TimerContextProvider>
+              <App />
+            </TimerContextProvider>
           </Suspense>
         </BrowserRouter>
       </PersistGate>

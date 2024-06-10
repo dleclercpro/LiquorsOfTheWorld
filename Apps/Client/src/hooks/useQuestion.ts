@@ -12,11 +12,13 @@ import { NO_QUESTION_INDEX } from '../constants';
 
 
 const useQuestion = (index: number, ignoreAdmins: boolean = true) => {
-  const dispatch = useDispatch();
-
+  // Note: no new instances will be created, since the props are directly derived
+  // from the root state
   const app = useApp();
   const user = useUser();
   const quiz = useQuiz();
+
+  const dispatch = useDispatch();
 
   const voteCount = useSelector((state) => selectVoteCounts(state, index));
 

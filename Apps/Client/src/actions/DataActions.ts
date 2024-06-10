@@ -29,8 +29,8 @@ export const fetchTeamsAction = createServerAction<string, CallGetTeamsResponseD
   },
 );
 
-type FetchQuestionsActionArgs = { language: Language, quizName: QuizName };
-export const fetchQuestionsAction = createServerAction<FetchQuestionsActionArgs, CallGetQuestionsResponseData>(
+type FetchQuestionDataActionArgs = { language: Language, quizName: QuizName };
+export const fetchQuestionDataAction = createServerAction<FetchQuestionDataActionArgs, CallGetQuestionsResponseData>(
   'data/questions',
   async ({ language, quizName }) => {
     const { data } = await new CallGetQuestions(language, quizName).execute();
@@ -103,7 +103,7 @@ export const fetchAllDataAction = createServerAction<FetchAllDataActionArgs, voi
   'data/fetch-all',
   async ({ quizId, quizName, language }, { dispatch }) => {
     const result = await Promise.all([
-      dispatch(fetchQuestionsAction({ language, quizName })), // Must only be fetched once: questions do not change
+      dispatch(fetchQuestionDataAction({ language, quizName })), // Must only be fetched once: questions do not change
       dispatch(fetchTeamsAction(quizId)), // Must only be fetched once: teams do not change
 
       dispatch(fetchStatusAction(quizId)),
