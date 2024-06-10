@@ -7,16 +7,36 @@ const getQuiz = (state: RootState) => state.quiz;
 const getUser = (state: RootState) => state.user;
 const getQuestionIndex = (_state: RootState, questionIndex: number) => questionIndex;
 
-export const selectQuestion = createSelector(
-  [getQuiz, getQuestionIndex],
-  (quiz, questionIndex) => {
-    const questions = quiz.questions.data;
+const getQuestions = createSelector(
+  [getQuiz],
+  (quiz) => quiz.questions.data
+);
 
+const getVotes = createSelector(
+  [getQuiz],
+  (quiz) => quiz.votes.data
+);
+
+const getPlayers = createSelector(
+  [getQuiz],
+  (quiz) => quiz.players.data
+);
+
+const getStatus = createSelector(
+  [getQuiz],
+  (quiz) => quiz.status.data
+);
+
+
+
+export const selectQuestion = createSelector(
+  [getQuestions, getQuestionIndex],
+  (questions, questionIndex) => {
     if (questions === null || questionIndex === NO_QUESTION_INDEX) {
       return null;
     }
 
-    const isQuestionIndexValid = 0 <= questionIndex && questionIndex + 1 <= questions.length;
+    const isQuestionIndexValid = 0 <= questionIndex && questionIndex < questions.length;
     if (!isQuestionIndexValid) {
       throw new Error('INVALID_QUESTION_INDEX');
     }
@@ -26,48 +46,33 @@ export const selectQuestion = createSelector(
 );
 
 export const selectChosenAnswer = createSelector(
-  [getUser, getQuiz, getQuestionIndex],
-  (user, quiz, questionIndex): AnswerData | null => {
-    const votes = quiz.votes.data;
-
-    if (user.username === null || votes === null) {
-      return null;
-    }
-
-    const question = selectQuestion.resultFunc(quiz, questionIndex);
-    if (question === null) {
+  [getUser, getVotes, selectQuestion, getQuestionIndex],
+  (user, votes, question, questionIndex): AnswerData | null => {
+    if (user.username === null || votes === null || question === null) {
       return null;
     }
 
     const currentVotes = votes[user.isAdmin ? UserType.Admin : UserType.Regular][user.username];
-
     if (!currentVotes) {
       return null;
     }
 
-    const vote = currentVotes[questionIndex];
-
-    if (vote === NO_VOTE_INDEX) {
+    const voteIndex = currentVotes[questionIndex];
+    if (voteIndex === NO_VOTE_INDEX) {
       return null;
     }
 
     return {
-      index: questionIndex,
-      value: question.options[vote],
+      index: voteIndex,
+      value: question.options[voteIndex],
     };
   }
 );
 
 export const selectCorrectAnswer = createSelector(
-  [getQuiz, getQuestionIndex],
-  (quiz, questionIndex): AnswerData | null => {
-    const status = quiz.status.data;
-    if (status === null) {
-      return null;
-    }
-
-    const question = selectQuestion.resultFunc(quiz, questionIndex);
-    if (question === null) {
+  [getStatus, selectQuestion],
+  (status, question): AnswerData | null => {
+    if (status === null || question === null) {
       return null;
     }
 
@@ -79,11 +84,8 @@ export const selectCorrectAnswer = createSelector(
 );
 
 export const selectVoteCounts = createSelector(
-  [getQuiz, getQuestionIndex],
-  (quiz, questionIndex) => {
-    const votes = quiz.votes.data;
-    const players = quiz.players.data;
-
+  [getVotes, getPlayers, getQuestionIndex],
+  (votes, players, questionIndex) => {
     if (votes === null || players === null || players.length === 0 || questionIndex === NO_QUESTION_INDEX) {
       return null;
     }
@@ -105,12 +107,8 @@ export const selectVoteCounts = createSelector(
 );
 
 export const selectHaveAllPlayersAnswered = createSelector(
-  [getQuiz, getQuestionIndex, (_state: RootState, _questionIndex: number, ignoreAdmins: boolean) => ignoreAdmins],
-  (quiz, questionIndex, ignoreAdmins) => {
-    const status = quiz.status.data;
-    const votes = quiz.votes.data;
-    const players = quiz.players.data;
-
+  [getStatus, getVotes, getPlayers, getQuestionIndex, (_state: RootState, _questionIndex: number, ignoreAdmins: boolean) => ignoreAdmins],
+  (status, votes, players, questionIndex, ignoreAdmins) => {
     if (status === null || votes === null || players === null || players.length === 0 || questionIndex === NO_QUESTION_INDEX) {
       return false;
     }

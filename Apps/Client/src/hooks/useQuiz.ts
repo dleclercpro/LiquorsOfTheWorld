@@ -12,7 +12,8 @@ import { sleep } from '../utils/time';
 import TimeDuration from '../models/TimeDuration';
 import { TimeUnit } from '../types/TimeTypes';
 import useUser from './useUser';
-import { GroupedScoresData, GroupedVotesData } from '../types/DataTypes';
+import { GroupedScoresData, GroupedVotesData, PlayersData, StatusData } from '../types/DataTypes';
+import { QuizJSON } from '../types/JSONTypes';
 
 const useQuiz = () => {
   const { i18n } = useTranslation();
@@ -25,12 +26,12 @@ const useQuiz = () => {
 
   const { id, name } = quiz;
 
-  const questions = quiz.questions.data;
-  const status = quiz.status.data;
-  const teams = quiz.teams.data ?? [];
-  const players = quiz.players.data ?? [];
-  const votes = quiz.votes.data ?? { [UserType.Admin]: {}, [UserType.Regular]: {} } as GroupedVotesData;
-  const scores = quiz.scores.data ?? { [UserType.Admin]: {}, [UserType.Regular]: {} } as GroupedScoresData;
+  const questions: QuizJSON | null = quiz.questions.data ?? null;
+  const status: StatusData | null = quiz.status.data ?? null;
+  const teams: string[] = quiz.teams.data ?? [];
+  const players: PlayersData = quiz.players.data ?? [];
+  const votes: GroupedVotesData = quiz.votes.data ?? { [UserType.Admin]: {}, [UserType.Regular]: {} };
+  const scores: GroupedScoresData = quiz.scores.data ?? { [UserType.Admin]: {}, [UserType.Regular]: {} };
 
   const questionIndex = status?.questionIndex ?? 0;
   

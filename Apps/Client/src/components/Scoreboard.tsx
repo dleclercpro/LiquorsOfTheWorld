@@ -51,7 +51,7 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
       <div className='scoreboard-table-container'>
         {!ignoreAdmins && (
           <p className='scoreboard-table-title'>
-            <strong>Regulars</strong>
+            <strong>{t('common:COMMON:REGULAR_USER')}</strong>
           </p>
         )}
         <table className='scoreboard-table'>
@@ -85,7 +85,7 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
       {!ignoreAdmins && (
         <div className='scoreboard-table-container'>
           <p className='scoreboard-table-title'>
-            <strong>Admins</strong>
+            <strong>{t('common:COMMON:ADMIN_USER')}</strong>
           </p>
           <table className='scoreboard-table'>
             <thead>

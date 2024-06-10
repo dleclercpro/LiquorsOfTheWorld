@@ -16,6 +16,8 @@
     "USERNAME": "Username",
     "QUIZ": "Quiz",
     "TEAM": "Team",
+    "REGULAR_USER": "Regular user",
+    "ADMIN_USER": "Admin user",
     "QUESTION": "Question",
     "TOPIC": "Topic",
     "TYPE": "Type",
