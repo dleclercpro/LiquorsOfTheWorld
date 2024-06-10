@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { NO_QUESTION_INDEX, NO_VOTE_INDEX, USER_TYPES, UserType } from '../constants';
 import { RootState } from '../stores/store';
-import { AnswerData, GroupedVoteCountData, PlayerData } from '../types/DataTypes';
+import { AnswerData, GroupedVoteCountData } from '../types/DataTypes';
 
 const getQuiz = (state: RootState) => state.quiz;
 const getUser = (state: RootState) => state.user;

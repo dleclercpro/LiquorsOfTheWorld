@@ -21,6 +21,8 @@ export const QUIZ_TIMER_URGENT_TIME = new TimeDuration(10, TimeUnit.Second);
 
 // Defaults
 export const DEFAULT_QUIZ_NAME = process.env.REACT_APP_DEFAULT_QUIZ_NAME!;
+export const DEFAULT_QUIZ_ID = process.env.REACT_APP_DEFAULT_QUIZ_ID!;
+export const DEFAULT_TEAM_ID = process.env.REACT_APP_DEFAULT_TEAM_ID!;
 
 // URL
 export const URL_PARAM_QUIZ_NAME = 'q';
