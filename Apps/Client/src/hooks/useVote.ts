@@ -1,4 +1,4 @@
-import { NO_QUESTION_INDEX, NO_VOTE_INDEX } from '../constants';
+import { NO_QUESTION_INDEX, NO_VOTE_INDEX, UserType } from '../constants';
 import useQuiz from './useQuiz';
 import useUser from './useUser';
 
@@ -6,10 +6,10 @@ const useVote = (questionIndex: number) => {
   const quiz = useQuiz();
   const user = useUser();
 
-  const users = Object.keys(quiz.votes.users);
-  const admins = Object.keys(quiz.votes.admins);
+  const regularUserVotes = Object.keys(quiz.votes[UserType.Regular]);
+  const adminUserVotes = Object.keys(quiz.votes[UserType.Admin]);
 
-  if (user.username === null || quiz.questions === null || users.length === 0 || admins.length === 0 || questionIndex === NO_QUESTION_INDEX) {
+  if (user.username === null || quiz.questions === null || regularUserVotes.length === 0 || adminUserVotes.length === 0 || questionIndex === NO_QUESTION_INDEX) {
     return {
       index: null,
       value: null,
@@ -17,7 +17,7 @@ const useVote = (questionIndex: number) => {
   }
 
   const question = quiz.questions[questionIndex];
-  const voteIndex = user.isAdmin ? quiz.votes.admins[user.username][questionIndex] : quiz.votes.users[user.username][questionIndex];
+  const voteIndex = quiz.votes[user.isAdmin ? UserType.Admin : UserType.Regular][user.username][questionIndex];
 
   // User hasn't voted on that question yet
   if (voteIndex === NO_VOTE_INDEX) {

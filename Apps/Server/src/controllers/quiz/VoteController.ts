@@ -73,7 +73,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         await APP_DB.setUserVotes(quiz, username, userVotes);
 
         // Find out how many users have voted on current question
-        const playersWhoVoted = await APP_DB.getPlayersWhoVoted(quiz, questionIndex);
+        const playersWhoVoted = await APP_DB.getUsernamesOfPlayersWhoVoted(quiz, questionIndex);
         const players = quiz.getPlayers();
         const haveAllPlayersVoted = playersWhoVoted.length === players.length;
         logger.trace(`Players who voted so far on question ${questionIndexAsString}: ${playersWhoVoted.length}/${players.length}`);

@@ -12,6 +12,10 @@ const AdminQuizForm: React.FC = () => {
 
   const quiz = useQuiz();
 
+  const regularPlayers = quiz.players.filter((player) => !player.isAdmin);
+
+
+
   const handleIsSupervisedCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setIsSupervised(!isSupervised);
   }
@@ -44,8 +48,8 @@ const AdminQuizForm: React.FC = () => {
 
       <p className='admin-quiz-form-text'>
         <Trans
-          i18nKey={quiz.players.length === 1 ? 'FORMS.START_QUIZ.SINGLE_PLAYER_WAITING' : 'FORMS.START_QUIZ.MANY_PLAYERS_WAITING'}
-          values={{ id: quiz.id, count: quiz.players.length }}
+          i18nKey={regularPlayers.length === 1 ? 'FORMS.START_QUIZ.SINGLE_PLAYER_WAITING' : 'FORMS.START_QUIZ.MANY_PLAYERS_WAITING'}
+          values={{ id: quiz.id, count: regularPlayers.length }}
         >
           ... <strong>...</strong> ...
         </Trans>

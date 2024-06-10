@@ -10,6 +10,7 @@ import useApp from '../../hooks/useApp';
 import useOverlay from '../../hooks/useOverlay';
 import { OverlayName } from '../../reducers/OverlaysReducer';
 import useQuestion from '../../hooks/useQuestion';
+import { UserType } from '../../constants';
 
 const AnswerOverlay: React.FC = () => {
   const navigate = useNavigate();
@@ -29,20 +30,20 @@ const AnswerOverlay: React.FC = () => {
 
 
   // Wait until quiz data has been fetched
-  const isReady = !(quiz.id === null || quiz.questions === null || quiz.status === null || quiz.players.length === 0 || question.voteCount === null);
-  if (!isReady) {
+  if (quiz.id === null || quiz.questions === null || quiz.status === null || quiz.players.length === 0 || question.voteCount === null) {
     return null;
   }
 
   const correctAnswer = question.answer.correct;
   const chosenAnswer = question.answer.chosen;
 
-  const playersCount = quiz.players.length;
+  const regularPlayersCount = quiz.players.filter((player) => !player.isAdmin).length;
+  const regularPlayersVoteCount = question.voteCount[UserType.Regular];
 
   const Icon = question.answer.isCorrect ? RightIcon : WrongIcon;
   const iconText = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_ICON_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_ICON_TEXT');
 
-  const currentVoteStatus = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount: question.voteCount, playersCount });
+  const currentVoteStatus = t('common:OVERLAYS.ANSWER.CURRENT_STATUS', { voteCount: regularPlayersVoteCount, playersCount: regularPlayersCount });
   const text = t(question.answer.isCorrect ? 'OVERLAYS.ANSWER.RIGHT_ANSWER_TEXT' : 'OVERLAYS.ANSWER.WRONG_ANSWER_TEXT');
 
   const hideAnswer = correctAnswer === null || chosenAnswer === null || (!quiz.isOver && !user.isAdmin && !question.haveAllPlayersAnswered);

@@ -1,10 +1,10 @@
 import { randomUUID } from 'crypto';
 import { APP_DB } from '..';
-import { Language, NO_VOTE_INDEX, QUIZ_NAMES, QuizName } from '../constants';
+import { Language, QUIZ_NAMES, QuizName } from '../constants';
 import InvalidQuizNameError from '../errors/InvalidQuizNameError';
 import QuizAlreadyExistsError from '../errors/QuizAlreadyExistsError';
 import logger from '../logger';
-import { getRange, unique } from '../utils/array';
+import { unique } from '../utils/array';
 import User from './users/User';
 import QuizManager from './QuizManager';
 import InvalidQuestionIndexError from '../errors/InvalidQuestionIndexError';
@@ -181,16 +181,17 @@ class Quiz {
         await this.save();
     }
 
-    public async addUserToPlayers(user: User, teamId: string = '') {
+    public async addUserToPlayers(user: User, teamId: string) {
         this.players = unique([...this.players, {
             username: user.getUsername(),
+            isAdmin: user.isAdmin(),
             teamId,
         }]);
 
         await this.save();
     }
 
-    public isUserPlaying(user: User, teamId: string = '') {
+    public isUserPlaying(user: User, teamId: string) {
         return this.players
             .filter((player) => player.teamId === teamId)
             .map((player) => player.username)
@@ -236,7 +237,7 @@ class Quiz {
         await APP_DB.set(`quiz:${this.id}`, this.serialize());
     }
 
-    public static async create(id: string, name: QuizName, username: string, teamId: string = '') {
+    public static async create(id: string, name: QuizName, username: string, teamId: string) {
         logger.info(`Creating a new quiz '${name}' (ID = ${id})...`);
 
         if (!QUIZ_NAMES.includes(name)) {
@@ -261,9 +262,9 @@ class Quiz {
             },
         });
 
-        // Add creator user to players if it's NOT an admin
+        // Add creator user to players
         const user = await User.get(username);
-        if (user && !user.isAdmin()) {
+        if (user) {
             await quiz.addUserToPlayers(user, teamId);
         }
 

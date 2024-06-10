@@ -13,6 +13,7 @@ import User from '../../models/users/User';
 import Quiz from '../../models/Quiz';
 import { CallLogInRequestData, CallLogInResponseData } from '../../types/DataTypes';
 import { isPasswordValid } from '../../utils/crypto';
+import { UserType } from '../../constants';
 
 const LoginController: RequestHandler = async (req, res, next) => {
     try {
@@ -20,7 +21,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
 
         // Check if user is admin based on env variable
         const isAdmin = ADMINS.findIndex(admin => admin.username === username) !== -1;
-        logger.trace(`Attempt to join quiz '${quizName}' with ID '${quizId}' as ${isAdmin ? 'admin' : 'user'} '${username}'...`);
+        logger.trace(`Attempt to join quiz '${quizName}' with ID '${quizId}' as ${isAdmin ? UserType.Admin : UserType.Regular} user '${username}'...`);
 
         // In case a team is specified, but it doesn't exist
         if (TEAMS_ENABLE) {
@@ -42,7 +43,7 @@ const LoginController: RequestHandler = async (req, res, next) => {
             }
 
             // Only admins can create new quizzes
-            quiz = await Quiz.create(quizId, quizName, username);
+            quiz = await Quiz.create(quizId, quizName, username, teamId);
         }
 
         // If user exists: check if password is valid
@@ -65,15 +66,15 @@ const LoginController: RequestHandler = async (req, res, next) => {
         // already exist
         if (!user) {
             if (isAdmin) {
-                user = await User.create({ username, password }, true);
+                user = await User.create({ username, password }, UserType.Admin);
             } else {
-                user = await User.create({ username, password }, false);
+                user = await User.create({ username, password }, UserType.Regular);
             }
         }
 
         // Check if quiz has already started and non-admin user is playing
         const isUserPlaying = quiz.isUserPlaying(user!, teamId);
-        if (!isUserPlaying && !user.isAdmin()) {
+        if (!isUserPlaying) {
             logger.debug(`User '${username}' is not part of the quiz.`);
             if (quiz.isStarted()) {
                 throw new QuizAlreadyStartedError();

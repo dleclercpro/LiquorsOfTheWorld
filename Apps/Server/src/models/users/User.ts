@@ -4,27 +4,28 @@ import logger from '../../logger';
 import HashError from '../../errors/HashError';
 import { Auth } from '../../types';
 import { APP_DB } from '../..';
+import { UserType } from '../../constants';
 
-type UserArgs = Auth & { admin: boolean };
+type UserArgs = Auth & { type: UserType };
 
 
 
 class User {
     protected username: string;
     protected password: string;
-    protected admin: boolean;
+    protected type: UserType;
 
     public constructor(args: UserArgs) {
         this.username = args.username;
         this.password = args.password;
-        this.admin = args.admin;
+        this.type = args.type;
     }
 
     public serialize() {
-        const { username, password, admin } = this;
+        const { username, password, type } = this;
 
         return JSON.stringify({
-            username, password, admin,
+            username, password, type,
         });
     }
 
@@ -44,8 +45,12 @@ class User {
         return this.password;
     }
 
+    public getType() {
+        return this.type;
+    }
+
     public isAdmin() {
-        return this.admin;
+        return this.type === UserType.Admin;
     }
 
     public static isAdmin(username: string) {
@@ -72,15 +77,15 @@ class User {
         await APP_DB.set(`users:${this.username}`, this.serialize());
     }
 
-    public static async create(auth: Auth, admin: boolean = false) {
+    public static async create(auth: Auth, type: UserType = UserType.Regular) {
         const username = auth.username.toLowerCase();
         const password = auth.password;
 
-        logger.trace(`Creating ${admin ? 'admin' : 'user'} '${username}'...`);
+        logger.trace(`Creating ${type} user '${username}'...`);
         const user = new User({
             username,
             password: await User.hashPassword(password),
-            admin,
+            type,
         });
       
         // Store user in DB

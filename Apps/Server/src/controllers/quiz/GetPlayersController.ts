@@ -28,11 +28,9 @@ const GetPlayersController: RequestHandler = async (req, res, next) => {
     try {
         const { quiz } = await validateParams(req.params);
 
-        const players: PlayersData = quiz.getPlayers();
+        const response: PlayersData = quiz.getPlayers();
 
-        return res.json(
-            successResponse(players)
-        );
+        return res.json(successResponse(response));
 
     } catch (err: any) {
         next(err);

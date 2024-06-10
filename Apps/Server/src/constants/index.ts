@@ -6,12 +6,17 @@ export const ENVIRONMENTS = Object.values(Environment);
 export enum Language {
   EN = 'en',
   DE = 'de',
-}
+};
+
+export enum UserType {
+  Regular = 'regular',
+  Admin = 'admin',
+};
 
 export enum QuizName {
   Liquors = 'liquors',
   KonnyUndJohannes = 'k-und-j',
-}
+};
 
 export enum QuestionType {
   Text = 'text',
@@ -29,8 +34,10 @@ export const APP_NAME = label;
 
 export const EPOCH_TIME_INIT = new Date(0);
 
-export const NO_VOTE_INDEX = -1;
-
 export const SEPARATOR = '|';
 export const NEW_LINE_REGEXP = /[\r\n]+/;
 export const NEW_LINE = '\n';
+
+export const USER_TYPES = Object.values(UserType);
+
+export const NO_VOTE_INDEX = -1;

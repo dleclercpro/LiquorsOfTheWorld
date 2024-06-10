@@ -1,11 +1,15 @@
 import { Auth, TimeUnit } from '.';
-import { Language, QuizName } from '../constants';
+import { Language, QuizName, UserType } from '../constants';
 import { QuizJSON } from './JSONTypes';
 
 export type FetchedData<Data> = {
   data: Data | null,
   status: 'idle' | 'loading' | 'succeeded' | 'failed',
   error: string | null,
+};
+
+export type VersionData = {
+  version: string,
 };
 
 export type UserData = {
@@ -20,34 +24,10 @@ export type QuizData = {
   quizId: string,
 };
 
-export type PingData = UserData & QuizData;
-
-export type LoginData = Auth & QuizData & {
-  teamId: string,
-};
-
-export type VersionData = {
-  version: string,
-};
-
-export type VotesData = number[];
-
-export type GroupedVotesData = {
-  admins: Record<string, VotesData>,
-  users: Record<string, VotesData>,
-};
-
 export type AnswerData = {
   index: number,
   value: string,
 };
-
-export type PlayerData = {
-  username: string,
-  teamId?: string,
-};
-
-export type PlayersData = PlayerData[];
 
 export type TimerData = {
   startedAt: Date,
@@ -66,14 +46,44 @@ export type StatusData = {
   timer?: TimerData,
 };
 
-export type ScoresData = Record<string, {
+export type PingData = UserData & QuizData;
+
+export type LoginData = Auth & QuizData & {
+  teamId: string,
+};
+
+export type PlayerData = {
+  username: string,
+  isAdmin: boolean,
+  teamId?: string,
+};
+
+export type PlayersData = PlayerData[];
+
+export type VotesData = number[];
+
+export type GroupedVotesData = {
+  [UserType.Admin]: Record<string, VotesData>,
+  [UserType.Regular]: Record<string, VotesData>,
+};
+
+export type VoteCountData = number;
+
+export type GroupedVoteCountData = {
+  [UserType.Admin]: VoteCountData,
+  [UserType.Regular]: VoteCountData,
+};
+
+export type ScoreData = {
   value: number,
   total: number,
-}>;
+};
+
+export type ScoresData = Record<string, ScoreData>;
 
 export type GroupedScoresData = {
-  admins: ScoresData,
-  users: ScoresData,
+  [UserType.Admin]: ScoresData,
+  [UserType.Regular]: ScoresData,
 };
 
 

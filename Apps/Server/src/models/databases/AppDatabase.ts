@@ -1,12 +1,11 @@
 import { ADMINS, REDIS_DATABASE, REDIS_ENABLE, REDIS_OPTIONS, USERS } from '../../config';
-import { sum } from '../../utils/math';
 import RedisDatabase from './base/RedisDatabase';
 import QuizManager from '../QuizManager';
 import MemoryDatabase from './base/MemoryDatabase';
 import User from '../users/User';
 import Quiz from '../Quiz';
-import { NO_VOTE_INDEX } from '../../constants';
-import { GroupedVotesData, ScoresData } from '../../types/DataTypes';
+import { NO_VOTE_INDEX, USER_TYPES, UserType } from '../../constants';
+import { GroupedScoresData, GroupedVotesData } from '../../types/DataTypes';
 
 const SEPARATOR = '|';
 
@@ -28,7 +27,7 @@ class AppDatabase {
             const admin = await User.get(username);
         
             if (!admin) {
-                await User.create({ username, password }, true);
+                await User.create({ username, password }, UserType.Admin);
             }
         });
 
@@ -37,7 +36,7 @@ class AppDatabase {
             const user = await User.get(username);
         
             if (!user) {
-                await User.create({ username, password }, false);
+                await User.create({ username, password }, UserType.Regular);
             }
         });
     }
@@ -95,43 +94,43 @@ class AppDatabase {
 
     
     public async getAllVotes(quiz: Quiz): Promise<GroupedVotesData> {
-        const votes: GroupedVotesData = { users: {}, admins: {} };
-    
-        const playerUsernames = quiz.getPlayers().map((player) => player.username);
-        for (const playerUsername of playerUsernames) {
-            votes.users[playerUsername] = await this.getUserVotes(quiz, playerUsername);
-        }
+        const votes: GroupedVotesData = { [UserType.Regular]: {}, [UserType.Admin]: {} };
 
-        // FIXME: those should be stored somewhere?
-        const adminUsernames = ADMINS.map((admin) => admin.username);
-        for (const adminUsername of adminUsernames) {
-            votes.admins[adminUsername] = await this.getUserVotes(quiz, adminUsername);
+        for (const player of quiz.getPlayers()) {
+            const user = await User.get(player.username) as User;
+            
+            votes[user.getType()][player.username] = await this.getUserVotes(quiz, player.username);
         }
         
         return votes;
     }
 
-    public async getAllScores(quiz: Quiz) {
-        const questions = await QuizManager.get(quiz.getName());
-        const answers = questions.map((question) => question.answer);
-        const votes = await this.getAllVotes(quiz);
+    public async getAllScores(quiz: Quiz): Promise<GroupedScoresData> {
+        const scores: GroupedScoresData = { [UserType.Regular]: {}, [UserType.Admin]: {} };
 
-        const scores = Object
-            .entries(votes.users) // FIXME: only return user votes, not admin ones
-            .reduce((prev, [voter, voterVotes]) => {
-                return {
-                    ...prev,
-                    [voter]: {
-                        total: voterVotes.filter((vote) => vote !== NO_VOTE_INDEX).length,
-                        value: sum(answers
-                            .map((answerIndex, i) => answerIndex === voterVotes[i])
-                            .map((x) => Number(x))
-                        ),
-                    },
-                };
-            }, {} as ScoresData);
+        for (const player of quiz.getPlayers()) {
+            const user = await User.get(player.username) as User;
+
+            scores[user.getType()][player.username] = await this.getUserScores(quiz, user);
+        }
     
         return scores;
+    }
+
+    public async getUserScores(quiz: Quiz, user: User) {
+        const votes = await this.getAllVotes(quiz);
+        const questions = await QuizManager.get(quiz.getName());
+        const answers = questions.map((question) => question.answer);
+
+        const userVotes = votes[user.getType()][user.getUsername()];
+
+        return {
+            total: userVotes
+                .filter((vote) => vote !== NO_VOTE_INDEX).length,
+            value: answers
+                .filter((answerIndex, i) => answerIndex === userVotes[i])
+                .length
+        };
     }
 
     public async getUserVotes(quiz: Quiz, username: string) {
@@ -165,13 +164,23 @@ class AppDatabase {
         return votes.split(SEPARATOR).map(Number);
     }
 
-    public async getPlayersWhoVoted(quiz: Quiz, questionIndex: number) {
+    public async getUsernamesOfPlayersWhoVoted(quiz: Quiz, questionIndex: number) {
         const votes = await this.getAllVotes(quiz);
 
-        // FIXME: only consider regular users
-        const voters = Object.keys(votes.users);
+        let usernamesOfPlayersWhoVoted: string[] = [];
 
-        return voters.filter((voter) => votes.users[voter][questionIndex] !== NO_VOTE_INDEX);
+        for (const userType of USER_TYPES) {
+            const allVotesForUserType = Object.entries(votes[userType]);
+
+            usernamesOfPlayersWhoVoted = [
+                ...usernamesOfPlayersWhoVoted, 
+                ...allVotesForUserType
+                    .filter(([_, playerVotes]) => playerVotes[questionIndex] !== NO_VOTE_INDEX)
+                    .map(([player, _]) => player),
+            ];
+        }
+
+        return usernamesOfPlayersWhoVoted;
     }
 }
 

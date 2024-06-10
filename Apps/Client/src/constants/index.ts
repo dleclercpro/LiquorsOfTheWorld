@@ -12,10 +12,15 @@ export enum Language {
   DE = 'de',
 };
 
+export enum UserType {
+  Regular = 'regular',
+  Admin = 'admin',
+};
+
 export enum QuizName {
   Liquors = 'liquors',
   KonnyUndJohannes = 'k-und-j',
-}
+};
 
 export enum QuestionType {
   Text = 'text',
@@ -27,7 +32,9 @@ export enum AspectRatio {
   Square = '1:1',
   FourByThree = '4:3',
   SixteenByNine = '16:9',
-}
+};
+
+export const USER_TYPES = Object.values(UserType);
 
 export const NO_TIME = new TimeDuration(0, TimeUnit.Millisecond);
 export const NO_VOTE_INDEX = -1;

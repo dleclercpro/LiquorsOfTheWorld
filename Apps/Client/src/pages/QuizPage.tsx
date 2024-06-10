@@ -106,7 +106,9 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    setChoice(question.answer.chosen.value);
+    if (choice !== question.answer.chosen.value) {
+      setChoice(question.answer.chosen.value);
+    }
 
     if (!answerOverlay.isOpen) {
       answerOverlay.open();

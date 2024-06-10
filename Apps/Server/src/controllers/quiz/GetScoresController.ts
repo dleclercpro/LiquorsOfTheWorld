@@ -7,6 +7,9 @@ import InvalidParamsError from '../../errors/InvalidParamsError';
 import { GroupedScoresData, ScoresData } from '../../types/DataTypes';
 import { ADMINS } from '../../config';
 import Quiz from '../../models/Quiz';
+import { UserType } from '../../constants';
+import User from '../../models/users/User';
+import logger from '../../logger';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -29,33 +32,11 @@ const GetScoresController: RequestHandler = async (req, res, next) => {
     try {
         const { quiz } = await validateParams(req.params);
 
-        const scores: ScoresData = await APP_DB.getAllScores(quiz);
+        logger.trace(`Reading all scores of quiz: ID = ${quiz.getId()}`);
 
-        const admins = ADMINS.map((admin) => admin.username);
+        const response: GroupedScoresData = await APP_DB.getAllScores(quiz);
 
-        return res.json(
-            successResponse(
-                Object.entries(scores).reduce((prev, [scorer, score]) => {
-                    if (admins.includes(scorer)) {
-                        return {
-                            ...prev,
-                            admins: {
-                                ...prev.admins,
-                                [scorer]: score,
-                            },
-                        };
-                    }
-
-                    return {
-                        ...prev,
-                        users: {
-                            ...prev.users,
-                            [scorer]: score,
-                        },
-                    };
-                }, { admins: {}, users: {} } as GroupedScoresData),
-            )
-        );
+        return res.json(successResponse(response));
 
     } catch (err: any) {
         next(err);

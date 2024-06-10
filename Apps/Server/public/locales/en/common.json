@@ -62,6 +62,8 @@
       "FORCE_NEXT_QUESTION": "Force next question",
       "SINGLE_PLAYER_WAITING": "There is currently <1>1 player</1> waiting to play this quiz (ID = {{ id }}).",
       "MANY_PLAYERS_WAITING": "There are currently <1>{{count}} players</1> waiting to play this quiz (ID = {{ id }}).",
+      "SINGLE_ADMIN_WAITING": "There is currently <1>1 admin</1> waiting to start this quiz (ID = {{ id }}).",
+      "MANY_ADMINS_WAITING": "There are currently <1>{{count}} admins</1> waiting to start this quiz (ID = {{ id }}).",
       "START_QUIZ": "Yes, let's go!",
       "DELETE_QUIZ": "No, delete the quiz."
     },

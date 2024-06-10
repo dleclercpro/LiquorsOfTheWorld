@@ -6,6 +6,7 @@ import InvalidQuizIdError from '../../errors/InvalidQuizIdError';
 import InvalidParamsError from '../../errors/InvalidParamsError';
 import Quiz from '../../models/Quiz';
 import { CallGetVotesResponseData } from '../../types/DataTypes';
+import logger from '../../logger';
 
 const validateParams = async (params: ParamsDictionary) => {
     const { quizId } = params;
@@ -27,6 +28,8 @@ const validateParams = async (params: ParamsDictionary) => {
 const GetVotesController: RequestHandler = async (req, res, next) => {
     try {
         const { quiz } = await validateParams(req.params);
+
+        logger.trace(`Reading all votes of quiz: ID = ${quiz.getId()}`);
 
         const response: CallGetVotesResponseData = await APP_DB.getAllVotes(quiz);
 

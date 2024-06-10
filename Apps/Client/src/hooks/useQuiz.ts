@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from './ReduxHooks';
 import { fetchQuestionsAction, fetchAllDataAction, refreshDataAction } from '../actions/DataActions';
 import { startQuizAction as doStartQuiz } from '../actions/QuizActions';
 import { deleteQuizAction as doDeleteQuiz } from '../actions/QuizActions';
-import { Language, NO_QUESTION_INDEX, NO_VOTE_INDEX } from '../constants';
+import { Language, NO_QUESTION_INDEX, NO_VOTE_INDEX, UserType } from '../constants';
 import { useTranslation } from 'react-i18next';
 import useApp from './useApp';
 import { setQuestionIndex } from '../reducers/AppReducer';
@@ -12,6 +12,7 @@ import { sleep } from '../utils/time';
 import TimeDuration from '../models/TimeDuration';
 import { TimeUnit } from '../types/TimeTypes';
 import useUser from './useUser';
+import { GroupedScoresData, GroupedVotesData } from '../types/DataTypes';
 
 const useQuiz = () => {
   const { i18n } = useTranslation();
@@ -28,8 +29,8 @@ const useQuiz = () => {
   const status = quiz.status.data;
   const teams = quiz.teams.data ?? [];
   const players = quiz.players.data ?? [];
-  const votes = quiz.votes.data ?? { admins: {}, users: {} };
-  const scores = quiz.scores.data ?? { admins: {}, users: {} };
+  const votes = quiz.votes.data ?? { [UserType.Admin]: {}, [UserType.Regular]: {} } as GroupedVotesData;
+  const scores = quiz.scores.data ?? { [UserType.Admin]: {}, [UserType.Regular]: {} } as GroupedScoresData;
 
   const questionIndex = status?.questionIndex ?? 0;
   
@@ -46,7 +47,7 @@ const useQuiz = () => {
   const initializeQuestionIndex = useCallback(() => {
     if (user.username === null) return;
 
-    const currentVotes = user.isAdmin ? votes.admins[user.username] : votes.users[user.username];
+    const currentVotes = votes[user.isAdmin ? UserType.Admin : UserType.Regular][user.username];
 
     if (!currentVotes || currentVotes.length === 0) return;
     const lastQuestionIndex = currentVotes.length - 1;

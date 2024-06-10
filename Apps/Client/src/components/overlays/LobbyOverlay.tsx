@@ -11,6 +11,8 @@ const LobbyOverlay: React.FC = () => {
   const quiz = useQuiz();
   const user = useUser();
 
+  const regularPlayers = quiz.players.filter((player) => !player.isAdmin);
+
   const overlay = useOverlay(OverlayName.Lobby);
 
   const username = user.username ?? '';
@@ -32,9 +34,9 @@ const LobbyOverlay: React.FC = () => {
           {t('OVERLAYS.LOBBY.TEXT', { id: quiz.id })}
         </p>
 
-        {quiz.players.length > 0 && (
+        {regularPlayers.length > 0 && (
           <ul className='lobby-overlay-players-box'>
-            {quiz.players.map((player, i) => (
+            {regularPlayers.map((player, i) => (
               <li key={i}>
                 {player.username}
               </li>

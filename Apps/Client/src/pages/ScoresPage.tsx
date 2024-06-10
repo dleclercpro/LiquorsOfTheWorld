@@ -8,6 +8,8 @@ import Page from './Page';
 import { useTranslation } from 'react-i18next';
 import useQuiz from '../hooks/useQuiz';
 import { REFRESH_STATUS_INTERVAL } from '../config';
+import { UserType } from '../constants';
+import useUser from '../hooks/useUser';
 
 const ScoresPage: React.FC = () => {
   const { t } = useTranslation();
@@ -15,11 +17,15 @@ const ScoresPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const quiz = useQuiz();
-  
+  const user = useUser();
 
+  const regularUserScores = quiz.scores[UserType.Regular];
+  const adminUserScores = quiz.scores[UserType.Admin];
+
+  const hasEitherRegularOrAdminScores = Object.keys(regularUserScores).length > 0 || Object.keys(adminUserScores).length > 0;
 
   // Ensure there are user scores
-  const isReady = Object.keys(quiz.scores.users).length > 0;
+  const isReady = hasEitherRegularOrAdminScores;
 
 
 
@@ -46,7 +52,7 @@ const ScoresPage: React.FC = () => {
   
   return (
     <Page title={t('common:COMMON:SCOREBOARD')} className='scores-page'>
-      <Scoreboard scores={quiz.scores} />
+      <Scoreboard scores={quiz.scores} ignoreAdmins={!user.isAdmin} />
     </Page>
   );
 };

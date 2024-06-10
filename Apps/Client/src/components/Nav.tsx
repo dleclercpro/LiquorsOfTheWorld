@@ -153,7 +153,7 @@ const Nav: React.FC = () => {
             </li>
           )}
 
-          {DEBUG && location.pathname === '/admin' && (
+          {DEBUG && location.pathname === '/admin' && !user.isAuthenticated && (
             <li className='nav-item'>
               <Link className='nav-link' to={`/`}>
                 <HomeIcon className='nav-icon' />

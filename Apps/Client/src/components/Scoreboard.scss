@@ -34,38 +34,43 @@
 
   > .scoreboard-text {
     margin-bottom: 5px;
-
-    &:last-of-type {
-      margin-bottom: 20px;
-    }
   }
 
-  > .scoreboard-table {
-    table-layout: fixed;
-    width: 100%;
-    border-collapse: collapse;
-    margin-left: auto;
-    margin-right: auto;
+  > .scoreboard-table-container {
+    margin-top: 20px;
 
-    th, td {
-        width: 50%;
-        border: 1px solid #ddd;
-        text-align: center;
-        padding: 8px;
+    > .scoreboard-table-title {
+      font-size: 18px;
+      margin-bottom: 3px;
     }
 
-    th {
-        background-color: #f2f2f2;
-        color: #333;
-        @include font-sub-sub-title;
-    }
-
-    tr:hover {
-        background-color: #ddd;
-    }
-
-    td {
-        background-color: #f9f9f9;
+    > .scoreboard-table {
+      table-layout: fixed;
+      width: 100%;
+      border-collapse: collapse;
+      margin-left: auto;
+      margin-right: auto;
+  
+      th, td {
+          width: 50%;
+          border: 1px solid #ddd;
+          text-align: center;
+          padding: 8px;
+      }
+  
+      th {
+          background-color: #f2f2f2;
+          color: #333;
+          @include font-sub-sub-title;
+      }
+  
+      tr:hover {
+          background-color: #ddd;
+      }
+  
+      td {
+          background-color: #f9f9f9;
+      }
     }
   }
 }
