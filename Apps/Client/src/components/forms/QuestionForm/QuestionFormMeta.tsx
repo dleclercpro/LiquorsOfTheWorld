@@ -1,5 +1,5 @@
 import React from 'react';
-import './QuestionForm.scss';
+import './QuestionFormMeta.scss';
 import { useTranslation } from 'react-i18next';
 import { QUIZ_TIMER_URGENT_TIME } from '../../../config';
 import { NO_TIME } from '../../../constants';

@@ -3,32 +3,20 @@ import { useDispatch } from '../../../hooks/ReduxHooks';
 import './QuestionForm.scss';
 import { voteAction } from '../../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
-import { SERVER_ROOT } from '../../../config';
 import { AspectRatio } from '../../../constants';
-import PlaceholderImage from '../../PlaceholderImage';
-import PlaceholderVideo from '../../PlaceholderVideo';
 import TimeDuration from '../../../models/TimeDuration';
 import useQuiz from '../../../hooks/useQuiz';
 import useOverlay from '../../../hooks/useOverlay';
 import { OverlayName } from '../../../reducers/OverlaysReducer';
 import QuestionFormMeta from './QuestionFormMeta';
-
-type Image = {
-  url: string,
-  desc: string,
-};
-
-type Video = {
-  url: string,
-  desc: string,
-};
+import QuestionFormMedia, { MediaImage, MediaVideo } from './QuestionFormMedia';
 
 type Props = {
   index: number,
   topic: string,
   question: string,
-  image?: Image,
-  video?: Video,
+  image?: MediaImage,
+  video?: MediaVideo,
   ratio?: AspectRatio,
   options: string[],
   remainingTime?: TimeDuration,
@@ -47,9 +35,6 @@ const QuestionForm: React.FC<Props> = (props) => {
   const quiz = useQuiz();
 
   const answerOverlay = useOverlay(OverlayName.Answer);
-
-  const hasMedia = image || video;
-  const ratioClass = ratio ? `ratio-${ratio.replace(':', 'x')}` : 'ratio-1x1';
 
 
 
@@ -110,23 +95,12 @@ const QuestionForm: React.FC<Props> = (props) => {
 
       <h2 className='question-form-title'>{question}</h2>
 
-      {hasMedia && (
-        <div className={`question-form-media-container ${ratioClass}`}>
-          {image && (
-            <PlaceholderImage
-              className='question-form-image'
-              src={`${SERVER_ROOT}${image.url}`}
-              alt={image.desc}
-            />
-          )}
-          {video && (
-            <PlaceholderVideo
-              className='question-form-video'
-              src={`${SERVER_ROOT}${video.url}`}
-              alt={video.desc}
-            />
-          )}
-        </div>
+      {ratio && (image || video) && (
+        <QuestionFormMedia
+          image={image}
+          video={video}
+          ratio={ratio}
+        />
       )}
 
       {options.map((option, i) => {
