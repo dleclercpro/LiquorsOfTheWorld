@@ -3,15 +3,15 @@ import { useDispatch } from '../../../hooks/ReduxHooks';
 import './QuestionForm.scss';
 import { voteAction } from '../../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
-import { QUIZ_TIMER_URGENT_TIME, SERVER_ROOT } from '../../../config';
-import { AspectRatio, NO_TIME } from '../../../constants';
+import { SERVER_ROOT } from '../../../config';
+import { AspectRatio } from '../../../constants';
 import PlaceholderImage from '../../PlaceholderImage';
 import PlaceholderVideo from '../../PlaceholderVideo';
 import TimeDuration from '../../../models/TimeDuration';
-import { TimeUnit } from '../../../types/TimeTypes';
 import useQuiz from '../../../hooks/useQuiz';
 import useOverlay from '../../../hooks/useOverlay';
 import { OverlayName } from '../../../reducers/OverlaysReducer';
+import QuestionFormMeta from './QuestionFormMeta';
 
 type Image = {
   url: string,
@@ -101,32 +101,12 @@ const QuestionForm: React.FC<Props> = (props) => {
 
   return (
     <form className='question-form' onSubmit={handleSubmit}>
-      <div className='question-form-meta'>
-        {remainingTime && (
-          <p className={`
-            question-form-timer
-            ${remainingTime.smallerThanOrEquals(QUIZ_TIMER_URGENT_TIME) ? 'urgent' : ''}
-            ${remainingTime.equals(NO_TIME) ? 'done' : ''}
-          `}>
-            {t('common:COMMON.TIME_LEFT')}:
-            <span className='question-form-timer-value'>
-              {remainingTime.format(TimeUnit.Second)}
-            </span>
-          </p>
-        )}
-        <p className='question-form-index'>
-          {t('common:COMMON.QUESTION')}:
-          <span className='question-form-index-value'>
-            {index + 1}/{quiz.questions.length}
-          </span>
-        </p>
-        <p className='question-form-topic'>
-          {t('common:COMMON.TOPIC')}:
-          <span className='question-form-topic-value'>
-            {topic}
-          </span>
-        </p>
-      </div>
+      <QuestionFormMeta
+        questionIndex={index}
+        questionsCount={quiz.questions.length}
+        remainingTime={remainingTime}
+        topic={topic}
+      />
 
       <h2 className='question-form-title'>{question}</h2>
 
