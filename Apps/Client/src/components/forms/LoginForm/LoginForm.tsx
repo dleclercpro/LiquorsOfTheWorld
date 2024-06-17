@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from '../../hooks/ReduxHooks';
+import { useDispatch } from '../../../hooks/ReduxHooks';
 import './LoginForm.scss';
-import { loginAction } from '../../actions/UserActions';
+import { loginAction } from '../../../actions/UserActions';
 import { useTranslation } from 'react-i18next';
-import useQuiz from '../../hooks/useQuiz';
-import useUser from '../../hooks/useUser';
+import useQuiz from '../../../hooks/useQuiz';
+import useUser from '../../../hooks/useUser';
 import { useNavigate } from 'react-router-dom';
-import { PageUrl } from '../../constants';
+import { PageUrl } from '../../../constants';
 
 type Props = {
   quizId: string | null,

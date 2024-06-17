@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect } from 'react';
-import { useDispatch } from '../../hooks/ReduxHooks';
+import { useDispatch } from '../../../hooks/ReduxHooks';
 import './QuestionForm.scss';
-import { voteAction } from '../../actions/QuizActions';
+import { voteAction } from '../../../actions/QuizActions';
 import { useTranslation } from 'react-i18next';
-import { QUIZ_TIMER_URGENT_TIME, SERVER_ROOT } from '../../config';
-import { AspectRatio, NO_TIME } from '../../constants';
-import PlaceholderImage from '../PlaceholderImage';
-import PlaceholderVideo from '../PlaceholderVideo';
-import TimeDuration from '../../models/TimeDuration';
-import { TimeUnit } from '../../types/TimeTypes';
-import useQuiz from '../../hooks/useQuiz';
-import useOverlay from '../../hooks/useOverlay';
-import { OverlayName } from '../../reducers/OverlaysReducer';
+import { QUIZ_TIMER_URGENT_TIME, SERVER_ROOT } from '../../../config';
+import { AspectRatio, NO_TIME } from '../../../constants';
+import PlaceholderImage from '../../PlaceholderImage';
+import PlaceholderVideo from '../../PlaceholderVideo';
+import TimeDuration from '../../../models/TimeDuration';
+import { TimeUnit } from '../../../types/TimeTypes';
+import useQuiz from '../../../hooks/useQuiz';
+import useOverlay from '../../../hooks/useOverlay';
+import { OverlayName } from '../../../reducers/OverlaysReducer';
 
 type Image = {
   url: string,

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './QuizPage.scss';
-import QuestionForm from '../../forms/QuestionForm';
-import AdminQuizForm from '../../forms/AdminQuizForm';
+import QuestionForm from '../../forms/QuestionForm/QuestionForm';
+import AdminQuizForm from '../../forms/AdminQuizForm/AdminQuizForm';
 import { useTranslation } from 'react-i18next';
 import { AspectRatio, Language, QuestionType } from '../../../constants';
 import Page from '../Page';

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './AdminQuizForm.scss';
 import { Trans, useTranslation } from 'react-i18next';
-import useQuiz from '../../hooks/useQuiz';
-import useUser from '../../hooks/useUser';
+import useQuiz from '../../../hooks/useQuiz';
+import useUser from '../../../hooks/useUser';
 
 const AdminQuizForm: React.FC = () => {
   const { t } = useTranslation();

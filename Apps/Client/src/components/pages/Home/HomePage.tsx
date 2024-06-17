@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import './HomePage.scss';
-import LoginForm from '../../forms/LoginForm';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Page from '../Page';
@@ -11,6 +10,7 @@ import useQuiz from '../../../hooks/useQuiz';
 import useData from '../../../hooks/useData';
 import { setQuizName } from '../../../reducers/QuizReducer';
 import { useDispatch } from '../../../hooks/ReduxHooks';
+import LoginForm from '../../forms/LoginForm/LoginForm';
 
 const HomePage: React.FC = () => {
   const [searchParams] = useSearchParams();
