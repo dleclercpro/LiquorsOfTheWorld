@@ -11,6 +11,7 @@ import useOverlay from '../../hooks/useOverlay';
 import { OverlayName } from '../../reducers/OverlaysReducer';
 import useQuestion from '../../hooks/useQuestion';
 import { PageUrl, UserType } from '../../constants';
+import useTimerContext from '../contexts/TimerContext';
 
 const AnswerOverlay: React.FC = () => {
   const navigate = useNavigate();
@@ -21,8 +22,10 @@ const AnswerOverlay: React.FC = () => {
   const quiz = useQuiz();
   const user = useUser();
 
+  const timer = useTimerContext();
+
   const appQuestionIndex = app.questionIndex;
-  const nextAppQuestionIndex = appQuestionIndex + 1; // FIXME: 19/18?
+  const nextAppQuestionIndex = appQuestionIndex + 1;
 
   const question = useQuestion(appQuestionIndex);
   const overlay = useOverlay(OverlayName.Answer);
@@ -48,10 +51,14 @@ const AnswerOverlay: React.FC = () => {
 
 
   
-  // FIXME: show answer when timer is up
   let hideAnswer = true;
+  // Never hide answer for admins
   if (user.isAdmin) {
     hideAnswer = correctAnswer === null;
+  // Timer is over: show answer
+  } else if (timer.isEnabled && timer.isDone) {
+    hideAnswer = false;
+  // For regular users: wait until all players have answered question
   } else {
     hideAnswer = correctAnswer === null || chosenAnswer === null || (!quiz.isOver && !question.haveAllPlayersAnswered);
   }

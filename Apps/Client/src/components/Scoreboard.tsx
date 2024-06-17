@@ -5,6 +5,7 @@ import useQuiz from '../hooks/useQuiz';
 import useUser from '../hooks/useUser';
 import { UserType } from '../constants';
 import { ScoreComparator } from '../utils/scores';
+import useTimerContext from '../components/contexts/TimerContext';
 
 interface Props {
   scores: GroupedScoresData,
@@ -17,11 +18,14 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
   const quiz = useQuiz();
   const user = useUser();
 
+  const timer = useTimerContext();
+
   if (quiz.questions === null || quiz.status === null) {
     return null;
   }
 
   const questionsCount = quiz.questions.length;
+  const closedAnswersCount = quiz.isOver ? questionsCount : quiz.questionIndex + (timer.isEnabled && timer.isDone ? 1 : 0);
   const publishedAnswersCount = quiz.isOver ? questionsCount : quiz.questionIndex + 1;
 
   const regularPlayerUsernames = Object.keys(scores[UserType.Regular]);
@@ -48,14 +52,14 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
         </strong>
       </p>
       <p className='scoreboard-text'>
-        {t(quiz.isOver ? 'PAGES.SCOREBOARD.STATUS_OVER' : 'PAGES.SCOREBOARD.STATUS_NOT_OVER', { questionsCount, publishedAnswersCount })}
+        {t(quiz.isOver ? 'PAGES.SCOREBOARD.STATUS_OVER' : 'PAGES.SCOREBOARD.STATUS_NOT_OVER', { questionsCount, closedAnswersCount })}
       </p>
 
       {regularPlayerUsernames.length > 0 && (
         <div className='scoreboard-table-container'>
           {!ignoreAdmins && (
             <p className='scoreboard-table-title'>
-              <strong>{t('common:COMMON:REGULAR_USER')}</strong>
+              <strong>{t('common:COMMON:REGULAR_USERS')}</strong>
             </p>
           )}
           <table className='scoreboard-table'>
@@ -64,14 +68,14 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
                   <th>{t('common:COMMON.RANK')}</th>
                   <th>{t('common:COMMON.USERNAME')}</th>
                   <th>{t('common:COMMON.POINTS')}</th>
-                  {quiz.isTimed && (
+                  {user.isAdmin && quiz.isTimed && (
                     <th>{t('PAGES.SCOREBOARD.MISSED_POINTS')}</th>
                   )}
               </tr>
             </thead>
             <tbody>
               {sortedScores[UserType.Regular].map(({ username, score }, i) => {
-                const unansweredQuestionsCount = quiz.isOver ? publishedAnswersCount - score.total : publishedAnswersCount - 1 - score.total;
+                const unansweredQuestionsCount = publishedAnswersCount - score.total;
 
                 return (
                   <tr key={`scoreboard-table-row-${i}`}>
@@ -84,7 +88,7 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
                       ) : (
                         <td>{score.value}</td>
                       )}
-                      {quiz.isTimed && (
+                      {user.isAdmin && quiz.isTimed && (
                         <td>{unansweredQuestionsCount}</td>
                       )}
                   </tr>
@@ -98,7 +102,7 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
       {!ignoreAdmins && adminPlayerUsernames.length > 0 && (
         <div className='scoreboard-table-container'>
           <p className='scoreboard-table-title'>
-            <strong>{t('common:COMMON:ADMIN_USER')}</strong>
+            <strong>{t('common:COMMON:ADMIN_USERS')}</strong>
           </p>
           <table className='scoreboard-table'>
             <thead>
@@ -106,14 +110,14 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
                   <th>{t('common:COMMON.RANK')}</th>
                   <th>{t('common:COMMON.USERNAME')}</th>
                   <th>{t('common:COMMON.POINTS')}</th>
-                  {quiz.isTimed && (
+                  {user.isAdmin && quiz.isTimed && (
                     <th>{t('PAGES.SCOREBOARD.MISSED_POINTS')}</th>
                   )}
               </tr>
             </thead>
             <tbody>
               {sortedScores[UserType.Admin].map(({ username, score }, i) => {
-                const unansweredQuestionsCount = quiz.isOver ? publishedAnswersCount - score.total : publishedAnswersCount - 1 - score.total;
+                const unansweredQuestionsCount = publishedAnswersCount - score.total;
 
                 return (
                   <tr key={`scoreboard-table-row-${i}`}>
@@ -126,7 +130,7 @@ const Scoreboard: React.FC<Props> = ({ scores, ignoreAdmins = true }) => {
                       ) : (
                         <td>{score.value}</td>
                       )}
-                      {quiz.isTimed && (
+                      {user.isAdmin && quiz.isTimed && (
                         <td>{unansweredQuestionsCount}</td>
                       )}
                   </tr>

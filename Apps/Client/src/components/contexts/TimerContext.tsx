@@ -26,10 +26,10 @@ interface Props {
 export const TimerContextProvider: React.FC<Props> = (props) => {
     const { children } = props;
 
-    const auth = useTimerContext();
+    const timer = useTimerContext();
     
     return (
-        <TimerContext.Provider value={auth}>
+        <TimerContext.Provider value={timer}>
             {children}
         </TimerContext.Provider>
     );

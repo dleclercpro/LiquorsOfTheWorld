@@ -11,7 +11,6 @@ const AnswerOverlayHandler: React.FC = () => {
 
   const shouldShowAnswer = timer.isEnabled && timer.isDone && quiz.isStarted;
 
-  // FIXME: close answer overlay when timer is up for current question!
   useEffect(() => {
     if (shouldShowAnswer && !answerOverlay.isOpen) {
       answerOverlay.open();

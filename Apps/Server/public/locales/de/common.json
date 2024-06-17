@@ -18,7 +18,9 @@
     "QUIZZES": "Quizzes",
     "TEAM": "Team",
     "REGULAR_USER": "Normaler Nutzer",
+    "REGULAR_USERS": "Normale Nutzer",
     "ADMIN_USER": "Admin Nutzer",
+    "ADMIN_USERS": "Admin Nutzer",
     "QUESTION": "Frage",
     "TOPIC": "Thema",
     "TYPE": "Typ",
@@ -47,8 +49,8 @@
     "SCOREBOARD": {
       "NO_ANSWER": "Unbeantwortet",
       "MISSED_POINTS": "Verpasste Punkte",
-      "STATUS_OVER": "Das Quiz ist vorbei. Alle {{questionsCount}} Fragen wurden beantwortet. Hier sind die Endergebnisse:",
-      "STATUS_NOT_OVER": "Bisher wurden {{publishedAnswersCount}} von {{questionsCount}} Fragen freigestellt. Hier sind die aktuellen Ergebnisse:"
+      "STATUS_OVER": "Das Quiz ist vorbei. Alle {{ questionsCount }} Fragen wurden beantwortet. Hier sind die Endergebnisse:",
+      "STATUS_NOT_OVER": "Bisher wurden {{ closedAnswersCount }} von {{ questionsCount }} Fragen abgeschlossen. Hier sind die aktuellen Ergebnisse:"
     },
     "ERROR": {
       "TITLE": "Oje...",
