@@ -7,9 +7,6 @@ import { Language, NO_QUESTION_INDEX, NO_VOTE_INDEX, UserType } from '../constan
 import { useTranslation } from 'react-i18next';
 import useApp from './useApp';
 import { setQuestionIndex } from '../reducers/AppReducer';
-import { sleep } from '../utils/time';
-import TimeDuration from '../models/TimeDuration';
-import { TimeUnit } from '../types/TimeTypes';
 import useUser from './useUser';
 import { GroupedScoresData, GroupedVotesData, PlayersData, StatusData } from '../types/DataTypes';
 import { QuizJSON } from '../types/JSONTypes';
@@ -80,9 +77,6 @@ const useQuiz = () => {
 
   const fetchAllData = useCallback(async () => {
     if (quiz.id === null || quiz.name === null || !language) return;
-
-    // Fake processing time
-    await sleep(new TimeDuration(1, TimeUnit.Second));
 
     await dispatch(fetchAllDataAction({ quizId: quiz.id, quizName: quiz.name, language }));
 
