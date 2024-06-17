@@ -1,10 +1,10 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.scss';
-import HomePage from './components/pages/Home/HomePage';
-import QuizPage from './components/pages/Quiz/QuizPage';
-import ScoresPage from './components/pages/Scores/ScoresPage';
+import HomePage from './components/pages/HomePage/HomePage';
+import QuizPage from './components/pages/QuizPage/QuizPage';
+import ScoresPage from './components/pages/ScoresPage/ScoresPage';
 import { DEBUG } from './config';
-import AdminPage from './components/pages/Admin/AdminPage';
+import AdminPage from './components/pages/AdminPage/AdminPage';
 import AuthRoute from './routes/AuthRoute';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
 import AnswerOverlay from './components/overlays/AnswerOverlay';
@@ -18,8 +18,8 @@ import useUser from './hooks/useUser';
 import useApp from './hooks/useApp';
 import LobbyOverlay from './components/overlays/LobbyOverlay';
 import { PageUrl } from './constants';
-import ErrorPage from './components/pages/Error/ErrorPage';
-import QuizzesPage from './components/pages/Quizzes/QuizzesPage';
+import ErrorPage from './components/pages/ErrorPage/ErrorPage';
+import QuizzesPage from './components/pages/QuizzesPage/QuizzesPage';
 
 function App() {
   const dispatch = useDispatch();
