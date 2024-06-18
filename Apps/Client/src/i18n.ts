@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import HttpBackend from 'i18next-http-backend';
 import { DEBUG_I18N, SERVER_ROOT } from './config';
-import { Language, QuizName } from './constants';
+import { Language, QUIZ_NAMES } from './constants';
 
 export const INIT_LANGUAGE = Language.DE;
 export const FALLBACK_LANGUAGE = Language.EN;
@@ -14,7 +14,7 @@ i18n
     debug: DEBUG_I18N,
     lng: INIT_LANGUAGE,
     fallbackLng: FALLBACK_LANGUAGE,
-    ns: ['common', QuizName.Liquors, QuizName.KonnyUndJohannes],
+    ns: ['common', ...QUIZ_NAMES],
     defaultNS: 'common',
     interpolation: {
       escapeValue: false,

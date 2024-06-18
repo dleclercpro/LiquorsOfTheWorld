@@ -127,7 +127,7 @@ const Nav: React.FC = () => {
 
           {location.pathname !== PageUrl.Quiz && user.isAuthenticated && (
             <li className='nav-item'>
-              <Link className='nav-link' to={`/quiz`}>
+              <Link className='nav-link' to={PageUrl.Quiz}>
                 <QuizIcon className='nav-icon' />
                 {t('common:COMMON.QUIZ')}
               </Link>
@@ -136,27 +136,27 @@ const Nav: React.FC = () => {
 
           {location.pathname !== PageUrl.Scores && user.isAuthenticated && quiz.isStarted && (
             <li className='nav-item'>
-              <Link className='nav-link' to={`/scores`}>
+              <Link className='nav-link' to={PageUrl.Scores}>
                 <ScoreboardIcon className='nav-icon' />
                 {t('common:COMMON.SCOREBOARD')}
               </Link>
             </li>
           )}
 
-          {DEBUG && [PageUrl.Admin, PageUrl.Quizzes].map(url => url as string).includes(location.pathname) && !user.isAuthenticated && (
+          {DEBUG && [PageUrl.Admin, PageUrl.List].map(url => url as string).includes(location.pathname) && !user.isAuthenticated && (
             <li className='nav-item'>
-              <Link className='nav-link' to={`/`}>
+              <Link className='nav-link' to={PageUrl.Home}>
                 <HomeIcon className='nav-icon' />
                 {t('common:COMMON.HOMEPAGE')}
               </Link>
             </li>
           )}
 
-          {location.pathname !== PageUrl.Quizzes && !user.isAuthenticated && (
+          {location.pathname !== PageUrl.List && !user.isAuthenticated && (
             <li className='nav-item'>
-              <Link className='nav-link' to={`/quizzes`}>
+              <Link className='nav-link' to={PageUrl.List}>
                 <QuizIcon className='nav-icon' />
-                {t('common:COMMON.QUIZZES')}
+                {t('common:COMMON.QUIZ_LIST')}
               </Link>
             </li>
           )}
@@ -164,7 +164,7 @@ const Nav: React.FC = () => {
           {/* This nav item will only appear in debug mode! */}
           {DEBUG && location.pathname !== PageUrl.Admin && (
             <li className='nav-item'>
-              <Link className='nav-link' to={`/admin`}>
+              <Link className='nav-link' to={PageUrl.Admin}>
                 <SettingsIcon className='nav-icon' />
                 {t('common:COMMON.ADMIN')}
               </Link>

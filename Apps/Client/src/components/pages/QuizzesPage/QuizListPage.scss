@@ -1,8 +1,8 @@
 @import '../../../styles/common';
 
-.quizzes-page {
+.quiz-list-page {
 
-  > .quizzes-page-box {
+  > .quiz-list-page-box {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -18,21 +18,21 @@
       width: 740px;
     }
 
-    > .quizzes-page-title {
+    > .quiz-list-page-title {
       margin-bottom: 15px;
     }
 
-    > .quizzes-page-text {
+    > .quiz-list-page-text {
       margin-bottom: 20px;
       font-size: 18px;
       text-align: right;
     }
 
-    > .quizzes-page-list {
+    > .quiz-list-page-list {
       width: 100%;
       list-style-type: none;
 
-      > .quizzes-page-list-item {
+      > .quiz-list-page-list-item {
       
         &:not(:first-of-type) {
           margin-top: 5px;

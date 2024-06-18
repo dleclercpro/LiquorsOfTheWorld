@@ -11,9 +11,13 @@ import { PageUrl } from '../../../constants';
 type Props = {
   quizId: string | null,
   teamId: string | null,
+  hideQuizId?: boolean,
+  hideTeamId?: boolean,
 }
 
 const LoginForm: React.FC<Props> = (props) => {
+  const { hideQuizId, hideTeamId } = props;
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -117,27 +121,31 @@ const LoginForm: React.FC<Props> = (props) => {
 
   return (
     <form className='login-form' onSubmit={(e) => handleSubmit(e)}>
-      <input
-        id='login-quiz-id'
-        className={`${disableQuizId ? 'is-disabled' : ''}`}
-        type='text'
-        value={disableQuizId ? '' : quizId}
-        disabled={disableQuizId}
-        placeholder={disableQuizId ? `${t(`common:COMMON:QUIZ`)} ID: ${quizId}` : t('common:FORMS.LOGIN.QUIZ_ID')}
-        onChange={handleQuizIdChange}
-        required
-      />
+      {!hideQuizId && (
+        <input
+          id='login-quiz-id'
+          className={`${disableQuizId ? 'is-disabled' : ''}`}
+          type='text'
+          value={disableQuizId ? '' : quizId}
+          disabled={disableQuizId}
+          placeholder={disableQuizId ? `${t(`common:COMMON:QUIZ`)} ID: ${quizId}` : t('common:FORMS.LOGIN.QUIZ_ID')}
+          onChange={handleQuizIdChange}
+          required
+        />
+      )}
 
-      <input
-        id='login-team-id'
-        className={`${disableTeamId ? 'is-disabled' : ''}`}
-        type='text'
-        value={disableTeamId ? '' : teamId}
-        disabled={disableTeamId}
-        placeholder={disableTeamId ? `${t(`common:COMMON:TEAM`)} ID: ${teamId}` : t('common:FORMS.LOGIN.TEAM_ID')}
-        onChange={handleTeamIdChange}
-        required
-      />
+      {!hideTeamId && (
+        <input
+          id='login-team-id'
+          className={`${disableTeamId ? 'is-disabled' : ''}`}
+          type='text'
+          value={disableTeamId ? '' : teamId}
+          disabled={disableTeamId}
+          placeholder={disableTeamId ? `${t(`common:COMMON:TEAM`)} ID: ${teamId}` : t('common:FORMS.LOGIN.TEAM_ID')}
+          onChange={handleTeamIdChange}
+          required
+        />
+      )}
 
       <input
         id='login-username'

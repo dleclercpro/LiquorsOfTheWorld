@@ -1,4 +1,4 @@
-import { CallGetQuizzes } from '../calls/data/CallGetQuizzes';
+import { CallGetQuizList } from '../calls/data/CallGetQuizList';
 import { CallGetPlayers } from '../calls/quiz/CallGetPlayers';
 import { CallGetQuestions } from '../calls/quiz/CallGetQuestions';
 import { CallGetTeams } from '../calls/quiz/CallGetTeams';
@@ -6,15 +6,15 @@ import { CallGetScores } from '../calls/quiz/CallGetScores';
 import { CallGetStatus } from '../calls/quiz/CallGetStatus';
 import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 import { Language, QuizName } from '../constants';
-import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizzesResponseData, CallGetTeamsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData } from '../types/DataTypes';
+import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizListResponseData, CallGetTeamsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData } from '../types/DataTypes';
 import { createServerAction } from './ServerActions';
 import { logoutAction, pingAction } from './UserActions';
 import { updateVersionAction } from './AppActions';
 
-export const fetchQuizNamesAction = createServerAction<void, CallGetQuizzesResponseData>(
+export const fetchQuizNamesAction = createServerAction<void, CallGetQuizListResponseData>(
   'data/quiz-names',
   async () => {
-    const { data } = await new CallGetQuizzes().execute();
+    const { data } = await new CallGetQuizList().execute();
       
     return data!;
   },

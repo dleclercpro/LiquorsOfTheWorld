@@ -28,6 +28,7 @@ export const DEFAULT_TEAM_ID = process.env.REACT_APP_DEFAULT_TEAM_ID!;
 export const URL_PARAM_QUIZ_NAME = 'q';
 export const URL_PARAM_QUIZ_ID = 'qid';
 export const URL_PARAM_TEAM_ID = 'tid';
+export const URL_PARAM_HIDE = [true, 'true'].includes(process.env.REACT_APP_HIDE_URL_QUIZ_PARAMS!);
 
 // Logging
 export const LOG_SERVER_CALLS = [true, 'true'].includes(process.env.REACT_APP_LOG_SERVER_CALLS!) ?? DEBUG;

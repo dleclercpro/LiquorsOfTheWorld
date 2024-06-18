@@ -19,7 +19,7 @@ import useApp from './hooks/useApp';
 import LobbyOverlay from './components/overlays/LobbyOverlay';
 import { PageUrl } from './constants';
 import ErrorPage from './components/pages/ErrorPage/ErrorPage';
-import QuizzesPage from './components/pages/QuizzesPage/QuizzesPage';
+import QuizListPage from './components/pages/QuizzesPage/QuizListPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -55,8 +55,8 @@ function App() {
             )} />
           )}
 
-          <Route path={PageUrl.Quizzes} element={(
-            <QuizzesPage />
+          <Route path={PageUrl.List} element={(
+            <QuizListPage />
           )} />
 
           <Route path={PageUrl.Quiz} element={(

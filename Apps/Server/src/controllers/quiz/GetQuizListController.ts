@@ -1,11 +1,11 @@
 import { RequestHandler } from 'express';
 import { successResponse } from '../../utils/calls';
 import { QUIZ_LABELS, QUIZ_NAMES } from '../../constants';
-import { CallGetQuizzesResponseData } from '../../types/DataTypes';
+import { CallGetQuizListResponseData } from '../../types/DataTypes';
 
-const GetQuizzesController: RequestHandler = async (req, res, next) => {
+const GetQuizListController: RequestHandler = async (req, res, next) => {
     try {
-        const response: CallGetQuizzesResponseData = QUIZ_NAMES.map((name) => ({
+        const response: CallGetQuizListResponseData = QUIZ_NAMES.map((name) => ({
             name,
             label: QUIZ_LABELS[name],
         }));
@@ -19,4 +19,4 @@ const GetQuizzesController: RequestHandler = async (req, res, next) => {
     }
 }
 
-export default GetQuizzesController;
+export default GetQuizListController;

@@ -16,7 +16,7 @@ export enum PageUrl {
   Home = '/',
   Error = '/error',
   Admin = '/admin',
-  Quizzes = '/quizzes',
+  List = '/list',
   Quiz = '/quiz',
   Scores = '/scores',
 };
@@ -28,7 +28,7 @@ export enum UserType {
 
 export enum QuizName {
   Liquors = 'liquors',
-  KonnyUndJohannes = 'k-und-j',
+  // KonnyUndJohannes = 'k-und-j',
 };
 
 export enum QuestionType {
@@ -43,9 +43,11 @@ export enum AspectRatio {
   SixteenByNine = '16:9',
 };
 
+export const QUIZ_NAMES = Object.values(QuizName);
+
 export const QUIZ_LABELS = {
   [QuizName.Liquors]: 'Liquors',
-  [QuizName.KonnyUndJohannes]: 'Konny & Johannes',
+  // [QuizName.KonnyUndJohannes]: 'Konny & Johannes',
 };
 
 export const USER_TYPES = Object.values(UserType);

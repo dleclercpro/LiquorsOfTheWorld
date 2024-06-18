@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Page from '../Page';
 import { PageUrl, QuizName } from '../../../constants';
 import useUser from '../../../hooks/useUser';
-import { DEFAULT_QUIZ_ID, DEFAULT_QUIZ_NAME, DEFAULT_TEAM_ID, URL_PARAM_QUIZ_ID, URL_PARAM_QUIZ_NAME, URL_PARAM_TEAM_ID } from '../../../config';
+import { DEBUG, DEFAULT_QUIZ_ID, DEFAULT_QUIZ_NAME, DEFAULT_TEAM_ID, URL_PARAM_HIDE, URL_PARAM_QUIZ_ID, URL_PARAM_QUIZ_NAME, URL_PARAM_TEAM_ID } from '../../../config';
 import useQuiz from '../../../hooks/useQuiz';
 import useData from '../../../hooks/useData';
 import { setQuizName } from '../../../reducers/QuizReducer';
@@ -29,8 +29,8 @@ const HomePage: React.FC = () => {
   const paramTeamId = searchParams.get(URL_PARAM_TEAM_ID);
 
   const quizName = (paramQuizName ?? quiz.name) ?? DEFAULT_QUIZ_NAME;
-  const quizId = (paramQuizId ?? quiz.id) ?? DEFAULT_QUIZ_ID;
-  const teamId = (paramTeamId ?? user.teamId) ?? DEFAULT_TEAM_ID;
+  const quizId = (paramQuizId ?? quiz.id) ?? (DEBUG ? DEFAULT_QUIZ_ID : '');
+  const teamId = (paramTeamId ?? user.teamId) ?? (DEBUG ? DEFAULT_TEAM_ID : '');
 
   const isQuizNameValid = data.quizzes.map((q) => q.name)
     .includes(quizName as QuizName);
@@ -64,7 +64,10 @@ const HomePage: React.FC = () => {
           <p className='home-page-text'>{t(`${quizName}:WELCOME_TEXT`)}</p>
           <p className='home-page-text'>{t(`${quizName}:WELCOME_CTA`)}</p>
           
-          <LoginForm quizId={quizId} teamId={teamId} />
+          <LoginForm
+            quizId={quizId} hideQuizId={URL_PARAM_HIDE && !!paramQuizId}
+            teamId={teamId} hideTeamId={URL_PARAM_HIDE && !!paramTeamId}
+          />
         </div>
       )}
     </Page>

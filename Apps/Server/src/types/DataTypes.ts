@@ -115,7 +115,7 @@ export type CallLogInRequestData = LoginData;
 export type CallLogInResponseData = UserData;
 
 export type CallGetVersionResponseData = VersionData;
-export type CallGetQuizzesResponseData = { name: QuizName, label: string }[];
+export type CallGetQuizListResponseData = { name: QuizName, label: string }[];
 export type CallGetTeamsResponseData = string[];
 export type CallGetVotesResponseData = GroupedVotesData;
 export type CallGetQuestionsResponseData = QuizJSON;

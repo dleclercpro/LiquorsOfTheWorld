@@ -28,7 +28,7 @@ export enum UserType {
 
 export enum QuizName {
   Liquors = 'liquors',
-  KonnyUndJohannes = 'k-und-j',
+  // KonnyUndJohannes = 'k-und-j',
 };
 
 export enum QuestionType {
@@ -39,7 +39,7 @@ export enum QuestionType {
 
 export const QUIZ_LABELS = {
   [QuizName.Liquors]: 'Liquors',
-  [QuizName.KonnyUndJohannes]: 'Konny & Johannes',
+  // [QuizName.KonnyUndJohannes]: 'Konny & Johannes',
 };
 
 export const USER_TYPES = Object.values(UserType);
