@@ -62,10 +62,10 @@ then
 fi
 
 # Ensure GH_TOKEN is set
-# if [ -z "$GH_TOKEN" ]; then
-#     echo "Error: GH_TOKEN environment variable is not set. Please set it and try again."
-#     exit 1
-# fi
+if [ -z "$GH_TOKEN" ]; then
+    echo "Error: GH_TOKEN environment variable is not set. Please set it and try again."
+    exit 1
+fi
 
 
 
@@ -166,7 +166,7 @@ git tag "$release_tag"
 git push origin "$release_tag"
 
 # Create a new release on GitHub and tag it using release_tag
-# gh release create "$release_tag" --title "$release_tag" --notes "Automated release for version: $release_tag"
+gh release create "$release_tag" --title "$release_tag" --notes "Automated release for version: $release_tag"
 
 # Check out the master branch
 git checkout "$MASTER_BRANCH_NAME"
