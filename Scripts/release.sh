@@ -1,6 +1,21 @@
 #!/bin/bash
 # This is a shebang line that tells the system to use the bash shell to interpret this script
 
+# This script automates the process of creating a new release for the project.
+# It performs the following steps:
+# 1. Validates the format of the release version provided as an argument (X.Y.Z).
+# 2. Ensures that the GitHub CLI (gh) is installed.
+# 3. Ensures the GH_TOKEN environment variable is set (commented out but recommended for secure environments).
+# 4. Checks if the release branch already exists locally or in the remote repository.
+# 5. Checks if the release already exists on GitHub.
+# 6. Sets the necessary directory paths and file lists.
+# 7. Updates the version and branch details in the specified files.
+# 8. Runs an install script to set up the environment.
+# 9. Commits the changes to the new release branch.
+# 10. Pushes the new release branch and tag to the remote repository.
+# 11. Creates a new release on GitHub and tags it with the release version.
+# 12. Switches back to the master branch.
+
 
 
 # Function to validate the release version format
@@ -39,37 +54,52 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-# Validate the release version format
-validate_release_format "$1"
-
 # Ensure GitHub CLI is installed
 if ! command -v gh &> /dev/null
 then
-    echo "GitHub CLI (gh) could not be found. Please install it and try again."
+    echo "GitHub CLI could not be found. Please install it and try again."
     exit 1
 fi
 
+# Ensure GH_TOKEN is set
+# if [ -z "$GH_TOKEN" ]; then
+#     echo "Error: GH_TOKEN environment variable is not set. Please set it and try again."
+#     exit 1
+# fi
 
+
+
+# Validate the release version format
+validate_release_format "$1"
 
 # Set CWD to scripts directory
 cd "$ROOT_DIR"
-
-
-
-# Check out the new branch with Git
-if git show-ref --verify --quiet "refs/heads/$release_branch_name"; then
-  git checkout "$release_branch_name"
-else
-  git checkout -b "$release_branch_name"
-fi
-
-
 
 # Set the release variable to the provided argument
 release="$1"
 release_tag="v$release"
 release_branch="$USER/$APP:$release"
 release_branch_name="release/$release"
+
+
+
+# Check if the branch already exists locally
+if git show-ref --verify --quiet "refs/heads/$release_branch_name"; then
+  echo "Branch $release_branch_name already exists locally. Exiting."
+  exit 1
+fi
+
+# Check if the branch already exists in the remote repository
+if git ls-remote --heads origin "$release_branch_name" &> /dev/null; then
+  echo "Branch $release_branch_name already exists in the remote repository. Exiting."
+  exit 1
+fi
+
+# Check if the release already exists on GitHub
+if gh release view "$release_tag" &> /dev/null; then
+  echo "Release '$release_tag' already exists on GitHub. Exiting."
+  exit 0
+fi
 
 
 
@@ -124,8 +154,14 @@ git commit -m "Release tag: '$release_tag'."
 # Push the new branch to the repository
 git push -u origin "$release_branch_name"
 
+# Create a tag for the release
+git tag "$release_tag"
+
+# Push the tag to the remote repository
+git push origin "$release_tag"
+
 # Create a new release on GitHub and tag it using release_tag
-gh release create "$release_tag" --title "$release_tag" --notes "Automated release for version: $release_tag"
+# gh release create "$release_tag" --title "$release_tag" --notes "Automated release for version: $release_tag"
 
 # Check out the master branch
 git checkout "$MASTER_BRANCH_NAME"
