@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { ScoresData } from '../types/DataTypes';
 import './Scoreboard.scss';
 import useUser from '../hooks/useUser';
+import { ScoreComparator } from '../utils/scores';
 
 interface Props {
   title?: string,
@@ -15,6 +16,10 @@ const Scoreboard: React.FC<Props> = ({ title, scores, hasMissingPoints }) => {
   const user = useUser();
 
   const pointColumnsCount = hasMissingPoints ? 3 : 2;
+
+  // Sort users in descending order according to score value
+  const sortedScores = Object.entries(scores).map(([username, score]) => ({ username, score }));
+  sortedScores.sort((a, b) => ScoreComparator.compare(a, b, 'DESC'));
 
   return (
     <div className='scoreboard'>
@@ -39,7 +44,7 @@ const Scoreboard: React.FC<Props> = ({ title, scores, hasMissingPoints }) => {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(scores).map(([username, score], i) => {
+          {sortedScores.map(({ username, score }, i) => {
             return (
               <tr key={`scoreboard-table-row-${i}`} className={username === user.username ? 'is-self' : ''}>
                   <td>{i + 1}</td>
