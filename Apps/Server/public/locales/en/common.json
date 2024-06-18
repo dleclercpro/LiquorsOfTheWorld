@@ -47,8 +47,10 @@
       "NOTHING_TO_DO": "There is nothing to do here!"
     },
     "SCOREBOARD": {
-      "NO_ANSWER": "Unanswered",
+      "RIGHT_POINTS": "Right",
+      "WRONG_POINTS": "Wrong",
       "MISSED_POINTS": "Missed",
+      "UNANSWERED_POINTS": "Unanswered",
       "STATUS_OVER": "The quiz is over. All {{ questionsCount }} questions have been answered. Here are the final results:",
       "STATUS_NOT_OVER": "So far, {{ closedAnswersCount }} out of {{ questionsCount }} questions have been closed. Here are the current results:"
     },

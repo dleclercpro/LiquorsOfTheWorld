@@ -10,6 +10,7 @@ import QuizManager from './QuizManager';
 import InvalidQuestionIndexError from '../errors/InvalidQuestionIndexError';
 import { PlayerData, TimerData } from '../types/DataTypes';
 import { TIMER_DURATION } from '../config';
+import TimeDuration from './units/TimeDuration';
 
 type QuizArgs = {
     id: string,
@@ -61,6 +62,7 @@ class Quiz {
                     timer: {
                         questionIndex: this.status.timer.questionIndex,
                         startedAt: this.status.timer.startedAt!.toUTCString(),
+                        expiresAt: this.status.timer.expiresAt!.toUTCString(),
                         duration: this.status.timer.duration,
                     },
                 } : { }),
@@ -79,6 +81,7 @@ class Quiz {
                     timer: {
                         questionIndex: quiz.status.timer.questionIndex,
                         startedAt: new Date(quiz.status.timer.startedAt),
+                        expiresAt: new Date(quiz.status.timer.expiresAt),
                         duration: quiz.status.timer.duration,
                     },
                 } : { }),
@@ -161,11 +164,15 @@ class Quiz {
         this.status.isSupervised = isSupervised;
         this.status.isNextQuestionForced = isNextQuestionForced;
 
+        const startedAt = new Date();
+        const expiresAt = new Date(startedAt.getTime() + TIMER_DURATION.toMs().getAmount());
+
         // Create a timer
         if (isTimed) {
             this.status.timer = {
                 questionIndex: this.getQuestionIndex(),
-                startedAt: new Date(),
+                startedAt,
+                expiresAt,
                 duration:  {
                     amount: TIMER_DURATION.getAmount(),
                     unit: TIMER_DURATION.getUnit(),
@@ -226,14 +233,46 @@ class Quiz {
         logger.debug(`Incremented quiz (ID = ${this.id}) question index to: ${nextQuestionIndex}`);
     }
 
+    public getTimer() {
+        return this.status.timer;
+    }
+
+    public isTimerDone(questionIndex: number) {
+        const timer = this.getTimer();
+
+        if (!timer) {
+            throw new Error('MISSING_TIMER');
+        }
+
+        if (timer.questionIndex < questionIndex) {
+            throw new Error('TIMER_HAS_NOT_STARTED');
+        }
+
+        if (timer.questionIndex > questionIndex) {
+            return true;
+        }
+
+        if (timer.questionIndex === questionIndex) {
+            return timer.expiresAt <= new Date();
+        }
+    }
+
     public async restartTimer() {
         if (!this.isTimed()) {
             throw new Error('MISSING_TIMER');
         }
 
+        const restartedAt = new Date();
+
+        const timer = this.status.timer!;
+        const duration = new TimeDuration(timer.duration.amount, timer.duration.unit).toMs().getAmount();
+
         // Assign question index to timer so client app knows when a new timer has been created
         this.status.timer!.questionIndex = this.getQuestionIndex();
-        this.status.timer!.startedAt = new Date();
+        
+        // Reset times
+        this.status.timer!.startedAt = restartedAt;
+        this.status.timer!.expiresAt = new Date(restartedAt.getTime() + duration);
 
         await this.save();
     }

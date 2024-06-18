@@ -8,4 +8,45 @@
   @include desktop {
     justify-content: center;
   }
+
+  > .scores-container {
+    width: 100%;
+    max-width: 1024px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    > .scores-title {
+      margin-bottom: 5px;
+      @include font-title;
+    }
+  
+    > .scores-subtitle {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      @include font-sub-title;
+  
+      > .scores-quiz-label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px 15px;
+        margin-left: 5px;
+        border-radius: 4px;
+        color: $color-white;
+        background-color: $color-black;
+        @include font-caption;
+      }
+    }
+  
+    > .scores-text {
+      margin-bottom: 5px;
+    }
+
+    > .scoreboard {
+      margin-top: 20px;
+    }
+  }
 }

@@ -7,8 +7,8 @@ type Score = {
 
 export class ScoreComparator {
   public static compare(a: Score, b: Score) {
-    if (a.score.value < b.score.value) return 1;
-    if (a.score.value > b.score.value) return -1;
+    if (a.score.right < b.score.right) return 1;
+    if (a.score.right > b.score.right) return -1;
     return 0;
   }
 }

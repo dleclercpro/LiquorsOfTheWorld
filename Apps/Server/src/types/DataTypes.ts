@@ -32,6 +32,7 @@ export type AnswerData = {
 
 export type TimerData = {
   questionIndex: number,
+  expiresAt: Date,
   startedAt: Date,
   duration: {
     amount: number,
@@ -82,8 +83,10 @@ export type GroupedVoteCountData = {
 };
 
 export type ScoreData = {
-  value: number,
-  total: number,
+  right: number,
+  wrong: number,
+  missed: number,
+  unanswered: number,
 };
 
 export type ScoresData = Record<string, ScoreData>;

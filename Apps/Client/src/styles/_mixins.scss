@@ -1,5 +1,17 @@
 @import './variables';
 
+@mixin font-normal {
+  font-size: $font-size;
+
+  @include tablet {
+    font-size: $font-size-tablet;
+  }
+
+  @include desktop {
+    font-size: $font-size-desktop;
+  }
+}
+
 @mixin font-title {
   font-size: $font-size-title;
 

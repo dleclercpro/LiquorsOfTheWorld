@@ -12,9 +12,9 @@ const useServerTimer = (interval: TimeDuration = new TimeDuration(1, TimeUnit.Se
   
   const duration = data?.duration ? new TimeDuration(data.duration.amount, data.duration.unit) : NO_TIME;
   const startedAt = data?.startedAt ? new Date(data.startedAt) : new Date();
+  const expiresAt = data?.expiresAt ? new Date(data.expiresAt) : startedAt;
 
-  const alreadySpentTime = new TimeDuration(new Date().getTime() - startedAt.getTime(), TimeUnit.Millisecond);
-  let remainingTime = duration.subtract(alreadySpentTime);
+  let remainingTime = new TimeDuration(expiresAt.getTime() - new Date().getTime(), TimeUnit.Millisecond);
 
   if (remainingTime.smallerThan(NO_TIME)) {
     remainingTime = NO_TIME;
@@ -30,6 +30,7 @@ const useServerTimer = (interval: TimeDuration = new TimeDuration(1, TimeUnit.Se
     isEnabled,
     duration,
     startedAt,
+    expiresAt,
     isRunning: localTimer.isRunning,
     isDone: localTimer.isDone,
     time: localTimer.time,

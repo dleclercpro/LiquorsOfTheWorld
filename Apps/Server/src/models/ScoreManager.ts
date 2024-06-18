@@ -1,5 +1,5 @@
 import { UserType, NO_VOTE_INDEX } from '../constants';
-import { GroupedScoresData } from '../types/DataTypes';
+import { GroupedScoresData, ScoreData } from '../types/DataTypes';
 import Quiz from './Quiz';
 import QuizManager from './QuizManager';
 import VoteManager from './VoteManager';
@@ -30,16 +30,27 @@ class ScoreManager {
         return scores;
     }
 
-    public async getUserScores(quiz: Quiz, user: User) {
+    public async getUserScores(quiz: Quiz, user: User): Promise<ScoreData> {
         const votes = await VoteManager.getAllVotes(quiz);
         const questions = await QuizManager.get(quiz.getName());
         const answers = questions.map((question) => question.answer);
 
         const userVotes = votes[user.getType()][user.getUsername()];
 
+        const right = answers.filter((answerIndex, i) => answerIndex === userVotes[i] && userVotes[i] !== NO_VOTE_INDEX).length;
+        const wrong = answers.filter((answerIndex, i) => answerIndex !== userVotes[i] && userVotes[i] !== NO_VOTE_INDEX).length;
+
+        let missed = 0;
+        if (quiz.isTimed()) {
+            missed = userVotes.filter((voteIndex, i) => voteIndex === NO_VOTE_INDEX && i <= quiz.getQuestionIndex() && quiz.isTimerDone(i)).length;
+        }
+        const unanswered = userVotes.filter((voteIndex) => voteIndex === NO_VOTE_INDEX).length - missed;
+
         return {
-            total: userVotes.filter((vote) => vote !== NO_VOTE_INDEX).length,
-            value: answers.filter((answerIndex, i) => answerIndex === userVotes[i]).length
+            right,
+            wrong,
+            missed,
+            unanswered,
         };
     }
 }
