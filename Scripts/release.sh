@@ -5,6 +5,7 @@
 DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$DIR/../"
 APPS_DIR="$ROOT_DIR/Apps"
+SCRIPTS_DIR="$ROOT_DIR/Scripts"
 
 # Define branch details
 user="dleclercpro"
@@ -45,9 +46,9 @@ YAML_FILES=("$ROOT_DIR/docker-compose.yml" "$ROOT_DIR/docker-compose.local.yml")
 for file in "${PACKAGE_JSON_FILES[@]}"; do
   if [ -f "$file" ]; then
     sed -i "s|\"version\": \"$master\"|\"version\": \"$release\"|g" "$file"
-    echo "Updated version in $file"
+    echo "Updated version in '$file'."
   else
-    echo "File $file not found!"
+    echo "File '$file' not found!"
   fi
 done
 
@@ -55,9 +56,9 @@ done
 for file in "${SCRIPT_FILES[@]}"; do
   if [ -f "$file" ]; then
     sed -i "s|release=\"$master\"|release=\"$release\"|g" "$file"
-    echo "Updated release in $file"
+    echo "Updated release in '$file'."
   else
-    echo "File $file not found!"
+    echo "File '$file' not found!"
   fi
 done
 
@@ -65,11 +66,23 @@ done
 for file in "${YAML_FILES[@]}"; do
   if [ -f "$file" ]; then
     sed -i "s|$master_branch|$release_branch|g" "$file"
-    echo "Updated branch in $file"
+    echo "Updated branch in '$file'."
   else
-    echo "File $file not found!"
+    echo "File '$file' not found!"
   fi
 done
+
+
+
+# Run the install script before pushing the changes
+INSTALL_SCRIPT="$SCRIPTS_DIR/install.sh"
+
+if [ -f "$INSTALL_SCRIPT" ]; then
+  bash "$INSTALL_SCRIPT"
+else
+  echo "Install script '$INSTALL_SCRIPT' not found!"
+  exit 1
+fi
 
 
 
