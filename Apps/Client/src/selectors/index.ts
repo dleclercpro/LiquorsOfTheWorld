@@ -135,6 +135,6 @@ export const selectHaveAllPlayersAnswered = createSelector(
       }
     }
 
-    return playersWhoHaveVotedCount === players.filter.length;
+    return playersWhoHaveVotedCount === playersToConsider.length;
   }
 );

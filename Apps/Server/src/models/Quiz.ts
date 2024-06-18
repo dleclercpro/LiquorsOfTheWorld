@@ -97,6 +97,10 @@ class Quiz {
         return this.status.isStarted;
     }
 
+    public isOver() {
+        return this.status.isOver;
+    }
+
     public isSupervised() {
         return this.status.isSupervised;
     }
