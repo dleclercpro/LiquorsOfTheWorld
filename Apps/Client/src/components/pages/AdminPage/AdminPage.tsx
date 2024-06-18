@@ -13,7 +13,7 @@ import useQuiz from '../../../hooks/useQuiz';
 import useUser from '../../../hooks/useUser';
 import useDatabase from '../../../hooks/useDatabase';
 import { PageUrl } from '../../../constants';
-import PersistedStore from '../../../stores/AppState';
+import AppStore from '../../../stores/AppStore';
 
 interface SnackbarState extends SnackbarOrigin {
   open: boolean,
@@ -39,7 +39,7 @@ const AdminPage: React.FC = () => {
   const database = useDatabase();
 
   const hasCookie = Boolean(getCookie(COOKIE_NAME));
-  const hasLocalStorage = Boolean(PersistedStore.getStore());
+  const hasLocalStorage = Boolean(AppStore.getStore());
   const hasNoOptions = !DEBUG && !user.isAdmin && !hasCookie && !hasLocalStorage;
 
 
@@ -81,7 +81,7 @@ const AdminPage: React.FC = () => {
       alert(`This might break the app's UI!`);
 
       // Delete app state storage
-      PersistedStore.reset();
+      AppStore.reset();
 
       setState({
         ...state,
