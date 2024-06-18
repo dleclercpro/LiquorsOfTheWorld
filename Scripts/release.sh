@@ -90,7 +90,7 @@ if git show-ref --verify --quiet "refs/heads/$release_branch_name"; then
 fi
 
 # Check if the branch already exists in the remote repository
-if git ls-remote --heads origin "$release_branch_name" &> /dev/null; then
+if git ls-remote --heads origin | grep -q "refs/heads/$release_branch_name"; then
   echo "Branch $release_branch_name already exists in the remote repository. Exiting."
   exit 1
 fi
@@ -98,7 +98,7 @@ fi
 # Check if the release already exists on GitHub
 if gh release view "$release_tag" &> /dev/null; then
   echo "Release '$release_tag' already exists on GitHub. Exiting."
-  exit 0
+  exit 1
 fi
 
 
