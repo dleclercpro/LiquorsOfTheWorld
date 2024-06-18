@@ -25,18 +25,7 @@ const validateParams = async (params: ParamsDictionary) => {
         throw new InvalidQuizIdError();
     }
 
-    const currentQuestionIndex = quiz.getQuestionIndex();
-    const currentQuestionIndexAsString = `Q${currentQuestionIndex}`;
-    
     const questionIndex = Number(_questionIndex);
-    const questionIndexAsString = `Q${questionIndex}`;
-
-    // User cannot vote for questions that are past the current question
-    const isQuestionIndexValid = (0 <= questionIndex) && (questionIndex <= currentQuestionIndex);
-    if (!isQuestionIndexValid) {
-        logger.error(`Cannot vote for question ${questionIndexAsString} while current question is ${currentQuestionIndexAsString}!`);
-        throw new InvalidQuestionIndexError();
-    }
 
     return { quizId, questionIndex };
 }
@@ -56,20 +45,29 @@ const VoteController: RequestHandler = async (req, res, next) => {
         if (!quiz) {
             throw new InvalidQuizIdError();
         }
-        const nextQuestionIndex = questionIndex + 1;
-        const questionCount = await QuizManager.count(quiz.getName());
-        const isLastQuestion = nextQuestionIndex === questionCount;
+        const currentQuestionIndex = quiz.getQuestionIndex();
+        const currentQuestionIndexAsString = `Q${currentQuestionIndex}`;
+        const questionIndexAsString = `Q${questionIndex}`;
+        const voteIndexAsString = `A${vote}`;
+        
+        // User cannot vote for questions that are past the current question, unless
+        // they are an admin!
+        const isQuestionIndexValid = (0 <= questionIndex) && (questionIndex <= currentQuestionIndex);
+        if (!isQuestionIndexValid) {
+            if (!isAdmin) {
+                logger.error(`Cannot vote for question ${questionIndexAsString} while current question is ${currentQuestionIndexAsString}!`);
+                throw new InvalidQuestionIndexError();
+            }
+            logger.warn(`Allowing admin user to vote on question ${questionIndexAsString}, even though current question index is ${currentQuestionIndexAsString}.`);
+        }
 
         // Get votes from DB if they exist
         const user = await User.get(username) as User;
         const userVotes = await VoteManager.getVotes(quiz, user);
-        
-        const questionIndexAsString = `Q${questionIndex}`;
-        const voteIndexAsString = `A${vote}`;
 
         // Add vote to array
         userVotes[questionIndex] = vote;
-        logger.debug(`New vote for user '${user.getUsername()}': ${questionIndexAsString}|${voteIndexAsString}`);
+        logger.debug(`New vote for ${user.getType()} user '${user.getUsername()}': ${questionIndexAsString}|${voteIndexAsString}`);
 
         // Store votes in DB
         await VoteManager.setVotes(quiz, user, userVotes);
@@ -81,6 +79,9 @@ const VoteController: RequestHandler = async (req, res, next) => {
         logger.trace(`Players who voted so far on question ${questionIndexAsString}: ${playersWhoVoted.length}/${players.length}`);
 
         // If quiz is not supervised and all players have submitted their answer: increment question index
+        const nextQuestionIndex = questionIndex + 1;
+        const questionCount = await QuizManager.count(quiz.getName());
+
         if (!quiz.isSupervised() && haveAllPlayersVoted) {
             logger.info(`All users have voted on question ${questionIndexAsString}.`);
             
@@ -101,6 +102,7 @@ const VoteController: RequestHandler = async (req, res, next) => {
         }
 
         // Admin has closed last question
+        const isLastQuestion = nextQuestionIndex === questionCount;
         if (quiz.isSupervised() && isAdmin && isLastQuestion) {
             await quiz.finish();
         }

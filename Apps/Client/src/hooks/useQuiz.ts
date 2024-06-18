@@ -43,24 +43,28 @@ const useQuiz = () => {
 
 
   const initializeQuestionIndex = useCallback(() => {
-    if (user.username === null) return;
+    if (user.username === null || status === null || votes === null) return;
 
+    const currentQuestionIndex = status.questionIndex;
     const currentVotes = votes[user.isAdmin ? UserType.Admin : UserType.Regular][user.username];
 
     if (!currentVotes || currentVotes.length === 0) return;
     const lastQuestionIndex = currentVotes.length - 1;
 
     // Identify next question to be answered by user
-    let lastUnansweredQuestionIndex = currentVotes.findIndex((vote: number) => vote === NO_VOTE_INDEX);
+    let firstUnansweredQuestionIndex = currentVotes.findIndex((vote: number) => vote === NO_VOTE_INDEX);
     
-    if (lastUnansweredQuestionIndex === -1) {
-      lastUnansweredQuestionIndex = lastQuestionIndex;
+    if (firstUnansweredQuestionIndex === -1) {
+      firstUnansweredQuestionIndex = lastQuestionIndex;
     }
 
-    if (app.questionIndex !== lastUnansweredQuestionIndex) {
-      dispatch(setQuestionIndex(lastUnansweredQuestionIndex));
+    if (currentQuestionIndex < firstUnansweredQuestionIndex) {
+      dispatch(setQuestionIndex(currentQuestionIndex));
     }
-  }, [votes]);
+    else {
+      dispatch(setQuestionIndex(firstUnansweredQuestionIndex));
+    }
+  }, [status, votes]);
 
 
 
