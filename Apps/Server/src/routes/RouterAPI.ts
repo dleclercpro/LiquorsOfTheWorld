@@ -53,13 +53,13 @@ router.delete('/quiz/:quizId', [AuthMiddleware], DeleteQuizController);
 router.put('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], StartQuestionController);
 router.post('/quiz/:quizId/question/:questionIndex', [AuthMiddleware], VoteController);
 
+router.get('/quiz/:quizId/questions/:language', GetQuestionsController);
 router.get('/quiz/:quizId/teams', [AuthMiddleware], GetTeamsController);
 router.get('/quiz/:quizId/votes', [AuthMiddleware], GetVotesController);
 router.get('/quiz/:quizId/players', [AuthMiddleware], GetPlayersController);
 router.get('/quiz/:quizId/scores', [AuthMiddleware], GetScoresController);
 
 router.get('/quizzes', GetQuizListController);
-router.get('/questions/:language/:quizName', GetQuestionsController);
 
 
 

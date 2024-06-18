@@ -4,7 +4,7 @@ import { Language, QUIZ_NAMES, QuizName } from '../constants';
 import InvalidQuizNameError from '../errors/InvalidQuizNameError';
 import QuizAlreadyExistsError from '../errors/QuizAlreadyExistsError';
 import logger from '../logger';
-import { unique } from '../utils/array';
+import { getRange, shuffle, unique } from '../utils/array';
 import User from './users/User';
 import QuizManager from './QuizManager';
 import InvalidQuestionIndexError from '../errors/InvalidQuestionIndexError';
@@ -27,6 +27,7 @@ type QuizStatusArgs = {
     isSupervised: boolean,
     isNextQuestionForced: boolean,
     questionIndex: number,
+    questionOrder: number[],
     timer?: TimerData,
   }
 
@@ -212,6 +213,10 @@ class Quiz {
             .includes(user.getUsername());
     }
 
+    public getQuestionOrder() {
+        return this.status.questionOrder;
+    }
+
     public getQuestionIndex() {
         return this.status.questionIndex;
     }
@@ -295,6 +300,7 @@ class Quiz {
         if (await Quiz.exists(id)) {
             throw new QuizAlreadyExistsError();
         }
+        const questionsCount = await QuizManager.count(name);
 
         const quiz = new Quiz({
             id,
@@ -307,6 +313,7 @@ class Quiz {
                 isSupervised: false,
                 isNextQuestionForced: false,
                 questionIndex: 0,
+                questionOrder: shuffle(getRange(questionsCount)),
             },
         });
 

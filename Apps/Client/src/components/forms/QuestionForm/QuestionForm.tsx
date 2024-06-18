@@ -10,7 +10,7 @@ import useOverlay from '../../../hooks/useOverlay';
 import { OverlayName } from '../../../reducers/OverlaysReducer';
 import QuestionFormMeta from './QuestionFormMeta';
 import QuestionFormMedia, { MediaImage, MediaVideo } from './QuestionFormMedia';
-import { shuffleArray } from '../../../utils/array';
+import { shuffle } from '../../../utils/array';
 
 type Props = {
   index: number,
@@ -82,7 +82,7 @@ const QuestionForm: React.FC<Props> = (props) => {
 
   
   // Randomize options order on load
-  const randomizedOptions = useMemo(() => shuffleArray(options), [options]);
+  const randomizedOptions = useMemo(() => shuffle(options), [options]);
 
 
 

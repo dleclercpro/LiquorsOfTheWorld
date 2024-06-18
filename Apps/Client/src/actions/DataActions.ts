@@ -30,11 +30,11 @@ export const fetchTeamsAction = createServerAction<string, CallGetTeamsResponseD
   },
 );
 
-type FetchQuestionDataActionArgs = { language: Language, quizName: QuizName };
+type FetchQuestionDataActionArgs = { language: Language, quizId: string };
 export const fetchQuestionDataAction = createServerAction<FetchQuestionDataActionArgs, CallGetQuestionsResponseData>(
   'data/questions',
-  async ({ language, quizName }) => {
-    const { data } = await new CallGetQuestions(language, quizName).execute();
+  async ({ language, quizId }) => {
+    const { data } = await new CallGetQuestions(language, quizId).execute();
       
     return data!;
   },
@@ -104,10 +104,10 @@ export const fetchInitialDataAction = createServerAction<void, void>(
 type FetchAllDataActionArgs = { quizId: string, quizName: QuizName, language: Language };
 export const fetchAllDataAction = createServerAction<FetchAllDataActionArgs, void>(
   'data/fetch-all',
-  async ({ quizId, quizName, language }, { dispatch }) => {
+  async ({ quizId, language }, { dispatch }) => {
     const result = await Promise.all([
-      dispatch(fetchQuestionDataAction({ language, quizName })), // Must only be fetched once: questions do not change
-      dispatch(fetchTeamsAction(quizId)), // Must only be fetched once: teams do not change
+      dispatch(fetchQuestionDataAction({ language, quizId })), // Must only be fetched once: questions do not change
+      dispatch(fetchTeamsAction(quizId)),                      // Must only be fetched once: teams do not change
 
       dispatch(fetchStatusAction(quizId)),
       dispatch(fetchPlayersAction(quizId)),

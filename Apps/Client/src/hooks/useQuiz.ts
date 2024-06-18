@@ -89,10 +89,10 @@ const useQuiz = () => {
 
 
   const refreshQuestionData = useCallback(async () => {
-    if (quiz.name === null || !language) return;
+    if (quiz.id === null || !language) return;
     
-    await dispatch(fetchQuestionDataAction({ quizName: quiz.name, language }));
-  }, [quiz.name, language]);
+    await dispatch(fetchQuestionDataAction({ quizId: quiz.id, language }));
+  }, [quiz.id, language]);
 
 
 
