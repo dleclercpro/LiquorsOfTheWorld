@@ -18,6 +18,16 @@
 
       > tr {
 
+        &:nth-child(1) {
+
+          > th {
+            @include font-sub-sub-title;
+            background-color: #f2f2f2;
+            color: #333;
+            vertical-align: middle;
+          }
+        }
+
         &:nth-child(2) {
 
           > th {
@@ -27,13 +37,10 @@
       }
     }
 
-    > thead, > tbody {
+    > thead,
+    > tbody {
       
       > tr {
-
-        &:hover {
-          background-color: #bbb;
-        }
   
         > th, > td {
             border: 1px solid #ddd;
@@ -49,11 +56,14 @@
   
         > td {
             background-color: #f9f9f9;
+
+            &[colspan='2'],
+            &[colspan='3'] {
+              padding: 0;
+            }
         }
       }
     }
-
-
 
     // Set specific widths for columns
     &.col-2 {
@@ -75,15 +85,11 @@
 
     th[colspan='2'], td[colspan='2'] {
       width: 40%;
-      padding: 0;
     }
 
     th[colspan='3'], td[colspan='3'] {
       width: 45%;
-      padding: 0;
     }
-
-
 
     // Inner table styles
     table.scoreboard-inner-table {
@@ -97,9 +103,10 @@
 
           > th, > td {
             width: 100% !important;
+            padding: 8px !important;
+            border: 1px solid #ddd; // Add borders to inner table cells
             text-align: center;
-            padding: 8px;
-            background-color: transparent !important;
+            margin: -1px; // Merge borders with parent table
           }
         }
       }

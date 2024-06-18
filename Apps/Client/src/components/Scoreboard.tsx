@@ -23,13 +23,11 @@ const Scoreboard: React.FC<Props> = ({ title, scores, hasMissingPoints }) => {
       <table className={`scoreboard-table col-${pointColumnsCount}`}>
         <thead>
           <tr>
-              <th>{t('common:COMMON.RANK')}</th>
-              <th>{t('common:COMMON.USERNAME')}</th>
+              <th rowSpan={2}>{t('common:COMMON.RANK')}</th>
+              <th rowSpan={2}>{t('common:COMMON.USERNAME')}</th>
               <th colSpan={pointColumnsCount}>{t('common:COMMON.POINTS')}</th>
           </tr>
           <tr>
-              <th></th>
-              <th></th>
               <th>{t('PAGES.SCOREBOARD.RIGHT_POINTS')}</th>
               <th>{t('PAGES.SCOREBOARD.WRONG_POINTS')}</th>
               {hasMissingPoints && (
