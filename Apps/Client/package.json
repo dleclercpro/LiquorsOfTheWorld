@@ -1,6 +1,6 @@
 {
   "name": "quiz--client",
-  "version": "latest",
+  "version": "3.12.2",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.3",
