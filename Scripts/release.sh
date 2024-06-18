@@ -20,7 +20,21 @@ fi
 
 # Set the release variable to the provided argument
 release="$1"
+release_tag="v$release"
 release_branch="$user/$app:$release"
+release_branch_name="release/$release"
+
+
+
+# Check out the new branch with Git
+cd "$ROOT_DIR"
+if git show-ref --verify --quiet "refs/heads/$release_branch_name"; then
+  git checkout "$release_branch_name"
+else
+  git checkout -b "$release_branch_name"
+fi
+
+
 
 # Define the list of files to update
 PACKAGE_JSON_FILES=("$APPS_DIR/Server/package.json" "$APPS_DIR/Client/package.json")
@@ -56,3 +70,14 @@ for file in "${YAML_FILES[@]}"; do
     echo "File $file not found!"
   fi
 done
+
+
+
+# Add the changes to the git index
+git add .
+
+# Commit the changes
+git commit -m "Release tag: '$release_tag'."
+
+# Push the new branch to the repository
+git push -u origin "$release_branch_name"
