@@ -20,6 +20,7 @@ import GetQuizzesController from '../controllers/quiz/GetQuizzesController';
 import GetBackgroundUrlController from '../controllers/app/GetBackgroundUrlController';
 import GetPlayersController from '../controllers/quiz/GetPlayersController';
 import GetTeamsController from '../controllers/quiz/GetTeamsController';
+import { DEBUG } from '../config';
 
 
 
@@ -35,7 +36,7 @@ router.get('/ready', ReadyController);
 
 
 // API
-router.delete('/', [AuthMiddleware], DeleteDatabaseController);
+router.delete('/', DEBUG ? [] : [AuthMiddleware], DeleteDatabaseController);
 
 router.get('/auth', PingController);
 router.put('/auth', LoginController);

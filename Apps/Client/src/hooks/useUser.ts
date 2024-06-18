@@ -28,6 +28,7 @@ const useUser = () => {
     teamId: user.teamId,
     isAdmin: user.isAdmin,
     isAuthenticated: user.isAuthenticated,
+    setError,
     logout,
   };
 };

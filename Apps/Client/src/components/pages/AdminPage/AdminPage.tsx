@@ -7,7 +7,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { deleteCookie, deleteFromLocalStorage, getCookie, getFromLocalStorage } from '../../../utils/storage';
 import { Snackbar, SnackbarContent, SnackbarOrigin } from '@mui/material';
 import Fade from '@mui/material/Fade';
-import { COOKIE_NAME, URL_PARAM_QUIZ_NAME } from '../../../config';
+import { COOKIE_NAME, DEBUG, URL_PARAM_QUIZ_NAME } from '../../../config';
 import { useTranslation } from 'react-i18next';
 import useQuiz from '../../../hooks/useQuiz';
 import useUser from '../../../hooks/useUser';
@@ -39,14 +39,7 @@ const AdminPage: React.FC = () => {
 
   const hasCookie = Boolean(getCookie(COOKIE_NAME));
   const hasLocalStorage = Boolean(getFromLocalStorage('persist:root'));
-
-  let hasNoOptions = true;
-
-  if (user.isAdmin) {
-    hasNoOptions = !hasCookie && !hasLocalStorage;
-  } else {
-    hasNoOptions = !hasCookie;
-  }
+  const hasNoOptions = !DEBUG && !user.isAdmin && !hasCookie && !hasLocalStorage;
 
 
 
@@ -131,12 +124,12 @@ const AdminPage: React.FC = () => {
             {t('common:PAGES.ADMIN.DELETE_COOKIE')}
           </button>
         )}
-        {hasLocalStorage && user.isAdmin && (
+        {hasLocalStorage && (DEBUG || user.isAdmin) && (
           <button className='admin-page-button' onClick={handleDeleteLocalStorage}>
             {t('common:PAGES.ADMIN.DELETE_LOCAL_STORAGE')}
           </button>
         )}
-        {user.isAdmin && (
+        {(DEBUG || user.isAdmin) && (
           <button className='admin-page-button' onClick={handleDeleteDatabase}>
           {t('common:PAGES.ADMIN.DELETE_DATABASE')}
           </button>

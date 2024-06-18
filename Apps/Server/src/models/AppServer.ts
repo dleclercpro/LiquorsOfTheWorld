@@ -7,7 +7,7 @@ import ErrorMiddleware from '../middleware/ErrorMiddleware';
 import TimeDuration from './units/TimeDuration';
 import { killAfterTimeout } from '../utils/process';
 import { Socket } from 'net';
-import { DEV, TEST, PROD, CLIENT_ROOT, PORT } from '../config';
+import { DEV, TEST, PROD, CLIENT_ROOT, PORT, DEBUG } from '../config';
 import logger from '../logger';
 import { TimeUnit } from '../types';
 
@@ -34,7 +34,7 @@ class AppServer {
         this.app.use(compression());
 
         // CORS
-        if (DEV || TEST) {
+        if (DEBUG) {
             const CORS_OPTIONS = {
                 origin: CLIENT_ROOT,
                 credentials: true,

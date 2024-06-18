@@ -11,6 +11,7 @@ export const ENV = loadEnvironment();
 export const DEV = ENV === Environment.Development;
 export const TEST = ENV === Environment.Test;
 export const PROD = ENV === Environment.Production;
+export const DEBUG = DEV || TEST;
 export const LOGGING_LEVEL = (process.env.LOGGING_LEVEL ?? 'trace') as Level;
 
 // API
