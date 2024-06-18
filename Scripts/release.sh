@@ -41,7 +41,7 @@ SCRIPT_FILES=("$SCRIPTS_DIR/build.sh" "$SCRIPTS_DIR/run.sh" "$SCRIPTS_DIR/run.lo
 
 # Branch details
 USER="dleclercpro"
-APP="quiz"
+APP="QuizApp"
 MASTER_TAG="latest"
 MASTER_BRANCH="$USER/$APP:$MASTER_TAG"
 MASTER_BRANCH_NAME="master"
@@ -80,6 +80,11 @@ release="$1"
 release_tag="v$release"
 release_branch="$USER/$APP:$release"
 release_branch_name="release/$release"
+
+
+
+# Fetch the latest release tag
+release_tag_latest=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
 
 
 
@@ -165,8 +170,14 @@ git tag "$release_tag"
 # Push the tag to the remote repository
 git push origin "$release_tag"
 
+# Generate changelog
+changelog="Automated release."
+if [ -n "$release_tag_latest" ]; then
+  changelog="$changelog Changelog: https://github.com/$USER/$APP/compare/$release_tag_latest...$release_tag"
+fi
+
 # Create a new release on GitHub and tag it using release_tag
-gh release create "$release_tag" --title "$release_tag" --notes "Automated release for version: $release_tag"
+gh release create "$release_tag" --title "$release_tag" --notes "$(echo -e $changelog)"
 
 # Check out the master branch
 git checkout "$MASTER_BRANCH_NAME"
