@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { ScoresData } from '../types/DataTypes';
 import './Scoreboard.scss';
+import useUser from '../hooks/useUser';
 
 interface Props {
   title?: string,
@@ -10,6 +11,8 @@ interface Props {
 
 const Scoreboard: React.FC<Props> = ({ title, scores, hasMissingPoints }) => {
   const { t } = useTranslation();
+
+  const user = useUser();
 
   const pointColumnsCount = hasMissingPoints ? 3 : 2;
 
@@ -38,12 +41,12 @@ const Scoreboard: React.FC<Props> = ({ title, scores, hasMissingPoints }) => {
         <tbody>
           {Object.entries(scores).map(([username, score], i) => {
             return (
-              <tr key={`scoreboard-table-row-${i}`}>
+              <tr key={`scoreboard-table-row-${i}`} className={username === user.username ? 'is-self' : ''}>
                   <td>{i + 1}</td>
                   <td>
                     <strong>{username}</strong>
                   </td>
-                  <td colSpan={pointColumnsCount}>
+                  <td colSpan={pointColumnsCount} className='scoreboard-inner-table-container'>
                     <table className='scoreboard-inner-table'>
                       <tbody>
                         <tr>
