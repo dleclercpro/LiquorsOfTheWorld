@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData, CallPingResponseData, CallStartQuestionResponseData, CallVoteResponseData, FetchedData, GroupedScoresData, GroupedVotesData, PlayersData, StatusData } from '../types/DataTypes';
 import { getInitialFetchedData } from '../utils';
 import { startQuizAction, startQuestionAction, voteAction } from '../actions/QuizActions';
-import { logoutAction, pingAction } from '../actions/UserActions';
+import { logoutAction, pingAction } from '../actions/AuthActions';
 import { QuizJSON } from '../types/JSONTypes';
 import { QuizName } from '../constants';
 import { fetchStatusAction, fetchQuestionDataAction, fetchPlayersAction, fetchVotesAction, fetchScoresAction, fetchTeamsAction } from '../actions/DataActions';

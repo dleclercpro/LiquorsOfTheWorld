@@ -3,6 +3,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import rootReducer from '../reducers';
 import { STORE_VERSION } from '../config';
+import PersistedStore from './AppState';
 
 const persistConfig = {
   key: 'root',
@@ -28,14 +29,11 @@ export type AppDispatch = typeof store.dispatch;
 
 
 // Handle local storage store inconsistencies
-const persistedStore = localStorage.getItem('persist:root');
-
 const currentVersion = STORE_VERSION;
-const persistedVersion = persistedStore ? JSON.parse(JSON.parse(persistedStore)._persist).version : null;
+const persistedVersion = PersistedStore.getStoreVersion();
 
 if (persistedVersion !== currentVersion) {
   console.log(`Persisted store version is different than the latest one: ${currentVersion} !== ${persistedVersion}`);
-  console.log(`Erasing persisted app store of local storage...`);
 
-  localStorage.clear();
+  PersistedStore.reset();
 }

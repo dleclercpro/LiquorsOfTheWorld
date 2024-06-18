@@ -11,6 +11,7 @@ export const API_ROOT = `${SERVER_ROOT}/api/v1`;
 
 // Local storage
 export const STORE_VERSION = 1;
+export const STORE_LOCAL_STORAGE_KEY = 'persist:root';
 
 // Auth
 export const COOKIE_NAME = `quiz`;

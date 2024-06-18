@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch } from '../../../hooks/ReduxHooks';
 import './QuestionForm.scss';
 import { voteAction } from '../../../actions/QuizActions';
@@ -10,6 +10,7 @@ import useOverlay from '../../../hooks/useOverlay';
 import { OverlayName } from '../../../reducers/OverlaysReducer';
 import QuestionFormMeta from './QuestionFormMeta';
 import QuestionFormMedia, { MediaImage, MediaVideo } from './QuestionFormMedia';
+import { shuffleArray } from '../../../utils/array';
 
 type Props = {
   index: number,
@@ -70,11 +71,18 @@ const QuestionForm: React.FC<Props> = (props) => {
     }
   }
 
+
+
   // Reset choice when changing question
   useEffect(() => {
     setChoice('');
 
   }, [index]);
+
+
+  
+  // Randomize options order on load
+  const randomizedOptions = useMemo(() => shuffleArray(options), [options]);
 
 
 
@@ -103,7 +111,7 @@ const QuestionForm: React.FC<Props> = (props) => {
         />
       )}
 
-      {options.map((option, i) => {
+      {randomizedOptions.map((option, i) => {
         const disabled = remainingTime ? remainingTime.isZero() : false;
         
         return (

@@ -12,6 +12,15 @@ export const getRange = (size: number, order: 'ASC' | 'DESC' = 'ASC') => {
   return arr;
 }
 
+export const shuffleArray = <T>(array: T[]): T[] => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 export const toSortedArray = (obj: Record<string, number>, order: 'ASC' | 'DESC' = 'ASC') => {
   const arr = Object.entries(obj);
   let sortedArr = arr;

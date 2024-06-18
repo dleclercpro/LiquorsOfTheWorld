@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { logoutAction } from '../actions/UserActions';
+import { logoutAction } from '../actions/AuthActions';
 
 export enum OverlayName {
   Loading = 'loading',

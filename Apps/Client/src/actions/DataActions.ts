@@ -8,8 +8,9 @@ import { CallGetVotes } from '../calls/quiz/CallGetVotes';
 import { Language, QuizName } from '../constants';
 import { CallGetPlayersResponseData, CallGetQuestionsResponseData, CallGetQuizListResponseData, CallGetTeamsResponseData, CallGetScoresResponseData, CallGetStatusResponseData, CallGetVotesResponseData } from '../types/DataTypes';
 import { createServerAction } from './ServerActions';
-import { logoutAction, pingAction } from './UserActions';
+import { logoutAction, pingAction } from './AuthActions';
 import { updateVersionAction } from './AppActions';
+import PersistedStore from '../stores/AppState';
 
 export const fetchQuizNamesAction = createServerAction<void, CallGetQuizListResponseData>(
   'data/quiz-names',
@@ -91,6 +92,10 @@ export const fetchInitialDataAction = createServerAction<void, void>(
       .some(type => type.endsWith('/rejected'));
 
     if (someFetchActionFailed) {
+      
+      // Ensure you clear app state
+      PersistedStore.reset();
+      
       throw new Error('FETCH_INITIAL_DATA_ACTION');
     }
   },

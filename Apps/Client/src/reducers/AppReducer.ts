@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { logoutAction } from '../actions/UserActions';
+import { logoutAction } from '../actions/AuthActions';
 import { startQuestionAction } from '../actions/QuizActions';
 import { Language, NO_QUESTION_INDEX } from '../constants';
 import { INIT_LANGUAGE } from '../i18n';

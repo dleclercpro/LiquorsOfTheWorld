@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { logoutAction as doLogout } from '../actions/UserActions';
+import { logoutAction as doLogout } from '../actions/AuthActions';
 import { useDispatch, useSelector } from './ReduxHooks';
 
 const useUser = () => {

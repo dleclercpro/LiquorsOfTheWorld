@@ -1,7 +1,7 @@
 import { CallStartQuiz } from '../calls/quiz/CallStartQuiz';
 import { CallStartQuestion } from '../calls/quiz/CallStartQuestion';
 import { CallDeleteQuiz } from '../calls/quiz/CallDeleteQuiz';
-import { logoutAction } from './UserActions';
+import { logoutAction } from './AuthActions';
 import { ThunkAPI, createServerAction } from './ServerActions';
 import { CallVote } from '../calls/quiz/CallVote';
 import { CallVoteResponseData } from '../types/DataTypes';

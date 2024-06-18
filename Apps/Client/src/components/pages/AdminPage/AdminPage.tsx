@@ -4,7 +4,7 @@ import { useDispatch } from '../../../hooks/ReduxHooks';
 import { closeAllOverlays } from '../../../reducers/OverlaysReducer';
 import Page from '../Page';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { deleteCookie, deleteFromLocalStorage, getCookie, getFromLocalStorage } from '../../../utils/storage';
+import { deleteCookie, getCookie } from '../../../utils/storage';
 import { Snackbar, SnackbarContent, SnackbarOrigin } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import { COOKIE_NAME, DEBUG, URL_PARAM_QUIZ_NAME } from '../../../config';
@@ -13,6 +13,7 @@ import useQuiz from '../../../hooks/useQuiz';
 import useUser from '../../../hooks/useUser';
 import useDatabase from '../../../hooks/useDatabase';
 import { PageUrl } from '../../../constants';
+import PersistedStore from '../../../stores/AppState';
 
 interface SnackbarState extends SnackbarOrigin {
   open: boolean,
@@ -38,7 +39,7 @@ const AdminPage: React.FC = () => {
   const database = useDatabase();
 
   const hasCookie = Boolean(getCookie(COOKIE_NAME));
-  const hasLocalStorage = Boolean(getFromLocalStorage('persist:root'));
+  const hasLocalStorage = Boolean(PersistedStore.getStore());
   const hasNoOptions = !DEBUG && !user.isAdmin && !hasCookie && !hasLocalStorage;
 
 
@@ -79,7 +80,8 @@ const AdminPage: React.FC = () => {
     if (quiz.name !== null) {
       alert(`This might break the app's UI!`);
 
-      deleteFromLocalStorage('persist:root'); // Delete Redux Persist storage
+      // Delete app state storage
+      PersistedStore.reset();
 
       setState({
         ...state,

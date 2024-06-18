@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { loginAction, logoutAction, pingAction } from '../actions/UserActions';
+import { loginAction, logoutAction, pingAction } from '../actions/AuthActions';
 import { CallPingResponseData, UserData } from '../types/DataTypes';
 
 export type UserState = {
