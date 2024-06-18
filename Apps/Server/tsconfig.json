@@ -14,5 +14,5 @@
   "include": [
     "./src/**/*.ts",
     "./package*.json"
-, "../Client/src/utils/scores.ts"  ]
+  ]
 }
